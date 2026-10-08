@@ -281,6 +281,17 @@ Time estimates are rough hours for you working with my help. Core (Phases 0-7) i
 - [x] Checked in a real browser (Edge): the picker lists the years, A and B choices exclude each other, choosing opens the right page and keeps the order chosen; the main dropdown and search do not list the comparisons
 - [x] 664 tests pass; samples regenerated; the error-page footer now names `compare.py --help` too
 - [ ] *Not built:* more than two companies at once, or a comparison across different years; the picker never downloads (it offers the pairs whose pages exist)
+
+### Phase 17: Make the viewer simple (home page for one company, a separate compare page)  ✅ DONE
+*Asked for by the user: the index page looked cluttered ("it should be simple"; the assignment says the dashboard must be user friendly). Their idea: pick one company and show the plain-English dashboard in one tab and the SEBI-format report in another; put the comparison on its own page behind a Compare button.*
+- [x] **Home page (`index.html`):** a slim top bar (the name and a big *Compare two companies* button), ONE row of choices (Company, Financial year, Show: Report / Year-on-year / Multi-year trend), then the report fills the window. The report already has the Dashboard tab and the SEBI-format tab. Removed: the search box, Previous / Next, the hint line, the second banner, the long list of every page
+- [x] A *Show* button is greyed out when that page does not exist, and its tooltip says which command makes it; error pages have one small dropdown of their own (only if there are some)
+- [x] **Compare page (`compare_companies.html`):** a way back, then Financial year, Company A, Company B; a pair is already shown when it opens; it keeps the order chosen. Made only when there is at least one comparison (an old one is removed)
+- [x] Views decide (companies, years, trends, other pages: `views/hub_view.py`); two templates print (`hub.html`, `compare_hub.html`) and share `hub.css` and `hub.js`
+- [x] The report pages' own header is tighter (smaller banner, the long source-file name on one line) so the dashboard starts higher; every page that shares `style.css` got the same header
+- [x] Checked in a real browser (Edge): desktop and phone width; company, year, view, error-page and deep-link behaviour; the compare page keeps A and B in the order chosen
+- [x] 681 tests pass; samples regenerated (`samples/index.html` + `samples/compare_companies.html`)
+- [ ] *Not built:* a search box (a dropdown of a few companies is enough); making the year-on-year and trend pages automatically for every company (they are made by `summary.py` and `trends.py`)
 ---
 
 ## 6. Milestones
@@ -292,6 +303,7 @@ Time estimates are rough hours for you working with my help. Core (Phases 0-7) i
 | M2: Trends | 8 | Extension 1 |
 | M3: YoY summary | 9 | Extension 2 |
 | M3b: Company comparison | 16 | Extension 3 |
+| M3c: Simple viewer | 17 | Home page (one company) + compare page |
 | M4: Submission-ready | 11 | README, samples, tests, GitHub |
 
 ## 7. Risks and fallbacks

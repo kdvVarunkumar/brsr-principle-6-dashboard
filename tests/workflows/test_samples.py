@@ -12,9 +12,10 @@ from html_checks import assert_well_formed
 from brsr_p6.core.errors import BrsrError
 from brsr_p6.core.fiscal_year import fiscal_years_between
 from brsr_p6.core.paths import DEFAULT_RAW_DIR, SAMPLES_DIR
-from brsr_p6.rendering.render import error_page_path, render_error_page, render_hub_page, render_page, render_summary_page
+from brsr_p6.rendering.render import (error_page_path, render_compare_hub_page, render_error_page, render_hub_page, render_page,
+                                      render_summary_page)
 from brsr_p6.views.error_view import build_error_view
-from brsr_p6.views.hub_view import SAMPLES_TITLE, build_hub_view
+from brsr_p6.views.hub_view import SAMPLES_TITLE, build_compare_hub_view, build_hub_view
 from brsr_p6.workflows import samples
 from brsr_p6.workflows.hub import read_pages
 from brsr_p6.workflows.pipeline import load_saved_report
@@ -108,20 +109,28 @@ def test_the_summary_samples_show_the_cases_they_claim_to():
     assert "NSE has no BRSR filing of its own for FY 2021-22." in reliance and "previous-year column of the FY 2022-23 filing" in reliance
 
 
-def test_the_committed_viewer_lists_every_sample_page_and_is_up_to_date():
-    """samples/index.html puts all the sample pages behind one dropdown and search box; it must match what the code builds today."""
-    committed = (SAMPLES_DIR / "index.html").read_text(encoding="utf-8")
-    view = build_hub_view(read_pages(SAMPLES_DIR), embed=False, title=SAMPLES_TITLE)
-    assert committed == render_hub_page(view), "samples/index.html is out of date: run  python make_samples.py"
-    assert {entry.file for entry in view.entries} == set(expected_files()) - {"index.html"}      # every page, and nothing else
+def test_the_committed_viewers_list_every_sample_page_and_are_up_to_date():
+    """samples/index.html (one company) and samples/compare_companies.html (two companies) must match what the code builds today."""
+    pages = read_pages(SAMPLES_DIR)
+    view = build_hub_view(pages, embed=False, title=SAMPLES_TITLE)
+    compare_view = build_compare_hub_view(pages, embed=False, title=SAMPLES_TITLE)
+    assert (SAMPLES_DIR / "index.html").read_text(encoding="utf-8") == render_hub_page(view), "samples/index.html is out of date: run  python make_samples.py"
+    assert (SAMPLES_DIR / "compare_companies.html").read_text(encoding="utf-8") == render_compare_hub_page(compare_view), \
+        "samples/compare_companies.html is out of date: run  python make_samples.py"
+    shown = {entry.file for entry in view.entries} | {entry.file for entry in compare_view.entries}
+    assert shown == set(expected_files()) - {"index.html", "compare_companies.html"}              # every page is behind one of the two viewers, and nothing else
     assert "html" not in json.loads(view.data_json)["entries"][0]                                  # linked, so the repository does not store each page twice
 
 
-def test_the_viewer_groups_the_samples_the_way_the_readme_does():
-    view = build_hub_view(read_pages(SAMPLES_DIR), embed=False)
+def test_the_viewers_group_the_samples_the_way_the_readme_does():
+    pages = read_pages(SAMPLES_DIR)
+    view = build_hub_view(pages, embed=False)
     counts = {kind: sum(entry.kind == kind for entry in view.entries) for kind in view.kinds}
-    assert counts == {"Reports": len(SAMPLE_COMPANIES), "Company comparisons": len(SAMPLE_COMPARISONS), "Year-on-year summaries": len(SAMPLE_SUMMARIES),
+    assert counts == {"Reports": len(SAMPLE_COMPANIES), "Year-on-year summaries": len(SAMPLE_SUMMARIES),
                       "Multi-year trends": len(SAMPLE_TRENDS), "Error pages": len(SAMPLE_ERRORS)}
+    assert len(build_compare_hub_view(pages, embed=False).entries) == len(SAMPLE_COMPARISONS) == view.compare_count
+    names = [company.name.casefold() for company in view.companies]
+    assert names == sorted(names) and {company.symbol for company in view.companies} == {s.symbol for s in SAMPLE_COMPANIES}      # one entry per company, by name
 
 
 def test_a_summary_sample_with_a_missing_previous_report_never_looks_for_one():

@@ -6,269 +6,145 @@
 <title>{{ view.title }}</title>
 <noscript><style>.js-only { display: none; }</style></noscript>
 <style>
-{# The hub viewer.  This is the only page with a script: a dropdown and a search box cannot work without one.  The pages it shows
-   have none.  Everything it shows is decided in views/hub_view.py. #}
-:root { --ink: #1d2733; --muted: #5d6b7a; --paper: #ffffff; --page: #f3f5f7; --line: #d5dce3; --accent: #0f6b5c; --accent-soft: #e3f1ee; }
-* { box-sizing: border-box; }
-body { margin: 0; background: var(--page); color: var(--ink); font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif; }
-.hub-head { background: var(--accent); color: #fff; padding: 18px 16px 16px; }
-.hub-head .inner { max-width: 1280px; margin: 0 auto; }
-.eyebrow { margin: 0; font-size: 0.78rem; letter-spacing: 0.04em; text-transform: uppercase; opacity: 0.9; }
-.hub-head h1 { margin: 2px 0 0; font-size: 1.5rem; }
-.hub-head .sub { margin: 2px 0 0; opacity: 0.9; font-size: 0.92rem; }
-main { max-width: 1280px; margin: 0 auto; padding: 12px 16px 24px; }
-.controls { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: flex-end; background: var(--paper); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; margin-bottom: 12px; }
-.controls[hidden] { display: none; }
-.controls.compare { border-left: 5px solid var(--accent); }
-.controls.compare .lead { flex: 1 1 100%; margin: 0; font-size: 0.95rem; }
-.field { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
-.field.grow { flex: 1 1 260px; }
-.field label { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
-.field label span { text-transform: none; letter-spacing: 0; }
-input[type="search"], select { width: 100%; font: inherit; padding: 8px 10px; border: 1px solid var(--line); border-radius: 6px; background: #fff; color: var(--ink); }
-input[type="search"]:focus, select:focus, button:focus-visible, a.open:focus-visible { outline: 3px solid #8cc7bb; outline-offset: 1px; }
-.actions { flex-direction: row; align-items: center; gap: 8px; flex-wrap: wrap; }
-button, a.open { font: inherit; padding: 8px 12px; border: 1px solid var(--accent); border-radius: 6px; background: var(--accent-soft); color: var(--accent); text-decoration: none; cursor: pointer; white-space: nowrap; }
-button:disabled { opacity: 0.45; cursor: default; }
-.hint { margin: 0 0 8px; color: var(--muted); font-size: 0.86rem; }
-kbd { background: #eef1f4; border: 1px solid var(--line); border-radius: 4px; padding: 0 5px; font-size: 0.8rem; }
-#viewer { display: block; width: 100%; height: calc(100vh - 215px); min-height: 520px; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
-.nojs { background: var(--paper); border: 1px solid var(--line); border-left: 5px solid #e5b84a; border-radius: 8px; padding: 12px 16px; }
-.nojs h2 { margin: 0 0 6px; font-size: 1.05rem; }
-.nojs ul { margin: 4px 0 10px; padding-left: 20px; }
-@media (max-width: 640px) { #viewer { height: 75vh; } .hub-head h1 { font-size: 1.25rem; } .hint { display: none; } }
+{# The home page of the tool: pick a company (and a year) and its report appears.  One of the two pages with a script (the other is
+   compare_companies.html): a dropdown cannot work without one.  The pages it shows have none.  What it offers is decided in views/hub_view.py. #}
+{% include "hub.css" %}
 </style>
 </head>
 <body>
 
-<header class="hub-head">
-  <div class="inner">
-    <p class="eyebrow">Business Responsibility &amp; Sustainability Report · Principle 6 (environment)</p>
-    <h1>{{ view.title }}</h1>
-    <p class="sub">{{ view.page_count }} report{{ "" if view.page_count == 1 else "s" }} in one place: pick one from the dropdown, or search by company, year or type.{% if view.compare_count %} {{ view.compare_count }} company comparison{{ "" if view.compare_count == 1 else "s" }} have their own dropdowns below.{% endif %}</p>
-  </div>
+<header class="topbar">
+  <h1>{{ view.title }}</h1>
+  <span class="grow"></span>
+  {% if view.compare_count %}<a class="cta" href="{{ view.compare_file }}">Compare two companies ⇄</a>{% endif %}
 </header>
 
-<main>
-  <noscript>
-    <div class="nojs">
-      <h2>This viewer needs JavaScript</h2>
-      <p>The dropdown and the search box are the only parts of this project that use a script; the pages themselves have none. Without it, open the pages directly (these links work when the pages are in the same folder as this file):</p>
-      {% for kind in view.kinds %}
-      <strong>{{ kind }}</strong>
-      <ul>{% for e in view.entries if e.kind == kind %}<li><a href="{{ e.file }}">{{ e.label }}</a></li>{% endfor %}</ul>
-      {% endfor %}
-    </div>
-  </noscript>
+<noscript>
+  <div class="nojs">
+    <h2>This page needs JavaScript to show a page here</h2>
+    <p>The dropdowns are the only part of this project that use a script; the pages themselves have none. Without it, open the pages directly (these links work when the pages are in the same folder as this file):</p>
+    {% if view.compare_count %}<p><a href="{{ view.compare_file }}">Compare two companies</a> ({{ view.compare_count }} comparison{{ "" if view.compare_count == 1 else "s" }})</p>{% endif %}
+    {% for kind in view.kinds %}
+    <strong>{{ kind }}</strong>
+    <ul>{% for e in view.entries if e.kind == kind %}<li><a href="{{ e.file }}">{{ e.label }}</a></li>{% endfor %}</ul>
+    {% endfor %}
+  </div>
+</noscript>
 
-  <section class="controls js-only" aria-label="Choose a page">
-    <div class="field grow">
-      <label for="page-search">Search</label>
-      <input id="page-search" type="search" placeholder="for example: tata, 2025-26, trend, error" autocomplete="off">
+<section class="pickbar js-only" aria-label="Choose what to show">
+  <div class="who one-company" id="who">
+    <div class="field company">
+      <label for="company">Company</label>
+      <select id="company"></select>
     </div>
-    <div class="field grow">
-      <label for="page-select">Report <span id="match-count"></span></label>
-      <select id="page-select"></select>
+    <div class="field">
+      <label for="year">Financial year</label>
+      <select id="year"></select>
     </div>
-    <div class="field actions">
-      <button type="button" id="prev">◀ Previous</button>
-      <button type="button" id="next">Next ▶</button>
-      <a class="open" id="open-tab" href="#" target="_blank" rel="noopener">Open in a new tab ↗</a>
+    <div class="field views">
+      <span class="label" id="show-label">Show</span>
+      <div class="seg" role="group" aria-labelledby="show-label">
+        <button type="button" data-view="report" data-hint="The dashboard and the SEBI-format report for this year" data-make="main.py --company {name} --fy {fy}">Report</button>
+        <button type="button" data-view="summary" data-hint="What got better and worse since last year" data-make="summary.py --company {name} --fy {fy}">Year-on-year</button>
+        <button type="button" data-view="trend" data-hint="Several years side by side" data-make="trends.py --company {name}">Multi-year trend</button>
+      </div>
     </div>
-  </section>
-  <section class="controls compare js-only" id="compare-panel" aria-label="Compare two companies" hidden>
-    <p class="lead"><strong>Compare two companies in one financial year.</strong> Pick the year and two companies: the comparison opens below. (Comparisons are not in the report dropdown above.)</p>
-    <div class="field"><label for="cmp-fy">Financial year</label><select id="cmp-fy"></select></div>
-    <div class="field grow"><label for="cmp-a">Company A</label><select id="cmp-a"></select></div>
-    <div class="field grow"><label for="cmp-b">Company B</label><select id="cmp-b"></select></div>
-  </section>
-  <p class="hint js-only">Type to narrow the list, press <kbd>Enter</kbd> to open the first match, <kbd>/</kbd> to jump to the search box, <kbd>Esc</kbd> to clear it. The address bar keeps the page you chose, so you can copy it.</p>
+  </div>
+  <div class="end">
+    {% if view.others %}
+    <div class="field">
+      <label for="other">{{ view.others_label }} ({{ view.others|length }})</label>
+      <select id="other"></select>
+    </div>
+    {% endif %}
+    <a class="open" id="open-tab" href="#" target="_blank" rel="noopener">Open in a new tab ↗</a>
+  </div>
+</section>
 
-  <iframe id="viewer" class="js-only" title="The selected page" sandbox="allow-popups allow-popups-to-escape-sandbox"></iframe>
-</main>
+<iframe id="viewer" class="js-only" title="The selected page" sandbox="allow-popups allow-popups-to-escape-sandbox"></iframe>
 
 <script type="application/json" id="hub-data">{{ view.data_json|safe }}</script>
 <script>
 (function () {
   "use strict";
-  var data = JSON.parse(document.getElementById("hub-data").textContent);
-  var entries = data.entries;
-  var byId = {};
-  entries.forEach(function (entry) { byId[entry.id] = entry; });
-  // the comparisons have their own dropdowns (the picker further down), so the main dropdown, its count and the search leave them out
-  var pages = entries.filter(function (entry) { return !entry.compare; });
+{% include "hub.js" %}
 
-  var search = document.getElementById("page-search");
-  var select = document.getElementById("page-select");
-  var count = document.getElementById("match-count");
-  var frame = document.getElementById("viewer");
-  var prev = document.getElementById("prev");
-  var next = document.getElementById("next");
-  var openTab = document.getElementById("open-tab");
-  var visible = [];      // the pages that match the search, in dropdown order
-  var current = null;    // the page being shown
+  var data = JSON.parse($("hub-data").textContent);
+  var viewer = makeViewer(data.entries);
+  var companies = data.companies;
+  var pickCompany = $("company");
+  var pickYear = $("year");
+  var other = $("other");                       // the error pages and anything else that belongs to no company (null when there are none)
+  var buttons = [].slice.call(document.querySelectorAll(".seg button"));
+  var state = { symbol: "", fy: "", view: "report" };
+  var place = {};                               // where each page sits: its company, and whether it is a report, a summary or a trend
 
-  function fromHash() {
-    try { return decodeURIComponent(location.hash.slice(1)); } catch (error) { return ""; }
-  }
-
-  function fillList() {
-    var words = search.value.toLowerCase().split(/\s+/).filter(Boolean);
-    visible = pages.filter(function (entry) {
-      return words.every(function (word) { return entry.search.indexOf(word) !== -1; });
+  companies.forEach(function (company) {
+    company.years.forEach(function (year) {
+      if (year.report) { place[year.report] = { symbol: company.symbol, fy: year.fy, view: "report" }; }
+      if (year.summary) { place[year.summary] = { symbol: company.symbol, fy: year.fy, view: "summary" }; }
     });
-    select.textContent = "";
-    var group = null;
-    var kind = null;
-    visible.forEach(function (entry) {
-      if (entry.kind !== kind) {
-        kind = entry.kind;
-        group = document.createElement("optgroup");
-        group.label = kind;
-        select.appendChild(group);
-      }
-      var option = document.createElement("option");
-      option.value = entry.id;
-      option.textContent = entry.label;
-      group.appendChild(option);
-    });
-    select.disabled = visible.length === 0;
-    count.textContent = "(" + visible.length + " of " + pages.length + (visible.length === 0 ? ": nothing matches" : "") + ")";
-    if (current && visible.indexOf(current) !== -1) { select.value = current.id; } else { select.selectedIndex = -1; }
-    setButtons();
-  }
-
-  function setButtons() {
-    var at = visible.indexOf(current);
-    prev.disabled = visible.length === 0 || at === 0;
-    next.disabled = visible.length === 0 || at === visible.length - 1;
-  }
-
-  function show(id) {
-    var entry = byId[id];
-    if (!entry) { return; }
-    current = entry;
-    if (typeof entry.html === "string") {
-      frame.srcdoc = entry.html;
-    } else {
-      frame.removeAttribute("srcdoc");
-      frame.src = encodeURI(entry.file);
-    }
-    if (visible.indexOf(entry) !== -1) { select.value = id; } else if (entry.compare) { select.selectedIndex = -1; }     // a comparison is chosen in its own dropdowns
-    document.title = entry.label;
-    syncPicker(entry);
-    try { history.replaceState(null, "", "#" + encodeURIComponent(id)); } catch (error) { /* the page still works without a saved address */ }
-    setButtons();
-  }
-
-  function step(delta) {
-    var at = visible.indexOf(current);
-    var target = at === -1 ? (delta > 0 ? 0 : visible.length - 1) : at + delta;
-    if (target >= 0 && target < visible.length) { show(visible[target].id); }
-  }
-
-  // ---- "compare two companies": the comparisons were made in advance (hub.py / compare.py), this only picks the right one
-  var comparisons = entries.filter(function (entry) { return entry.compare; });
-  var pickFy = document.getElementById("cmp-fy");
-  var pickA = document.getElementById("cmp-a");
-  var pickB = document.getElementById("cmp-b");
-
-  function setOptions(select, items) {
-    var keep = select.value;
-    select.textContent = "";
-    items.forEach(function (item) {
-      var option = document.createElement("option");
-      option.value = item.value;
-      option.textContent = item.text;
-      select.appendChild(option);
-    });
-    if (items.some(function (item) { return item.value === keep; })) { select.value = keep; }
-  }
-
-  function inYear(fy) { return comparisons.filter(function (entry) { return entry.compare.fy === fy; }); }
-
-  function companiesWith(list, only) {
-    var seen = {};
-    var found = [];
-    list.forEach(function (entry) {
-      [[entry.compare.a, entry.compare.a_name], [entry.compare.b, entry.compare.b_name]].forEach(function (pair) {
-        if (!seen[pair[0]] && (!only || only(entry, pair[0]))) { seen[pair[0]] = true; found.push({ value: pair[0], text: pair[1] }); }
-      });
-    });
-    return found.sort(function (x, y) { return x.text.localeCompare(y.text); });
-  }
-
-  function fillCompanyA() { setOptions(pickA, companiesWith(inYear(pickFy.value))); fillCompanyB(); }
-
-  function fillCompanyB() {
-    var a = pickA.value;
-    setOptions(pickB, companiesWith(inYear(pickFy.value).filter(function (entry) { return entry.compare.a === a || entry.compare.b === a; }),
-                                    function (entry, id) { return id !== a; }));
-  }
-
-  function openPicked() {
-    var fy = pickFy.value;
-    var a = pickA.value;
-    var b = pickB.value;
-    var match = inYear(fy).filter(function (entry) {
-      return (entry.compare.a === a && entry.compare.b === b) || (entry.compare.a === b && entry.compare.b === a);
-    })[0];
-    if (match) { show(match.id); }
-  }
-
-  function syncPicker(entry) {
-    if (!entry.compare || comparisons.length === 0) { return; }
-    var chosen = pickFy.value === entry.compare.fy && ((pickA.value === entry.compare.a && pickB.value === entry.compare.b)
-                                                        || (pickA.value === entry.compare.b && pickB.value === entry.compare.a));
-    if (chosen) { return; }       // the user picked this very pair: keep A and B in the order they chose (the file name is alphabetical)
-    pickFy.value = entry.compare.fy;
-    fillCompanyA();
-    pickA.value = entry.compare.a;
-    fillCompanyB();
-    pickB.value = entry.compare.b;
-  }
-
-  function setUpPicker() {
-    if (comparisons.length === 0) { return; }
-    document.getElementById("compare-panel").hidden = false;
-    var years = comparisons.map(function (entry) { return entry.compare.fy; })
-      .filter(function (fy, at, all) { return all.indexOf(fy) === at; }).sort().reverse();
-    setOptions(pickFy, years.map(function (fy) { return { value: fy, text: "FY " + fy }; }));
-    fillCompanyA();
-  }
-
-  pickFy.addEventListener("change", function () { fillCompanyA(); openPicked(); });
-  pickA.addEventListener("change", function () { fillCompanyB(); openPicked(); });
-  pickB.addEventListener("change", openPicked);
-
-  search.addEventListener("input", fillList);
-  search.addEventListener("keydown", function (event) {
-    if (event.key === "Enter" && visible.length > 0) { event.preventDefault(); show(visible[0].id); }
-    if (event.key === "Escape") { search.value = ""; fillList(); }
-  });
-  select.addEventListener("change", function () { show(select.value); });
-  prev.addEventListener("click", function () { step(-1); });
-  next.addEventListener("click", function () { step(1); });
-  openTab.addEventListener("click", function (event) {
-    if (!current) { event.preventDefault(); return; }
-    openTab.href = typeof current.html === "string"
-      ? URL.createObjectURL(new Blob([current.html], { type: "text/html" }))
-      : encodeURI(current.file);
-  });
-  document.addEventListener("keydown", function (event) {
-    var typing = document.activeElement && (document.activeElement.tagName === "INPUT" || document.activeElement.tagName === "SELECT");
-    if (event.key === "/" && !typing) { event.preventDefault(); search.focus(); }
-  });
-  window.addEventListener("hashchange", function () {
-    var id = fromHash();
-    if (byId[id] && byId[id] !== current) { show(id); }
+    company.trends.forEach(function (trend) { place[trend.id] = { symbol: company.symbol, fy: "", view: "trend" }; });
   });
 
-  search.value = new URLSearchParams(location.search).get("q") || "";
-  fillList();
-  setUpPicker();
-  var start = fromHash();
-  show(byId[start] ? start : (visible[0] || entries[0]).id);
+  // the page for a company, a year and one of the three views ("" when there is none)
+  function pageFor(company, fy, view) {
+    var year = find(company.years, function (y) { return y.fy === fy; }) || {};
+    if (view === "report") { return year.report || ""; }
+    if (view === "summary") { return year.summary || ""; }
+    var covering = find(company.trends, function (t) { return t.first <= fy && fy <= t.last; });     // the newest trend that covers this year, else the newest
+    return (covering || company.trends[0] || {}).id || "";
+  }
+
+  // show a company: `fy` and `view` are wishes; a year or view that company has no page for gives way to one it has
+  function choose(symbol, fy, view, exact) {
+    var company = find(companies, function (c) { return c.symbol === symbol; });
+    var years = company.years.map(function (y) { return { value: y.fy, text: "FY " + y.fy }; });
+    var wanted = fy || state.fy;
+    setOptions(pickYear, years);
+    if (years.some(function (y) { return y.value === wanted; })) { pickYear.value = wanted; }
+    fy = pickYear.value;                        // "" for a company that has no yearly page
+    var chosen = find([view, "report", "summary", "trend"], function (v) { return pageFor(company, fy, v); }) || "report";
+    buttons.forEach(function (button) {
+      var has = pageFor(company, fy, button.dataset.view) !== "";
+      button.disabled = !has;
+      button.title = has ? button.dataset.hint : "Not made yet. To make it, run:  python " + button.dataset.make.replace("{name}", '"' + company.name + '"').replace("{fy}", fy);
+      button.setAttribute("aria-pressed", String(button.dataset.view === chosen));
+    });
+    pickCompany.value = symbol;
+    if (other) { other.selectedIndex = 0; }
+    state = { symbol: symbol, fy: fy, view: chosen };
+    viewer.show(exact || pageFor(company, fy, chosen));
+  }
+
+  function showOther(id) {
+    buttons.forEach(function (button) { button.setAttribute("aria-pressed", "false"); });
+    other.value = id;
+    viewer.show(id);
+  }
+
+  function openPage(id) {
+    if (place[id]) { choose(place[id].symbol, place[id].fy, place[id].view, id); return true; }
+    if (other && viewer.byId[id]) { showOther(id); return true; }
+    return false;
+  }
+
+  pickCompany.addEventListener("change", function () { choose(pickCompany.value, "", state.view); });
+  pickYear.addEventListener("change", function () { choose(pickCompany.value, pickYear.value, state.view); });
+  buttons.forEach(function (button) {
+    button.addEventListener("click", function () { choose(state.symbol, state.fy, button.dataset.view); });
+  });
+  if (other) {
+    other.addEventListener("change", function () { if (other.value) { showOther(other.value); } });
+    setOptions(other, [{ value: "", text: "Choose a page…" }].concat(data.others.map(function (id) { return { value: id, text: viewer.byId[id].label }; })));
+  }
+  window.addEventListener("hashchange", function () { openPage(fromHash()); });
+
+  setOptions(pickCompany, companies.map(function (company) { return { value: company.symbol, text: company.name }; }));
+  $("who").hidden = companies.length === 0;
+  if (!openPage(fromHash())) {
+    if (companies.length) { choose(companies[0].symbol, "", "report"); } else if (data.others.length) { showOther(data.others[0]); }
+  }
 })();
 </script>
 </body>

@@ -39,9 +39,8 @@
     </div>
     <div>
       <dt>Source file (NSE)</dt>
-      <dd>{% if report.source_url.startswith("https://") %}<a href="{{ report.source_url }}" rel="noopener noreferrer" target="_blank">{{ report.source_file }}</a>{% else %}{{ report.source_file }}{% endif %}
+      <dd class="source" title="{{ report.source_file }}">{% if report.source_url.startswith("https://") %}<a href="{{ report.source_url }}" rel="noopener noreferrer" target="_blank">{{ report.source_file }}</a>{% else %}{{ report.source_file }}{% endif %}
         {% if report.pdf_url.startswith("https://") %}<span class="boundary-help">The same filing as a PDF: <a href="{{ report.pdf_url }}" rel="noopener noreferrer" target="_blank">open</a></span>{% endif %}
-        <span class="boundary-help">Every number on this page was read from this file. The last section of the SEBI tab shows where.</span>
       </dd>
     </div>
   </dl>
@@ -68,8 +67,8 @@
 </main>
 
 <footer>
-  Source: the company's BRSR filing on NSE (structured XBRL file {{ report.source_file }}). Every figure comes from that filing;
-  values we converted, calculated or doubt are marked. Generated from the May 2021 SEBI BRSR format, Principle 6.
+  Source: the company's BRSR filing on NSE (structured XBRL file {{ report.source_file }}). Every figure comes from that filing (the last section
+  of the SEBI tab shows where each number was read); values we converted, calculated or doubt are marked. Generated from the May 2021 SEBI BRSR format, Principle 6.
 </footer>
 
 </body>

@@ -2,7 +2,7 @@
 
 Open any file in a web browser. They are made by `python make_samples.py` (do not edit them by hand).
 
-**Easiest: open [index.html](index.html).** It puts every page below behind one dropdown and a search box (it opens the files in this folder).
+**Easiest: open [index.html](index.html).** Choose a company and a year and its report appears; the *Compare two companies* button opens [compare_companies.html](compare_companies.html), where you choose a year and two companies (both open the files in this folder).
 
 ## Report pages (Dashboard tab first, SEBI-format report second)
 

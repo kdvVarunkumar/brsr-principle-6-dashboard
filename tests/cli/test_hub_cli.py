@@ -35,6 +35,16 @@ def test_the_command_writes_index_html_and_says_how_many_pages(tmp_path, capsys)
     assert (tmp_path / "index.html").exists()
 
 
+def test_the_compare_page_is_named_only_when_there_is_a_comparison(tmp_path, capsys):
+    write_page(tmp_path)
+    main(["--dir", str(tmp_path), "--no-compare"])
+    assert "comparing two companies" not in capsys.readouterr().out
+    write_page(tmp_path, "ITC_vs_WIPRO_2024-25.html")
+    main(["--dir", str(tmp_path), "--no-compare"])
+    out = capsys.readouterr().out
+    assert "comparing two companies" in out and str(tmp_path / "compare_companies.html") in out
+
+
 def test_link_mode_is_named_in_the_message_and_makes_a_much_smaller_file(tmp_path, capsys):
     write_page(tmp_path)
     (tmp_path / "ITC_2024-25.html").write_text("<!doctype html><title>ITC</title>" + "<p>filler</p>" * 5000, encoding="utf-8")

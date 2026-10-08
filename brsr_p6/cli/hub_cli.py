@@ -1,4 +1,4 @@
-"""Command-line interface of hub.py: every page in a folder behind ONE page with a dropdown and a search box."""
+"""Command-line interface of hub.py: every page in a folder behind a home page (choose a company) and a compare page (choose two companies)."""
 
 import argparse
 import sys
@@ -6,6 +6,7 @@ import webbrowser
 from pathlib import Path
 
 from brsr_p6.core.paths import DEFAULT_OUTPUT_DIR
+from brsr_p6.rendering.render import compare_hub_page_path
 from brsr_p6.workflows.hub import generate_hub
 
 
@@ -13,9 +14,10 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="hub.py",
         description=(
-            "Put every page in a folder (the reports, trend pages, summaries and error pages that main.py, trends.py and summary.py "
-            "wrote) behind one page, index.html, with a search box and a dropdown to choose the page. "
-            "By default every page is embedded, so index.html is one self-contained file."
+            "Put every page in a folder (the reports, trend pages, summaries, comparisons and error pages that main.py, trends.py, "
+            "summary.py and compare.py wrote) behind a home page, index.html, where you choose a company and a year, and a compare page, "
+            "compare_companies.html, where you choose two companies (a button on the home page opens it). "
+            "By default every page is embedded, so each of the two is one self-contained file; keep them in the same folder."
         ),
         epilog="Example: python hub.py --open      (then, after running more commands, run it again to include the new pages)",
     )
@@ -40,6 +42,9 @@ def main(argv: list[str] | None = None) -> int:
         return 1
     path, count = made
     print(f"One page for all {count} pages ({'linked, not embedded' if args.link else 'embedded, one self-contained file'}) written to: {path}")
+    compare_page = compare_hub_page_path(args.dir)
+    if compare_page.exists():
+        print(f"The page for comparing two companies (the button on that page opens it; keep the two files together): {compare_page}")
     print("Open it in your web browser (double-click the file), or run again with --open.")
     if args.open:
         webbrowser.open(path.as_uri())

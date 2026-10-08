@@ -11,6 +11,7 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 from brsr_p6.core.paths import DEFAULT_OUTPUT_DIR, safe_name
 from brsr_p6.views.compare_view import build_compare_view
 from brsr_p6.views.dashboard_view import build_dashboard_view
+from brsr_p6.views.hub_view import COMPARE_FILE, HOME_FILE
 from brsr_p6.views.sebi_view import build_sebi_view
 from brsr_p6.views.summary_view import build_summary_view
 from brsr_p6.views.trace_view import build_trace_view
@@ -83,11 +84,12 @@ def write_summary_page(report, previous=None, previous_note="", output_dir: Path
     return path
 
 
-HUB_FILE_NAME = "index.html"      # the viewer that holds every page of a folder: output/index.html, samples/index.html
+HUB_FILE_NAME = HOME_FILE                    # the viewer of single companies: output/index.html, samples/index.html
+COMPARE_HUB_FILE_NAME = COMPARE_FILE         # the viewer of two companies, one click away from it
 
 
 def render_hub_page(view) -> str:
-    """The HTML of the viewer with a dropdown and a search box (a HubView from hub_view.py)."""
+    """The HTML of the index page: choose a company and a year (a HubView from hub_view.py)."""
     return _environment().get_template("hub.html").render(view=view)
 
 
@@ -99,6 +101,22 @@ def write_hub_page(view, folder: Path = DEFAULT_OUTPUT_DIR) -> Path:
     path = hub_page_path(folder)
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(render_hub_page(view), encoding="utf-8")
+    return path
+
+
+def render_compare_hub_page(view) -> str:
+    """The HTML of the compare page: choose a year and two companies (a CompareHubView from hub_view.py)."""
+    return _environment().get_template("compare_hub.html").render(view=view)
+
+
+def compare_hub_page_path(folder: Path = DEFAULT_OUTPUT_DIR) -> Path:
+    return folder / COMPARE_HUB_FILE_NAME
+
+
+def write_compare_hub_page(view, folder: Path = DEFAULT_OUTPUT_DIR) -> Path:
+    path = compare_hub_page_path(folder)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(render_compare_hub_page(view), encoding="utf-8")
     return path
 
 

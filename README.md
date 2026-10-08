@@ -13,13 +13,13 @@ A third command, `summary.py`, answers "what got **better** and what got **worse
 setbacks** of the newest filing, each explained in plain English, with the definition of "better" stated on the page.
 A fourth command, `compare.py`, puts **two companies side by side for the same year** and says which does better on the measures that can be compared
 fairly (a bigger company uses more, so totals are shown but never ranked).
-A fifth command, `hub.py`, puts **every page you have made behind one page** with a dropdown, a search box and a "compare two companies" picker
-(see "All pages in one place").
+A fifth command, `hub.py`, puts **every page you have made behind two simple pages**: pick a company and see its report, or press *Compare two companies*
+and pick two (see "All pages in one place").
 
 ![The dashboard for Reliance Industries, FY 2023-24](docs/dashboard_reliance.png)
 
 > **Demo cheat-sheet:** [`commands.md`](commands.md) has every command with copy-paste examples.
-> **Sample pages** (open in a browser, no setup): open [`samples/index.html`](samples/index.html) for all of them behind one dropdown, or see the [list](samples/README.md).
+> **Sample pages** (open in a browser, no setup): open [`samples/index.html`](samples/index.html), choose a company and a year, or see the [list](samples/README.md).
 
 ## Quick start
 
@@ -55,7 +55,7 @@ python main.py --help                                         # all options (--o
 python trends.py --company "Tata Steel" --from 2021-22 --to 2025-26 --open   # several years side by side (--from / --to are optional)
 python summary.py --company "Tata Steel" --open                              # 3 best and 3 worst changes (--fy picks a year; default = newest)
 python compare.py --company-a "Tata Steel" --company-b "Wipro" --fy 2025-26 --open   # two companies side by side for one year
-python hub.py --open                                                         # every page in output/ behind one dropdown + search box (+ a comparison for every pair)
+python hub.py --open                                                         # every page in output/ behind a home page (choose a company) and a compare page (choose two)
 
 python download_filings.py --company Reliance                 # only download: every year NSE has for the company
 python extract_report.py --company Reliance --fy 2023-24      # only clean: print the SEBI rows as text, save the JSON
@@ -108,11 +108,11 @@ pytest                                                        # the automatic te
 | Polite to NSE: 3 s between requests, cache everywhere, retries only for temporary problems, stops on 403 / 429 | ✅ |
 | Error pages for every failure, not only console messages | ✅ |
 | Sample pages in `samples/`: 5 company reports, 3 trend pages, 3 summaries, 3 company comparisons and 6 error cases | ✅ |
-| One page for all outputs: `hub.py` puts every generated page behind a dropdown, a search box and a "compare two companies" picker (`output/index.html`, `samples/index.html`) | ✅ |
+| One place for all outputs: `hub.py` puts every generated page behind a home page (choose a company and a year) and a compare page (choose two companies), `output/index.html` and `output/compare_companies.html` (and the same in `samples/`) | ✅ |
 | Code organised in nine layered packages (download, parsing, extraction, analysis, views, rendering, ...), the layer rule checked by a test | ✅ |
 | **Extension 1:** multi-year trends (`trends.py`): company + start year + end year, all figures side by side, missing years flagged, basis changes and restatements marked, error pages | ✅ |
 | **Extension 2:** year-on-year summary (`summary.py`): the newest year chosen automatically, 3 best + 3 worst against the previous year with a plain-English explanation each, "better" defined on the page, missing previous-year report handled, error pages | ✅ |
-| **Extension 3:** company comparison (`compare.py`): two companies, one financial year, side by side; totals shown but not ranked, verdicts only on per-₹ figures and shares, units made the same, "Not reported" never 0, standalone vs consolidated warned, error pages. Also offered on the all-pages viewer as a year + company A + company B picker | ✅ |
+| **Extension 3:** company comparison (`compare.py`): two companies, one financial year, side by side; totals shown but not ranked, verdicts only on per-₹ figures and shares, units made the same, "Not reported" never 0, standalone vs consolidated warned, error pages. Also offered on its own page of the viewer (`compare_companies.html`, opened by the *Compare two companies* button): year, company A, company B | ✅ |
 
 ## How the data is extracted
 
@@ -224,25 +224,31 @@ Asking for the same company twice, an unknown company or a year NSE has no filin
 
 ## All pages in one place (`hub.py`)
 
-Every command writes its own page, so after a few runs `output/` holds many files. `python hub.py --open` puts them **all behind one page**,
-`output/index.html`:
+Every command writes its own page, so after a few runs `output/` holds many files. `python hub.py --open` puts them behind **two simple pages**: one for a
+single company, and one for comparing two.
 
-- **A search box and a dropdown.** Type part of a company, a year or a type (`tata`, `2025-26`, `trend`, `error`, `vs`) and the dropdown narrows to the
-  matching pages, grouped as *Reports*, *Year-on-year summaries*, *Multi-year trends* and *Error pages*. Choosing one shows it right there.
-  *Previous* and *Next* step through the matches, and *Open in a new tab* opens the chosen page on its own.
-- **Compare two companies: its own dropdowns, not in the list above.** The comparisons are kept out of the main dropdown and the search box (there can be dozens
-  of them). A separate panel under the search box takes a financial year, then Company A and Company B (only companies that have a report for that year,
-  and B can never be A) and opens their comparison; it keeps the order you chose. `hub.py` first writes a comparison for **every pair of companies that have a
-  report page for the same year**, from the filings already on disk (no internet; `--no-compare` skips this). For a pair that has no page yet, run `compare.py`.
-- **Keyboard:** `/` jumps to the search box, `Enter` opens the first match, `Esc` clears the search.
-- **A shareable address.** `index.html#WIPRO_2025-26` opens that page, and `index.html?q=tata` starts with that search.
-- **One self-contained file by default.** Every page is embedded, so `index.html` can be moved or sent on its own. `python hub.py --link` makes a tiny
-  index that only opens the files next to it. `python make_samples.py` builds [`samples/index.html`](samples/index.html) this way, so the repository does
-  not store each sample page twice.
-- **Run it again** after making new pages; it reads whatever is in the folder (`--dir samples` for another folder).
+**`output/index.html`: pick a company, see its report.**
+- A slim bar at the top, then one row of choices: **Company**, **Financial year** and **Show**. The report appears straight away below it, with its two tabs:
+  **Dashboard** (plain English) and **SEBI-format report**.
+- **Show** has three buttons: *Report*, *Year-on-year* (what got better and worse) and *Multi-year trend*. A button is greyed out when that page has not
+  been made yet, and its tooltip says which command makes it.
+- The big **Compare two companies** button (top right) opens the second page. Error pages (if the folder has any) have a small dropdown of their own.
+- *Open in a new tab* shows the chosen page on its own. `index.html#WIPRO_2025-26` opens that page directly.
 
-The viewer is the only page with a script (a dropdown and a search box cannot work without one); the report pages inside it still have none, and the frame
-that shows them is sandboxed so a page could not run code even if it tried. Without JavaScript the viewer shows a plain list of links to the files.
+**`output/compare_companies.html`: pick two companies, see the comparison.**
+- Choose the **financial year**, then **Company A** and **Company B** (only companies that have a report for that year are offered, and B can never be A).
+  The comparison appears below; it keeps the order you chose. A pair is already shown when the page opens. *← All reports* goes back.
+- `hub.py` first writes a comparison for **every pair of companies that have a report page for the same year**, from the filings already on disk (no
+  internet; `--no-compare` skips this). For a pair that has no page yet, run `compare.py`. With no comparison at all, this page is not made and the
+  button is not shown.
+
+**Both** are one self-contained file by default (every page is embedded); keep the two files in the same folder, because the button and *← All reports*
+are links between them. `python hub.py --link` makes tiny pages that only open the files next to them; `python make_samples.py` builds
+[`samples/index.html`](samples/index.html) and [`samples/compare_companies.html`](samples/compare_companies.html) this way, so the repository does not store
+each sample page twice. Run `hub.py` again after making new pages; it reads whatever is in the folder (`--dir samples` for another folder).
+
+These two are the only pages with a script (a dropdown cannot work without one); the report pages inside them still have none, and the frame that shows
+them is sandboxed so a page could not run code even if it tried. Without JavaScript they show a plain list of links to the files.
 
 ## Error handling
 
@@ -268,7 +274,7 @@ It names what went wrong, what you typed, what to try, and gives ready-to-run co
 
 - **Comparison covers two companies and one year**, and only the headline figures (up to 14 rows, as in the summary), not every SEBI row. It is not a
   ranking of "greener" companies: there is no benchmark in the filings, and a steel maker and an IT firm are not the same kind of business. A pair with
-  different reporting scope (standalone vs consolidated) is compared but warned about. The viewer's picker only offers pairs whose pages were written
+  different reporting scope (standalone vs consolidated) is compared but warned about. The compare page only offers pairs whose pages were written
   (by `hub.py`, which does it for every pair, or by `compare.py`); it does not download anything.
 - **The one-year dashboard and the summary compare each figure with the previous-year column of the *same* filing**, which can differ from what the
   company reported last year if it restated. The summary checks last year's own filing when it can, and says which figures were restated.
@@ -288,8 +294,8 @@ It names what went wrong, what you typed, what to try, and gives ready-to-run co
 - **PPP-adjusted and per-tonne intensities** are shown only in the SEBI tab ("additional items"); their unit labels in the filings are unreliable.
 - **NSE's endpoints are undocumented** and may change. A company you have never downloaded needs internet and can be refused (HTTP 403 / 429).
 - **Tested only in a Chromium-based browser (Edge) and on Windows.** The report, trend, summary and error pages use no JavaScript, so other browsers should work.
-  The all-pages viewer (`hub.py`) does use a small script, so it needs a current browser; it grows with the number of pages when they are embedded (about 1.8 MB for 12), and it
-  does not refresh itself, so run `python hub.py` again after making new pages. Its search looks at a page's company, year and type, not at the text inside the pages.
+  The two viewer pages (`hub.py`) do use a small script, so they need a current browser; they grow with the number of pages when embedded (a few MB for dozens), and they
+  do not refresh themselves, so run `python hub.py` again after making new pages. They find pages by company, year and kind (report, year-on-year, trend), not by the text inside a page.
 
 ## Design note
 
@@ -322,7 +328,7 @@ The design was prototyped first with real numbers: [`design/dashboard_mockup.htm
 pytest
 ```
 
-About 660 tests, under a minute, no internet. They cover unit conversion, the XBRL reader, every SEBI row, the verdict and sentence rules, HTML
+About 680 tests, under a minute, no internet. They cover unit conversion, the XBRL reader, every SEBI row, the verdict and sentence rules, HTML
 well-formedness, escaping of filing text, the error pages, and (when the filings are on disk) real-filing spot checks, the trace of every value to
 the raw XML, and "the committed sample pages are up to date". The test folders mirror the code folders (`tests/views` tests `brsr_p6/views`, and so on), so
 `pytest tests/views` runs one layer. `tests/test_architecture.py` checks the layer rule below on every run.
@@ -336,7 +342,7 @@ extract_report.py    filing -> SEBI Principle 6 data, printed as text (tiny entr
 trends.py            one company over several years (tiny entry point)
 summary.py           what got better and worse since last year (tiny entry point)
 compare.py           two companies side by side for one year (tiny entry point)
-hub.py               every generated page behind one dropdown + search box + compare picker (tiny entry point)
+hub.py               every generated page behind a home page (choose a company) and a compare page (choose two) (tiny entry point)
 make_samples.py      rebuilds the pages in samples/ (tiny entry point)
 brsr_p6/             the code, one package per step of the journey from NSE to the page:
   core/                the data model and small helpers everyone uses: models, errors, fiscal_year, units, formatting, friendly,

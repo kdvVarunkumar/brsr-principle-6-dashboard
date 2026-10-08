@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ view.title }}: {{ view.project }}</title>
+<noscript><style>.js-only { display: none; }</style></noscript>
+<style>
+{# The second page of the tool: pick a year and two companies and their comparison appears.  The comparisons were all made in advance
+   (hub.py / compare.py); this page only picks the right one.  It has a script because a dropdown cannot work without one; the pages it shows have none. #}
+{% include "hub.css" %}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <a class="back" href="{{ view.home_file }}">← All reports</a>
+  <h1>{{ view.title }}</h1>
+</header>
+
+<noscript>
+  <div class="nojs">
+    <h2>This page needs JavaScript to show a comparison here</h2>
+    <p>Without it, open the comparisons directly (these links work when the pages are in the same folder as this file):</p>
+    <ul>{% for e in view.entries %}<li><a href="{{ e.file }}">{{ e.label }}</a></li>{% endfor %}</ul>
+  </div>
+</noscript>
+
+<section class="pickbar js-only" aria-label="Choose the two companies">
+  <div class="who">
+    <div class="field">
+      <label for="cmp-fy">Financial year</label>
+      <select id="cmp-fy"></select>
+    </div>
+    <div class="field company">
+      <label for="cmp-a">Company A</label>
+      <select id="cmp-a"></select>
+    </div>
+    <span class="vs" aria-hidden="true">vs</span>
+    <div class="field company">
+      <label for="cmp-b">Company B</label>
+      <select id="cmp-b"></select>
+    </div>
+  </div>
+  <div class="end">
+    <a class="open" id="open-tab" href="#" target="_blank" rel="noopener">Open in a new tab ↗</a>
+  </div>
+</section>
+
+<iframe id="viewer" class="js-only" title="The comparison" sandbox="allow-popups allow-popups-to-escape-sandbox"></iframe>
+
+<script type="application/json" id="hub-data">{{ view.data_json|safe }}</script>
+<script>
+(function () {
+  "use strict";
+{% include "hub.js" %}
+
+  var data = JSON.parse($("hub-data").textContent);
+  var viewer = makeViewer(data.entries);
+  var comparisons = data.entries;               // every one has .compare = {fy, a, b, a_name, b_name}
+  var pickFy = $("cmp-fy");
+  var pickA = $("cmp-a");
+  var pickB = $("cmp-b");
+
+  function inYear(fy) { return comparisons.filter(function (entry) { return entry.compare.fy === fy; }); }
+
+  // the companies that appear in these comparisons, by name; `only(entry, symbol)` can leave some out
+  function companiesWith(list, only) {
+    var seen = {};
+    var found = [];
+    list.forEach(function (entry) {
+      [[entry.compare.a, entry.compare.a_name], [entry.compare.b, entry.compare.b_name]].forEach(function (pair) {
+        if (!seen[pair[0]] && (!only || only(entry, pair[0]))) { seen[pair[0]] = true; found.push({ value: pair[0], text: pair[1] }); }
+      });
+    });
+    return found.sort(function (x, y) { return x.text.localeCompare(y.text); });
+  }
+
+  function fillCompanyA() { setOptions(pickA, companiesWith(inYear(pickFy.value))); fillCompanyB(); }
+
+  // B: only companies that have been compared with A in this year, and never A itself
+  function fillCompanyB() {
+    var a = pickA.value;
+    setOptions(pickB, companiesWith(inYear(pickFy.value).filter(function (entry) { return entry.compare.a === a || entry.compare.b === a; }),
+                                    function (entry, symbol) { return symbol !== a; }));
+  }
+
+  function showPicked() {
+    var fy = pickFy.value;
+    var a = pickA.value;
+    var b = pickB.value;
+    var match = find(inYear(fy), function (entry) {
+      return (entry.compare.a === a && entry.compare.b === b) || (entry.compare.a === b && entry.compare.b === a);
+    });
+    if (match) { viewer.show(match.id); }
+  }
+
+  // a page opened from the address (compare_companies.html#TATASTEEL_vs_WIPRO_2025-26) sets the dropdowns to match
+  function showId(id) {
+    var entry = viewer.byId[id];
+    if (!entry) { return false; }
+    var c = entry.compare;
+    var chosen = pickFy.value === c.fy && ((pickA.value === c.a && pickB.value === c.b) || (pickA.value === c.b && pickB.value === c.a));
+    if (!chosen) {                              // (a pair the user just picked keeps its order: the file name is alphabetical, A and B may be the other way round)
+      pickFy.value = c.fy;
+      fillCompanyA();
+      pickA.value = c.a;
+      fillCompanyB();
+      pickB.value = c.b;
+    }
+    viewer.show(id);
+    return true;
+  }
+
+  pickFy.addEventListener("change", function () { fillCompanyA(); showPicked(); });
+  pickA.addEventListener("change", function () { fillCompanyB(); showPicked(); });
+  pickB.addEventListener("change", showPicked);
+  window.addEventListener("hashchange", function () { showId(fromHash()); });
+
+  var years = comparisons.map(function (entry) { return entry.compare.fy; })
+    .filter(function (fy, at, all) { return all.indexOf(fy) === at; }).sort().reverse();
+  setOptions(pickFy, years.map(function (fy) { return { value: fy, text: "FY " + fy }; }));
+  fillCompanyA();
+  if (!showId(fromHash())) { showPicked(); }      // by default: the first pair of the newest year
+})();
+</script>
+</body>
+</html>

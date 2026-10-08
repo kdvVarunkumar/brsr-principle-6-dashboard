@@ -1717,6 +1717,8 @@ The picker's rules (year first; only the companies that have a report for that y
 
 ## 16.7 A follow-up: comparisons get their own dropdowns
 
+*(Phase 17 went one step further: the comparisons now have a whole page of their own, `compare_companies.html`, and the home page has no search box. The lesson about the picker keeping the user's order still holds, and the code for it moved to `compare_hub.html`.)*
+
 With 21 reports the comparison pages added 31 more entries, so the main dropdown was mostly comparisons. The user asked for the compare part to be a separate dropdown, not in the main page list. Two small changes:
 - The viewer script builds a list `pages` (every entry that is not a comparison). The dropdown, its "(n of m)" count and the search read `pages`; the picker reads the comparisons. One test line checks `visible = pages.filter(` so nobody changes it back by accident.
 - The comparisons are still *in the data*. That is why `index.html#TATASTEEL_vs_WIPRO_2025-26` still opens one, and why the no-script link list still names them. Hiding something from a list is not the same as deleting it.
@@ -1731,3 +1733,73 @@ With 21 reports the comparison pages added 31 more entries, so the main dropdown
 4. Which existing function did you reuse, and what had to change?
 5. Why are the comparisons made in advance and not when the user clicks in the viewer?
 6. What does "Tata Steel's emissions are shown but not compared" mean, and how does the code decide it?
+
+---
+
+# Phase 17: Making the viewer simple
+
+## 17.1 What the user saw, and why they were right
+
+The index page had become a control panel: the viewer's own green banner, a search card (search box, dropdown, Previous, Next, Open in a new tab), a compare card, a hint line, and *then* the report, which has a green banner of its own. When I looked at it in a browser, the actual dashboard started in the middle of the screen. The assignment says the dashboard must be **user friendly**; a page that makes you work out which of five controls to touch first is not.
+
+The user's idea was the right one: **one job per page.**
+- *Home page:* choose ONE company and the report appears. It already has two tabs: the plain-English **Dashboard** and the **SEBI-format report**.
+- *Compare page:* a button on the home page opens a different page where you choose TWO companies.
+
+> Lesson: more features on one screen is not "more helpful". Decide the one thing a screen is for, and put the rest one click away.
+
+## 17.2 The new layout
+
+```
+home page (index.html)
+ ┌──────────────────────────────────────────────────────────────┐
+ │ BRSR Principle 6: Environmental Dashboard   [Compare two companies ⇄] │  slim bar
+ ├──────────────────────────────────────────────────────────────┤
+ │ Company [Tata Steel ▾]  Year [FY 2025-26 ▾]  Show [Report|Year-on-year|Multi-year trend]
+ ├──────────────────────────────────────────────────────────────┤
+ │  the report (Dashboard tab | SEBI-format report tab)         │  fills the window
+ └──────────────────────────────────────────────────────────────┘
+compare page (compare_companies.html)
+   [← All reports]  Compare two companies
+   Year [FY 2025-26 ▾]  Company A [▾]  vs  Company B [▾]
+   the comparison
+```
+
+What was taken away, and why:
+| Removed | Why |
+|---|---|
+| The search box, Previous, Next, the keyboard keys | A dropdown of a handful of companies is quicker than typing. Fewer controls = nothing to explain in a demo. (It can come back if there are dozens of companies.) |
+| The list of *every* page in one dropdown | A person thinks "Tata Steel, 2025-26", not "TATASTEEL_summary_2025-26". The page now lets you choose by company, year and what to show |
+| The hint line | If a screen needs a paragraph of instructions, simplify the screen |
+| The viewer's second banner | The report has its own banner with the company name |
+
+Two details that make it feel finished:
+- **A view that does not exist is greyed out, not hidden.** *Year-on-year* and *Multi-year trend* are separate commands (`summary.py`, `trends.py`). If the page was never made, the button is grey and its tooltip says exactly which command makes it. Hiding it would leave the user wondering where the feature went.
+- **The pair is already shown when the compare page opens.** An empty page that says "choose something" makes the first impression a blank; a real comparison shows what the page is for.
+
+## 17.3 How the code follows the same idea ("Python decides, the template prints")
+
+- `views/hub_view.py` decides everything: which companies there are, each company's years (newest first) with the ids of its report and its summary, the trend pages that cover it, and the pages that belong to no company (error pages). It reads this from the **file names** (`TATASTEEL_2025-26`, `TATASTEEL_summary_2025-26`, `TATASTEEL_trend_2021-22_to_2025-26`) and the company's name from the page `<title>`.
+- `hub.html` (home) and `compare_hub.html` (compare) only print and wire the dropdowns. They share one style (`hub.css`) and one small script of helpers (`hub.js`), so the two pages look like one tool and the helper code exists once.
+- The pages shown inside are still the same finished HTML files. Nothing about the numbers changed. This is why "back end wise everything is good" was true: only the layer that arranges the pages was redone.
+
+## 17.4 Looking at the real result found more
+
+- **Stale pages.** The report pages sitting in `output/` were written by older versions of the templates (their header still had the old text). Anything built from them looked different from what the code produces today. I rewrote them offline from the saved filings (no NSE requests) before judging the design. *Lesson: judge a design on output made by the current code.*
+- **A header that was too tall.** The report's banner and facts card took about 330 pixels before the dashboard began, mostly because the source-file name (60 characters) wrapped onto three lines. Now the name stays on one line (the whole name is in the tooltip and the footer) and the banner is smaller. Every page that shares `style.css` got the same tighter header.
+- **I put ITC and M&M back by accident**, because my rewrite loop took every filing on disk. You had asked for those two to be left out. I removed them again and added a skip to the loop. *Lesson: a script that "does everything" can undo a decision you already made; check its result against the earlier decisions.*
+
+## 17.5 Try it yourself
+
+1. `python hub.py --open`. Choose a company with no summary page and hover the greyed *Year-on-year* button. What does the tooltip say? Run that command and run `hub.py` again.
+2. Open `output/compare_companies.html`. Choose Company A = Tata Steel, Company B = Reliance. Does it keep that order? (Hint: the file is called `RELIANCE_vs_TATASTEEL...`; find the check in `compare_hub.html` that stops the dropdowns from swapping.)
+3. Delete every `*_vs_*.html` file from a copy of `output/` and run `python hub.py --no-compare`. What happens to the button, and to `compare_companies.html`?
+4. Move only `index.html` to the desktop and press the Compare button. Why does it fail, and why was it a good trade for not embedding everything twice?
+
+## 17.6 Interview self-check
+
+1. The assignment says "user friendly". What did you remove from the first viewer, and what did you keep? Why?
+2. Why is the comparison on its own page and not on the home page?
+3. What does a greyed-out *Year-on-year* button tell the user, and why is that better than hiding it?
+4. Which part of the code knows what "a company" is on the home page? Which part only prints?
+5. What did you check in a real browser that the unit tests cannot check?

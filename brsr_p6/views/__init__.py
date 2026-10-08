@@ -7,6 +7,6 @@ prints.  The page layout is not decided here (that is the templates' job), so ev
     trend_view                                     the multi-year trend page
     summary_view                                   the year-on-year summary
     compare_view                                   two companies for one year, compared fairly (totals shown, not ranked)
-    hub_view                                       the names and groups of the pages in the all-pages viewer
+    hub_view                                       the companies, years and pages the two viewer pages offer (home page, compare page)
     error_view                                     the explanation page for each kind of error
 """

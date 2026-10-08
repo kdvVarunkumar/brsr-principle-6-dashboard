@@ -24,10 +24,10 @@ body { margin: 0; background: var(--page); color: var(--ink); font: 16px/1.5 sys
 a { color: var(--accent); }
 
 /* ---------- page header ---------- */
-.page-header { background: var(--accent); color: #fff; padding: 28px 16px 22px; }
+.page-header { background: var(--accent); color: #fff; padding: 18px 16px 24px; }
 .page-header .inner, main, footer { max-width: 1120px; margin: 0 auto; }
 .eyebrow { margin: 0 0 4px; font-size: 0.85rem; letter-spacing: 0.04em; text-transform: uppercase; opacity: 0.9; }
-h1 { margin: 0; font-size: 1.9rem; line-height: 1.2; }
+h1 { margin: 0; font-size: 1.7rem; line-height: 1.2; }
 h1 .symbol { font-weight: 400; opacity: 0.85; }
 .subtitle { margin: 4px 0 0; opacity: 0.95; }
 
@@ -38,6 +38,7 @@ h1 .symbol { font-weight: 400; opacity: 0.85; }
 .facts div { min-width: 0; }
 .facts dt { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
 .facts dd { margin: 0; overflow-wrap: anywhere; }
+.facts dd.source a { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }       /* the long file name stays on one line (the whole name is in the tooltip and in the footer) */
 .boundary { font-weight: 700; }
 .boundary-help { display: block; font-size: 0.82rem; color: var(--muted); font-weight: 400; }
 .legend { margin: 12px 0 0; font-size: 0.9rem; color: var(--muted); }
@@ -296,8 +297,7 @@ table.trace-table th:not([scope]) { width: 35%; }
     </div>
     <div>
       <dt>Source file (NSE)</dt>
-      <dd><a href="https://nsearchives.nseindia.com/corporate/xbrl/BRSR_892127_19072023024601_WEB.xml" rel="noopener noreferrer" target="_blank">BRSR_892127_19072023024601_WEB.xml</a><span class="boundary-help">The same filing as a PDF: <a href="https://nsearchives.nseindia.com/corporate/HDFCBANK_19072023144457_SEintimation_Reg34.pdf" rel="noopener noreferrer" target="_blank">open</a></span>        <span class="boundary-help">Every number on this page was read from this file. The last section of the SEBI tab shows where.</span>
-      </dd>
+      <dd class="source" title="BRSR_892127_19072023024601_WEB.xml"><a href="https://nsearchives.nseindia.com/corporate/xbrl/BRSR_892127_19072023024601_WEB.xml" rel="noopener noreferrer" target="_blank">BRSR_892127_19072023024601_WEB.xml</a><span class="boundary-help">The same filing as a PDF: <a href="https://nsearchives.nseindia.com/corporate/HDFCBANK_19072023144457_SEintimation_Reg34.pdf" rel="noopener noreferrer" target="_blank">open</a></span>      </dd>
     </div>
   </dl>
 </div>
@@ -2106,8 +2106,8 @@ table.trace-table th:not([scope]) { width: 35%; }
 </main>
 
 <footer>
-  Source: the company's BRSR filing on NSE (structured XBRL file BRSR_892127_19072023024601_WEB.xml). Every figure comes from that filing;
-  values we converted, calculated or doubt are marked. Generated from the May 2021 SEBI BRSR format, Principle 6.
+  Source: the company's BRSR filing on NSE (structured XBRL file BRSR_892127_19072023024601_WEB.xml). Every figure comes from that filing (the last section
+  of the SEBI tab shows where each number was read); values we converted, calculated or doubt are marked. Generated from the May 2021 SEBI BRSR format, Principle 6.
 </footer>
 
 </body>

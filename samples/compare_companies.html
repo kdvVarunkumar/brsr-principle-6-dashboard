@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Compare two companies: BRSR Principle 6: Environmental Dashboard (sample reports)</title>
+<noscript><style>.js-only { display: none; }</style></noscript>
+<style>
+/* The two viewer pages (index.html and compare_companies.html) share this style, so they look like one tool.
+   Idea: as little as possible around the page being shown.  A slim top bar, one row of choices, then the page fills the window. */
+:root { --ink: #1d2733; --muted: #5d6b7a; --paper: #ffffff; --page: #f3f5f7; --line: #d5dce3; --accent: #0f6b5c; --accent-soft: #e3f1ee; --off: #8a97a4; }
+* { box-sizing: border-box; }
+body { margin: 0; min-height: 100vh; display: flex; flex-direction: column; background: var(--page); color: var(--ink); font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif; }
+[hidden] { display: none !important; }
+
+/* ---------- top bar: the name of the page, and the one big button ---------- */
+.topbar { background: var(--accent); color: #fff; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; padding: 10px 20px; }
+.topbar h1 { margin: 0; font-size: 1.15rem; line-height: 1.3; }
+.topbar .grow { flex: 1 1 auto; }
+.cta, .back { color: #fff; text-decoration: none; white-space: nowrap; border-radius: 999px; }
+.cta { background: #fff; color: var(--accent); font-weight: 700; padding: 8px 18px; }
+.cta:hover { background: var(--accent-soft); }
+.back { padding: 6px 14px; border: 1px solid rgba(255, 255, 255, 0.6); font-size: 0.92rem; }
+.back:hover { background: rgba(255, 255, 255, 0.15); }
+.topbar a:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+
+/* ---------- the choices: one row on a computer ---------- */
+.pickbar { background: var(--paper); border-bottom: 1px solid var(--line); padding: 10px 20px; display: flex; flex-wrap: wrap; align-items: flex-end; gap: 10px 18px; }
+.who { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 10px 18px; }
+.field { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.field > label, .field > .label { font-size: 0.72rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); }
+select { font: inherit; padding: 7px 10px; border: 1px solid var(--line); border-radius: 8px; background: #fff; color: var(--ink); min-width: 0; max-width: 100%; }
+select:focus-visible, button:focus-visible, a.open:focus-visible { outline: 3px solid #8cc7bb; outline-offset: 1px; }
+.field.company select { min-width: 280px; }
+.vs { padding-bottom: 8px; color: var(--muted); font-weight: 600; }
+.end { margin-left: auto; display: flex; flex-wrap: wrap; align-items: flex-end; gap: 10px 18px; }
+a.open { color: var(--accent); text-decoration: none; padding: 7px 0; white-space: nowrap; }
+a.open:hover { text-decoration: underline; }
+
+/* the three things you can show for a company: joined buttons, the chosen one filled in */
+.seg { display: inline-flex; border: 1px solid var(--accent); border-radius: 8px; overflow: hidden; }
+.seg button { font: inherit; padding: 7px 14px; border: 0; border-right: 1px solid var(--accent); background: #fff; color: var(--accent); cursor: pointer; white-space: nowrap; }
+.seg button:last-child { border-right: 0; }
+.seg button:hover:not(:disabled) { background: var(--accent-soft); }
+.seg button[aria-pressed="true"] { background: var(--accent); color: #fff; }
+.seg button:disabled { background: var(--page); color: var(--off); cursor: not-allowed; }
+
+/* ---------- the page being shown fills what is left of the window ---------- */
+#viewer { flex: 1 1 auto; display: block; width: 100%; min-height: 480px; border: 0; background: #fff; }
+
+/* ---------- without a script ---------- */
+.nojs { margin: 16px 20px; background: var(--paper); border: 1px solid var(--line); border-left: 5px solid #e5b84a; border-radius: 8px; padding: 12px 16px; }
+.nojs h2 { margin: 0 0 6px; font-size: 1.05rem; }
+.nojs ul { margin: 4px 0 10px; padding-left: 20px; }
+
+@media (max-width: 720px) {
+  .topbar, .pickbar { padding-left: 12px; padding-right: 12px; }
+  .topbar h1 { font-size: 1rem; }
+  .who, .field, .field.company select, .end, .seg { width: 100%; }
+  .field.company select { min-width: 0; }
+  .who.one-company { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 10px; }      /* company and year share a row, the three views get their own */
+  .who.one-company .field.views { grid-column: 1 / -1; }
+  a.open { display: none; }                                                                             /* a convenience for a big screen */
+  .seg button { flex: 1 1 0; padding-left: 6px; padding-right: 6px; white-space: normal; }
+  .vs { display: none; }
+  .end { margin-left: 0; }
+  #viewer { min-height: 70vh; }
+}</style>
+</head>
+<body>
+
+<header class="topbar">
+  <a class="back" href="index.html">← All reports</a>
+  <h1>Compare two companies</h1>
+</header>
+
+<noscript>
+  <div class="nojs">
+    <h2>This page needs JavaScript to show a comparison here</h2>
+    <p>Without it, open the comparisons directly (these links work when the pages are in the same folder as this file):</p>
+    <ul><li><a href="HDFCBANK_vs_RELIANCE_2022-23.html">HDFC Bank Limited vs Reliance Industries Limited: BRSR Principle 6 compared, FY 2022-23</a></li><li><a href="RELIANCE_vs_TATASTEEL_2023-24.html">Reliance Industries Limited vs Tata Steel Limited: BRSR Principle 6 compared, FY 2023-24</a></li><li><a href="TATASTEEL_vs_WIPRO_2025-26.html">Tata Steel Limited vs Wipro Limited: BRSR Principle 6 compared, FY 2025-26</a></li></ul>
+  </div>
+</noscript>
+
+<section class="pickbar js-only" aria-label="Choose the two companies">
+  <div class="who">
+    <div class="field">
+      <label for="cmp-fy">Financial year</label>
+      <select id="cmp-fy"></select>
+    </div>
+    <div class="field company">
+      <label for="cmp-a">Company A</label>
+      <select id="cmp-a"></select>
+    </div>
+    <span class="vs" aria-hidden="true">vs</span>
+    <div class="field company">
+      <label for="cmp-b">Company B</label>
+      <select id="cmp-b"></select>
+    </div>
+  </div>
+  <div class="end">
+    <a class="open" id="open-tab" href="#" target="_blank" rel="noopener">Open in a new tab ↗</a>
+  </div>
+</section>
+
+<iframe id="viewer" class="js-only" title="The comparison" sandbox="allow-popups allow-popups-to-escape-sandbox"></iframe>
+
+<script type="application/json" id="hub-data">{"embed": false, "entries": [{"id": "HDFCBANK_vs_RELIANCE_2022-23", "file": "HDFCBANK_vs_RELIANCE_2022-23.html", "label": "HDFC Bank Limited vs Reliance Industries Limited: BRSR Principle 6 compared, FY 2022-23", "kind": "Company comparisons", "compare": {"fy": "2022-23", "a": "HDFCBANK", "b": "RELIANCE", "a_name": "HDFC Bank Limited", "b_name": "Reliance Industries Limited"}}, {"id": "RELIANCE_vs_TATASTEEL_2023-24", "file": "RELIANCE_vs_TATASTEEL_2023-24.html", "label": "Reliance Industries Limited vs Tata Steel Limited: BRSR Principle 6 compared, FY 2023-24", "kind": "Company comparisons", "compare": {"fy": "2023-24", "a": "RELIANCE", "b": "TATASTEEL", "a_name": "Reliance Industries Limited", "b_name": "Tata Steel Limited"}}, {"id": "TATASTEEL_vs_WIPRO_2025-26", "file": "TATASTEEL_vs_WIPRO_2025-26.html", "label": "Tata Steel Limited vs Wipro Limited: BRSR Principle 6 compared, FY 2025-26", "kind": "Company comparisons", "compare": {"fy": "2025-26", "a": "TATASTEEL", "b": "WIPRO", "a_name": "Tata Steel Limited", "b_name": "Wipro Limited"}}]}</script>
+<script>
+(function () {
+  "use strict";
+  // ---- shared by index.html and compare_companies.html: finding things, filling a dropdown, showing a page in the frame
+  function $(id) { return document.getElementById(id); }
+
+  function find(list, test) { return list.filter(test)[0]; }
+
+  function fromHash() {
+    try { return decodeURIComponent(location.hash.slice(1)); } catch (error) { return ""; }
+  }
+
+  function setOptions(select, items) {
+    var keep = select.value;
+    select.textContent = "";
+    items.forEach(function (item) {
+      var option = document.createElement("option");
+      option.value = item.value;
+      option.textContent = item.text;
+      select.appendChild(option);
+    });
+    if (items.some(function (item) { return item.value === keep; })) { select.value = keep; }
+  }
+
+  function makeViewer(entries) {
+    var frame = $("viewer");
+    var openTab = $("open-tab");
+    var byId = {};
+    var current = null;
+    entries.forEach(function (entry) { byId[entry.id] = entry; });
+    openTab.addEventListener("click", function (event) {
+      if (!current) { event.preventDefault(); return; }
+      openTab.href = typeof current.html === "string"
+        ? URL.createObjectURL(new Blob([current.html], { type: "text/html" }))
+        : encodeURI(current.file);
+    });
+    return {
+      byId: byId,
+      show: function (id) {
+        var entry = byId[id];
+        if (!entry) { return null; }
+        current = entry;
+        if (typeof entry.html === "string") {
+          frame.srcdoc = entry.html;
+        } else {
+          frame.removeAttribute("srcdoc");
+          frame.src = encodeURI(entry.file);
+        }
+        document.title = entry.label;
+        try { history.replaceState(null, "", "#" + encodeURIComponent(id)); } catch (error) { /* the page still works without a saved address */ }
+        return entry;
+      }
+    };
+  }
+  var data = JSON.parse($("hub-data").textContent);
+  var viewer = makeViewer(data.entries);
+  var comparisons = data.entries;               // every one has .compare = {fy, a, b, a_name, b_name}
+  var pickFy = $("cmp-fy");
+  var pickA = $("cmp-a");
+  var pickB = $("cmp-b");
+
+  function inYear(fy) { return comparisons.filter(function (entry) { return entry.compare.fy === fy; }); }
+
+  // the companies that appear in these comparisons, by name; `only(entry, symbol)` can leave some out
+  function companiesWith(list, only) {
+    var seen = {};
+    var found = [];
+    list.forEach(function (entry) {
+      [[entry.compare.a, entry.compare.a_name], [entry.compare.b, entry.compare.b_name]].forEach(function (pair) {
+        if (!seen[pair[0]] && (!only || only(entry, pair[0]))) { seen[pair[0]] = true; found.push({ value: pair[0], text: pair[1] }); }
+      });
+    });
+    return found.sort(function (x, y) { return x.text.localeCompare(y.text); });
+  }
+
+  function fillCompanyA() { setOptions(pickA, companiesWith(inYear(pickFy.value))); fillCompanyB(); }
+
+  // B: only companies that have been compared with A in this year, and never A itself
+  function fillCompanyB() {
+    var a = pickA.value;
+    setOptions(pickB, companiesWith(inYear(pickFy.value).filter(function (entry) { return entry.compare.a === a || entry.compare.b === a; }),
+                                    function (entry, symbol) { return symbol !== a; }));
+  }
+
+  function showPicked() {
+    var fy = pickFy.value;
+    var a = pickA.value;
+    var b = pickB.value;
+    var match = find(inYear(fy), function (entry) {
+      return (entry.compare.a === a && entry.compare.b === b) || (entry.compare.a === b && entry.compare.b === a);
+    });
+    if (match) { viewer.show(match.id); }
+  }
+
+  // a page opened from the address (compare_companies.html#TATASTEEL_vs_WIPRO_2025-26) sets the dropdowns to match
+  function showId(id) {
+    var entry = viewer.byId[id];
+    if (!entry) { return false; }
+    var c = entry.compare;
+    var chosen = pickFy.value === c.fy && ((pickA.value === c.a && pickB.value === c.b) || (pickA.value === c.b && pickB.value === c.a));
+    if (!chosen) {                              // (a pair the user just picked keeps its order: the file name is alphabetical, A and B may be the other way round)
+      pickFy.value = c.fy;
+      fillCompanyA();
+      pickA.value = c.a;
+      fillCompanyB();
+      pickB.value = c.b;
+    }
+    viewer.show(id);
+    return true;
+  }
+
+  pickFy.addEventListener("change", function () { fillCompanyA(); showPicked(); });
+  pickA.addEventListener("change", function () { fillCompanyB(); showPicked(); });
+  pickB.addEventListener("change", showPicked);
+  window.addEventListener("hashchange", function () { showId(fromHash()); });
+
+  var years = comparisons.map(function (entry) { return entry.compare.fy; })
+    .filter(function (fy, at, all) { return all.indexOf(fy) === at; }).sort().reverse();
+  setOptions(pickFy, years.map(function (fy) { return { value: fy, text: "FY " + fy }; }));
+  fillCompanyA();
+  if (!showId(fromHash())) { showPicked(); }      // by default: the first pair of the newest year
+})();
+</script>
+</body>
+</html>

@@ -19,8 +19,8 @@ from brsr_p6.download.company_lookup import pick_company
 from brsr_p6.download.filings import parse_listing, select_filing
 from brsr_p6.extraction.report_io import save_report
 from brsr_p6.parsing.xbrl_reader import read_filing
-from brsr_p6.rendering.render import (HUB_FILE_NAME, error_page_path, trend_page_name, write_compare_page, write_error_page, write_page, write_summary_page,
-                                      write_trend_page)
+from brsr_p6.rendering.render import (COMPARE_HUB_FILE_NAME, HUB_FILE_NAME, compare_hub_page_path, error_page_path, trend_page_name, write_compare_page,
+                                      write_error_page, write_page, write_summary_page, write_trend_page)
 from brsr_p6.views.error_view import build_error_view
 from brsr_p6.views.hub_view import SAMPLES_TITLE
 from brsr_p6.workflows.compare import generate_comparison_page
@@ -222,8 +222,10 @@ def make_samples(output_dir: Path = SAMPLES_DIR, progress=print) -> list:
     (output_dir / "README.md").write_text(_readme(report_pages, trend_pages, summary_pages, comparison_pages, error_pages), encoding="utf-8")
     pages = [page for _, page in report_pages + trend_pages + summary_pages + comparison_pages + error_pages]
     hub, _ = generate_hub(output_dir, embed=False, title=SAMPLES_TITLE)     # linked, not embedded: the pages are already in this folder
-    progress(f"wrote {hub.name}")
-    return pages + [hub]
+    viewers = [hub] + ([compare_hub_page_path(output_dir)] if comparison_pages else [])       # the compare page exists when there is a comparison
+    for viewer in viewers:
+        progress(f"wrote {viewer.name}")
+    return pages + viewers
 
 
 def _summary_reports(sample):
@@ -277,7 +279,8 @@ def _readme(report_pages, trend_pages, summary_pages, comparison_pages, error_pa
         "",
         "Open any file in a web browser. They are made by `python make_samples.py` (do not edit them by hand).",
         "",
-        "**Easiest: open [index.html](index.html).** It puts every page below behind one dropdown and a search box (it opens the files in this folder).",
+        "**Easiest: open [index.html](index.html).** Choose a company and a year and its report appears; the *Compare two companies* button opens "
+        "[compare_companies.html](compare_companies.html), where you choose a year and two companies (both open the files in this folder).",
         "",
         "## Report pages (Dashboard tab first, SEBI-format report second)",
         "",
@@ -308,4 +311,6 @@ def expected_files():
     names += [f"{safe_name(s.symbol_a)}_vs_{safe_name(s.symbol_b)}_{s.fy}.html" for s in SAMPLE_COMPARISONS]
     names += [error_page_path(e.company, e.fy, Path()).name for e in SAMPLE_ERRORS]
     names.append(HUB_FILE_NAME)                      # the viewer that holds all of them
+    if SAMPLE_COMPARISONS:
+        names.append(COMPARE_HUB_FILE_NAME)          # and the one for the comparisons
     return names
