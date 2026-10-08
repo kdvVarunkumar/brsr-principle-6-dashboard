@@ -248,3 +248,25 @@ Then run `python download_filings.py --company "ITC"` again to show a real downl
 - **What if NSE is down during a demo?** Companies already downloaded still work: an older saved filing list is used (and the console says so). Only a never-seen company needs the internet.
 - **Does it run from a clean checkout?** Yes: tested in a brand-new virtual environment: `pip install -r requirements.txt`, one command, and the page is written (about 11 seconds for a new company).
 - **Why Python + a template?** Python decides (verdicts, sentences, warnings), the HTML template only prints. That makes every rule testable without a browser.
+
+---
+
+## 12. Git cheat-sheet
+
+Git was installed in Phase 11. If PyCharm says "git is not recognized", close and reopen PyCharm. Everything here is read-only except `commit` and `push`.
+
+```powershell
+git status                      # what changed since the last commit
+git log --oneline               # the history, one line per commit
+git diff                        # exactly what you changed (before committing)
+git add -A ; git commit -m "Describe what changed"      # save a new snapshot
+git push                        # send new commits to GitHub (after the first push has been done once)
+git ls-files                    # every file the repository tracks
+```
+
+First publication (once, needs your GitHub login): create an **empty** repository on github.com, then
+```powershell
+git remote add origin https://github.com/<your-username>/<repository-name>.git
+git push -u origin main
+```
+Before every commit that touches pages or rules, run `python make_samples.py` and `pytest -q`: a test fails if a sample page is out of date.

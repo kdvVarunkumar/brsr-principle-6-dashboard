@@ -1119,3 +1119,71 @@ Honest limits build more trust than a long list of features.
 8. Which parts of the project are *not* done, and where does the README say so?
 9. How did you prove the project runs from a clean checkout? What would you do differently with git installed?
 10. Name two known limitations of the data extraction and say why they exist.
+
+
+---
+---
+
+# Phase 11: Git, the repository, and "does a stranger's computer run it?"
+
+## 11.1 What git is doing for us (a recap in one paragraph)
+
+Git is a **time machine for a folder**. Each **commit** is a labelled snapshot ("save point") with an author and a message; you can look back, compare and
+undo. **GitHub** is a website that keeps a copy of your repository so other people (the reviewers) can see it. Git works on your PC; GitHub is only the copy.
+
+## 11.2 What we did, step by step
+
+| Step | Command / action | Why |
+|---|---|---|
+| Install git | `winget install --id Git.Git` | git was never installed on this PC (we postponed it to the end on purpose) |
+| Create the repository | `git init -b main` | turns the folder into a repository; `main` is the name of the main line of history |
+| Decide what NOT to save | `.gitignore` | big, generated or private files stay out (virtual environment, caches, PDFs, generated JSON, `output/`) |
+| Check before saving | `git add -n .` (a *dry run*) | lists what would be added without adding anything: we saw 108 files and no PDFs |
+| Save in logical pieces | `git add <paths>` then `git commit -m "..."` | 4 commits: code, tests, samples + data, notes. A reader can follow the story |
+| Prove it | `git clone` into a new folder + new venv | a clone contains **only what was committed**, exactly what a reviewer gets |
+
+## 11.3 Ideas worth understanding
+
+- **Staging.** `git add` puts files on a "tray"; `git commit` photographs the tray. That is why you can commit code and notes separately.
+- **`.gitignore` with exceptions.** `data/raw/*` ignores every downloaded filing; then lines like `!data/raw/WIPRO/2025-26/` bring back the few we want. Rule: *a later line beats an
+  earlier one*, and a folder must be re-included before its contents can be. We checked the result with the dry run, not by guessing.
+- **Why commit a few filings?** The brief allows hand-downloaded filings "with documentation". Eight small XML files (about 8 MB) make the samples and **every one of the 340
+  tests** run offline on a fresh clone. The big PDFs are not needed, so they are not committed. `data/README.md` explains each file.
+- **`.gitattributes`.** Windows and Linux end lines differently. `* text=auto` lets git tidy text files; `*.xml -text` tells it to leave the filings byte-for-byte as NSE published them.
+  The warnings "LF will be replaced by CRLF" you saw are only git saying this; they are harmless.
+- **The commit author.** Every commit records a name and email, and on a **public** repository anyone can read them. Before publishing, check `git log --format="%an <%ae>"`.
+  GitHub also offers a private "no-reply" address if you do not want your real email shown.
+- **Privacy scan before publishing.** We searched all text for the Windows user name, e-mail addresses and absolute paths and removed two. A public repository is forever.
+- **The assignment brief (`*.pdf`) is not committed.** It belongs to the company, not to us.
+
+## 11.4 Publishing to GitHub (you do this part: it needs your GitHub login)
+
+1. In the browser: **github.com > New repository**. Name it, for example, `brsr-principle6-dashboard`. Choose **Public** (simplest) or **Private** (then add the reviewers under
+   *Settings > Collaborators*). **Do not** tick "Add a README", ".gitignore" or "licence": the repository must be empty.
+2. In the project folder, with your own repository address:
+   ```powershell
+   git remote add origin https://github.com/<your-username>/brsr-principle6-dashboard.git
+   git push -u origin main
+   ```
+   The first push opens a browser window to sign in (Git Credential Manager is part of Git for Windows).
+3. Reload the repository page: you should see `README.md` with the screenshots, and the `samples/` folder.
+4. Put the link in your submission. Test it once from a private/incognito window (or ask a friend) to be sure the reviewers can open it.
+
+Common problems: *"git is not recognized"* (close and reopen PyCharm so it sees the new PATH), *"remote origin already exists"* (`git remote set-url origin <url>`),
+*"rejected ... fetch first"* (you created the GitHub repository with a README: either delete the repository and create an empty one, or ask for help before using any force option).
+
+## 11.5 Try it yourself
+
+1. `git log --oneline` (the story of the project in 4 lines) and `git log --stat -1` (what the last commit changed).
+2. `git status`: it should say "nothing to commit, working tree clean". Edit one word in `README.md`, run `git status` again, then `git diff` to see the change; undo it with `git restore README.md`.
+3. `git ls-files data` shows which data files are tracked; `git check-ignore -v data/raw/ITC/2024-25/filing.json` shows *which line of `.gitignore`* ignores a file.
+4. Make a change, run `python make_samples.py`, then `pytest`: which test notices if a sample page was not regenerated?
+
+## 11.6 Interview self-check
+
+1. What is the difference between git and GitHub?
+2. What does `git add` do, and how is it different from `git commit`?
+3. Why is `.venv/` ignored? Why is `data/parsed/` ignored but eight raw filings are committed?
+4. How did you check what would be committed *before* committing? How did you prove a stranger can run the project?
+5. Why does the commit author matter on a public repository?
+6. What would you do if you had accidentally committed a file with a password in it? (Think: rotating the password first.)

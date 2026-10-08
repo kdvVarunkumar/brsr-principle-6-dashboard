@@ -197,7 +197,7 @@ Time estimates are rough hours for you working with my help. Core (Phases 0-7) i
 - [x] `main.py --company "Tata Steel" --fy 2023-24` → one HTML file with two tabs (CSS-only): **done in Phase 5**; the Dashboard tab gets its content in Phase 6
 - [x] The same command must also write a **page** (not just a console message) for errors (unknown company, FY not on NSE, bad file...) so the message is shown on a page
 - [x] Specific on-page messages for: unknown company, year before 2021-22, no filing for that year, unparseable filing, NSE unreachable
-- [ ] Generate **≥ 2 sample outputs** (plan: one heavy-industry, one IT/services, ideally one with sparse data) into `samples/` and commit them (generated with `python make_samples.py`: 5 companies + 4 error pages; committing them to GitHub happens in Phase 11)
+- [x] Generate **≥ 2 sample outputs** (plan: one heavy-industry, one IT/services, ideally one with sparse data) into `samples/` and commit them (generated with `python make_samples.py`: 5 companies + 4 error pages; committed in Phase 11)
 - [x] README v1: setup, run commands, inputs to try, approach, limitations; **design note** (half a page)
 - **Done when:** a fresh clone + `pip install -r requirements.txt` + one command produces the page. ✅ proven in a fresh venv (context.md D58)
 
@@ -219,11 +219,12 @@ Time estimates are rough hours for you working with my help. Core (Phases 0-7) i
 ### Phase 10: Extension 3, company comparison (~3 h, only if time remains)
 - [ ] Two companies, one FY, side by side; compare **intensity** metrics fairly; show the unit used; mark fields one company didn't report
 
-### Phase 11: Final polish (~2-3 h)
-- [ ] README complete: setup, run, inputs to try, parts completed, extraction approach, limitations, **AI tools used and for what**, design note
-- [ ] Test from a clean checkout in a new venv; all tests pass
-- [ ] **Git (deferred from Phase 0):** install git, `git init`, first commit, create the GitHub repo, push (public, or private + add them as collaborator). Steps are in `learnings.md` §5
-- [ ] Regenerate and commit samples
+### Phase 11: Final polish (~2-3 h)  (everything except the GitHub push and the optional screen recording is DONE)
+- [x] README complete: setup, run, inputs to try, parts completed, extraction approach, limitations, **AI tools used and for what**, design note
+- [x] Test from a clean checkout in a new venv; all tests pass (a real `git clone` into a new folder + new venv: 340 passed, 0 skipped; `make_samples.py` rebuilt every page byte-for-byte)
+- [x] **Git (deferred from Phase 0):** git 2.55 installed, `git init -b main`, repository with 4 logical commits (108 files); steps are in `learnings.md` §5 and the Phase 11 section
+- [ ] **Publish:** create an EMPTY repository on GitHub (public, or private + add the reviewers as collaborators), then `git remote add origin <url>` and `git push -u origin main`. *Needs the user's GitHub login, so the user runs it.*
+- [x] Regenerate and commit samples
 - [ ] Optional: 3-5 min screen recording
 - [ ] **Interview prep:** for each module, write 2-3 lines "what it does and why". You must be able to explain every part.
 
