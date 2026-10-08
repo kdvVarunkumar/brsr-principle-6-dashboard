@@ -75,7 +75,7 @@ pytest                                                        # the automatic te
 | `--company "Wipro" --fy 2025-26` | IT services. Energy filed in megajoules is shown in GJ and marked "unit changed by us". |
 | `--company "Infosys" --fy 2021-22` | An older filing layout, a damaged XML file that was cleaned, monthly air figures, energy with no unit. |
 | `--company "HDFC Bank" --fy 2022-23` | A bank: sparse data, many "Not reported" and "reported as 0", and the page stays honest. |
-| `--company "ITC" --fy 2024-25`<br>`--company "M&M" --fy 2024-25`<br>`--company "TCS" --fy 2024-25`<br>`--company "ONGC" --fy 2023-24` | Other sectors and filing styles (for example ONGC files its air pollutants as concentrations, not tonnes). |
+| `--company "TCS" --fy 2024-25`<br>`--company "ONGC" --fy 2023-24` | Other sectors and filing styles (for example ONGC files its air pollutants as concentrations, not tonnes). |
 | `trends.py --company "Tata Steel" --from 2021-22 --to 2025-26` | **Trends:** a year NSE does not have (FY 2021-22, filled from the next filing's previous-year column and marked), a change from consolidated to standalone, restated figures, mis-scaled emissions. |
 | `trends.py --company "Wipro" --from 2023-24 --to 2025-26` | **Trends:** the reporting basis flips from year to year, so only the two consolidated years are compared. |
 | `trends.py --company "Reliance"` | **Trends:** one basis throughout, so every year is compared; FY 2022-23 uses the older layout with no energy unit. |

@@ -202,8 +202,6 @@ python main.py --company "Reliance" --fy 2023-24 --open       # the cleanest exa
 python main.py --company "Infosys" --fy 2021-22 --open        # old-style filing + a file that needed cleaning + monthly air figures
 python main.py --company "HDFC Bank" --fy 2022-23 --open      # a bank: older layout, no units, little environmental data
 python main.py --company "Wipro" --fy 2025-26 --open          # energy filed in megajoules, shown in GJ
-python main.py --company "ITC" --fy 2024-25 --open
-python main.py --company "M&M" --fy 2024-25 --open
 ```
 
 **Timing you can expect:** a brand-new company takes about **10 s** for one year (about **20-30 s** to download every year); anything already downloaded takes **under 1 s**.
@@ -221,8 +219,6 @@ Folders under `data\raw\`. NSE itself has more years than these (all years from 
 | Infosys | `INFY` | 2021-22, 2023-24 |
 | HDFC Bank | `HDFCBANK` | 2022-23, 2023-24 |
 | Wipro | `WIPRO` | 2021-22 to 2025-26 |
-| Mahindra & Mahindra | `M&M` (folder `M_M`) | 2024-25 |
-| ITC | `ITC` | 2024-25 |
 | TCS | `TCS` | 2024-25 |
 | ONGC | `ONGC` | 2023-24 *(files its air pollutants as concentrations, not tonnes)* |
 
@@ -305,10 +301,10 @@ pytest -k "scale" -v                   # only tests with "scale" in their name
 
 This deletes only files that can be downloaded again:
 ```powershell
-Remove-Item -Recurse -Force data\raw\ITC          # forget one company's downloads
+Remove-Item -Recurse -Force data\raw\TCS          # forget one company's downloads
 Remove-Item -Recurse -Force data\cache            # forget saved company searches
 ```
-Then run `python download_filings.py --company "ITC"` again to show a real download.
+Then run `python download_filings.py --company "TCS"` again to show a real download.
 
 ---
 
