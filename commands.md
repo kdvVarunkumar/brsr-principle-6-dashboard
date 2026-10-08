@@ -171,6 +171,28 @@ python flow.py hub --only-existing            # make no missing page: only gathe
 **Addresses you can copy:** `index.html#WIPRO_2025-26` opens that page; `compare_companies.html#TATASTEEL_vs_WIPRO_2025-26` opens that comparison.
 **Run it again** after making new pages (it reads whatever is in the folder). Talking point: the report pages still have no JavaScript; only these two viewers do, and their frame is sandboxed.
 
+### 2.8 Add a new company: the commands in order
+Run them from the project folder, in the PyCharm Terminal (the one that shows `(.venv)`). Example company: **ICICI Bank**; use any name or NSE symbol.
+
+```powershell
+# 1. (optional) Is it found, and which years does NSE have?  Downloads every year, politely (3 s apart); a second run sends 0 requests
+python flow.py download --company "ICICI Bank"
+
+# 2. Make the report page for each year you want (the home page lists a company only if it has a report page; repeat per year)
+python flow.py --company "ICICI Bank" --fy 2022-23
+python flow.py --company "ICICI Bank" --fy 2023-24
+python flow.py --company "ICICI Bank" --fy 2024-25
+#    or all in one line:
+foreach ($fy in "2022-23","2023-24","2024-25") { python flow.py --company "ICICI Bank" --fy $fy }
+
+# 3. (optional) Check the numbers as text, with the filing element behind each one
+python flow.py extract --company "ICICI Bank" --fy 2024-25 --questions E1,E6 --trace
+
+# 4. Put it on the home page. This also makes, offline, the company's Year-on-year page, its Multi-year trend and a comparison with every other company for the same year
+python flow.py hub --open
+```
+Step 2 is the only one that is required, plus step 4 to see it on the home page. Use the NSE symbol (`ICICIBANK`) if the name matches several companies (the error page lists them). Years NSE has no filing for give a specific error page, not a crash. To make the year-on-year or trend page for one company on its own: `python flow.py summary --company "ICICI Bank"` and `python flow.py trends --company "ICICI Bank"`.
+
 ---
 
 ## 3. A 5-minute demo flow
