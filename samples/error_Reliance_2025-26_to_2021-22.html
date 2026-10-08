@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>No report: The filing on NSE could not be read</title>
+<title>No report: That range of years cannot be used</title>
 <style>
 /* Styles for the generated report page. Everything is inline in the HTML so the page opens anywhere, offline. */
 :root {
@@ -147,19 +147,19 @@ code { background: #eef1f4; border-radius: 4px; padding: 2px 7px; font-family: u
   <div class="inner">
     <p class="eyebrow">BRSR Principle 6 report generator</p>
     <h1>We could not make this report</h1>
-<p class="subtitle">Company: Infosys · Financial year: 2021-22</p>  </div>
+<p class="subtitle">Company: Reliance · Financial year: 2025-26 to 2021-22</p>  </div>
 </header>
 
 <main class="error-main">
   <section class="error-card" role="alert" aria-labelledby="error-title">
-    <p class="error-kind">Filing could not be read</p>
-    <h2 id="error-title">The filing on NSE could not be read</h2>
-    <p class="error-message">BRSR_damaged_example.xml is not valid XML (line 2, column 56: no element found: line 2, column 56). The file on NSE appears to be damaged, so no figures can be read from it.</p>
+    <p class="error-kind">Year range not valid</p>
+    <h2 id="error-title">That range of years cannot be used</h2>
+    <p class="error-message">The start year FY 2025-26 is after the end year FY 2021-22. Give the earlier year first.</p>
 
 
     <h3>What you can try</h3>
     <ul class="hints">
-<li>The file is damaged, or it is not a BRSR XBRL file, so no figures can be read from it. We show nothing rather than guess.</li><li>Try another financial year for the same company.</li><li>The downloaded copy is kept under data/raw/. Delete that file and run again to download a fresh copy.</li>    </ul>
+<li>Give the earlier year first, for example --from 2021-22 --to 2025-26.</li><li>BRSR filings exist for FY 2021-22 and later, and at most 10 years can be shown at a time.</li>    </ul>
   </section>
 
   <p class="error-note">No numbers were guessed or filled in. A page with a report appears only when the data could really be read.</p>
