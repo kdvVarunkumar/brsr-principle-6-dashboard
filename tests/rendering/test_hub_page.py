@@ -127,6 +127,14 @@ def test_the_compare_page_opens_the_first_pair_of_the_newest_year_unless_the_add
 
 
 # ------------------------------------------------------------------------------------------------ both pages
+def test_a_page_shown_in_the_frame_gets_a_base_address_so_its_own_links_jump_inside_it():
+    """Without it a link such as href="#dash-energy" in a srcdoc frame loads the viewer itself into the frame (the "404" the user saw)."""
+    for html in (index(), compare_page()):
+        assert "function forFrame(page)" in html and '<base href="about:srcdoc">' in html
+        assert "frame.srcdoc = forFrame(entry.html);" in html                       # the frame gets the base ...
+        assert "new Blob([current.html]" in html and "forFrame(current.html)" not in html          # ... "Open in a new tab" does not (a blob page has its own address)
+
+
 def test_both_viewers_share_one_style_and_one_script_helper():
     one, two = index(PAGES + [COMPARISON]), compare_page()
     for html in (one, two):

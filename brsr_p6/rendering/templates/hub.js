@@ -19,6 +19,12 @@
     if (items.some(function (item) { return item.value === keep; })) { select.value = keep; }
   }
 
+  // A page shown through srcdoc takes the address of the viewer, so a link such as href="#dash-energy" would try to load the viewer itself
+  // into the frame (and fail). <base href="about:srcdoc"> makes such a link jump inside the page. Only the frame gets it, not "Open in a new tab".
+  function forFrame(page) {
+    return page.replace(/<head[^>]*>/i, function (tag) { return tag + '<base href="about:srcdoc">'; });
+  }
+
   function makeViewer(entries) {
     var frame = $("viewer");
     var openTab = $("open-tab");
@@ -38,7 +44,7 @@
         if (!entry) { return null; }
         current = entry;
         if (typeof entry.html === "string") {
-          frame.srcdoc = entry.html;
+          frame.srcdoc = forFrame(entry.html);
         } else {
           frame.removeAttribute("srcdoc");
           frame.src = encodeURI(entry.file);

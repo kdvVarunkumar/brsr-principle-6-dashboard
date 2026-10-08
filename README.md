@@ -234,12 +234,15 @@ single company, and one for comparing two.
   been made yet, and its tooltip says which command makes it.
 - The big **Compare two companies** button (top right) opens the second page. Error pages (if the folder has any) have a small dropdown of their own.
 - *Open in a new tab* shows the chosen page on its own. `index.html#WIPRO_2025-26` opens that page directly.
+- `hub.py` first makes the pages that would otherwise be greyed out, **from the filings already on disk (no internet)**: a *Year-on-year* summary for every
+  report page, and a *Multi-year trend* for every company with at least two years in a row saved. It never overwrites a summary or trend you made with
+  `summary.py` / `trends.py`, and a summary whose previous-year filing is not saved says so on the page. `--only-existing` makes none of these.
 
 **`output/compare_companies.html`: pick two companies, see the comparison.**
 - Choose the **financial year**, then **Company A** and **Company B** (only companies that have a report for that year are offered, and B can never be A).
   The comparison appears below; it keeps the order you chose. A pair is already shown when the page opens. *← All reports* goes back.
 - `hub.py` first writes a comparison for **every pair of companies that have a report page for the same year**, from the filings already on disk (no
-  internet; `--no-compare` skips this). For a pair that has no page yet, run `compare.py`. With no comparison at all, this page is not made and the
+  internet; `--only-existing` skips this). For a pair that has no page yet, run `compare.py`. With no comparison at all, this page is not made and the
   button is not shown.
 
 **Both** are one self-contained file by default (every page is embedded); keep the two files in the same folder, because the button and *← All reports*

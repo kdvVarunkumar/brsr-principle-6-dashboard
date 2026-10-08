@@ -56,25 +56,27 @@ def test_a_folder_without_pages_makes_no_viewer(tmp_path):
     assert generate_hub(tmp_path / "does_not_exist") is None
 
 
-def test_comparisons_are_made_first_only_when_asked_and_go_to_the_compare_page_not_the_index_page(tmp_path, monkeypatch):
+def test_missing_pages_are_made_first_only_when_asked_and_comparisons_go_to_the_compare_page(tmp_path, monkeypatch):
     from brsr_p6.workflows import hub
 
     write(tmp_path, "A_2023-24.html")
     write(tmp_path, "B_2023-24.html")
     asked = []
 
-    def fake_comparisons(folder):
-        asked.append(folder)
+    def fake_comparisons(folder, loader):
+        asked.append(("comparisons", folder))
         write(folder, "A_vs_B_2023-24.html", "A Limited vs B Limited: BRSR Principle 6 compared, FY 2023-24")
         return 1
 
     monkeypatch.setattr(hub, "generate_all_comparisons", fake_comparisons)
+    monkeypatch.setattr(hub, "generate_missing_summaries", lambda folder, loader: asked.append(("summaries", folder)))
+    monkeypatch.setattr(hub, "generate_missing_trends", lambda folder, loader: asked.append(("trends", folder)))
     path, count = generate_hub(tmp_path)
     assert asked == [] and count == 2                                          # off by default: the samples viewer must not gain pages
     assert not (tmp_path / COMPARE_HUB_FILE_NAME).exists()                      # no comparison, so no compare page and no button
     assert 'class="cta"' not in path.read_text(encoding="utf-8").split("<noscript>")[0]
-    path, count = generate_hub(tmp_path, compare=True)
-    assert asked == [tmp_path] and count == 3
+    path, count = generate_hub(tmp_path, fill=True)
+    assert asked == [("comparisons", tmp_path), ("summaries", tmp_path), ("trends", tmp_path)] and count == 3
     assert [row["id"] for row in data_of(path)["entries"]] == ["A_2023-24", "B_2023-24"]          # the index page does not list the comparison ...
     assert 'class="cta" href="compare_companies.html"' in path.read_text(encoding="utf-8")      # ... it has a button to the compare page
     entries = {row["id"]: row for row in data_of(tmp_path / COMPARE_HUB_FILE_NAME)["entries"]}
@@ -92,7 +94,7 @@ def test_a_compare_page_whose_comparisons_are_gone_is_removed_not_left_stale(tmp
 
 
 def test_a_folder_with_no_page_makes_no_comparison_and_no_viewer(tmp_path):
-    assert generate_hub(tmp_path, compare=True) is None and not list(tmp_path.glob("*"))
+    assert generate_hub(tmp_path, fill=True) is None and not list(tmp_path.glob("*"))
 
 
 def test_the_title_of_the_viewer_can_be_chosen(tmp_path):

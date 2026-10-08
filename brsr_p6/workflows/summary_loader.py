@@ -27,6 +27,15 @@ class SummaryInputs:
     previous_note: str = ""               # why `previous` is None ("" when it is there)
 
 
+def before_brsr(fy):
+    """True for a year before BRSR reporting began (so there can be no report for it)."""
+    return int(fy[:4]) < EARLIEST_START_YEAR
+
+
+def before_brsr_note(fy):
+    return f"BRSR reporting began with FY {EARLIEST_START_YEAR}-{(EARLIEST_START_YEAR + 1) % 100:02d}, so there is no report for FY {fy}."
+
+
 def load_summary_inputs(company_query, fy=None, raw_dir=DEFAULT_RAW_DIR, cache_dir=DEFAULT_CACHE_DIR,
                         client: NseClient | None = None, progress=print) -> SummaryInputs:
     """The latest filing (or the one for `fy`) and last year's filing.  Raises an error when the latest one cannot be used."""
@@ -49,8 +58,8 @@ def load_summary_inputs(company_query, fy=None, raw_dir=DEFAULT_RAW_DIR, cache_d
 
     before_fy = previous_fiscal_year(latest_fy)
     previous, note = None, ""
-    if int(before_fy[:4]) < EARLIEST_START_YEAR:
-        note = f"BRSR reporting began with FY {EARLIEST_START_YEAR}-{(EARLIEST_START_YEAR + 1) % 100:02d}, so there is no report for FY {before_fy}."
+    if before_brsr(before_fy):
+        note = before_brsr_note(before_fy)
     elif before_fy not in by_year:
         note = f"NSE has no BRSR filing of its own for FY {before_fy}."
     else:

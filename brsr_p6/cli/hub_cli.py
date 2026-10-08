@@ -24,9 +24,11 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--dir", type=Path, default=DEFAULT_OUTPUT_DIR, help="Folder that holds the pages (default: output/)")
     parser.add_argument("--link", action="store_true",
                         help="Do not embed the pages: index.html only opens the files next to it (much smaller, but needs the folder)")
-    parser.add_argument("--no-compare", action="store_true",
-                        help="Do not make the company-vs-company comparison pages (by default one is made for every pair of companies "
-                             "that have a report page for the same year)")
+    parser.add_argument("--only-existing", "--no-compare", dest="only_existing", action="store_true",
+                        help="Only gather the pages that already exist. By default the pages the two viewers would lack are made first, "
+                             "from the filings already on disk (no internet): a comparison for every pair of companies with a report for the "
+                             "same year, and a year-on-year summary and a multi-year trend for companies that have none. "
+                             "(--no-compare is the older name of this option.)")
     parser.add_argument("--open", action="store_true", help="Open index.html in your web browser")
     return parser
 
@@ -36,7 +38,7 @@ def main(argv: list[str] | None = None) -> int:
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
-    made = generate_hub(args.dir, embed=not args.link, compare=not args.no_compare)
+    made = generate_hub(args.dir, embed=not args.link, fill=not args.only_existing)
     if made is None:
         print(f"There is no HTML page in {args.dir} yet. Make one first, for example:  python main.py --company \"Reliance\" --fy 2023-24")
         return 1

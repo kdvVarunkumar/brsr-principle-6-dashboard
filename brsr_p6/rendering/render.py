@@ -72,9 +72,13 @@ def render_summary_page(report, previous=None, previous_note="") -> str:
     return _environment().get_template("summary.html").render(view=view)
 
 
+def summary_page_name(symbol, fy) -> str:
+    return f"{safe_name(symbol)}_summary_{fy}.html"
+
+
 def summary_page_path(report, output_dir: Path = DEFAULT_OUTPUT_DIR) -> Path:
     """output/<SYMBOL>_summary_<FY>.html"""
-    return output_dir / f"{safe_name(report.symbol)}_summary_{report.fy}.html"
+    return output_dir / summary_page_name(report.symbol, report.fy)
 
 
 def write_summary_page(report, previous=None, previous_note="", output_dir: Path = DEFAULT_OUTPUT_DIR) -> Path:

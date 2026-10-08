@@ -290,7 +290,9 @@ Time estimates are rough hours for you working with my help. Core (Phases 0-7) i
 - [x] Views decide (companies, years, trends, other pages: `views/hub_view.py`); two templates print (`hub.html`, `compare_hub.html`) and share `hub.css` and `hub.js`
 - [x] The report pages' own header is tighter (smaller banner, the long source-file name on one line) so the dashboard starts higher; every page that shares `style.css` got the same header
 - [x] Checked in a real browser (Edge): desktop and phone width; company, year, view, error-page and deep-link behaviour; the compare page keeps A and B in the order chosen
-- [x] 681 tests pass; samples regenerated (`samples/index.html` + `samples/compare_companies.html`)
+- [x] **Fix:** the sub-heading links (Energy, Water, ...) inside a report showed a 404 in the viewer, because a page shown through `srcdoc` takes the viewer's address, so `#dash-energy` tried to load the viewer into the frame. The frame now gets `<base href="about:srcdoc">` (not "Open in a new tab")
+- [x] **Fix:** the Year-on-year button was greyed out for most companies. `hub.py` now makes the missing summaries (every report page) and trends (every company with 2+ years in a row) from the saved filings, offline, and never overwrites one made by `summary.py` / `trends.py` (`workflows/missing_pages.py`; option `--only-existing`)
+- [x] 692 tests pass; samples regenerated (`samples/index.html` + `samples/compare_companies.html`)
 - [ ] *Not built:* a search box (a dropdown of a few companies is enough); making the year-on-year and trend pages automatically for every company (they are made by `summary.py` and `trends.py`)
 ---
 

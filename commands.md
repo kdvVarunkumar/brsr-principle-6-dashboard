@@ -155,13 +155,13 @@ Every command writes its own file, so `output\` fills up with pages. This puts t
 python hub.py --open                     # every page in output\  ->  output\index.html (+ output\compare_companies.html), each one self-contained file
 python hub.py --dir samples              # another folder
 python hub.py --link                     # tiny index that only opens the files next to it
-python hub.py --no-compare               # do not make the company-vs-company pages
+python hub.py --only-existing            # make no missing page: only gather what exists
 ```
 | Option | Meaning |
 |---|---|
 | `--dir` | the folder that holds the pages (default `output`) |
 | `--link` | do not embed the pages; the two viewers open the files in the same folder (what `make_samples.py` uses for `samples\index.html`) |
-| `--no-compare` | skip the comparisons (by default one is written for every pair of companies with a report page for the same year; offline, from the saved filings) |
+| `--only-existing` | make no missing page (older name: `--no-compare`). By default, from the saved filings and offline, it first writes a comparison for every pair of companies with a report for the same year, a *Year-on-year* summary for every report page, and a *Multi-year trend* for every company with two or more years in a row; it never overwrites a summary or trend you made yourself |
 | `--open` | open `index.html` in your browser |
 
 **Home page (`index.html`):** one row: **Company**, **Financial year**, **Show** (*Report* / *Year-on-year* / *Multi-year trend*; a button is greyed out when that page was not made yet, and its tooltip says which command makes it). The report opens right below with its two tabs: **Dashboard** (plain English) and **SEBI-format report**. The big **Compare two companies** button (top right) opens the second page. Error pages have a small dropdown of their own (only when there are some). *Open in a new tab* shows the page alone.
