@@ -1,0 +1,6 @@
+# Let git tidy line endings of text files (Windows and macOS / Linux differ) ...
+* text=auto
+
+# ... but never touch the downloaded filings: they stay byte-for-byte what NSE published.
+*.xml -text
+*.png binary

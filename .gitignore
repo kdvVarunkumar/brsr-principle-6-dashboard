@@ -1,0 +1,59 @@
+# Files and folders git should NOT track (one pattern per line).
+
+# The virtual environment: big, machine-specific, and anyone can recreate it
+# with `pip install -r requirements.txt`.
+.venv/
+
+# Python's automatic cache files (created every time you run code).
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# PyCharm's personal project settings.
+.idea/
+
+# Small caches created by the downloader (company search results). Easy to recreate.
+data/cache/
+
+# Pages generated while experimenting. (The committed sample pages go in samples/.)
+output/
+
+# Cleaned data (JSON): generated from the filings by the tool, so it is never committed.
+data/parsed/
+
+# PDFs: the optional PDF of a filing (big, not needed) and the assignment brief (not ours to publish).
+*.pdf
+
+# Operating-system clutter.
+Thumbs.db
+.DS_Store
+
+# ---------------------------------------------------------------------------------------------------------------
+# Downloaded NSE filings (data/raw/) are a cache of about 32 MB, so they are NOT committed ...
+data/raw/*
+# ... EXCEPT the few filings that the committed sample pages (samples/) and the tests need, so that a fresh clone can
+# rebuild every sample and run every test without the internet (the assignment allows hand-downloaded filings in the
+# repository if they are documented: see data/README.md).  Only the XML and the small filing.json are kept, never the PDFs.
+!data/raw/TATASTEEL/
+data/raw/TATASTEEL/*
+!data/raw/TATASTEEL/filings_index.json
+!data/raw/TATASTEEL/2025-26/
+
+!data/raw/RELIANCE/
+data/raw/RELIANCE/*
+!data/raw/RELIANCE/2022-23/
+!data/raw/RELIANCE/2023-24/
+
+!data/raw/WIPRO/
+data/raw/WIPRO/*
+!data/raw/WIPRO/2023-24/
+!data/raw/WIPRO/2024-25/
+!data/raw/WIPRO/2025-26/
+
+!data/raw/INFY/
+data/raw/INFY/*
+!data/raw/INFY/2021-22/
+
+!data/raw/HDFCBANK/
+data/raw/HDFCBANK/*
+!data/raw/HDFCBANK/2022-23/

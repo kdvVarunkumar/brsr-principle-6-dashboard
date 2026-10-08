@@ -1,0 +1,142 @@
+{# ======================================================================================================
+   The SEBI-format view.  This template only PRINTS; every decision was made in sebi_view.py.
+   Macros (small reusable pieces):  cell, notes, value_table, list_table
+   ====================================================================================================== #}
+
+{# One value cell: the number (or "Not reported"), its unit, small labels, and footnote marks. #}
+{% macro cell(c, qid) %}
+{% if c.missing %}<span class="missing">Not reported</span>{% else %}<span class="num">{{ c.text }}</span>{% if c.unit %}<span class="unit{% if c.unit.startswith('(') %} unit-unknown{% endif %}">{{ c.unit }}</span>{% endif %}{% endif %}
+{% for tag in c.tags %}<span class="tag tag-{{ tag }}" title="{{ 'Built by adding reported numbers together' if tag == 'calculated' else 'The unit was converted; the figure as filed is kept in the saved data' }}">{{ 'calc.' if tag == 'calculated' else 'conv.' }}</span>{% endfor %}
+{% for n in c.notes %}<sup class="fn"><a href="#fn-{{ qid }}-{{ n }}">{{ n }}</a></sup>{% endfor %}
+{% for n in c.warns %}<sup class="fn fn-warn"><a href="#fn-{{ qid }}-{{ n }}" title="Doubtful value: see the note">⚠{{ n }}</a></sup>{% endfor %}
+{% endmacro %}
+
+{# The numbered notes under a table. #}
+{% macro notes(items, qid) %}
+{% if items %}
+<ul class="footnotes">
+  {% for n, kind, text in items %}
+  <li id="fn-{{ qid }}-{{ n }}" class="{{ kind }}"><span class="fn-num">{{ n }}</span>{% if kind == "warning" %}<strong>⚠ Doubtful:</strong> {% endif %}{{ text }}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+{% endmacro %}
+
+{# A SEBI table: Parameter | [Unit] | current FY | previous FY. #}
+{% macro value_table(table, qid) %}
+{% set columns = 4 if table.unit_column else 3 %}
+<div class="table-wrap">
+  <table class="sebi{% if table.unit_column %} has-unit{% endif %}">
+    <thead>
+      <tr>
+        <th>Parameter</th>
+        {% if table.unit_column %}<th>{{ table.unit_column }}</th>{% endif %}
+        <th class="valhead">FY {{ report.fy }}<small>(Current Financial Year)</small></th>
+        <th class="valhead">FY {{ report.previous_fy }}<small>(Previous Financial Year)</small></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in table.rows %}
+        {% if row.header %}
+      <tr class="subhead"><th colspan="{{ columns }}" scope="colgroup">{{ row.label }}</th></tr>
+        {% else %}
+      <tr>
+        <th scope="row">{{ row.label }}</th>
+        {% if table.unit_column %}<td class="unit-col">{{ row.unit }}</td>{% endif %}
+        <td class="val">{{ cell(row.current, qid) }}</td>
+        <td class="val">{{ cell(row.previous, qid) }}</td>
+      </tr>
+        {% endif %}
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{{ notes(table.footnotes, qid) }}
+{% endmacro %}
+
+{# A table written out row by row (sensitive areas, EIAs, initiatives). #}
+{% macro list_table(listing) %}
+<div class="table-wrap">
+  <table class="sebi list">
+    <thead><tr>{% for column in listing.columns %}<th>{{ column }}</th>{% endfor %}</tr></thead>
+    <tbody>
+      {% for row in listing.rows %}
+      <tr>{% for text, muted in row %}<td{% if muted %} class="missing"{% endif %}>{{ text }}</td>{% endfor %}</tr>
+      {% else %}
+      <tr><td colspan="{{ listing.columns|length }}" class="missing">No rows reported.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% if listing.note %}<p class="remark">{{ listing.note }}</p>{% endif %}
+{% endmacro %}
+
+{# ====================================================== the page body ====================================================== #}
+<h2 class="principle-title">PRINCIPLE 6: Businesses should respect and make efforts to protect and restore the environment</h2>
+<p class="principle-sub">Laid out as in SEBI's Business Responsibility &amp; Sustainability Reporting format (Annexure I, May 2021). Same question numbers, tables and row labels.</p>
+<p class="legend">
+  <strong>How to read the tables.</strong>
+  <span class="missing">Not reported</span> = the filing has nothing for that item (it is never shown as 0).
+  <span class="tag tag-calculated">calc.</span> = we added reported numbers together.
+  <span class="tag tag-converted">conv.</span> = we changed the unit.
+  <sup class="fn fn-warn"><a href="#">⚠1</a></sup> = a doubtful value, explained in the note under the table. Numbers are always shown exactly as filed unless marked.
+  Units shown: energy in gigajoules (GJ), water in kilolitres (kL), waste and air pollutants in tonnes, greenhouse gases in tonnes of CO₂ equivalent (tCO₂e).
+</p>
+
+{% for section in sebi.sections %}
+<h2 class="section">{{ section.title }}</h2>
+
+  {% for q in section.questions %}
+<article class="question" id="q-{{ q.id }}">
+  <h3><span class="qnum">{{ q.number }}.</span>{{ q.text }}</h3>
+
+    {% if q.kind == "table" %}
+  {{ value_table(q.table, q.id) }}
+
+    {% elif q.kind in ("yes_no", "text", "number") %}
+  <div class="answer-box">
+      {% if q.answer %}
+    <p><strong>Answer:</strong> {{ cell(q.answer, q.id) }}</p>
+      {% endif %}
+      {% if q.kind != "number" %}
+        {% if q.details %}
+    <p><strong>Details:</strong></p>
+    <p class="details">{{ q.details }}</p>
+        {% else %}
+    <p><strong>Details:</strong> <span class="missing">Not reported</span></p>
+        {% endif %}
+      {% endif %}
+  </div>
+  {{ notes(q.table.footnotes, q.id) }}
+
+    {% elif q.kind == "list" %}
+  {{ list_table(q.listing) }}
+
+    {% elif q.kind == "facilities" %}
+      {% for facility in q.facilities %}
+  <div class="facility">
+    <h4>Facility {{ loop.index }}. (i) Name of the area: {{ facility.name }} &nbsp;|&nbsp; (ii) Nature of operations: {{ facility.nature }}</h4>
+    {{ value_table(facility.table, q.id ~ "-f" ~ loop.index) }}
+  </div>
+      {% else %}
+  <p class="missing">No facility in an area of water stress is listed in the structured filing.</p>
+      {% endfor %}
+    {% endif %}
+
+    {% if q.has_assurance %}
+  <p class="assurance"><span class="sebi-note">Note: Indicate if any independent assessment/ evaluation/assurance has been carried out by an external agency? (Y/N) If yes, name of the external agency.</span><br>
+    <strong>Answer:</strong> {% if q.assurance == "Not reported" %}<span class="missing">Not reported</span>{% else %}{{ q.assurance }}{% endif %}</p>
+    {% endif %}
+
+    {% if q.remark %}
+  <p class="remark"><strong>Note from this tool:</strong> {{ q.remark }}</p>
+    {% endif %}
+</article>
+  {% endfor %}
+{% endfor %}
+
+{% if sebi.extras %}
+<h2 class="section">Additional items in this filing</h2>
+<p class="principle-sub">These items are not part of the May 2021 SEBI form. Newer filings include them, so they are shown here separately, exactly as filed.</p>
+{{ value_table(sebi.extras, "X") }}
+{% endif %}

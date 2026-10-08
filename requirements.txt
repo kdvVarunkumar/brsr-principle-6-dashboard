@@ -1,0 +1,6 @@
+# Libraries this project needs. Install them all with:  pip install -r requirements.txt
+# "==" pins the exact version we developed and tested with, so everyone gets the same behaviour.
+
+requests==2.34.2   # downloads filings from NSE over HTTP
+Jinja2==3.1.6      # fills HTML templates with data to build the report pages
+pytest==9.1.1      # runs our automatic tests

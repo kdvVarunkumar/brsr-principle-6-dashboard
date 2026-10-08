@@ -1,0 +1,120 @@
+/* Styles for the generated report page. Everything is inline in the HTML so the page opens anywhere, offline. */
+:root {
+  --ink: #1d2733;
+  --muted: #5d6b7a;
+  --paper: #ffffff;
+  --page: #f3f5f7;
+  --line: #d5dce3;
+  --accent: #0f6b5c;
+  --accent-soft: #e3f1ee;
+  --head-bg: #e8eef2;
+  --warn-ink: #7a4b00;
+  --warn-bg: #fff3d4;
+  --warn-line: #e5b84a;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--page); color: var(--ink); font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+a { color: var(--accent); }
+
+/* ---------- page header ---------- */
+.page-header { background: var(--accent); color: #fff; padding: 28px 16px 22px; }
+.page-header .inner, main, footer { max-width: 1120px; margin: 0 auto; }
+.eyebrow { margin: 0 0 4px; font-size: 0.85rem; letter-spacing: 0.04em; text-transform: uppercase; opacity: 0.9; }
+h1 { margin: 0; font-size: 1.9rem; line-height: 1.2; }
+h1 .symbol { font-weight: 400; opacity: 0.85; }
+.subtitle { margin: 4px 0 0; opacity: 0.95; }
+
+/* ---------- facts box ---------- */
+.facts-box { background: var(--paper); border: 1px solid var(--line); border-radius: 8px; margin: -14px 16px 18px; padding: 14px 18px; max-width: 1088px; }
+@media (min-width: 1152px) { .facts-box { margin-left: auto; margin-right: auto; } }
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 10px 24px; margin: 0; }
+.facts div { min-width: 0; }
+.facts dt { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
+.facts dd { margin: 0; overflow-wrap: anywhere; }
+.boundary { font-weight: 700; }
+.boundary-help { display: block; font-size: 0.82rem; color: var(--muted); font-weight: 400; }
+.legend { margin: 12px 0 0; font-size: 0.9rem; color: var(--muted); }
+.callout { margin: 12px 0 0; padding: 10px 14px; background: var(--warn-bg); border: 1px solid var(--warn-line); border-left-width: 5px; border-radius: 6px; color: var(--warn-ink); font-size: 0.92rem; }
+
+/* ---------- tabs (CSS only: no JavaScript) ---------- */
+main { padding: 0 16px 32px; }
+main > input[type="radio"] { position: absolute; opacity: 0; pointer-events: none; }
+main > label { display: inline-block; padding: 9px 18px; margin-right: 6px; border: 1px solid var(--line); border-bottom: none; border-radius: 8px 8px 0 0; background: var(--head-bg); cursor: pointer; font-weight: 600; }
+#view-sebi:checked ~ label[for="view-sebi"], #view-dashboard:checked ~ label[for="view-dashboard"] { background: var(--paper); color: var(--accent); box-shadow: inset 0 3px 0 var(--accent); }
+main > input:focus-visible + label { outline: 3px solid #1a73e8; outline-offset: 2px; }
+.panel { display: none; background: var(--paper); border: 1px solid var(--line); border-radius: 0 8px 8px 8px; padding: 20px 22px 28px; }
+#view-sebi:checked ~ .panel-sebi, #view-dashboard:checked ~ .panel-dashboard { display: block; }
+
+/* ---------- SEBI view ---------- */
+.principle-title { margin: 0 0 4px; font-size: 1.1rem; color: var(--accent); }
+.principle-sub { margin: 0 0 8px; color: var(--muted); font-size: 0.92rem; }
+h2.section { margin: 30px 0 4px; padding-bottom: 6px; border-bottom: 3px solid var(--accent); font-size: 1.25rem; }
+article.question { margin: 26px 0 0; padding-top: 6px; }
+article.question h3 { margin: 0 0 10px; font-size: 1rem; font-weight: 600; line-height: 1.45; }
+.qnum { display: inline-block; min-width: 1.8em; color: var(--accent); }
+
+.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 6px; }
+table.sebi { width: 100%; min-width: 620px; border-collapse: collapse; font-size: 0.93rem; }
+table.sebi th, table.sebi td { padding: 7px 10px; border-bottom: 1px solid var(--line); vertical-align: top; text-align: left; }
+table.sebi thead th { background: var(--head-bg); font-weight: 600; }
+table.sebi thead th small { font-weight: 400; color: var(--muted); display: block; }
+table.sebi tbody th[scope="row"] { font-weight: 400; width: 46%; }
+table.sebi tr.subhead th { background: #f3f6f8; font-weight: 600; }
+table.sebi tbody tr:last-child th, table.sebi tbody tr:last-child td { border-bottom: none; }
+table.sebi td.val, table.sebi th.valhead { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+table.sebi td.unit-col { color: var(--muted); white-space: nowrap; }
+table.list td { text-align: left; white-space: normal; overflow-wrap: anywhere; }
+
+.num { font-variant-numeric: tabular-nums; }
+.unit { color: var(--muted); font-size: 0.85em; margin-left: 5px; }
+.unit-unknown { font-style: italic; }
+.missing { color: var(--muted); font-style: italic; }
+td.missing { background: #fafbfc; }
+
+/* marks: words and symbols, never colour alone */
+.tag { display: inline-block; margin-left: 4px; padding: 0 5px; border-radius: 3px; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.02em; vertical-align: middle; }
+.tag-calculated { border: 1px solid #3b6ea8; color: #24507f; background: #eaf2fb; }
+.tag-converted { border: 1px solid #7a5aa6; color: #573a82; background: #f1ecf8; }
+sup.fn { margin-left: 2px; font-size: 0.7rem; }
+sup.fn a { text-decoration: none; font-weight: 700; padding: 0 1px; }
+sup.fn-warn a { color: var(--warn-ink); }
+
+ul.footnotes { list-style: none; margin: 8px 0 0; padding: 0; font-size: 0.85rem; color: var(--muted); }
+ul.footnotes li { margin: 3px 0; padding-left: 1.8em; text-indent: -1.8em; }
+ul.footnotes .fn-num { display: inline-block; min-width: 1.4em; font-weight: 700; text-indent: 0; }
+ul.footnotes li.warning { color: var(--warn-ink); background: var(--warn-bg); border-radius: 4px; padding: 3px 8px 3px 2.4em; }
+
+.answer-box { border-left: 4px solid var(--accent-soft); padding: 2px 0 2px 14px; }
+.answer-box p { margin: 4px 0; }
+.details { white-space: pre-line; margin: 4px 0 0; }
+.assurance { margin: 10px 0 0; font-size: 0.88rem; }
+.sebi-note { color: var(--muted); }
+.remark { margin: 10px 0 0; padding: 7px 12px; background: var(--accent-soft); border-radius: 6px; font-size: 0.86rem; }
+.facility { margin: 16px 0 6px; }
+.facility h4 { margin: 0 0 6px; font-size: 0.95rem; }
+
+.placeholder { color: var(--muted); font-style: italic; }
+footer { padding: 4px 16px 40px; color: var(--muted); font-size: 0.85rem; }
+
+/* phones: let the tables fit the screen (units drop under the number, cells may wrap) instead of forcing a sideways swipe */
+@media (max-width: 640px) {
+  .panel { padding: 14px 12px 22px; }
+  table.sebi { min-width: 0; table-layout: fixed; font-size: 0.8rem; }
+  table.sebi th, table.sebi td { padding: 6px 4px; overflow-wrap: anywhere; }
+  table.sebi thead th:first-child { width: 36%; }               /* parameter column; the other columns share the rest */
+  table.sebi.has-unit thead th:nth-child(2) { width: 15%; }     /* the Unit column of E5, E6, L4 */
+  table.sebi th.valhead { white-space: normal; }
+  table.sebi td.val { white-space: normal; }
+  table.sebi td.val .unit { display: block; margin-left: 0; }
+  table.sebi td.unit-col { white-space: normal; }
+  table.sebi thead th small { font-size: 0.68rem; }
+  table.sebi.list { table-layout: auto; min-width: 560px; }     /* list tables have many columns: these may still scroll sideways */
+}
+
+@media print {
+  body { background: #fff; }
+  main > input, main > label { display: none; }
+  .panel { display: block !important; border: none; padding: 0; }
+  .panel-dashboard { display: none !important; }
+  .table-wrap { overflow: visible; }
+}

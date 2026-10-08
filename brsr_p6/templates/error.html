@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>No report: {{ view.title }}</title>
+<style>
+{% include "style.css" %}
+{% include "error.css" %}
+</style>
+</head>
+<body>
+{# The page that appears INSTEAD of a report when something went wrong.  All the words were decided in error_view.py. #}
+
+<header class="page-header">
+  <div class="inner">
+    <p class="eyebrow">BRSR Principle 6 report generator</p>
+    <h1>We could not make this report</h1>
+    {% if view.asked %}<p class="subtitle">{{ view.asked }}</p>{% endif %}
+  </div>
+</header>
+
+<main class="error-main">
+  <section class="error-card{% if view.technical %} technical{% endif %}" role="alert" aria-labelledby="error-title">
+    <p class="error-kind">{{ view.kind }}</p>
+    <h2 id="error-title">{{ view.title }}</h2>
+    <p class="error-message">{{ view.message }}</p>
+
+    {% if view.options %}
+    <h3>{{ view.options_title }}</h3>
+    <ul class="options">
+      {% for option in view.options %}
+      <li><span class="option-label">{{ option.label }}</span><code>{{ option.command }}</code></li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+
+    <h3>What you can try</h3>
+    <ul class="hints">
+      {% for hint in view.hints %}<li>{{ hint }}</li>{% endfor %}
+    </ul>
+  </section>
+
+  <p class="error-note">No numbers were guessed or filled in. A page with a report appears only when the data could really be read.</p>
+</main>
+
+<footer>
+  Source of all data: the companies' BRSR filings on NSE. Run <code>python main.py --help</code> to see every option.
+</footer>
+
+</body>
+</html>

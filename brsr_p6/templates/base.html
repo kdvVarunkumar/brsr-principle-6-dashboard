@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ report.company_name }}: BRSR Principle 6, FY {{ report.fy }}</title>
+<style>
+{% include "style.css" %}
+{% include "dashboard.css" %}
+</style>
+</head>
+<body>
+
+<header class="page-header">
+  <div class="inner">
+    <p class="eyebrow">Business Responsibility &amp; Sustainability Report · Principle 6 (environment)</p>
+    <h1>{{ report.company_name }} <span class="symbol">({{ report.symbol }})</span></h1>
+    <p class="subtitle">Financial year {{ report.fy }}, compared with {{ report.previous_fy }}</p>
+  </div>
+</header>
+
+{# ---------------------------------------------------------------- facts about this filing #}
+<div class="facts-box">
+  <dl class="facts">
+    <div>
+      <dt>Reporting boundary</dt>
+      <dd class="boundary">{{ report.boundary }}
+        {% if "tandalone" in report.boundary %}<span class="boundary-help">The figures cover the company on its own, not its subsidiaries.</span>
+        {% elif "onsolidated" in report.boundary %}<span class="boundary-help">The figures cover the company together with its subsidiaries.</span>{% endif %}
+      </dd>
+    </div>
+    <div>
+      <dt>Filed on NSE</dt>
+      <dd>{{ report.submission_date or "date not available" }}{% if report.revision_date %} <span class="missing">(revised {{ report.revision_date }})</span>{% endif %}</dd>
+    </div>
+    <div>
+      <dt>Edition of SEBI's XBRL form</dt>
+      <dd>{{ report.taxonomy_release }} <span class="missing">({{ report.family }} layout)</span></dd>
+    </div>
+    <div>
+      <dt>Source file (NSE)</dt>
+      <dd>{{ report.source_file }}</dd>
+    </div>
+  </dl>
+  {% for warning in report.warnings %}
+  <p class="callout"><strong>⚠ About this filing:</strong> {{ warning }}</p>
+  {% endfor %}
+</div>
+
+<main>
+  {# CSS-only tabs: the radio buttons decide which panel is visible. No JavaScript needed.
+     The plain-English Dashboard comes first and opens by default; the SEBI-format report is the second tab. #}
+  <input type="radio" name="view" id="view-dashboard" checked>
+  <label for="view-dashboard">Dashboard</label>
+  <input type="radio" name="view" id="view-sebi">
+  <label for="view-sebi">SEBI-format report</label>
+
+  <section class="panel panel-dashboard" aria-label="Dashboard">
+    {% include "dashboard.html" %}
+  </section>
+
+  <section class="panel panel-sebi" aria-label="SEBI-format report">
+    {% include "sebi.html" %}
+  </section>
+</main>
+
+<footer>
+  Source: the company's BRSR filing on NSE (structured XBRL file {{ report.source_file }}). Every figure comes from that filing;
+  values we converted, calculated or doubt are marked. Generated from the May 2021 SEBI BRSR format, Principle 6.
+</footer>
+
+</body>
+</html>
