@@ -203,12 +203,12 @@ Time estimates are rough hours for you working with my help. Core (Phases 0-7) i
 
 > Everything below is **optional**, attempted strictly **in this order**, and only after Milestone 1 is solid.
 
-### Phase 8: Extension 1, multi-year trends (~3 h)
-- [ ] Input: company, start FY, end FY. One listing call gives all years; then fetch each year's XML (cache + delay)
-- [ ] Per year show the **reporting boundary** and **flag boundary changes** (Tata Steel: Consolidated in FY22-23 → Standalone from FY23-24) and **restatements** (a later filing's previous-year column differs from the earlier filing's value)
-- [ ] Table/sparkline per metric across years; **missing years flagged, never skipped or zero-filled**
-- [ ] Check units are consistent across years; note when a later filing *restated* an earlier year
-- [ ] Specific errors: missing report, unparseable filing, unknown company
+### Phase 8: Extension 1, multi-year trends (~3 h)  ✅ DONE
+- [x] Input: company, start FY, end FY. One listing call gives all years; then fetch each year's XML (cache + delay)
+- [x] Per year show the **reporting boundary** and **flag boundary changes** (Tata Steel: Consolidated in FY22-23 → Standalone from FY23-24) and **restatements** (a later filing's previous-year column differs from the earlier filing's value)
+- [x] Table/sparkline per metric across years; **missing years flagged, never skipped or zero-filled**
+- [x] Check units are consistent across years; note when a later filing *restated* an earlier year
+- [x] Specific errors: missing report, unparseable filing, unknown company
 
 ### Phase 9: Extension 2, year-on-year summary (~3 h)
 - [ ] State clearly how we define "better" (e.g. lower emissions intensity = better; higher recycled share = better)

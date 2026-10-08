@@ -1187,3 +1187,89 @@ Common problems: *"git is not recognized"* (close and reopen PyCharm so it sees 
 4. How did you check what would be committed *before* committing? How did you prove a stranger can run the project?
 5. Why does the commit author matter on a public repository?
 6. What would you do if you had accidentally committed a file with a password in it? (Think: rotating the password first.)
+
+
+---
+---
+
+# Phase 8: Extension 1, several years side by side (`trends.py`)
+
+## 8.1 What we built
+
+```powershell
+python trends.py --company "Tata Steel" --from 2021-22 --to 2025-26 --open
+```
+One page with a **column per financial year**: the five topics (energy, climate, water, air, waste) with a mini bar per year and a trend verdict, then **every figure of SEBI's Principle 6 tables**
+year by year, then the list of figures that later filings changed. `--from` and `--to` are optional (default: FY 2021-22 up to the newest filing NSE has).
+
+## 8.2 The idea that makes it possible: every filing holds TWO years
+
+A filing for FY 2023-24 contains its own year (the *current* column) and FY 2022-23 (the *previous* column). That gives us two powerful tricks, both with real data only:
+
+1. **A missing year can still be shown.** NSE has no Tata Steel filing for FY 2021-22, but the FY 2022-23 filing's previous-year column holds the company's own FY 2021-22 figures. We show them, in a shaded column
+   that says "no filing on NSE; figures from the FY 2022-23 filing". It is never a zero and never a guess.
+2. **A year can be checked against what the next filing says about it.** If the two differ, the company changed (**restated**) the figure.
+
+## 8.3 What the real data taught us (we looked BEFORE designing the rules)
+
+We compared, for every pair of neighbouring years on disk, the figure in the first filing with the same year in the next filing:
+
+| What we found | Rule we wrote |
+|---|---|
+| Tata Steel FY 2022-23 says energy = 857 (consolidated, no unit). The next filing says 559,969,887 GJ (standalone). A naive check would call that a "restatement" | Only call it a restatement when **both years are on the same basis**. Otherwise mark it ≠ ("different basis, not comparable") |
+| Wipro FY 2022-23 energy is exactly **1,000 times** the next filing's figure (probably megajoules vs gigajoules) | Only compare figures that have the **same, stated unit**. We do not guess that it was a unit slip |
+| Tata Steel FY 2023-24 electricity (28.4 million GJ) appears in the next filing as 19.5 million GJ: a real restatement of 31% | Keep the figure **as filed in its own year**, mark it ⟲ and show the later figure in the tooltip and in a table |
+| Wipro's 6515.4 vs 6515.0 | Differences under **0.5%** are rounding, not restatements |
+| Wipro reports standalone, then consolidated, then consolidated again | Every column shows its basis; the verdict only compares years on the same basis |
+
+## 8.4 How the trend verdict is decided
+
+For each row we take the **latest year with a figure** and walk back one year at a time **while the basis and the unit stay the same and a figure exists**. The result is compared with the first year of that block:
+*"▲ 14.3% higher than FY 2023-24"*. If earlier years were left out, the sentence says why. If only one year is left, the chip says "Can't compare" and gives the specific reason
+("FY 2022-23 is on a different basis (Consolidated instead of Standalone)", "No figure for FY 2022-23", "FY 2022-23's figure was 0", "The figure looks doubtful").
+
+## 8.5 The code, in three layers (each can be tested without the others)
+
+| Layer | File | Touches | Job |
+|---|---|---|---|
+| Load | `trend_loader.py` | files + NSE | list what NSE has, download the years (politely, cached), read each one; **a problem in one year becomes a flagged entry, not a crash** |
+| Logic | `trend_model.py` | nothing | build the columns, borrow missing years, find restatements and basis changes |
+| Words | `trend_view.py` + `trends.html` | nothing | rows, cells, marks, notes, sentences; the template only prints |
+
+Plus small changes elsewhere: `compare(..., earlier="FY 2023-24")` (so the wording can say *than FY 2023-24* instead of *than last year*), `download_filings(first=..., last=...)`,
+`NoFilingFound(symbol, available)`, the error `InvalidYearRange`, `fiscal_years_between`, and error pages whose suggested commands use `trends.py` for a trend request.
+
+## 8.6 Two bugs found by LOOKING at the page (not by the tests)
+
+1. **A doubtful figure printed as "0".** Tata's emissions are about 8 crore tonnes in the early years and then "64 tonnes" (typed in millions). On a "crore" scale for the whole row, 64 rounds to 0. A reader would see a
+   zero for something that is not zero. Fix: a figure too small for the row's scale is written in its own scale and unit ("64 tonnes CO₂e"), and a doubtful zero intensity says "Filed as 0".
+2. **The table was laid out like a stack of boxes.** I named the table's CSS class `trend`, and the dashboard stylesheet already had a rule `.dash .trend { display: flex }` for the card's "▲ 2% lower" line. The table
+   became a flexbox, so header cells and body cells no longer lined up. I found it by asking the browser itself: a tiny script printed `TABLE display=flex`. The class is now `trendtable`, and a test forbids the old name.
+   **Lesson: when a layout is "weird", measure instead of guessing, and keep class names specific.**
+
+## 8.7 Smaller design choices worth knowing
+
+- **Bars start at zero** and are scaled to the row's largest figure, as on the dashboard. Doubtful figures get no bar.
+- **The first column stays in place** (sticky) when a phone scrolls the table sideways.
+- **Samples:** 3 trend pages (Tata Steel, Wipro, Reliance) and 1 trend error page in `samples/`; the freshness test covers them too. Tata Steel's FY 2022-23 to FY 2024-25 filings were added to the repository for this.
+- **What we do NOT do:** infer a missing unit from the next filing (even where the same number is repeated with a unit), or use a later restated figure instead of the filed one.
+
+## 8.8 Try it yourself
+
+1. `python trends.py --company "Tata Steel" --from 2021-22 --to 2025-26 --open`. Find: the shaded FY 2021-22 column, the purple *Consolidated* → blue *Standalone* chips, a ⟲ mark (hover it), the "Can't compare" in Climate.
+2. Run the same for Wipro `--from 2023-24 --to 2025-26`: which two years does each verdict compare, and why?
+3. `python trends.py --company "Reliance" --from 2025-26 --to 2021-22` and read the error page.
+4. Open `brsr_p6/trend_model.py` and change `RESTATEMENT_TOLERANCE` from `0.005` to `0.05`; regenerate Tata Steel: how many figures are still marked as restated? Change it back and run `pytest`.
+5. In `tests/test_trend_model.py` find the test about Wipro's "1,000 times" energy. What would go wrong if we flagged it as a restatement?
+6. Open the page on a phone-width window: where does the "swipe sideways" hint appear?
+
+## 8.9 Interview self-check
+
+1. What two years does one filing contain, and how does that let us show a year NSE has no filing for? Why is that not "making up a number"?
+2. How do we decide that a later filing *restated* a figure? Name three cases we deliberately do NOT call a restatement and why.
+3. Why do trend verdicts stop at a change of basis? Show an example from Tata Steel.
+4. Why do we keep the figure as filed in its own year instead of replacing it with the restated one?
+5. What happens to the page when one year's file is damaged? Which errors do produce a full error page?
+6. How did you find the table layout bug, and what was the cause?
+7. Why is the loader separate from the model? How are they tested?
+8. What would you build next (Extension 2 or 3) and how would the existing pieces help?

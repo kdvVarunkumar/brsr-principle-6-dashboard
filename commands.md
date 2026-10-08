@@ -3,7 +3,7 @@
 Every command here was run and checked. Replace the company name and the year with whatever the interviewer asks for.
 **Run all commands from the project folder**, in the **PyCharm Terminal** (it activates the project's environment, so you see `(.venv)` at the start of the line).
 
-> **Project status:** download ✅ · clean/parse ✅ · SEBI-format HTML page ✅ · plain-English dashboard ✅ (opens first) · error pages ✅ · `samples/` ✅ · README ✅. Optional extensions are not built.
+> **Project status:** download ✅ · clean/parse ✅ · SEBI-format HTML page ✅ · plain-English dashboard ✅ (opens first) · error pages ✅ · `samples/` ✅ · README ✅ · **several years side by side (`trends.py`, Extension 1) ✅**. Extensions 2 and 3 are not built.
 
 ---
 
@@ -14,6 +14,7 @@ Every command here was run and checked. Replace the company name and the year wi
 | **Make the report page** (does everything: download → clean → page) | `python main.py --company "Reliance" --fy 2023-24 --open` |
 | Only **download** the filings | `python download_filings.py --company "Reliance"` |
 | Only **clean/parse** and print the data | `python extract_report.py --company "Reliance" --fy 2023-24` |
+| **Several years side by side** (Extension 1) | `python trends.py --company "Tata Steel" --from 2021-22 --to 2025-26 --open` |
 | Rebuild the pages in `samples/` | `python make_samples.py` |
 | Run all automatic tests | `pytest -q` |
 
@@ -21,7 +22,7 @@ Pattern to remember: **`--company "<name or NSE symbol>"`** and **`--fy <year>`*
 
 ---
 
-## 2. The three commands in detail
+## 2. The four commands in detail
 
 ### 2.1 Download from NSE: `download_filings.py`
 Downloads a company's BRSR filing files (XBRL) into `data\raw\<SYMBOL>\<FY>\`. Anything already on disk is reused.
@@ -72,18 +73,42 @@ Downloads if needed, cleans, saves the JSON **and** writes one self-contained HT
 
 **If something goes wrong, the same command still writes a page**: `output\error_<company>_<year>.html` (see section 6).
 
+### 2.4 Several years side by side: `trends.py`  ← Extension 1
+```powershell
+python trends.py --company "Tata Steel" --from 2021-22 --to 2025-26 --open
+python trends.py --company "Wipro" --from 2023-24 --to 2025-26          # the reporting basis flips between years
+python trends.py --company "Reliance"                                   # no years given = FY 2021-22 up to the newest filing
+```
+| Option | Meaning |
+|---|---|
+| `--from` / `--to` | first and last financial year (optional; default FY 2021-22 up to the newest filing NSE has) |
+| `--open`, `--output-dir`, `--debug` | the same as `main.py` |
+
+Writes **`output\<SYMBOL>_trend_<from>_to_<to>.html`**: a column per year, the five topics with a mini bar per year and a trend verdict, then **every figure of SEBI's Principle 6
+tables** year by year, then the figures later filings changed. Downloads the years it needs (3 s apart, cached); a company already downloaded takes about 3 seconds.
+
+What to point at (2 minutes):
+1. **The column headers:** each year says *Standalone* or *Consolidated*. A year NSE does not have (Tata Steel FY 2021-22) is shaded and says *"no filing on NSE; figures from the FY 2022-23 filing"*: real data from the next filing's previous-year column, never a zero.
+2. **"Read this before comparing years":** the missing year, the change of basis, the older layout with no units, the restatements.
+3. **The Trend column:** the verdict only compares years on the **same basis and unit**. Tata: *"▲ 14.3% higher than FY 2023-24 ... earlier years use another basis and are not included"*. Wipro: only the two consolidated years. Mis-scaled emissions: *"Can't compare"*.
+4. **The marks:** ⟲ restated by the next filing (hover for the later figure), ⚠ a note or a doubtful figure, ≠ the next filing is on a different basis, u a different unit.
+5. **"Every figure, year by year"** (collapsible per SEBI question) and **"Figures changed by a later filing"**.
+
+If one year's filing is damaged, only that column is flagged. Errors give a page too: `--from 2025-26 --to 2021-22` ("That range of years cannot be used"), an unknown company, a year before FY 2021-22.
+
 ---
 
 ## 3. A 5-minute demo flow
 
 | Step | Command | What to say |
 |---|---|---|
-| 1 | `pytest -q` | "298 automatic tests pass, with no internet needed." |
+| 1 | `pytest -q` | "About 410 automatic tests pass, with no internet needed." |
 | 2 | `python download_filings.py --company "<NEW COMPANY>"` | "It finds the company on NSE, downloads each year politely (3 s apart), and flags years NSE does not have." |
 | 3 | *(run step 2 again)* | "Second run: 0 requests. Everything is cached." |
 | 4 | `python extract_report.py --company "<NEW COMPANY>" --fy 2024-25 --questions E1,E6` | "XML → clean SEBI rows. Calculated, converted and doubtful values are marked, and nothing is invented: missing = Not reported." |
 | 5 | `python main.py --company "<NEW COMPANY>" --fy 2024-25 --open` | "One HTML page, two tabs. It opens on the plain-English **Dashboard**; the second tab is the **SEBI-format report**, same question numbers and wording as SEBI's form." |
 | 6 | click the **SEBI-format report** tab, then back | "Same data, two audiences. Every dashboard number comes from this table." |
+| 6b | `python trends.py --company "<COMPANY>" --open` | "Extension 1: the same company over every year NSE has. Missing years flagged, basis changes and restatements marked." |
 | 7 | the error commands in section 6 | "Specific messages instead of crashes." |
 
 ### 3a. What to point at on the Dashboard (about 2 minutes)
@@ -152,6 +177,8 @@ python main.py --company "Reliance" --fy 2019-20            # before FY 2021-22:
 python main.py --company "Reliance" --fy banana             # not a year
 python main.py --company "Tata Steel" --fy 2021-22          # valid year, but NSE has no filing: lists the years it does have
 python main.py --company "Sakuma Exports" --fy 2023-24      # listed company with no BRSR filing
+python trends.py --company "Reliance" --from 2025-26 --to 2021-22      # years the wrong way round
+python trends.py --company "Tata Steel" --from 2019-20                # a year before BRSR reporting began
 ```
 Each one prints `Error: ...` with the specific reason, **and writes an explanation page** `output\error_<company>_<year>.html` (add `--open` to show it). Exit code 1, never a Python traceback.
 
@@ -198,7 +225,7 @@ How to read a page: *Not reported* = the filing has nothing (never shown as 0) �
 ## 8. Tests
 
 ```powershell
-pytest -q                              # everything (298 tests, a few seconds, no internet)
+pytest -q                              # everything (about 410 tests, a few seconds, no internet)
 pytest tests/test_extractor.py -v      # one file, one line per test
 pytest -k "scale" -v                   # only tests with "scale" in their name
 ```
@@ -246,6 +273,9 @@ Then run `python download_filings.py --company "ITC"` again to show a real downl
 - **How do you stop it inventing things?** Missing is "Not reported" (never 0), a zero last year gives "can't compare", figures with no unit are not quoted in sentences, and a test checks every warning in every real filing is classified.
 - **What happens on bad input?** The same command writes an *error page* instead of a report: the exact reason, what you typed, what to try, and commands you can copy (for example the years NSE does have). A real bug gets a page too, and `--debug` shows the traceback.
 - **What if NSE is down during a demo?** Companies already downloaded still work: an older saved filing list is used (and the console says so). Only a never-seen company needs the internet.
+- **What does the trend page do with a missing year?** It flags it ("No filing", never 0). If the next filing exists, that filing's previous-year column holds the company's own figures for the missing year, so they are shown and marked.
+- **How do you handle a change from consolidated to standalone?** Every column shows its basis; trend verdicts only compare years on the same basis and unit, and the page says which years were left out.
+- **What is a restatement?** The next filing gives a different figure for the same year (more than 0.5% apart). We keep the figure as filed in its own year and mark it ⟲ with the later figure.
 - **Does it run from a clean checkout?** Yes: tested in a brand-new virtual environment: `pip install -r requirements.txt`, one command, and the page is written (about 11 seconds for a new company).
 - **Why Python + a template?** Python decides (verdicts, sentences, warnings), the HTML template only prints. That makes every rule testable without a browser.
 

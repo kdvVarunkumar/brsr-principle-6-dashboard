@@ -7,6 +7,9 @@ Give it a listed Indian company and a financial year. It produces **one HTML pag
    *whether it got better or worse than last year* and *why it matters*.
 2. **SEBI-format report**: laid out like SEBI's May 2021 template, same question numbers, wording, tables and row labels.
 
+A second command, `trends.py`, shows one company over **several years side by side**: missing years are flagged (never skipped or filled with zero),
+changes of reporting basis and restated figures are marked, and trend verdicts only compare years that can really be compared.
+
 ![The dashboard for Reliance Industries, FY 2023-24](docs/dashboard_reliance.png)
 
 > **Demo cheat-sheet:** [`commands.md`](commands.md) has every command with copy-paste examples.
@@ -19,6 +22,7 @@ python -m venv .venv
 .venv\Scripts\Activate.ps1
 pip install -r requirements.txt
 python main.py --company "Reliance" --fy 2023-24 --open
+python trends.py --company "Tata Steel" --from 2021-22 --to 2025-26 --open     # several years side by side
 ```
 
 The page is written to `output/RELIANCE_2023-24.html`. The first run for a company downloads its filing from NSE (about 10 seconds,
@@ -40,6 +44,7 @@ polite and cached); after that it takes under a second.
 ```powershell
 python main.py --company "Tata Steel" --fy 2025-26 --open     # the report page (downloads, cleans, writes the page)
 python main.py --help                                         # all options (--output-dir, --debug as well)
+python trends.py --company "Tata Steel" --from 2021-22 --to 2025-26 --open   # several years side by side (--from / --to are optional)
 
 python download_filings.py --company Reliance                 # only download: every year NSE has for the company
 python extract_report.py --company Reliance --fy 2023-24      # only clean: print the SEBI rows as text, save the JSON
@@ -50,7 +55,7 @@ pytest                                                        # the automatic te
 - `--company` takes a name (`"Tata Steel"`) or the NSE symbol (`TATASTEEL`). `--fy` takes `2023-24`, `2023-2024`, `FY2023-24` or `2023/24`.
 - Output: `output/<SYMBOL>_<FY>.html`, one self-contained file (no JavaScript, no internet needed to open it).
 - Downloaded filings are kept in `data/raw/<SYMBOL>/<FY>/`; the cleaned data in `data/parsed/<SYMBOL>/<FY>.json`.
-- **Eight filings are committed** (Tata Steel, Reliance, Wipro, Infosys, HDFC Bank) so that a fresh clone can rebuild `samples/` and run every
+- **Eleven filings are committed** (Tata Steel, Reliance, Wipro, Infosys, HDFC Bank) so that a fresh clone can rebuild `samples/` and run every
   test without the internet, as the brief allows. They are listed and explained in [`data/README.md`](data/README.md). Every other company is
   downloaded on demand.
 
@@ -64,6 +69,9 @@ pytest                                                        # the automatic te
 | `--company "Infosys" --fy 2021-22` | An older filing layout, a damaged XML file that was cleaned, monthly air figures, energy with no unit. |
 | `--company "HDFC Bank" --fy 2022-23` | A bank: sparse data, many "Not reported" and "reported as 0", and the page stays honest. |
 | `--company "ITC" --fy 2024-25`<br>`--company "M&M" --fy 2024-25`<br>`--company "TCS" --fy 2024-25`<br>`--company "ONGC" --fy 2023-24` | Other sectors and filing styles (for example ONGC files its air pollutants as concentrations, not tonnes). |
+| `trends.py --company "Tata Steel" --from 2021-22 --to 2025-26` | **Trends:** a year NSE does not have (FY 2021-22, filled from the next filing's previous-year column and marked), a change from consolidated to standalone, restated figures, mis-scaled emissions. |
+| `trends.py --company "Wipro" --from 2023-24 --to 2025-26` | **Trends:** the reporting basis flips from year to year, so only the two consolidated years are compared. |
+| `trends.py --company "Reliance"` | **Trends:** one basis throughout, so every year is compared; FY 2022-23 uses the older layout with no energy unit. |
 | `--company "Xyzzy Quux" --fy 2023-24` | An error page: unknown company. |
 | `--company "Tata Steel" --fy 2021-22` | An error page: NSE has no filing for that year, and it lists the years it does have. |
 | `--company "Reliance" --fy 2019-20` | An error page: before BRSR reporting began. |
@@ -81,7 +89,7 @@ pytest                                                        # the automatic te
 | Polite to NSE: 3 s between requests, cache everywhere, retries only for temporary problems, stops on 403 / 429 | ✅ |
 | Error pages for every failure, not only console messages | ✅ |
 | Sample pages for 5 companies and 4 error cases in `samples/` | ✅ |
-| **Extension 1:** multi-year trends | ❌ not built |
+| **Extension 1:** multi-year trends (`trends.py`): company + start year + end year, all figures side by side, missing years flagged, basis changes and restatements marked, error pages | ✅ |
 | **Extension 2:** year-on-year summary (3 best + 3 worst) | ❌ not built (each card already compares with last year) |
 | **Extension 3:** company comparison | ❌ not built |
 
@@ -109,6 +117,23 @@ company text ─► NSE symbol ─► filing list ─► XBRL file (cached) ─�
 - **Verification:** key numbers for Tata Steel FY 2025-26 were compared by hand with the company's own PDF report and are pinned in
   tests (`tests/test_real_filings.py`); other companies are covered by the consistency checks above.
 
+## Multi-year trends (Extension 1)
+
+`python trends.py --company "<name>" [--from 2021-22] [--to 2025-26]` makes one page with a column per financial year. It first lists the five
+topics (the same figures as the dashboard, each row with a mini bar per year and a trend verdict), then **every figure of SEBI's Principle 6
+tables** year by year, then the figures that later filings changed. The rules, all visible on the page:
+
+- **Missing years are flagged, never skipped or zero-filled.** A year NSE has no filing for shows "No filing". If the *next* year's filing exists,
+  its previous-year column holds the company's own figures for the missing year, so those are shown, clearly marked "figures from the FY ... filing".
+- **Every year says on which basis it was reported** (standalone or consolidated). Trend verdicts walk back from the latest year and stop when the
+  basis or the unit changes, so a change of basis can never look like an improvement. Wipro's basis flips every year; Tata Steel changed once.
+- **Restatements.** Each filing also contains the previous year's figures. If the next filing gives a different figure for the same year (more than
+  0.5% apart, which is rounding), the figure is marked ⟲ and the later figure is shown in the tooltip and in a table. Each figure is kept **as filed in
+  its own year**. Differences across a change of basis (≠) or with an unstated unit are *not* called restatements, because they are not comparable.
+- **Units.** Older filings state no unit for some figures; they are shown as filed, marked, and not compared with years that state one.
+- **One bad year does not stop the page.** A damaged or missing filing becomes a flagged column with its specific reason; the other years still show.
+  Only problems with the whole request (unknown company, no filings, NSE unreachable, years the wrong way round) give an error page.
+
 ## Error handling
 
 Every failure still produces a page, `output/error_<company>_<year>.html`, so the reason appears where the report would have been.
@@ -122,13 +147,17 @@ It names what went wrong, what you typed, what to try, and gives ready-to-run co
 | NSE has no filing for that year | The years NSE does have, each with a command |
 | Company filed no BRSR at all | That only the top 1,000 listed companies must file |
 | NSE unreachable or blocking | Advice to retry; companies already downloaded keep working (an older saved filing list is used and the console says so) |
-| Damaged or wrong kind of filing file | The file name and the problem; "we show nothing rather than guess" |
+| Damaged or wrong kind of filing file | The file name and the problem; "we show nothing rather than guess". On a trend page only that year's column is flagged |
+| Trend request with the years the wrong way round, or too many years | "That range of years cannot be used", with an example |
 | Any unexpected bug | A page saying so with the technical reason; `--debug` shows the traceback |
 
 ## Known limitations
 
-- **Extensions 1 to 3 are not built.** The dashboard compares each figure with the previous-year column of the *same* filing, which can
-  differ from what the company reported last year if it restated.
+- **Extensions 2 and 3 are not built** (year-on-year 3 best / 3 worst, company comparison). The one-year dashboard compares each figure with the
+  previous-year column of the *same* filing, which can differ from what the company reported last year if it restated.
+- **Trend pages:** a restated figure is shown as originally filed (the later figure is in the tooltip). We never infer a missing unit, even when
+  the next filing repeats the same number with a unit. A borrowed year (from the next filing's previous-year column) has no yes/no answers or texts.
+  A year is only borrowed from the filing inside the requested range.
 - **"Better / worse" is only against the company's own previous year** (within ±1% counts as "about the same"). There is no benchmark or
   legal limit in the filings, so there is no rating or score.
 - **Waste recovery and disposal are totals only.** SEBI's form asks for them per waste category; the structured filing gives one total for all.
@@ -172,7 +201,7 @@ The design was prototyped first with real numbers: [`design/dashboard_mockup.htm
 pytest
 ```
 
-About 340 tests, a few seconds, no internet. They cover unit conversion, the XBRL reader, every SEBI row, the verdict and sentence rules, HTML
+About 410 tests, a few seconds, no internet. They cover unit conversion, the XBRL reader, every SEBI row, the verdict and sentence rules, HTML
 well-formedness, escaping of filing text, the error pages, and (when the filings are on disk) real-filing spot checks and "the committed
 sample pages are up to date".
 
@@ -182,18 +211,20 @@ sample pages are up to date".
 main.py              the report generator (tiny entry point)
 download_filings.py  downloads filings from NSE (tiny entry point)
 extract_report.py    filing -> SEBI Principle 6 data, printed as text (tiny entry point)
+trends.py            one company over several years (tiny entry point)
 make_samples.py      rebuilds the pages in samples/ (tiny entry point)
 brsr_p6/             the code:
                        download:   nse_client, company_lookup, filings, downloader
                        read+clean: xbrl_reader, values, units, sebi_template, p6_mapping, extractor, checks, models
                        dashboard:  warning_kinds, friendly, comparison, metric_info, dashboard_cards, dashboard_view
+                       trends:     trend_loader (files + NSE), trend_model (the logic), trend_view, trend_cli
                        pages:      sebi_view, formatting, render, error_view, templates/ (HTML + CSS), pipeline, samples
                        other:      cli, report_io, report_text, errors, fiscal_year
 tests/               automatic tests
-samples/             sample report pages and error pages (+ README)
+samples/             sample report pages, trend pages and error pages (+ README)
 design/              the dashboard prototype
 docs/                screenshots used in this README
-data/                filings downloaded from NSE (8 are committed, see data/README.md) and the cleaned JSON
+data/                filings downloaded from NSE (11 are committed, see data/README.md) and the cleaned JSON
 plan.md  context.md  learnings.md  commands.md             the plan, project notes, plain-English explanations, demo commands
 ```
 
