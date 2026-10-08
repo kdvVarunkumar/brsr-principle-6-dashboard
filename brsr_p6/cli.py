@@ -51,11 +51,11 @@ def main(argv: list[str] | None = None) -> int:
     try:
         page, report = generate_page(args.company, args.fy, output_dir=args.output_dir, progress=print)
     except BrsrError as exc:   # every error we raise on purpose carries a message meant for the user
-        return _explain(exc, args)
+        return explain_failure(exc, args.company, args.fy, args.output_dir, args.open)
     except Exception as exc:   # anything else is a bug.  This is the outermost layer, so it is the right place to catch it.
         if args.debug:
             raise
-        return _explain(exc, args)
+        return explain_failure(exc, args.company, args.fy, args.output_dir, args.open)
 
     print(f"\nReport page written to: {page}")
     print("Open it in your web browser (double-click the file), or run again with --open.")
@@ -64,18 +64,20 @@ def main(argv: list[str] | None = None) -> int:
     return 0
 
 
-def _explain(error, args) -> int:
-    """Print the problem and write the error page.  Returns the exit code (1 = something went wrong)."""
+def explain_failure(error, company_text, fy_text, output_dir, open_page, trends=False) -> int:
+    """Print the problem and write the error page.  Returns the exit code (1 = something went wrong).
+
+    Shared by main.py and trends.py; `trends=True` makes the suggested commands use trends.py."""
     if isinstance(error, BrsrError):
         print(f"Error: {error}")
     else:
         print(f"Unexpected problem ({type(error).__name__}: {error}). Run again with --debug to see the details.")
     try:
-        page = write_error_page(build_error_view(error, args.company, args.fy), args.company, args.fy, args.output_dir)
+        page = write_error_page(build_error_view(error, company_text, fy_text, trends), company_text, fy_text, output_dir)
     except OSError as problem:   # even the explanation page could not be saved (for example a read-only folder)
         print(f"(Could not write the explanation page: {problem})")
         return 1
     print(f"An explanation page was written to: {page}")
-    if args.open:
+    if open_page:
         webbrowser.open(page.as_uri())
     return 1

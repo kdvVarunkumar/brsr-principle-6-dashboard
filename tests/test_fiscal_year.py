@@ -38,3 +38,24 @@ def test_none_is_rejected():
 
 def test_format_fiscal_year():
     assert format_fiscal_year(2025, 2026) == "2025-26"
+
+
+# ----------------------------------------------------------------------------------------------- year ranges (trend page)
+def test_next_fiscal_year():
+    from brsr_p6.fiscal_year import next_fiscal_year
+    assert next_fiscal_year("2023-24") == "2024-25" and next_fiscal_year("2099-00") == "2100-01"
+
+
+def test_fiscal_years_between_lists_every_year_oldest_first():
+    from brsr_p6.fiscal_year import fiscal_years_between
+    assert fiscal_years_between("2021-22", "2023-24") == ["2021-22", "2022-23", "2023-24"]
+    assert fiscal_years_between("2022-23", "2022-23") == ["2022-23"]
+
+
+def test_a_range_must_start_before_it_ends_and_not_be_too_long():
+    from brsr_p6.errors import InvalidYearRange
+    from brsr_p6.fiscal_year import MAX_TREND_YEARS, fiscal_years_between
+    with pytest.raises(InvalidYearRange, match="after the end year"):
+        fiscal_years_between("2024-25", "2022-23")
+    with pytest.raises(InvalidYearRange, match="at most"):
+        fiscal_years_between("2021-22", f"{2021 + MAX_TREND_YEARS}-{(2022 + MAX_TREND_YEARS) % 100:02d}")

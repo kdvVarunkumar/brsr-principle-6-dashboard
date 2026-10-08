@@ -47,10 +47,12 @@ def trust_of(*cells):
     return worst_kind([w for cell in cells for w in cell.warnings])
 
 
-def compare(current, previous, better, shape="amount"):
-    """Compare two cells.  `better` is LOWER, HIGHER or CONTEXT; `shape` is "amount" or "share" (a percentage)."""
+def compare(current, previous, better, shape="amount", earlier="last year"):
+    """Compare two cells.  `better` is LOWER, HIGHER or CONTEXT; `shape` is "amount" or "share" (a percentage).
+
+    `earlier` is how the older figure is called in the words: "last year" on the one-year page, "FY 2023-24" on a trend page."""
     trust = trust_of(current, previous)
-    reason = _why_not(current, previous, trust)
+    reason = _why_not(current, previous, trust, earlier)
     if reason:
         return Comparison(UNSURE, reason=reason, trust=trust)
 
@@ -58,24 +60,24 @@ def compare(current, previous, better, shape="amount"):
     if shape == "share":
         points = now - before
         if abs(points) < NO_CHANGE:
-            return Comparison(SAME, change="No change from last year", trust=trust)
+            return Comparison(SAME, change=f"No change from {earlier}", trust=trust)
         same = abs(points) < SAME_WITHIN_POINTS
         rising = points > 0
         size = f"{points_text(points)} percentage points"
-        change = f"{size} {'above' if rising else 'below'} last year"
+        change = f"{size} {'above' if rising else 'below'} {earlier}"
     else:
         if before == 0:
             if now == 0:
                 return Comparison(SAME, change="No change: 0 in both years", trust=trust)
             # A percentage of zero does not exist.  And a 0 last year may simply mean "not measured", so we do not guess.
-            return Comparison(UNSURE, reason="Last year's figure was 0, so a percentage change cannot be worked out.", trust=trust)
+            return Comparison(UNSURE, reason=f"{earlier[:1].upper() + earlier[1:]}'s figure was 0, so a percentage change cannot be worked out.", trust=trust)
         percent = (now - before) / before * 100
         if abs(percent) < NO_CHANGE:
-            return Comparison(SAME, change="No change from last year", trust=trust)
+            return Comparison(SAME, change=f"No change from {earlier}", trust=trust)
         same = abs(percent) < SAME_WITHIN_PERCENT
         rising = percent > 0
         size = percent_change_text(percent)
-        change = f"{size} {'higher' if rising else 'lower'} than last year"
+        change = f"{size} {'higher' if rising else 'lower'} than {earlier}"
 
     return Comparison(_verdict(rising, same, better), "▲" if rising else "▼", change, trust=trust, size=size, rising=rising)
 
@@ -89,7 +91,7 @@ def _verdict(rising, same, better):
     return IMPROVED if good else WORSE
 
 
-def _why_not(current, previous, trust):
+def _why_not(current, previous, trust, earlier="last year"):
     """The reason these two cells cannot be compared, or "" when they can."""
     if trust == DOUBTFUL:
         return "The figure looks doubtful, so we do not compare it."
@@ -98,7 +100,7 @@ def _why_not(current, previous, trust):
     if not has_number(current):
         return "No figure for this year."
     if not has_number(previous):
-        return "No figure for last year."
+        return f"No figure for {earlier}."
     if current.unit != previous.unit:
         return "The two years use different units."
     return ""

@@ -11,6 +11,7 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 from brsr_p6.dashboard_view import build_dashboard_view
 from brsr_p6.downloader import PROJECT_ROOT, safe_name
 from brsr_p6.sebi_view import build_sebi_view
+from brsr_p6.trend_view import build_trend_view
 
 TEMPLATE_DIR = Path(__file__).resolve().parent / "templates"
 DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "output"
@@ -40,6 +41,27 @@ def write_page(report, output_dir: Path = DEFAULT_OUTPUT_DIR) -> Path:
     return path
 
 
+def render_trend_page(trend) -> str:
+    """The HTML of the multi-year trend page for a Trend (trend_model.py)."""
+    return _environment().get_template("trends.html").render(view=build_trend_view(trend))
+
+
+def trend_page_name(symbol, first_fy, last_fy) -> str:
+    return f"{safe_name(symbol)}_trend_{first_fy}_to_{last_fy}.html"
+
+
+def trend_page_path(trend, output_dir: Path = DEFAULT_OUTPUT_DIR) -> Path:
+    """output/<SYMBOL>_trend_<first year>_to_<last year>.html"""
+    return output_dir / trend_page_name(trend.symbol, trend.columns[0].fy, trend.columns[-1].fy)
+
+
+def write_trend_page(trend, output_dir: Path = DEFAULT_OUTPUT_DIR) -> Path:
+    path = trend_page_path(trend, output_dir)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(render_trend_page(trend), encoding="utf-8")
+    return path
+
+
 def render_error_page(view) -> str:
     """The HTML of an error page (an ErrorView from error_view.py)."""
     return _environment().get_template("error.html").render(view=view)
@@ -48,7 +70,7 @@ def render_error_page(view) -> str:
 def error_page_path(company_text, fy_text, output_dir: Path = DEFAULT_OUTPUT_DIR) -> Path:
     """output/error_<company>_<year>.html.  The 'error_' start means an error page can never overwrite a real report page."""
     company = safe_name(company_text.strip())[:40] or "unknown"
-    year = safe_name(fy_text.strip())[:12] or "year"
+    year = safe_name(fy_text.strip())[:24] or "year"
     return output_dir / f"error_{company}_{year}.html"
 
 

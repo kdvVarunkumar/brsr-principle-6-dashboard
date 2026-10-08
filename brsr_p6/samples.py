@@ -16,10 +16,11 @@ from brsr_p6.downloader import DEFAULT_RAW_DIR, PROJECT_ROOT, safe_name
 from brsr_p6.error_view import build_error_view
 from brsr_p6.errors import BrsrError
 from brsr_p6.filings import parse_listing, select_filing
-from brsr_p6.fiscal_year import parse_fiscal_year
-from brsr_p6.pipeline import generate_page, load_saved_report
-from brsr_p6.render import error_page_path, write_error_page, write_page
+from brsr_p6.fiscal_year import fiscal_years_between, parse_fiscal_year
+from brsr_p6.pipeline import generate_page, generate_trend_page, load_saved_report
+from brsr_p6.render import error_page_path, trend_page_name, write_error_page, write_page, write_trend_page
 from brsr_p6.report_io import save_report
+from brsr_p6.trend_model import NOT_FILED, YearEntry, build_trend
 from brsr_p6.xbrl_reader import read_filing
 
 SAMPLES_DIR = PROJECT_ROOT / "samples"
@@ -34,11 +35,22 @@ class SampleCompany:
 
 
 @dataclass(frozen=True)
+class SampleTrend:
+    symbol: str
+    company: str
+    fy_from: str
+    fy_to: str
+    shows: str
+    not_filed: tuple = ()     # years in the range that NSE really has no filing for (so they are flagged, not downloaded)
+
+
+@dataclass(frozen=True)
 class SampleError:
     company: str     # what the user "typed"
     fy: str
     shows: str
     trigger: object  # a function that raises the error (offline)
+    trends: bool = False     # True when it is an error of trends.py
 
 
 SAMPLE_COMPANIES = (
@@ -52,6 +64,19 @@ SAMPLE_COMPANIES = (
                   "IT services, older filing layout: a damaged file that had to be cleaned, monthly air figures, energy with no unit."),
     SampleCompany("HDFCBANK", "HDFC Bank", "2022-23",
                   "A bank (sparse data), older layout: many 'Not reported' and 'reported as 0', and the page still stays honest."),
+)
+
+
+SAMPLE_TRENDS = (
+    SampleTrend("TATASTEEL", "Tata Steel", "2021-22", "2025-26",
+                "Five years with everything the trend page handles: FY 2021-22 is not on NSE (shown from the next filing's previous-year column), "
+                "the basis changes from consolidated to standalone, a later filing restates figures, and the emissions are mis-scaled.",
+                not_filed=("2021-22",)),
+    SampleTrend("WIPRO", "Wipro", "2023-24", "2025-26",
+                "The reporting basis flips from year to year (standalone, consolidated, consolidated), so only years on the same basis are compared."),
+    SampleTrend("RELIANCE", "Reliance", "2021-22", "2023-24",
+                "A company on one basis throughout. FY 2021-22 is not on NSE, and FY 2022-23 uses the older SEBI layout with no energy unit.",
+                not_filed=("2021-22",)),
 )
 
 
@@ -72,6 +97,10 @@ def _year_not_on_nse():
     select_filing(records, "2021-22")
 
 
+def _years_the_wrong_way_round():
+    fiscal_years_between("2025-26", "2021-22")
+
+
 def _damaged_filing():
     """A file that starts like a real SEBI filing but is cut off in the middle, as a damaged download would be."""
     start = '<xbrli:xbrl xmlns:xbrli="http://www.xbrl.org/2003/instance" xmlns:in-capmkt="http://www.sebi.gov.in/xbrl/2024-04-30/in-capmkt">'
@@ -87,6 +116,7 @@ SAMPLE_ERRORS = (
     SampleError("Tata Steel", "2021-22", "A real company and a valid year, but NSE has no filing for it: lists the years it does have.",
                 _year_not_on_nse),
     SampleError("Infosys", "2021-22", "A filing file on NSE that is damaged (here a deliberately broken file).", _damaged_filing),
+    SampleError("Reliance", "2025-26 to 2021-22", "A trend request with the years the wrong way round (trends.py).", _years_the_wrong_way_round, trends=True),
 )
 
 
@@ -107,21 +137,41 @@ def make_samples(output_dir: Path = SAMPLES_DIR, progress=print) -> list:
         progress(f"wrote {page.name}")
         report_pages.append((sample, page))
 
+    trend_pages = []
+    for sample in SAMPLE_TRENDS:
+        page = _write_trend(sample, output_dir, progress)
+        progress(f"wrote {page.name}")
+        trend_pages.append((sample, page))
+
     for example in SAMPLE_ERRORS:
         try:
             example.trigger()
         except BrsrError as error:
-            page = write_error_page(build_error_view(error, example.company, example.fy), example.company, example.fy, output_dir)
+            page = write_error_page(build_error_view(error, example.company, example.fy, example.trends), example.company, example.fy, output_dir)
             progress(f"wrote {page.name}")
             error_pages.append((example, page))
         except FileNotFoundError as missing:             # the saved filing list for the example is not on disk: skip it, say so
             progress(f"skipped the example for {example.company} {example.fy}: {missing}")
 
-    (output_dir / "README.md").write_text(_readme(report_pages, error_pages), encoding="utf-8")
-    return [page for _, page in report_pages + error_pages]
+    (output_dir / "README.md").write_text(_readme(report_pages, trend_pages, error_pages), encoding="utf-8")
+    return [page for _, page in report_pages + trend_pages + error_pages]
 
 
-def _readme(report_pages, error_pages):
+def _write_trend(sample, output_dir, progress):
+    """A trend page built from the filings on disk; a year that is neither on disk nor known to be unfiled makes it download first."""
+    entries = []
+    for fy in fiscal_years_between(sample.fy_from, sample.fy_to):
+        report = load_saved_report(sample.symbol, fy)
+        if report is None and fy not in sample.not_filed:
+            progress(f"{sample.company} FY {fy}: not on disk, downloading ...")
+            page, _ = generate_trend_page(sample.company, sample.fy_from, sample.fy_to, output_dir=output_dir)
+            return page
+        entries.append(YearEntry(fy, report) if report else YearEntry(fy, problem="NSE has no BRSR filing for this year.", kind=NOT_FILED))
+    name = next(entry.report.company_name for entry in entries if entry.report)
+    return write_trend_page(build_trend(name, sample.symbol, entries), output_dir)
+
+
+def _readme(report_pages, trend_pages, error_pages):
     lines = [
         "# Sample pages",
         "",
@@ -133,6 +183,9 @@ def _readme(report_pages, error_pages):
         "|---|---|---|",
     ]
     lines += [f"| [{page.name}]({page.name}) | {s.company}, FY {s.fy} | {s.shows} |" for s, page in report_pages]
+    lines += ["", "## Trend pages (one company over several years: `python trends.py ...`)", "",
+              "| File | Company and years | What it shows |", "|---|---|---|"]
+    lines += [f"| [{page.name}]({page.name}) | {s.company}, FY {s.fy_from} to FY {s.fy_to} | {s.shows} |" for s, page in trend_pages]
     lines += ["", "## Error pages (what you see instead of a report when something goes wrong)", "",
               "| File | What was asked | What it shows |", "|---|---|---|"]
     lines += [f"| [{page.name}]({page.name}) | {e.company}, {e.fy} | {e.shows} |" for e, page in error_pages]
@@ -142,5 +195,6 @@ def _readme(report_pages, error_pages):
 def expected_files():
     """Names of the files make_samples() writes (for tests and the README)."""
     names = [f"{safe_name(s.symbol)}_{s.fy}.html" for s in SAMPLE_COMPANIES]
+    names += [trend_page_name(s.symbol, s.fy_from, s.fy_to) for s in SAMPLE_TRENDS]
     names += [error_page_path(e.company, e.fy, Path()).name for e in SAMPLE_ERRORS]
     return names

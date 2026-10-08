@@ -10,8 +10,8 @@ a few "what you can try" hints, and, where we know them, ready-to-run commands (
 
 from dataclasses import dataclass, field
 
-from brsr_p6.errors import (AmbiguousCompany, BrsrError, FileNotAvailable, InvalidFiscalYear, NoFilingFound, NSEUnavailable,
-                            UnknownCompany, UnparseableFiling, UnsupportedYear)
+from brsr_p6.errors import (AmbiguousCompany, BrsrError, FileNotAvailable, InvalidFiscalYear, InvalidYearRange, NoFilingFound,
+                            NSEUnavailable, UnknownCompany, UnparseableFiling, UnsupportedYear)
 from brsr_p6.fiscal_year import parse_fiscal_year
 
 EXAMPLE_YEAR = "2023-24"
@@ -51,6 +51,10 @@ ERROR_INFO = {
     UnsupportedYear: ErrorInfo(
         "Year too early", "BRSR filings start with FY 2021-22",
         ("BRSR reporting began with FY 2021-22 (for the top 1,000 listed companies), so nothing earlier exists. Try 2021-22 or later.",)),
+    InvalidYearRange: ErrorInfo(
+        "Year range not valid", "That range of years cannot be used",
+        ("Give the earlier year first, for example --from 2021-22 --to 2025-26.",
+         "BRSR filings exist for FY 2021-22 and later, and at most 10 years can be shown at a time.")),
     UnknownCompany: ErrorInfo(
         "Unknown company", "We could not find that company on NSE",
         ("Check the spelling, or type the company's NSE symbol (for example TATASTEEL, RELIANCE or INFY).",
@@ -85,8 +89,10 @@ UNEXPECTED = ErrorInfo(
 )
 
 
-def build_error_view(error, company_text="", fy_text=""):
-    """The ErrorView for an exception.  `company_text` and `fy_text` are what the user typed."""
+def build_error_view(error, company_text="", fy_text="", trends=False):
+    """The ErrorView for an exception.  `company_text` and `fy_text` are what the user typed.
+
+    `trends=True` when the failed command was trends.py: the suggested commands then use trends.py instead of main.py."""
     if isinstance(error, BrsrError):
         info = next(ERROR_INFO[cls] for cls in type(error).__mro__ if cls in ERROR_INFO)
         message, unexpected = str(error), False
@@ -98,7 +104,12 @@ def build_error_view(error, company_text="", fy_text=""):
     if isinstance(error, AmbiguousCompany):
         year = _usable_year(fy_text)
         view.options_title = "Companies that match what you typed"
-        view.options = [OptionView(f"{c.name} ({c.symbol})", _command(c.symbol, year)) for c in error.candidates]
+        view.options = [OptionView(f"{c.name} ({c.symbol})", _trend_command(c.symbol) if trends else _command(c.symbol, year))
+                        for c in error.candidates]
+    elif isinstance(error, NoFilingFound) and error.symbol and error.available and trends:
+        first, last = error.available[0], error.available[-1]
+        view.options_title = "The years NSE has for this company"
+        view.options = [OptionView(f"FY {first} to FY {last}", _trend_command(error.symbol, first, last))]
     elif isinstance(error, NoFilingFound) and error.symbol and error.available:
         view.options_title = "Financial years NSE has for this company"
         view.options = [OptionView(f"FY {fy}", _command(error.symbol, fy)) for fy in error.available]
@@ -124,3 +135,8 @@ def _usable_year(fy_text):
 
 def _command(symbol, fy):
     return f'python main.py --company "{symbol}" --fy {fy}'
+
+
+def _trend_command(symbol, first=None, last=None):
+    years = f" --from {first} --to {last}" if first else ""
+    return f'python trends.py --company "{symbol}"{years}'

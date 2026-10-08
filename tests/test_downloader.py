@@ -141,3 +141,12 @@ def test_manually_downloaded_file_is_reused(tmp_path):
     run(tmp_path, client, fy="2023-24")
     assert client.downloads == []
     assert (manual / "b.xml").read_bytes() == b"<?xml?> my own copy"
+
+
+def test_first_and_last_keep_only_the_years_in_between_and_the_report_still_lists_every_filing(tmp_path):
+    client = FakeNse()
+    report = run(tmp_path, client, first="2023-24", last="2023-24")
+    assert [d.record.fy for d in report.downloads] == ["2023-24"] and client.downloads == [XML + "b.xml"]
+    assert [r.fy for r in report.records] == ["2022-23", "2023-24", "2024-25"]               # what NSE has, for flagging missing years
+    assert [d.record.fy for d in run(tmp_path, FakeNse(), first="2023-24").downloads] == ["2023-24", "2024-25"]
+    assert [d.record.fy for d in run(tmp_path, FakeNse(), last="2022-23").downloads] == ["2022-23"]

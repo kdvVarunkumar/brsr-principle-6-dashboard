@@ -96,3 +96,18 @@ def test_trust_and_has_number_helpers():
     assert trust_of(number(1), number(2)) == OK
     assert trust_of(number(1, warnings=[ZERO_MEANING]), number(2)) == CHECK
     assert has_number(number(0)) and not has_number(MISSING) and not has_number(Cell("Yes", "", Status.REPORTED))
+
+
+# ------------------------------------------------------------------------------------------------ the words for the older year (trend page)
+def test_the_older_year_can_be_called_by_its_name():
+    result = compare(number(120), number(100), LOWER, earlier="FY 2023-24")
+    assert (result.verdict, result.change) == (WORSE, "20.0% higher than FY 2023-24")
+    assert compare(number(1.5, "%"), number(1.0, "%"), HIGHER, "share", earlier="FY 2023-24").change == "0.50 percentage points above FY 2023-24"
+    assert compare(number(100), number(100), LOWER, earlier="FY 2023-24").change == "No change from FY 2023-24"
+
+
+def test_the_reasons_name_the_older_year_too_and_the_default_wording_is_unchanged():
+    assert compare(number(5), MISSING, LOWER, earlier="FY 2023-24").reason == "No figure for FY 2023-24."
+    assert compare(number(5), number(0), LOWER, earlier="FY 2023-24").reason == "FY 2023-24's figure was 0, so a percentage change cannot be worked out."
+    assert compare(number(5), number(0), LOWER).reason == "Last year's figure was 0, so a percentage change cannot be worked out."
+    assert compare(number(5), MISSING, LOWER).reason == "No figure for last year."

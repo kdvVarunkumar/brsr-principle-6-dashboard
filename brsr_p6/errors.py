@@ -18,6 +18,10 @@ class UnsupportedYear(BrsrError):
     """A valid financial year, but earlier than FY 2021-22 (out of scope for this project)."""
 
 
+class InvalidYearRange(BrsrError):
+    """A multi-year request whose start year is after its end year, or that spans too many years."""
+
+
 class UnknownCompany(BrsrError):
     """No NSE-listed equity matches the text the user typed."""
 

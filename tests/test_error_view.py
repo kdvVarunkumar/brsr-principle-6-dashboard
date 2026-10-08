@@ -114,3 +114,21 @@ def test_write_error_page_creates_the_folder_and_the_file(tmp_path):
     view = build_error_view(UnknownCompany("No match."), "Xyzzy", "2023-24")
     path = write_error_page(view, "Xyzzy", "2023-24", tmp_path / "new_folder")
     assert path.exists() and path.read_text(encoding="utf-8").startswith("<!doctype html>")
+
+
+# ------------------------------------------------------------------------------------------------ trend commands (trends.py)
+def test_an_invalid_year_range_has_its_own_page():
+    from brsr_p6.errors import InvalidYearRange
+    view = build_error_view(InvalidYearRange("The start year FY 2024-25 is after the end year FY 2022-23."), "Reliance", "2024-25 to 2022-23", trends=True)
+    assert view.title == "That range of years cannot be used" and any("--from 2021-22 --to 2025-26" in h for h in view.hints)
+
+
+def test_suggested_commands_use_trends_py_when_a_trend_request_failed():
+    ambiguous = AmbiguousCompany("Several.", [Company("TCS", "Tata Consultancy Services Limited")])
+    assert build_error_view(ambiguous, "Tata", "2021-22 to 2025-26", trends=True).options[0].command == 'python trends.py --company "TCS"'
+    none_in_range = NoFilingFound("No filing in range.", symbol="TATASTEEL", available=["2022-23", "2023-24", "2025-26"])
+    option = build_error_view(none_in_range, "Tata Steel", "2018-19 to 2019-20", trends=True).options[0]
+    assert option.label == "FY 2022-23 to FY 2025-26"
+    assert option.command == 'python trends.py --company "TATASTEEL" --from 2022-23 --to 2025-26'
+    # ... and main.py as before for a one-year request
+    assert build_error_view(none_in_range, "Tata Steel", "2021-22").options[0].command == 'python main.py --company "TATASTEEL" --fy 2022-23'

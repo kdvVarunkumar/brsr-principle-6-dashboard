@@ -6,10 +6,13 @@ We always use the short canonical form "2023-24" for folder names and messages.
 
 import re
 
-from brsr_p6.errors import InvalidFiscalYear, UnsupportedYear
+from brsr_p6.errors import InvalidFiscalYear, InvalidYearRange, UnsupportedYear
 
 # The assignment only covers FY 2021-22 and later.
 EARLIEST_START_YEAR = 2021
+
+# A multi-year trend page covers at most this many years (BRSR has existed for only a few, so this is generous).
+MAX_TREND_YEARS = 10
 
 # Accepts: 2023-24, 2023-2024, FY2023-24, FY 2023-24, 2023/24 (case-insensitive).
 _FY_PATTERN = re.compile(r"^(?:FY)?\s*(\d{4})\s*[-/]\s*(\d{4}|\d{2})$", re.IGNORECASE)
@@ -24,6 +27,24 @@ def previous_fiscal_year(fy: str) -> str:
     """'2023-24' -> '2022-23'."""
     start = int(fy[:4])
     return format_fiscal_year(start - 1, start)
+
+
+def next_fiscal_year(fy: str) -> str:
+    """'2023-24' -> '2024-25'."""
+    start = int(fy[:4])
+    return format_fiscal_year(start + 1, start + 2)
+
+
+def fiscal_years_between(first: str, last: str) -> list:
+    """Every financial year from `first` to `last`, oldest first: ('2021-22', '2023-24') -> ['2021-22', '2022-23', '2023-24'].
+
+    Both must already be in the canonical form (see parse_fiscal_year)."""
+    start, end = int(first[:4]), int(last[:4])
+    if start > end:
+        raise InvalidYearRange(f"The start year FY {first} is after the end year FY {last}. Give the earlier year first.")
+    if end - start + 1 > MAX_TREND_YEARS:
+        raise InvalidYearRange(f"FY {first} to FY {last} is {end - start + 1} years; at most {MAX_TREND_YEARS} years can be shown at a time.")
+    return [format_fiscal_year(year, year + 1) for year in range(start, end + 1)]
 
 
 def parse_fiscal_year(text: str) -> str:

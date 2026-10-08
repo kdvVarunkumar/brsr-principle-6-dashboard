@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ view.company_name }}: BRSR Principle 6 trends, FY {{ view.first_fy }} to FY {{ view.last_fy }}</title>
+<style>
+{% include "style.css" %}
+{% include "dashboard.css" %}
+{% include "trends.css" %}
+</style>
+</head>
+<body>
+{# The multi-year trend page.  Everything it shows was decided in trend_view.py; this file only prints it. #}
+
+{% macro chip(css_class, text) %}<span class="chip {{ css_class }}">{{ text }}</span>{% endmacro %}
+
+{% macro marks(items) %}{% for m in items %}<span class="mark mark-{{ m.css }}" title="{{ m.title }}" aria-label="{{ m.title }}" role="img">{{ m.symbol }}</span>{% endfor %}{% endmacro %}
+
+{# the header row of every table: one column per financial year #}
+{% macro year_headers(columns) %}
+{% for col in columns %}
+<th scope="col" class="yearcol {{ col.source }}">
+  <span class="fy">FY {{ col.fy }}</span>
+  {% if col.basis_text %}<span class="basis basis-{{ col.basis }}">{{ col.basis_text }}</span>{% endif %}
+  {% if col.note %}<span class="colnote">{{ col.note }}</span>{% endif %}
+</th>
+{% endfor %}
+{% endmacro %}
+
+{% macro cell(c) %}
+<td class="cell {{ c.css }}">
+  <span class="v num">{{ c.text }}</span>{% if c.unit %}<span class="u">{{ c.unit }}</span>{% endif %}{% for tag in c.tags %}<span class="tag tag-{{ 'calculated' if tag == 'calc.' else 'converted' }}">{{ tag }}</span>{% endfor %}{{ marks(c.marks) }}
+  {% if c.bar is not none %}<span class="mbar" aria-hidden="true"><i style="width:{{ '%.1f'|format(c.bar) }}%"></i></span>{% endif %}
+</td>
+{% endmacro %}
+
+<header class="page-header">
+  <div class="inner">
+    <p class="eyebrow">Business Responsibility &amp; Sustainability Report · Principle 6 (environment) · several years</p>
+    <h1>{{ view.company_name }} <span class="symbol">({{ view.symbol }})</span></h1>
+    <p class="subtitle">Trends from FY {{ view.first_fy }} to FY {{ view.last_fy }}</p>
+  </div>
+</header>
+
+<main class="trend-main">
+<div class="dash">
+
+  <section class="glance" aria-labelledby="trend-glance-h">
+    <h2 id="trend-glance-h">How have the environmental figures changed over the years?</h2>
+    <p class="story">{{ view.summary }}</p>
+    <p class="fairness"><b>How to read this page.</b> Each column is one financial year, with the basis it was reported on
+      (<b>standalone</b> = the company alone, <b>consolidated</b> = with its subsidiaries). “No filing” means NSE has none for that year: it is
+      never shown as 0. <span class="mark mark-restated">⟲</span> a later filing changed this year's figure.
+      <span class="mark mark-warn">⚠</span> the figure carries a note or looks doubtful.
+      <span class="mark mark-basis">≠</span> the next filing is on a different basis. <span class="mark mark-unit">u</span> a different unit from the other years.
+      Trend verdicts only compare years on the <b>same basis and in the same unit</b>, and only against the company's own earlier years.</p>
+    <p class="swipe-hint">On a phone the tables scroll sideways: swipe to see every year.</p>
+  </section>
+
+  {% if view.notes %}
+  <section class="topic" aria-labelledby="trend-notes-h">
+    <div class="topic-head"><h2 id="trend-notes-h">Read this before comparing years</h2></div>
+    <ul class="notes-list">
+      {% for note in view.notes %}<li class="note note-{{ note.kind }}">{{ note.text }}</li>{% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+
+  {% for topic in view.topics %}
+  <section class="topic" id="trend-{{ topic.id }}" aria-labelledby="trend-{{ topic.id }}-h">
+    <div class="topic-head"><svg aria-hidden="true"><use href="#{{ topic.icon }}"/></svg><h2 id="trend-{{ topic.id }}-h">{{ topic.name }}</h2></div>
+    <div class="table-wrap">
+      <table class="trendtable">
+        <thead><tr><th scope="col" class="rowhead">Figure</th>{{ year_headers(view.columns) }}<th scope="col" class="trendcol">Trend (same basis)</th></tr></thead>
+        <tbody>
+          {% for row in topic.rows %}
+          <tr>
+            <th scope="row" class="rowhead">{{ row.label }}{% if row.unit %}<span class="runit">{{ row.unit }}</span>{% endif %}<span class="rbetter">{{ row.better_label }}</span></th>
+            {% for c in row.cells %}{{ cell(c) }}{% endfor %}
+            <td class="trendcol">{{ chip(row.chip_class, row.chip_text) }}<span class="trendtext">{{ row.trend }}</span></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+  {% endfor %}
+
+  <section class="topic" aria-labelledby="trend-all-h">
+    <div class="topic-head"><h2 id="trend-all-h">Every figure, year by year</h2></div>
+    <p class="plain">All the numbers of SEBI's Principle 6 tables, one column per year, exactly as filed (units converted only where marked).
+      Open a question to see its table. Lists and the water-stress facility tables are in the one-year SEBI report.</p>
+    {% for q in view.questions %}
+    <details class="question">
+      <summary><b>{{ q.label }}</b> · {{ q.text }}</summary>
+      <div class="table-wrap">
+        <table class="trendtable all">
+          <thead><tr><th scope="col" class="rowhead">Parameter</th>{{ year_headers(view.columns) }}</tr></thead>
+          <tbody>
+            {% for row in q.rows %}
+            {% if row.heading %}
+            <tr class="subhead"><th scope="colgroup" colspan="{{ view.columns|length + 1 }}">{{ row.label }}</th></tr>
+            {% else %}
+            <tr><th scope="row" class="rowhead">{{ row.label }}{% if row.unit %}<span class="runit">{{ row.unit }}</span>{% endif %}</th>{% for c in row.cells %}{{ cell(c) }}{% endfor %}</tr>
+            {% endif %}
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </details>
+    {% endfor %}
+  </section>
+
+  {% if view.restatements %}
+  <section class="topic" aria-labelledby="trend-restated-h">
+    <div class="topic-head"><h2 id="trend-restated-h">Figures changed by a later filing ({{ view.restated_total }})</h2></div>
+    <p class="plain">A company can restate a year in its next report. We keep each figure as filed in its own year and list the biggest changes here
+      {% if view.restated_total > view.restatements|length %}(the {{ view.restatements|length }} largest of {{ view.restated_total }}){% endif %}.</p>
+    <div class="table-wrap">
+      <table class="trendtable all">
+        <thead><tr><th scope="col" class="rowhead">Figure</th><th scope="col">Year</th><th scope="col">As filed</th><th scope="col">Later filing says</th><th scope="col">Change</th><th scope="col">In the filing of</th></tr></thead>
+        <tbody>
+          {% for r in view.restatements %}
+          <tr><th scope="row" class="rowhead">{{ r.label }}</th><td>FY {{ r.fy }}</td><td class="num">{{ r.filed }}</td><td class="num">{{ r.restated }}</td><td>{{ r.change }}</td><td>FY {{ r.in_fy }}</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+  {% endif %}
+
+</div>
+</main>
+
+{# the same icons as the dashboard, drawn once #}
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-bolt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></symbol>
+  <symbol id="i-cloud" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M7 18a4 4 0 0 1-.5-7.97A6 6 0 0 1 18 9a4.5 4.5 0 0 1 0 9z"/></symbol>
+  <symbol id="i-drop" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2.5s6 6.2 6 10.5a6 6 0 0 1-12 0c0-4.3 6-10.5 6-10.5z"/></symbol>
+  <symbol id="i-wind" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10a3 3 0 1 0-3-3M3 12h14a3 3 0 1 1-3 3M3 16h7"/></symbol>
+  <symbol id="i-bin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/></symbol>
+</svg>
+
+<footer>
+  Source: the company's BRSR filings on NSE. Every figure comes from a filing; nothing is estimated. For one year explained in plain English, run
+  <code>python main.py --company "{{ view.symbol }}" --fy {{ view.last_fy }}</code>.
+</footer>
+
+</body>
+</html>

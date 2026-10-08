@@ -11,8 +11,10 @@ from brsr_p6.errors import NoFilingFound
 from brsr_p6.extractor import build_report
 from brsr_p6.filings import FilingRecord
 from brsr_p6.fiscal_year import parse_fiscal_year
-from brsr_p6.render import DEFAULT_OUTPUT_DIR, write_page
+from brsr_p6.render import DEFAULT_OUTPUT_DIR, write_page, write_trend_page
 from brsr_p6.report_io import save_report
+from brsr_p6.trend_loader import load_year_entries
+from brsr_p6.trend_model import build_trend
 from brsr_p6.xbrl_reader import read_filing
 
 
@@ -53,3 +55,15 @@ def generate_page(company, fy, output_dir=DEFAULT_OUTPUT_DIR, progress=_silent):
     report, _ = load_report(company, fy, progress)
     save_report(report)
     return write_page(report, output_dir), report
+
+
+def load_trend(company, fy_from=None, fy_to=None, progress=_silent):
+    """The multi-year Trend of a company: downloads what is needed (politely, cached) and reads every year in the range."""
+    found, entries = load_year_entries(company, fy_from, fy_to, progress=progress)
+    return build_trend(found.name, found.symbol, entries)
+
+
+def generate_trend_page(company, fy_from=None, fy_to=None, output_dir=DEFAULT_OUTPUT_DIR, progress=_silent):
+    """Produce the multi-year trend page.  Returns (path_of_the_page, trend)."""
+    trend = load_trend(company, fy_from, fy_to, progress)
+    return write_trend_page(trend, output_dir), trend

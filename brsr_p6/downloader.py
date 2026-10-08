@@ -40,6 +40,7 @@ class DownloadReport:
     downloads: list
     missing_years: list
     requests_made: int = 0  # how many requests this run really sent to NSE (0 = everything came from disk)
+    records: list = field(default_factory=list)  # every filing NSE lists for the company (not only the ones downloaded)
 
 
 def safe_name(text: str) -> str:
@@ -56,8 +57,12 @@ def download_filings(
     cache_dir: Path = DEFAULT_CACHE_DIR,
     client: NseClient | None = None,
     progress=print,
+    first: str | None = None,
+    last: str | None = None,
 ) -> DownloadReport:
-    """Download the BRSR filing(s) of a company. `fy=None` means every year NSE has (FY 2021-22 onwards)."""
+    """Download the BRSR filing(s) of a company. `fy=None` means every year NSE has (FY 2021-22 onwards).
+
+    `first` / `last` (for example "2022-23") keep only the filings from that year / up to that year: used by the trend page."""
     # 1) Validate the cheap things first, so a typo never costs a request to NSE.
     wanted_fy = parse_fiscal_year(fy) if fy else None
     client = client or NseClient()
@@ -78,7 +83,10 @@ def download_filings(
     progress("NSE has BRSR filings for: " + ", ".join(f"FY {r.fy}" for r in records))
 
     # 4) Which of them do we want?
-    targets = [select_filing(records, wanted_fy)] if wanted_fy else records
+    if wanted_fy:
+        targets = [select_filing(records, wanted_fy)]
+    else:
+        targets = [r for r in records if (first is None or r.fy_from >= int(first[:4])) and (last is None or r.fy_from <= int(last[:4]))]
 
     # 5) Save them.
     downloads = []
@@ -91,6 +99,7 @@ def download_filings(
         downloads=downloads,
         missing_years=[] if wanted_fy else missing_years(records),
         requests_made=getattr(client, "request_count", 0),
+        records=records,
     )
 
 
