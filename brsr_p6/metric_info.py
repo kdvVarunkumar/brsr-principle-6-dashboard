@@ -27,6 +27,7 @@ class MetricInfo:
     only_if_present: bool = False   # newer filings only: leave the card out when the filing's edition has no such item
     also: tuple = ()           # more rows to mention in the fine print: ((label, SEBI row key), ...)
     title_as_filed: str = ""   # intensities: the title to use when the unit is unclear and the number could not be put per Rs crore
+    replaces: str = ""         # intensities: the id of the total this per-sales figure is the fairer measure of (the summary page ranks one of the two)
 
 
 @dataclass(frozen=True)
@@ -104,7 +105,7 @@ METRICS = (
     MetricInfo("energy_intensity", "energy", "Energy for every ₹ 1 crore of sales", LOWER,
                "Energy used divided by sales (called “energy intensity”).",
                "The fairest way to judge efficiency, because it still works when the company grows.",
-               "E1.intensity", shape="intensity", headline=True, title_as_filed="Energy per unit of sales"),
+               "E1.intensity", shape="intensity", headline=True, title_as_filed="Energy per unit of sales", replaces="energy_total"),
     MetricInfo("renewable_share", "energy", "Energy from renewable sources", HIGHER,
                "The part of all energy that came from renewables such as solar and wind.",
                "The more energy comes from renewables, the fewer greenhouse gases the same work causes.",
@@ -118,7 +119,7 @@ METRICS = (
     MetricInfo("ghg_intensity", "climate", "Greenhouse gases for every ₹ 1 crore of sales", LOWER,
                "Scope 1 + 2 emissions divided by sales (“emission intensity”).",
                "Shows whether the company is getting cleaner per unit of business, even while it grows.",
-               "E6.intensity", shape="intensity", headline=True, title_as_filed="Greenhouse gases per unit of sales"),
+               "E6.intensity", shape="intensity", headline=True, title_as_filed="Greenhouse gases per unit of sales", replaces="ghg_total"),
     MetricInfo("ghg_scope3", "climate", "Supply-chain emissions (Scope 3)", LOWER,
                "Emissions from suppliers, transport and customers, which the company does not control directly.",
                "For many companies this is the biggest part of their footprint, so a missing figure leaves a gap.",
@@ -132,7 +133,7 @@ METRICS = (
     MetricInfo("water_intensity", "water", "Water for every ₹ 1 crore of sales", LOWER,
                "Water consumed divided by sales (“water intensity”).",
                "Shows whether each ₹ of business needs more or less water than before.",
-               "E3.intensity", shape="intensity", headline=True, title_as_filed="Water per unit of sales"),
+               "E3.intensity", shape="intensity", headline=True, title_as_filed="Water per unit of sales", replaces="water_in"),
     MetricInfo("water_out", "water", "Water given back (discharged)", CONTEXT,
                "Treated or untreated water the company released back to rivers, the sea or other receivers.",
                "Discharged water can carry pollutants. Whether it was treated first is the key question.",
@@ -162,7 +163,7 @@ METRICS = (
     MetricInfo("waste_intensity", "waste", "Waste for every ₹ 1 crore of sales", LOWER,
                "Waste produced divided by sales.",
                "Shows whether each ₹ of business creates more or less waste than before.",
-               "X.waste_rupee", shape="intensity", headline=True, only_if_present=True, title_as_filed="Waste per unit of sales"),
+               "X.waste_rupee", shape="intensity", headline=True, only_if_present=True, title_as_filed="Waste per unit of sales", replaces="waste_total"),
     MetricInfo("waste_recovered", "waste", "Waste recycled or reused", HIGHER,
                "The share of waste that was recycled, reused or otherwise recovered instead of burned or buried.",
                "Recovered waste does not end up in landfills or chimneys, so this is the best single sign of good waste handling.",

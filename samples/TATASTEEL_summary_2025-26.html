@@ -1,0 +1,416 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tata Steel Limited: what got better and worse in FY 2025-26</title>
+<style>
+/* Styles for the generated report page. Everything is inline in the HTML so the page opens anywhere, offline. */
+:root {
+  --ink: #1d2733;
+  --muted: #5d6b7a;
+  --paper: #ffffff;
+  --page: #f3f5f7;
+  --line: #d5dce3;
+  --accent: #0f6b5c;
+  --accent-soft: #e3f1ee;
+  --head-bg: #e8eef2;
+  --warn-ink: #7a4b00;
+  --warn-bg: #fff3d4;
+  --warn-line: #e5b84a;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--page); color: var(--ink); font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+a { color: var(--accent); }
+
+/* ---------- page header ---------- */
+.page-header { background: var(--accent); color: #fff; padding: 28px 16px 22px; }
+.page-header .inner, main, footer { max-width: 1120px; margin: 0 auto; }
+.eyebrow { margin: 0 0 4px; font-size: 0.85rem; letter-spacing: 0.04em; text-transform: uppercase; opacity: 0.9; }
+h1 { margin: 0; font-size: 1.9rem; line-height: 1.2; }
+h1 .symbol { font-weight: 400; opacity: 0.85; }
+.subtitle { margin: 4px 0 0; opacity: 0.95; }
+
+/* ---------- facts box ---------- */
+.facts-box { background: var(--paper); border: 1px solid var(--line); border-radius: 8px; margin: -14px 16px 18px; padding: 14px 18px; max-width: 1088px; }
+@media (min-width: 1152px) { .facts-box { margin-left: auto; margin-right: auto; } }
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 10px 24px; margin: 0; }
+.facts div { min-width: 0; }
+.facts dt { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
+.facts dd { margin: 0; overflow-wrap: anywhere; }
+.boundary { font-weight: 700; }
+.boundary-help { display: block; font-size: 0.82rem; color: var(--muted); font-weight: 400; }
+.legend { margin: 12px 0 0; font-size: 0.9rem; color: var(--muted); }
+.callout { margin: 12px 0 0; padding: 10px 14px; background: var(--warn-bg); border: 1px solid var(--warn-line); border-left-width: 5px; border-radius: 6px; color: var(--warn-ink); font-size: 0.92rem; }
+
+/* ---------- tabs (CSS only: no JavaScript) ---------- */
+main { padding: 0 16px 32px; }
+main > input[type="radio"] { position: absolute; opacity: 0; pointer-events: none; }
+main > label { display: inline-block; padding: 9px 18px; margin-right: 6px; border: 1px solid var(--line); border-bottom: none; border-radius: 8px 8px 0 0; background: var(--head-bg); cursor: pointer; font-weight: 600; }
+#view-sebi:checked ~ label[for="view-sebi"], #view-dashboard:checked ~ label[for="view-dashboard"] { background: var(--paper); color: var(--accent); box-shadow: inset 0 3px 0 var(--accent); }
+main > input:focus-visible + label { outline: 3px solid #1a73e8; outline-offset: 2px; }
+.panel { display: none; background: var(--paper); border: 1px solid var(--line); border-radius: 0 8px 8px 8px; padding: 20px 22px 28px; }
+#view-sebi:checked ~ .panel-sebi, #view-dashboard:checked ~ .panel-dashboard { display: block; }
+
+/* ---------- SEBI view ---------- */
+.principle-title { margin: 0 0 4px; font-size: 1.1rem; color: var(--accent); }
+.principle-sub { margin: 0 0 8px; color: var(--muted); font-size: 0.92rem; }
+h2.section { margin: 30px 0 4px; padding-bottom: 6px; border-bottom: 3px solid var(--accent); font-size: 1.25rem; }
+article.question { margin: 26px 0 0; padding-top: 6px; }
+article.question h3 { margin: 0 0 10px; font-size: 1rem; font-weight: 600; line-height: 1.45; }
+.qnum { display: inline-block; min-width: 1.8em; color: var(--accent); }
+
+.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 6px; }
+table.sebi { width: 100%; min-width: 620px; border-collapse: collapse; font-size: 0.93rem; }
+table.sebi th, table.sebi td { padding: 7px 10px; border-bottom: 1px solid var(--line); vertical-align: top; text-align: left; }
+table.sebi thead th { background: var(--head-bg); font-weight: 600; }
+table.sebi thead th small { font-weight: 400; color: var(--muted); display: block; }
+table.sebi tbody th[scope="row"] { font-weight: 400; width: 46%; }
+table.sebi tr.subhead th { background: #f3f6f8; font-weight: 600; }
+table.sebi tbody tr:last-child th, table.sebi tbody tr:last-child td { border-bottom: none; }
+table.sebi td.val, table.sebi th.valhead { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+table.sebi td.unit-col { color: var(--muted); white-space: nowrap; }
+table.list td { text-align: left; white-space: normal; overflow-wrap: anywhere; }
+
+.num { font-variant-numeric: tabular-nums; }
+.unit { color: var(--muted); font-size: 0.85em; margin-left: 5px; }
+.unit-unknown { font-style: italic; }
+.missing { color: var(--muted); font-style: italic; }
+td.missing { background: #fafbfc; }
+
+/* marks: words and symbols, never colour alone */
+.tag { display: inline-block; margin-left: 4px; padding: 0 5px; border-radius: 3px; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.02em; vertical-align: middle; }
+.tag-calculated { border: 1px solid #3b6ea8; color: #24507f; background: #eaf2fb; }
+.tag-converted { border: 1px solid #7a5aa6; color: #573a82; background: #f1ecf8; }
+sup.fn { margin-left: 2px; font-size: 0.7rem; }
+sup.fn a { text-decoration: none; font-weight: 700; padding: 0 1px; }
+sup.fn-warn a { color: var(--warn-ink); }
+
+ul.footnotes { list-style: none; margin: 8px 0 0; padding: 0; font-size: 0.85rem; color: var(--muted); }
+ul.footnotes li { margin: 3px 0; padding-left: 1.8em; text-indent: -1.8em; }
+ul.footnotes .fn-num { display: inline-block; min-width: 1.4em; font-weight: 700; text-indent: 0; }
+ul.footnotes li.warning { color: var(--warn-ink); background: var(--warn-bg); border-radius: 4px; padding: 3px 8px 3px 2.4em; }
+
+.answer-box { border-left: 4px solid var(--accent-soft); padding: 2px 0 2px 14px; }
+.answer-box p { margin: 4px 0; }
+.details { white-space: pre-line; margin: 4px 0 0; }
+.assurance { margin: 10px 0 0; font-size: 0.88rem; }
+.sebi-note { color: var(--muted); }
+.remark { margin: 10px 0 0; padding: 7px 12px; background: var(--accent-soft); border-radius: 6px; font-size: 0.86rem; }
+.facility { margin: 16px 0 6px; }
+.facility h4 { margin: 0 0 6px; font-size: 0.95rem; }
+
+.placeholder { color: var(--muted); font-style: italic; }
+footer { padding: 4px 16px 40px; color: var(--muted); font-size: 0.85rem; }
+
+/* phones: let the tables fit the screen (units drop under the number, cells may wrap) instead of forcing a sideways swipe */
+@media (max-width: 640px) {
+  .panel { padding: 14px 12px 22px; }
+  table.sebi { min-width: 0; table-layout: fixed; font-size: 0.8rem; }
+  table.sebi th, table.sebi td { padding: 6px 4px; overflow-wrap: anywhere; }
+  table.sebi thead th:first-child { width: 36%; }               /* parameter column; the other columns share the rest */
+  table.sebi.has-unit thead th:nth-child(2) { width: 15%; }     /* the Unit column of E5, E6, L4 */
+  table.sebi th.valhead { white-space: normal; }
+  table.sebi td.val { white-space: normal; }
+  table.sebi td.val .unit { display: block; margin-left: 0; }
+  table.sebi td.unit-col { white-space: normal; }
+  table.sebi thead th small { font-size: 0.68rem; }
+  table.sebi.list { table-layout: auto; min-width: 560px; }     /* list tables have many columns: these may still scroll sideways */
+}
+
+@media print {
+  body { background: #fff; }
+  main > input, main > label { display: none; }
+  .panel { display: block !important; border: none; padding: 0; }
+  .panel-dashboard { display: none !important; }
+  .table-wrap { overflow: visible; }
+}/* The Dashboard tab.  Every rule starts with .dash so it can never change how the SEBI tab looks. */
+.dash {
+  --good-ink: #0b6b4f; --good-bg: #e0f3ec; --good-line: #86c9b3;
+  --bad-ink: #9a3608;  --bad-bg: #fde9dc;  --bad-line: #eba67d;
+  --same-ink: #46525f; --same-bg: #eceff2; --same-line: #b9c3cc;
+}
+/* the tab panel itself: no white box, so the white cards stand out on the page colour */
+.panel-dashboard { background: var(--page); border: none; padding: 0; }
+#view-dashboard:checked ~ label[for="view-dashboard"] { background: var(--page); }
+
+/* ---- jump menu ---- */
+.dash .jump { position: sticky; top: 0; z-index: 5; background: var(--paper); border-bottom: 1px solid var(--line); border-radius: 0 8px 0 0; }
+.dash .jump ul { list-style: none; margin: 0; padding: 0 6px; display: flex; gap: 2px; overflow-x: auto; white-space: nowrap; }
+.dash .jump a { display: block; padding: 10px 12px; text-decoration: none; font-weight: 600; font-size: .92rem; color: var(--ink); border-bottom: 3px solid transparent; }
+.dash .jump a:hover, .dash .jump a:focus-visible { border-bottom-color: var(--accent); color: var(--accent); outline: none; }
+
+/* ---- chips: words and symbols, never colour alone ---- */
+.dash .chip { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: .8rem; font-weight: 700; border: 1px solid; white-space: nowrap; }
+.dash .chip-good { color: var(--good-ink); background: var(--good-bg); border-color: var(--good-line); }
+.dash .chip-bad { color: var(--bad-ink); background: var(--bad-bg); border-color: var(--bad-line); }
+.dash .chip-same { color: var(--same-ink); background: var(--same-bg); border-color: var(--same-line); }
+.dash .chip-unsure { color: var(--same-ink); background: #fff; border-color: var(--same-line); border-style: dashed; }
+.dash .chip-warn { color: var(--warn-ink); background: var(--warn-bg); border-color: var(--warn-line); }
+
+/* ---- at a glance ---- */
+.dash .glance { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 20px 22px; margin: 18px 0; }
+.dash .glance h2 { margin: 0 0 6px; font-size: 1.35rem; }
+.dash .story { font-size: 1.06rem; margin: 0 0 14px; }
+.dash .score { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 16px; align-items: center; }
+.dash .score .lbl { color: var(--muted); font-size: .9rem; margin-right: 4px; }
+.dash .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(136px, 1fr)); gap: 10px; }
+.dash .tile { display: block; text-decoration: none; color: inherit; border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; background: #fbfcfd; }
+.dash .tile:hover, .dash .tile:focus-visible { border-color: var(--accent); outline: none; box-shadow: 0 0 0 2px var(--accent-soft); }
+.dash .t-name { display: flex; align-items: center; gap: 6px; font-weight: 700; margin-bottom: 6px; }
+.dash .t-name svg { width: 20px; height: 20px; color: var(--accent); flex: none; }
+.dash .t-stat { display: block; font-size: .82rem; color: var(--muted); margin-top: 6px; }
+.dash .fairness { margin: 14px 0 0; padding: 9px 12px; background: var(--accent-soft); border-radius: 8px; font-size: .88rem; }
+
+/* ---- topic sections ---- */
+.dash .topic { margin: 34px 0 0; scroll-margin-top: 52px; }
+.dash .topic-head { display: flex; align-items: center; gap: 10px; border-bottom: 3px solid var(--accent); padding-bottom: 6px; }
+.dash .topic-head svg { width: 30px; height: 30px; color: var(--accent); flex: none; }
+.dash .topic-head h2 { margin: 0; font-size: 1.4rem; }
+.dash .topic-head .src { margin-left: auto; font-size: .78rem; color: var(--muted); text-align: right; }
+.dash .plain { margin: 10px 0 4px; color: var(--muted); }
+.dash .headline { margin: 6px 0 14px; padding: 10px 14px; background: var(--paper); border-left: 5px solid var(--accent); border-radius: 0 8px 8px 0; font-size: 1.05rem; font-weight: 600; }
+
+/* ---- cards ---- */
+.dash .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 14px; }
+.dash .minis { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 12px; margin-top: 12px; }
+.dash .card, .dash .mini { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.dash .card.doubtful, .dash .mini.doubtful { border: 2px dashed var(--warn-line); background: #fffdf6; }
+.dash .card.empty, .dash .mini.empty { background: #fafbfc; border-style: dashed; }
+.dash .card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+.dash .card h3, .dash .mini h3 { margin: 0; font-size: 1rem; line-height: 1.3; }
+.dash .name { display: block; font-size: .76rem; font-weight: 400; color: var(--muted); }
+.dash .better { font-size: .74rem; color: var(--muted); border: 1px solid var(--line); border-radius: 4px; padding: 1px 6px; white-space: nowrap; }
+.dash .big { margin: 0; line-height: 1.1; }
+.dash .big .v { font-size: 2.1rem; font-weight: 700; letter-spacing: -.01em; }
+.dash .big .u { font-size: 1rem; color: var(--muted); margin-left: 4px; }
+.dash .mini .big .v { font-size: 1.55rem; }
+.dash .big.none .v { font-size: 1.3rem; font-weight: 600; color: var(--muted); font-style: italic; }
+.dash .doubtful .big .v { color: var(--warn-ink); }       /* a doubtful number must not look as sure as a good one */
+.dash .trend { margin: 0; font-size: .93rem; display: flex; flex-wrap: wrap; gap: 6px 8px; align-items: center; }
+.dash .caveat { margin: 0; font-size: .8rem; color: var(--muted); }
+.dash .bars { display: grid; gap: 4px; }
+.dash .bar-row { display: grid; grid-template-columns: 78px 1fr 64px; gap: 8px; align-items: center; font-size: .78rem; color: var(--muted); }
+.dash .bar-row .bv { text-align: right; font-variant-numeric: tabular-nums; }
+.dash .bar { display: block; height: 10px; background: #edf0f3; border-radius: 5px; overflow: hidden; }
+.dash .bar i { display: block; height: 100%; min-width: 3px; background: var(--accent); border-radius: 5px; }
+.dash .bar-row.prev .bar i { background: #9fb0bd; }
+.dash .what, .dash .why { margin: 0; font-size: .88rem; }
+.dash .what b, .dash .why b { color: var(--ink); }
+.dash .why { color: var(--muted); }
+.dash .alert { margin: 0; padding: 7px 10px; background: var(--warn-bg); border: 1px solid var(--warn-line); border-left-width: 5px; border-radius: 6px; color: var(--warn-ink); font-size: .86rem; }
+.dash .alert.shared { margin-top: 12px; }
+.dash details.fine { font-size: .84rem; color: var(--muted); border-top: 1px dashed var(--line); padding-top: 6px; }
+.dash details.fine summary { cursor: pointer; font-weight: 600; color: var(--accent); }
+.dash details.fine p { margin: 6px 0 0; }
+.dash .badge { font-size: .76rem; color: var(--muted); margin: auto 0 0; padding-top: 2px; }
+
+/* ---- "where does it come from / go" bars ---- */
+.dash figure.stack { margin: 16px 0 0; background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; }
+.dash figure.stack figcaption { font-weight: 700; margin-bottom: 8px; }
+.dash .stack-bar { display: flex; height: 22px; border-radius: 6px; overflow: hidden; background: #edf0f3; }
+.dash .stack-bar span { display: block; height: 100%; min-width: 3px; }
+.dash .key { list-style: none; margin: 10px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(310px, 1fr)); gap: 5px 22px; font-size: .88rem; }
+.dash .key li { display: grid; grid-template-columns: 12px 3.6em 1fr; gap: 0 8px; align-items: baseline; }
+.dash .key .sw { width: 12px; height: 12px; border-radius: 3px; transform: translateY(1px); }
+.dash .key .pct { font-weight: 700; text-align: right; }
+.dash .key .amt { color: var(--muted); }
+.dash .stack-note { margin: 8px 0 0; font-size: .84rem; color: var(--muted); }
+.dash .c1 { background: #0f6b5c; } .dash .c2 { background: #3b6ea8; } .dash .c3 { background: #7a5aa6; } .dash .c4 { background: #8fc1e3; } .dash .c5 { background: #9aa7b3; }
+.dash .g1 { background: #0f6b5c; } .dash .g2 { background: #5fb9a5; } .dash .g3 { background: #a9ddd0; }
+.dash .o1 { background: #e08a2e; } .dash .o2 { background: #8a5a2b; } .dash .o3 { background: #9aa7b3; }
+.dash .grey { background: #cfd6dc; }
+
+/* ---- safeguards ---- */
+.dash .safe { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 12px; }
+.dash .sg { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; }
+.dash .sg h3 { margin: 0; font-size: .98rem; line-height: 1.3; }
+.dash .sg .ans { margin: 0; }
+.dash .sg .what { color: var(--muted); }
+.dash .quote { margin: 6px 0 0; padding: 6px 10px; border-left: 3px solid var(--line); color: var(--ink); font-size: .85rem; overflow-wrap: anywhere; }
+
+/* ---- trust box + glossary ---- */
+.dash .box { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; margin-top: 12px; }
+.dash .trust-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; }
+.dash .box h3 { margin: 0 0 6px; font-size: 1rem; }
+.dash .box ul { margin: 6px 0 0; padding-left: 1.2em; }
+.dash .small { font-size: .84rem; color: var(--muted); }
+.dash dl.gloss { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 8px 28px; margin: 0; }
+.dash dl.gloss dt { font-weight: 700; }
+.dash dl.gloss dd { margin: 0 0 6px; color: var(--muted); font-size: .92rem; }
+
+/* wide screens: reserve two lines for titles so the big numbers line up across a row */
+@media (min-width: 700px) { .dash .card-top { min-height: 2.7em; } .dash .sg h3 { min-height: 2.6em; } }
+@media (max-width: 560px) {
+  .dash .topic-head { flex-wrap: wrap; }
+  .dash .topic-head .src { margin-left: 40px; flex-basis: 100%; text-align: left; }
+  .dash .big .v { font-size: 1.8rem; }
+  .dash .glance { padding: 16px 14px; }
+  .dash .bar-row { grid-template-columns: 70px 1fr 58px; }
+}/* The year-on-year summary page.  It reuses the dashboard's cards, chips and notes; only the numbered entries and the table are new. */
+.trend-main { max-width: 1280px; margin: 0 auto; padding: 0 16px 32px; }
+.trend-main .dash { margin-top: 4px; }
+.dash .notes-list { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 8px; }
+.dash .note { padding: 9px 12px; background: var(--paper); border: 1px solid var(--line); border-left: 5px solid var(--same-line); border-radius: 6px; font-size: .92rem; }
+
+.dash .topic.best .topic-head { border-bottom-color: #3f9a7d; }
+.dash .topic.worst .topic-head { border-bottom-color: #d9803f; }
+.dash .entries { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; margin-top: 12px; }
+.dash .entry { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.dash .entry-head { display: flex; gap: 10px; align-items: flex-start; margin: 0; font-size: 1.05rem; line-height: 1.35; font-weight: 700; }
+.dash .rank { flex: none; width: 1.9em; height: 1.9em; border-radius: 50%; display: grid; place-items: center; font-size: .9rem; color: #fff; }
+.dash .rank-good { background: var(--good-ink); }
+.dash .rank-bad { background: var(--bad-ink); }
+.dash .entry-line { margin: 0; font-size: .9rem; color: var(--muted); }
+.dash .entry-note { margin: 0; padding: 7px 10px; font-size: .86rem; background: var(--accent-soft); border-radius: 6px; }
+
+.swipe-hint { display: none; margin: 8px 0 0; font-size: .82rem; color: var(--muted); }
+@media (max-width: 700px) { .swipe-hint { display: block; } }
+.table-wrap { overflow-x: auto; background: var(--paper); border: 1px solid var(--line); border-radius: 10px; margin-top: 10px; }
+table.sumtable { width: 100%; min-width: 640px; border-collapse: collapse; font-size: .92rem; }
+table.sumtable th, table.sumtable td { padding: 8px 12px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: middle; }
+table.sumtable thead th { background: var(--head-bg); font-weight: 600; }
+table.sumtable tbody tr:last-child th, table.sumtable tbody tr:last-child td { border-bottom: none; }
+table.sumtable tbody th { font-weight: 400; }
+table.sumtable tr.shown th { font-weight: 700; }
+table.sumtable td.num { white-space: nowrap; font-variant-numeric: tabular-nums; }
+footer code { background: #eef1f4; border-radius: 4px; padding: 1px 6px; font-size: .85rem; }</style>
+</head>
+<body>
+
+
+<header class="page-header">
+  <div class="inner">
+    <p class="eyebrow">Business Responsibility &amp; Sustainability Report · Principle 6 (environment) · year on year</p>
+    <h1>Tata Steel Limited <span class="symbol">(TATASTEEL)</span></h1>
+    <p class="subtitle">FY 2025-26 compared with FY 2024-25</p>
+  </div>
+</header>
+
+<main class="trend-main">
+<div class="dash">
+
+  <section class="glance" aria-labelledby="sum-glance-h">
+    <h2 id="sum-glance-h">What got better, and what got worse, in FY 2025-26?</h2>
+    <p class="story">We compared 8 figures for Tata Steel between FY 2024-25 and FY 2025-26: 1 improved, 3 stayed about the same and 4 got worse. Biggest improvement: Water for every ₹ 1 crore of sales was 4.7% less than last year. Biggest setback: SOx (sulphur oxides) was 45.7% more than last year.</p>
+    <p class="score"><span class="chip chip-good">✔ 1 improved</span><span class="chip chip-same">≈ 3 about the same</span><span class="chip chip-bad">✖ 4 got worse</span></p>
+  </section>
+
+  <section class="topic" aria-labelledby="sum-def-h">
+    <div class="topic-head"><h2 id="sum-def-h">How we decide what is “better”</h2></div>
+    <ul class="notes-list">
+<li class="note">“Better” only means better than the company&#39;s own figures for last year. The filings contain no industry benchmark or legal limit, so a company is never rated against others.</li><li class="note">Each figure has a direction. Lower is better for energy, greenhouse gases, water and waste per ₹ of sales and for each air pollutant. Higher is better for the share of energy from renewable sources and the share of waste recycled or reused.</li><li class="note">A change smaller than 1% (for a share: smaller than 0.5 of a percentage point) counts as “about the same” and is not ranked.</li><li class="note">Amounts are ranked by how much they changed in percent. Shares are ranked by how many percentage points they changed (a rise from 80% to 90% counts as 10).</li><li class="note">A company that grows will use more in total, so wherever a figure per ₹ of sales exists it is ranked instead of the total. The total is shown as context.</li><li class="note">Both years come from the same filing, so they use the same reporting basis. A figure that is missing, doubtful, in a different unit or was zero last year is not ranked; the page lists it with the reason.</li>    </ul>
+  </section>
+
+  <section class="topic best" aria-labelledby="sum-best-h">
+    <div class="topic-head"><h2 id="sum-best-h">✔ The biggest improvements</h2></div>
+<p class="plain">Only 1 figure improved.</p><div class="entries"><div class="entry">
+  <p class="entry-head"><span class="rank rank-good" aria-label="Number 1">1</span><span class="entry-headline">Water for every ₹ 1 crore of sales was 4.7% less than last year.</span></p>
+<p class="entry-line">Last year: 744 kL per ₹ crore. This year: 709 kL per ₹ crore.</p><p class="entry-line">Lower is better here, so this is an improvement.</p>  <article class="card">
+  <div class="card-top">
+    <h3>Water for every ₹ 1 crore of sales</h3>
+<span class="better">Lower is better ↓</span>  </div>
+  <p class="big"><span class="v num">709</span><span class="u">kL per ₹ crore</span></p>
+  <p class="trend"><span class="chip chip-good">✔ Improved</span><span>▼ 4.7% lower than last year</span></p>
+  <div class="bars" role="img" aria-label="2025-26: 709; 2024-25: 744">
+    <div class="bar-row"><span>2025-26</span><span class="bar"><i style="width:95.27%"></i></span><span class="bv">709</span></div>
+    <div class="bar-row prev"><span>2024-25</span><span class="bar"><i style="width:100.00%"></i></span><span class="bv">744</span></div>
+  </div>
+  <p class="what"><b>What it is:</b> Water consumed divided by sales (“water intensity”).</p>
+<p class="why"><b>Why it matters:</b> Shows whether each ₹ of business needs more or less water than before.</p>  <details class="fine"><summary>Fine print</summary><p>Filed as 0.0000708951 KilolitersPerINR (last year 0.0000744126 KilolitersPerINR). We show it per ₹ crore (× 10,000,000); only the unit changed.</p><p>Source in the SEBI tab: Essential 3, “Water intensity per rupee of turnover (Water consumed / turnover)”.</p></details>
+  <p class="badge">⇄ Reported by the company · shown per ₹ crore</p>
+</article>
+
+<p class="entry-note">For comparison, water taken in was about the same as last year.</p></div>
+</div>  </section>
+
+  <section class="topic worst" aria-labelledby="sum-worst-h">
+    <div class="topic-head"><h2 id="sum-worst-h">✖ The biggest setbacks</h2></div>
+<p class="plain">These are the 3 biggest of the 4 figures that got worse.</p><div class="entries"><div class="entry">
+  <p class="entry-head"><span class="rank rank-bad" aria-label="Number 1">1</span><span class="entry-headline">SOx (sulphur oxides) was 45.7% more than last year.</span></p>
+<p class="entry-line">Last year: 46,000 tonnes. This year: 67,000 tonnes.</p><p class="entry-line">Lower is better here, so this is a step backwards.</p>  <article class="mini">
+  <div class="card-top">
+    <h3>SOx <span class="name">sulphur oxides</span></h3>
+  </div>
+  <p class="big"><span class="v num">67,000</span><span class="u">tonnes</span></p>
+  <p class="trend"><span class="chip chip-bad">✖ Got worse</span><span>▲ 45.7% higher than last year</span></p>
+  <p class="what">From burning coal and oil; cause acid rain.</p>
+  <p class="badge">Last year: 46,000 tonnes · ⇄ Reported by the company · unit changed by us</p>
+</article>
+
+</div>
+<div class="entry">
+  <p class="entry-head"><span class="rank rank-bad" aria-label="Number 2">2</span><span class="entry-headline">NOx (nitrogen oxides) was 12.5% more than last year.</span></p>
+<p class="entry-line">Last year: 24,000 tonnes. This year: 27,000 tonnes.</p><p class="entry-line">Lower is better here, so this is a step backwards.</p>  <article class="mini">
+  <div class="card-top">
+    <h3>NOx <span class="name">nitrogen oxides</span></h3>
+  </div>
+  <p class="big"><span class="v num">27,000</span><span class="u">tonnes</span></p>
+  <p class="trend"><span class="chip chip-bad">✖ Got worse</span><span>▲ 12.5% higher than last year</span></p>
+  <p class="what">From burning fuel; cause smog and breathing problems.</p>
+  <p class="badge">Last year: 24,000 tonnes · ⇄ Reported by the company · unit changed by us</p>
+</article>
+
+</div>
+<div class="entry">
+  <p class="entry-head"><span class="rank rank-bad" aria-label="Number 3">3</span><span class="entry-headline">PM (particulate matter) was 12.5% more than last year.</span></p>
+<p class="entry-line">Last year: 8,000 tonnes. This year: 9,000 tonnes.</p><p class="entry-line">Lower is better here, so this is a step backwards.</p>  <article class="mini">
+  <div class="card-top">
+    <h3>PM <span class="name">particulate matter</span></h3>
+  </div>
+  <p class="big"><span class="v num">9,000</span><span class="u">tonnes</span></p>
+  <p class="trend"><span class="chip chip-bad">✖ Got worse</span><span>▲ 12.5% higher than last year</span></p>
+  <p class="what">Tiny dust and soot particles that reach deep into lungs.</p>
+  <p class="badge">Last year: 8,000 tonnes · ⇄ Reported by the company · unit changed by us</p>
+</article>
+
+</div>
+</div>  </section>
+
+  <section class="topic" aria-labelledby="sum-same-h">
+    <div class="topic-head"><h2 id="sum-same-h">≈ About the same</h2></div>
+    <ul class="notes-list"><li class="note">Energy for every ₹ 1 crore of sales: 4,434 GJ per ₹ crore last year, 4,465 GJ per ₹ crore this year. For comparison, total energy used was 6.2% more than last year.</li><li class="note">Energy from renewable sources: 0.07% last year, 0.24% of all energy this year.</li><li class="note">Waste recycled or reused: 99.9% last year, 99.9% of waste handled this year.</li></ul>
+  </section>
+
+  <section class="topic" aria-labelledby="sum-table-h">
+    <div class="topic-head"><h2 id="sum-table-h">Every figure we compared</h2></div>
+    <p class="plain">From the biggest improvement to the biggest setback. A star marks the ones shown above.</p>
+    <p class="swipe-hint">On a phone the table scrolls sideways: swipe to see every column.</p>
+    <div class="table-wrap">
+      <table class="sumtable">
+        <thead><tr><th scope="col">Figure</th><th scope="col">Last year (FY 2024-25)</th><th scope="col">This year (FY 2025-26)</th><th scope="col">Change</th><th scope="col">Verdict</th></tr></thead>
+        <tbody>
+          <tr class="shown"><th scope="row">★ Water for every ₹ 1 crore of sales</th><td class="num">744 kL per ₹ crore</td><td class="num">709 kL per ₹ crore</td><td class="num">▼ 4.7%</td><td><span class="chip chip-good">✔ Improved</span></td></tr>
+          <tr><th scope="row">Energy from renewable sources</th><td class="num">0.07%</td><td class="num">0.24% of all energy</td><td class="num">▲ 0.18 points</td><td><span class="chip chip-same">≈ About the same</span></td></tr>
+          <tr><th scope="row">Waste recycled or reused</th><td class="num">99.9%</td><td class="num">99.9% of waste handled</td><td class="num">▼ 0.01 points</td><td><span class="chip chip-same">≈ About the same</span></td></tr>
+          <tr><th scope="row">Energy for every ₹ 1 crore of sales</th><td class="num">4,434 GJ per ₹ crore</td><td class="num">4,465 GJ per ₹ crore</td><td class="num">▲ 0.69%</td><td><span class="chip chip-same">≈ About the same</span></td></tr>
+          <tr><th scope="row">Waste for every ₹ 1 crore of sales</th><td class="num">131 tonnes per ₹ crore</td><td class="num">134 tonnes per ₹ crore</td><td class="num">▲ 2.7%</td><td><span class="chip chip-bad">✖ Got worse</span></td></tr>
+          <tr class="shown"><th scope="row">★ NOx (nitrogen oxides)</th><td class="num">24,000 tonnes</td><td class="num">27,000 tonnes</td><td class="num">▲ 12.5%</td><td><span class="chip chip-bad">✖ Got worse</span></td></tr>
+          <tr class="shown"><th scope="row">★ PM (particulate matter)</th><td class="num">8,000 tonnes</td><td class="num">9,000 tonnes</td><td class="num">▲ 12.5%</td><td><span class="chip chip-bad">✖ Got worse</span></td></tr>
+          <tr class="shown"><th scope="row">★ SOx (sulphur oxides)</th><td class="num">46,000 tonnes</td><td class="num">67,000 tonnes</td><td class="num">▲ 45.7%</td><td><span class="chip chip-bad">✖ Got worse</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="topic" aria-labelledby="sum-left-h">
+    <div class="topic-head"><h2 id="sum-left-h">Not ranked, and why</h2></div>
+    <p class="plain">Nothing is hidden: these figures were not ranked, and this is the reason for each.</p>
+    <ul class="notes-list"><li class="note"><b>Total energy used</b>: Not ranked on its own: “Energy for every ₹ 1 crore of sales” is the fairer measure, because a total grows when a company grows. For the record, it was 6.2% more than last year.</li><li class="note"><b>Greenhouse gases released (Scope 1 + 2)</b>: The figure looks doubtful, so we do not compare it.</li><li class="note"><b>Greenhouse gases for every ₹ 1 crore of sales</b>: The figure looks doubtful, so we do not compare it.</li><li class="note"><b>Water taken in</b>: Not ranked on its own: “Water for every ₹ 1 crore of sales” is the fairer measure, because a total grows when a company grows. For the record, it was about the same as last year.</li><li class="note"><b>VOC</b>: Reported as 0 in both years, so there is nothing to compare.</li><li class="note"><b>Waste produced</b>: Not ranked on its own: “Waste for every ₹ 1 crore of sales” is the fairer measure, because a total grows when a company grows. For the record, it was 8.2% more than last year.</li></ul>
+  </section>
+
+  <section class="topic" aria-labelledby="sum-src-h">
+    <div class="topic-head"><h2 id="sum-src-h">Where last year's figures come from</h2></div>
+    <p class="plain">Last year&#39;s figures (FY 2024-25) are the previous-year column of the FY 2025-26 filing, so both years are on the same basis. Last year&#39;s own report was also checked: none of the figures shown was restated.</p>
+  </section>
+
+</div>
+</main>
+
+<footer>
+  Source: the company's BRSR filing on NSE. Every figure comes from that filing; nothing is estimated. For the whole picture run
+  <code>python main.py --company "TATASTEEL" --fy 2025-26</code>, or <code>python trends.py --company "TATASTEEL"</code> for several years.
+</footer>
+
+</body>
+</html>

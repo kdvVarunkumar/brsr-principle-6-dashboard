@@ -35,6 +35,7 @@ class Comparison:
     trust: str = OK         # warning_kinds.OK / CHECK / DOUBTFUL for the two figures together
     size: str = ""          # how big the change is: "2.0%" or "0.06 percentage points" ("" when it has no size)
     rising: bool = False    # True when this year's figure is higher
+    amount: float | None = None   # the signed size of the change: percent for amounts, percentage points for shares (None: no size)
 
 
 def has_number(cell):
@@ -60,7 +61,7 @@ def compare(current, previous, better, shape="amount", earlier="last year"):
     if shape == "share":
         points = now - before
         if abs(points) < NO_CHANGE:
-            return Comparison(SAME, change=f"No change from {earlier}", trust=trust)
+            return Comparison(SAME, change=f"No change from {earlier}", trust=trust, amount=0.0)
         same = abs(points) < SAME_WITHIN_POINTS
         rising = points > 0
         size = f"{points_text(points)} percentage points"
@@ -73,13 +74,14 @@ def compare(current, previous, better, shape="amount", earlier="last year"):
             return Comparison(UNSURE, reason=f"{earlier[:1].upper() + earlier[1:]}'s figure was 0, so a percentage change cannot be worked out.", trust=trust)
         percent = (now - before) / before * 100
         if abs(percent) < NO_CHANGE:
-            return Comparison(SAME, change=f"No change from {earlier}", trust=trust)
+            return Comparison(SAME, change=f"No change from {earlier}", trust=trust, amount=0.0)
         same = abs(percent) < SAME_WITHIN_PERCENT
         rising = percent > 0
         size = percent_change_text(percent)
         change = f"{size} {'higher' if rising else 'lower'} than {earlier}"
 
-    return Comparison(_verdict(rising, same, better), "▲" if rising else "▼", change, trust=trust, size=size, rising=rising)
+    amount = points if shape == "share" else percent
+    return Comparison(_verdict(rising, same, better), "▲" if rising else "▼", change, trust=trust, size=size, rising=rising, amount=amount)
 
 
 def _verdict(rising, same, better):

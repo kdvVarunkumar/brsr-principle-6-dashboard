@@ -43,14 +43,14 @@ def load_year_entries(company_query, fy_from=None, fy_to=None, raw_dir=DEFAULT_R
         if item is None:
             entries.append(YearEntry(fy, problem="NSE has no BRSR filing for this year.", kind=NOT_FILED))
         else:
-            entries.append(_read_year(fy, item, company))
+            entries.append(read_year(fy, item, company))
 
     if not any(entry.report for entry in entries):
         raise _nothing_usable(company, entries, available)
     return company, entries
 
 
-def _read_year(fy, item, company):
+def read_year(fy, item, company):
     """Read one downloaded filing.  Never raises: a problem becomes a flagged YearEntry."""
     if item.xml_path is None or not item.xml_path.exists():
         return YearEntry(fy, problem="NSE lists this filing, but its XBRL file is missing or no longer on NSE.", kind=NO_FILE)

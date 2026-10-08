@@ -1,0 +1,28 @@
+/* The year-on-year summary page.  It reuses the dashboard's cards, chips and notes; only the numbered entries and the table are new. */
+.trend-main { max-width: 1280px; margin: 0 auto; padding: 0 16px 32px; }
+.trend-main .dash { margin-top: 4px; }
+.dash .notes-list { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 8px; }
+.dash .note { padding: 9px 12px; background: var(--paper); border: 1px solid var(--line); border-left: 5px solid var(--same-line); border-radius: 6px; font-size: .92rem; }
+
+.dash .topic.best .topic-head { border-bottom-color: #3f9a7d; }
+.dash .topic.worst .topic-head { border-bottom-color: #d9803f; }
+.dash .entries { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; margin-top: 12px; }
+.dash .entry { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.dash .entry-head { display: flex; gap: 10px; align-items: flex-start; margin: 0; font-size: 1.05rem; line-height: 1.35; font-weight: 700; }
+.dash .rank { flex: none; width: 1.9em; height: 1.9em; border-radius: 50%; display: grid; place-items: center; font-size: .9rem; color: #fff; }
+.dash .rank-good { background: var(--good-ink); }
+.dash .rank-bad { background: var(--bad-ink); }
+.dash .entry-line { margin: 0; font-size: .9rem; color: var(--muted); }
+.dash .entry-note { margin: 0; padding: 7px 10px; font-size: .86rem; background: var(--accent-soft); border-radius: 6px; }
+
+.swipe-hint { display: none; margin: 8px 0 0; font-size: .82rem; color: var(--muted); }
+@media (max-width: 700px) { .swipe-hint { display: block; } }
+.table-wrap { overflow-x: auto; background: var(--paper); border: 1px solid var(--line); border-radius: 10px; margin-top: 10px; }
+table.sumtable { width: 100%; min-width: 640px; border-collapse: collapse; font-size: .92rem; }
+table.sumtable th, table.sumtable td { padding: 8px 12px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: middle; }
+table.sumtable thead th { background: var(--head-bg); font-weight: 600; }
+table.sumtable tbody tr:last-child th, table.sumtable tbody tr:last-child td { border-bottom: none; }
+table.sumtable tbody th { font-weight: 400; }
+table.sumtable tr.shown th { font-weight: 700; }
+table.sumtable td.num { white-space: nowrap; font-variant-numeric: tabular-nums; }
+footer code { background: #eef1f4; border-radius: 4px; padding: 1px 6px; font-size: .85rem; }

@@ -143,6 +143,20 @@ def test_manually_downloaded_file_is_reused(tmp_path):
     assert (manual / "b.xml").read_bytes() == b"<?xml?> my own copy"
 
 
+def test_pick_chooses_the_years_after_the_list_of_filings_is_known(tmp_path):
+    """The summary does not know the newest year until NSE has answered, so the years are chosen by a function that sees the list."""
+    seen = []
+
+    def pick(records):
+        seen.append([r.fy for r in records])
+        return "2023-24", records[-1].fy
+
+    client = FakeNse()
+    report = run(tmp_path, client, pick=pick)
+    assert seen == [["2022-23", "2023-24", "2024-25"]]
+    assert [d.record.fy for d in report.downloads] == ["2023-24", "2024-25"] and client.downloads == [XML + "b.xml", XML + "c.xml"]
+
+
 def test_first_and_last_keep_only_the_years_in_between_and_the_report_still_lists_every_filing(tmp_path):
     client = FakeNse()
     report = run(tmp_path, client, first="2023-24", last="2023-24")

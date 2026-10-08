@@ -119,16 +119,31 @@ def test_write_error_page_creates_the_folder_and_the_file(tmp_path):
 # ------------------------------------------------------------------------------------------------ trend commands (trends.py)
 def test_an_invalid_year_range_has_its_own_page():
     from brsr_p6.errors import InvalidYearRange
-    view = build_error_view(InvalidYearRange("The start year FY 2024-25 is after the end year FY 2022-23."), "Reliance", "2024-25 to 2022-23", trends=True)
+    view = build_error_view(InvalidYearRange("The start year FY 2024-25 is after the end year FY 2022-23."), "Reliance", "2024-25 to 2022-23", tool="trends")
     assert view.title == "That range of years cannot be used" and any("--from 2021-22 --to 2025-26" in h for h in view.hints)
 
 
 def test_suggested_commands_use_trends_py_when_a_trend_request_failed():
     ambiguous = AmbiguousCompany("Several.", [Company("TCS", "Tata Consultancy Services Limited")])
-    assert build_error_view(ambiguous, "Tata", "2021-22 to 2025-26", trends=True).options[0].command == 'python trends.py --company "TCS"'
+    assert build_error_view(ambiguous, "Tata", "2021-22 to 2025-26", tool="trends").options[0].command == 'python trends.py --company "TCS"'
     none_in_range = NoFilingFound("No filing in range.", symbol="TATASTEEL", available=["2022-23", "2023-24", "2025-26"])
-    option = build_error_view(none_in_range, "Tata Steel", "2018-19 to 2019-20", trends=True).options[0]
+    option = build_error_view(none_in_range, "Tata Steel", "2018-19 to 2019-20", tool="trends").options[0]
     assert option.label == "FY 2022-23 to FY 2025-26"
     assert option.command == 'python trends.py --company "TATASTEEL" --from 2022-23 --to 2025-26'
     # ... and main.py as before for a one-year request
     assert build_error_view(none_in_range, "Tata Steel", "2021-22").options[0].command == 'python main.py --company "TATASTEEL" --fy 2022-23'
+
+
+# ------------------------------------------------------------------------------------------------ summary commands (summary.py)
+def test_suggested_commands_use_summary_py_when_a_summary_request_failed():
+    ambiguous = AmbiguousCompany("Several.", [Company("TCS", "Tata Consultancy Services Limited")])
+    assert build_error_view(ambiguous, "Tata", "latest", tool="summary").options[0].command == 'python summary.py --company "TCS"'
+    assert build_error_view(ambiguous, "Tata", "2024-25", tool="summary").options[0].command == 'python summary.py --company "TCS" --fy 2024-25'
+    missing = NoFilingFound("No filing for that year.", symbol="TATASTEEL", available=["2022-23", "2025-26"])
+    commands = [o.command for o in build_error_view(missing, "Tata Steel", "2019-20", tool="summary").options]
+    assert commands == ['python summary.py --company "TATASTEEL" --fy 2022-23', 'python summary.py --company "TATASTEEL" --fy 2025-26']
+
+
+def test_a_garbage_year_never_ends_up_in_a_suggested_summary_command():
+    ambiguous = AmbiguousCompany("Several.", [Company("TCS", "Tata Consultancy Services Limited")])
+    assert build_error_view(ambiguous, "Tata", "banana", tool="summary").options[0].command == 'python summary.py --company "TCS"'

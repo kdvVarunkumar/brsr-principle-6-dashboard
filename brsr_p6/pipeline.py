@@ -11,8 +11,9 @@ from brsr_p6.errors import NoFilingFound
 from brsr_p6.extractor import build_report
 from brsr_p6.filings import FilingRecord
 from brsr_p6.fiscal_year import parse_fiscal_year
-from brsr_p6.render import DEFAULT_OUTPUT_DIR, write_page, write_trend_page
+from brsr_p6.render import DEFAULT_OUTPUT_DIR, write_page, write_summary_page, write_trend_page
 from brsr_p6.report_io import save_report
+from brsr_p6.summary_loader import load_summary_inputs
 from brsr_p6.trend_loader import load_year_entries
 from brsr_p6.trend_model import build_trend
 from brsr_p6.xbrl_reader import read_filing
@@ -67,3 +68,9 @@ def generate_trend_page(company, fy_from=None, fy_to=None, output_dir=DEFAULT_OU
     """Produce the multi-year trend page.  Returns (path_of_the_page, trend)."""
     trend = load_trend(company, fy_from, fy_to, progress)
     return write_trend_page(trend, output_dir), trend
+
+
+def generate_summary_page(company, fy=None, output_dir=DEFAULT_OUTPUT_DIR, progress=_silent):
+    """Produce the year-on-year summary page (the latest year unless `fy` is given).  Returns (path_of_the_page, report)."""
+    inputs = load_summary_inputs(company, fy, progress=progress)
+    return write_summary_page(inputs.latest, inputs.previous, inputs.previous_note, output_dir), inputs.latest

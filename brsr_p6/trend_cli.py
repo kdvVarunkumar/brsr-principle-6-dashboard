@@ -42,11 +42,11 @@ def main(argv: list[str] | None = None) -> int:
     try:
         page, trend = generate_trend_page(args.company, args.fy_from, args.fy_to, output_dir=args.output_dir, progress=print)
     except BrsrError as exc:
-        return explain_failure(exc, args.company, years_text, args.output_dir, args.open, trends=True)
+        return explain_failure(exc, args.company, years_text, args.output_dir, args.open, tool="trends")
     except Exception as exc:                                    # a bug: explain it on a page too (--debug shows the traceback)
         if args.debug:
             raise
-        return explain_failure(exc, args.company, years_text, args.output_dir, args.open, trends=True)
+        return explain_failure(exc, args.company, years_text, args.output_dir, args.open, tool="trends")
 
     first, last = trend.columns[0].fy, trend.columns[-1].fy
     print(f"\nTrend page for {trend.company_name}, FY {first} to FY {last}, written to: {page}")

@@ -13,13 +13,13 @@ from brsr_p6.error_view import build_error_view
 from brsr_p6.errors import BrsrError
 from brsr_p6.fiscal_year import fiscal_years_between
 from brsr_p6.pipeline import load_saved_report
-from brsr_p6.render import error_page_path, render_error_page, render_page
-from brsr_p6.samples import SAMPLE_COMPANIES, SAMPLE_ERRORS, SAMPLE_TRENDS, SAMPLES_DIR, expected_files
+from brsr_p6.render import error_page_path, render_error_page, render_page, render_summary_page
+from brsr_p6.samples import SAMPLE_COMPANIES, SAMPLE_ERRORS, SAMPLE_SUMMARIES, SAMPLE_TRENDS, SAMPLES_DIR, expected_files
 
 
 def test_there_are_at_least_two_companies_and_the_assignments_error_cases():
     assert len(SAMPLE_COMPANIES) >= 2 and len({s.symbol for s in SAMPLE_COMPANIES}) == len(SAMPLE_COMPANIES)
-    assert len(SAMPLE_ERRORS) >= 3 and len(SAMPLE_TRENDS) >= 2
+    assert len(SAMPLE_ERRORS) >= 3 and len(SAMPLE_TRENDS) >= 2 and len(SAMPLE_SUMMARIES) >= 2
 
 
 def test_every_sample_page_is_committed_and_well_formed():
@@ -40,7 +40,7 @@ def test_each_error_example_really_raises_the_error_it_claims(tmp_path):
         try:
             example.trigger()
         except BrsrError as error:
-            assert build_error_view(error, example.company, example.fy, example.trends).message == str(error)
+            assert build_error_view(error, example.company, example.fy, example.tool).message == str(error)
         except FileNotFoundError:
             pytest.skip("the saved filing list for an example is not on disk")
         else:
@@ -81,6 +81,37 @@ def test_the_trend_samples_show_the_cases_they_claim_to():
     assert wipro.count('class="basis basis-consolidated"') >= 2 and wipro.count('class="basis basis-standalone"') >= 1
 
 
+def test_committed_summary_pages_are_up_to_date(tmp_path):
+    checked = 0
+    for sample in SAMPLE_SUMMARIES:
+        found = samples._summary_reports(sample)
+        if found is None:
+            continue                                          # a filing is not on this machine: nothing to compare with (and no internet in tests)
+        committed = (SAMPLES_DIR / f"{sample.symbol}_summary_{sample.fy}.html").read_text(encoding="utf-8")
+        assert committed == render_summary_page(*found), f"{sample.symbol} summary {sample.fy} is out of date: run  python make_samples.py"
+        checked += 1
+    if not checked:
+        pytest.skip("no summary sample filing is downloaded")
+
+
+def test_the_summary_samples_show_the_cases_they_claim_to():
+    tata = (SAMPLES_DIR / "TATASTEEL_summary_2025-26.html").read_text(encoding="utf-8")
+    assert "1 improved, 3 stayed about the same and 4 got worse" in tata and "none of the figures shown was restated" in tata
+    wipro = (SAMPLES_DIR / "WIPRO_summary_2025-26.html").read_text(encoding="utf-8")
+    assert "9 improved, 0 stayed about the same and 0 got worse" in wipro and "These are the 3 biggest of the 9 figures that improved." in wipro
+    assert "Nothing got worse by more than the “about the same” margin." in wipro and wipro.count('class="entry"') == 3
+    reliance = (SAMPLES_DIR / "RELIANCE_summary_2022-23.html").read_text(encoding="utf-8")
+    assert "NSE has no BRSR filing of its own for FY 2021-22." in reliance and "previous-year column of the FY 2022-23 filing" in reliance
+
+
+def test_a_summary_sample_with_a_missing_previous_report_never_looks_for_one():
+    reliance = next(s for s in SAMPLE_SUMMARIES if s.symbol == "RELIANCE")
+    found = samples._summary_reports(reliance)
+    if found is None:
+        pytest.skip("Reliance FY 2022-23 is not downloaded")
+    assert found[1] is None and found[2] == reliance.previous_note
+
+
 def test_committed_error_pages_are_up_to_date():
     for example in SAMPLE_ERRORS:
         try:
@@ -88,7 +119,7 @@ def test_committed_error_pages_are_up_to_date():
         except BrsrError as error:
             path = error_page_path(example.company, example.fy, SAMPLES_DIR)
             committed = path.read_text(encoding="utf-8")
-            assert committed == render_error_page(build_error_view(error, example.company, example.fy, example.trends)), f"{path.name} is out of date"
+            assert committed == render_error_page(build_error_view(error, example.company, example.fy, example.tool)), f"{path.name} is out of date"
         except FileNotFoundError:
             continue
 

@@ -44,6 +44,7 @@ data/raw/TATASTEEL/*
 
 !data/raw/RELIANCE/
 data/raw/RELIANCE/*
+!data/raw/RELIANCE/filings_index.json
 !data/raw/RELIANCE/2022-23/
 !data/raw/RELIANCE/2023-24/
 

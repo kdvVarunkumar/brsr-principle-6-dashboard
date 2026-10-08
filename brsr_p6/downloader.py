@@ -59,10 +59,12 @@ def download_filings(
     progress=print,
     first: str | None = None,
     last: str | None = None,
+    pick=None,
 ) -> DownloadReport:
     """Download the BRSR filing(s) of a company. `fy=None` means every year NSE has (FY 2021-22 onwards).
 
-    `first` / `last` (for example "2022-23") keep only the filings from that year / up to that year: used by the trend page."""
+    `first` / `last` (for example "2022-23") keep only the filings from that year / up to that year: used by the trend page.
+    `pick(records)` may instead decide `(first, last)` AFTER seeing the filings NSE has (the summary page uses it to find the latest year)."""
     # 1) Validate the cheap things first, so a typo never costs a request to NSE.
     wanted_fy = parse_fiscal_year(fy) if fy else None
     client = client or NseClient()
@@ -83,6 +85,8 @@ def download_filings(
     progress("NSE has BRSR filings for: " + ", ".join(f"FY {r.fy}" for r in records))
 
     # 4) Which of them do we want?
+    if pick is not None:
+        first, last = pick(records)
     if wanted_fy:
         targets = [select_filing(records, wanted_fy)]
     else:

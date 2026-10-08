@@ -1,0 +1,55 @@
+{
+ "fetched_at": "2026-10-08T00:25:49",
+ "payload": {
+  "data": [
+   {
+    "attFileSize": "9.16 MB",
+    "attachmentFile": "https://nsearchives.nseindia.com/corporate/BRSR_500325_28052026144009.pdf",
+    "companyName": "Reliance Industries Limited",
+    "fyFrom": 2025,
+    "fyTo": 2026,
+    "revisionDate": "-",
+    "submissionDate": "06-Jun-2026",
+    "symbol": "RELIANCE",
+    "xbrlFile": "https://nsearchives.nseindia.com/corporate/xbrl/BRSR_500325_285202614409_BRSR_WebXMLFile_20260606_021004400.xml",
+    "xbrlFileSize": "1.47 MB"
+   },
+   {
+    "attFileSize": "9.27 MB",
+    "attachmentFile": "https://nsearchives.nseindia.com/corporate/kavinavora_07082025133236_SE_BRSR.pdf",
+    "companyName": "Reliance Industries Limited",
+    "fyFrom": 2024,
+    "fyTo": 2025,
+    "revisionDate": "-",
+    "submissionDate": "07-Aug-2025",
+    "symbol": "RELIANCE",
+    "xbrlFile": "https://nsearchives.nseindia.com/corporate/xbrl/BRSR_1504867_07082025013302_WEB.xml",
+    "xbrlFileSize": "1.42 MB"
+   },
+   {
+    "attFileSize": null,
+    "attachmentFile": "https://nsearchives.nseindia.com/corporate/kavinavora_07082024144352_SE_BRSR.pdf",
+    "companyName": "Reliance Industries Limited",
+    "fyFrom": 2023,
+    "fyTo": 2024,
+    "revisionDate": "-",
+    "submissionDate": "07-Aug-2024",
+    "symbol": "RELIANCE",
+    "xbrlFile": "https://nsearchives.nseindia.com/corporate/xbrl/BRSR_1215148_07082024024443_WEB.xml",
+    "xbrlFileSize": null
+   },
+   {
+    "attFileSize": null,
+    "attachmentFile": "https://nsearchives.nseindia.com/corporate/kavinavora_14082023134408_BRSR_pdf.pdf",
+    "companyName": "Reliance Industries Limited",
+    "fyFrom": 2022,
+    "fyTo": 2023,
+    "revisionDate": "-",
+    "submissionDate": "14-Aug-2023",
+    "symbol": "RELIANCE",
+    "xbrlFile": "https://nsearchives.nseindia.com/corporate/xbrl/BRSR_917995_14082023014435_WEB.xml",
+    "xbrlFileSize": null
+   }
+  ]
+ }
+}

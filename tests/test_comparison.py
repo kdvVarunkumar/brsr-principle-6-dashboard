@@ -44,6 +44,16 @@ def test_shares_are_compared_in_percentage_points():
     assert compare(number(60, "%"), number(55, "%"), HIGHER, "share").verdict == IMPROVED
 
 
+def test_the_size_of_the_change_is_kept_as_a_number_for_ranking():
+    """Amounts keep the change in percent, shares in percentage points: the summary page ranks by these."""
+    assert compare(number(75), number(100), LOWER).amount == pytest.approx(-25.0)
+    assert compare(number(25, "%"), number(10, "%"), HIGHER, "share").amount == pytest.approx(15.0)            # +150 % would be misleading
+    assert compare(number(100), number(100), LOWER).amount == 0.0
+    assert compare(number(0, "tonnes"), number(0, "tonnes"), LOWER).amount is None                             # 0 -> 0 has no size: not ranked
+    assert compare(number(5, "tonnes"), number(0, "tonnes"), LOWER).amount is None                             # a zero base has no percentage
+    assert compare(MISSING, number(3), LOWER).amount is None
+
+
 def test_a_neutral_metric_shows_the_change_but_gives_no_verdict():
     assert compare(number(3.46), number(3.34), CONTEXT).verdict == CONTEXT_ONLY
     assert compare(number(3.34), number(3.34), CONTEXT).verdict == SAME

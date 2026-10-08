@@ -11,6 +11,7 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 from brsr_p6.dashboard_view import build_dashboard_view
 from brsr_p6.downloader import PROJECT_ROOT, safe_name
 from brsr_p6.sebi_view import build_sebi_view
+from brsr_p6.summary_view import build_summary_view
 from brsr_p6.trend_view import build_trend_view
 
 TEMPLATE_DIR = Path(__file__).resolve().parent / "templates"
@@ -59,6 +60,24 @@ def write_trend_page(trend, output_dir: Path = DEFAULT_OUTPUT_DIR) -> Path:
     path = trend_page_path(trend, output_dir)
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(render_trend_page(trend), encoding="utf-8")
+    return path
+
+
+def render_summary_page(report, previous=None, previous_note="") -> str:
+    """The HTML of the year-on-year summary for the latest report (last year's own filing and the reason it may be missing are optional)."""
+    view = build_summary_view(report, previous, previous_note)
+    return _environment().get_template("summary.html").render(view=view)
+
+
+def summary_page_path(report, output_dir: Path = DEFAULT_OUTPUT_DIR) -> Path:
+    """output/<SYMBOL>_summary_<FY>.html"""
+    return output_dir / f"{safe_name(report.symbol)}_summary_{report.fy}.html"
+
+
+def write_summary_page(report, previous=None, previous_note="", output_dir: Path = DEFAULT_OUTPUT_DIR) -> Path:
+    path = summary_page_path(report, output_dir)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(render_summary_page(report, previous, previous_note), encoding="utf-8")
     return path
 
 

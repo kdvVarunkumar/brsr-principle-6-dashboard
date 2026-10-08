@@ -1,0 +1,53 @@
+{# The pieces of the dashboard that other pages reuse: a chip, a metric card and a "where does it go" bar. #}
+
+{% macro chip(css_class, text) %}<span class="chip {{ css_class }}">{{ text }}</span>{% endmacro %}
+
+{# ---- one metric card (big or small).  `c` is a CardView. ---- #}
+{% macro card(c) %}
+<article class="{{ 'mini' if c.size == 'mini' else 'card' }}{% if c.css %} {{ c.css }}{% endif %}">
+  <div class="card-top">
+    <h3>{{ c.title }}{% if c.name %} <span class="name">{{ c.name }}</span>{% endif %}</h3>
+    {% if c.size == "card" %}<span class="better">{{ c.better_label }}</span>{% endif %}
+  </div>
+  <p class="big{% if not c.has_number %} none{% endif %}"><span class="v num">{{ c.big }}</span>{% if c.unit %}<span class="u">{{ c.unit }}{% if c.trust == "doubtful" %} · as filed{% endif %}</span>{% endif %}</p>
+  <p class="trend">{{ chip(c.chip_class, c.chip_text) }}<span>{{ c.trend }}</span></p>
+  {% if c.caveat %}<p class="caveat">{{ c.caveat }}</p>{% endif %}
+  {% if c.bars %}
+  <div class="bars" role="img" aria-label="{% for b in c.bars %}{{ b.label }}: {{ b.text }}{% if not loop.last %}; {% endif %}{% endfor %}">
+    {% for b in c.bars %}
+    <div class="bar-row{% if b.is_previous %} prev{% endif %}"><span>{{ b.label }}</span><span class="bar"><i style="width:{{ '%.2f'|format(b.percent) }}%"></i></span><span class="bv">{{ b.text }}</span></div>
+    {% endfor %}
+  </div>
+  {% endif %}
+  <p class="what">{% if c.size == "card" %}<b>What it is:</b> {% endif %}{{ c.what }}</p>
+  {% if c.size == "card" and c.why %}<p class="why"><b>Why it matters:</b> {{ c.why }}</p>{% endif %}
+  {% if c.alerts %}
+  <p class="alert"><b>⚠ {{ "Doubtful figure." if c.trust == "doubtful" else "Check this figure." }}</b> {{ c.alerts|join(" ") }}</p>
+  {% elif c.shared_alert %}
+  <p class="alert">⚠ See the note below the figures.</p>
+  {% endif %}
+  {% if c.size == "card" and c.fine %}
+  <details class="fine"><summary>Fine print</summary>{% for line in c.fine %}<p>{{ line }}</p>{% endfor %}</details>
+  {% endif %}
+  <p class="badge">{% if c.size == "mini" and c.previous_text %}{{ c.previous_text }} · {% endif %}{{ c.badge }}</p>
+</article>
+{% endmacro %}
+
+{# ---- a "where does it come from / go" bar. `s` is a StackView. ---- #}
+{% macro stack(s) %}
+<figure class="stack">
+  <figcaption>{{ s.title }}</figcaption>
+  <div class="stack-bar" role="img" aria-label="{{ s.aria }}">
+    {% for seg in s.segments %}<span class="{{ seg.css }}" style="width:{{ '%.2f'|format(seg.percent) }}%"></span>{% endfor %}
+  </div>
+  <ul class="key">
+    {% for seg in s.segments %}
+    <li><i class="sw {{ seg.css }}"></i><span class="pct">{{ seg.percent_text }}%</span><span>{{ seg.label }} <span class="amt">· {{ seg.amount_text }}</span></span></li>
+    {% endfor %}
+    {% for label in s.missing %}
+    <li><i class="sw grey"></i><span class="pct">—</span><span><em>{{ label }}: not reported</em></span></li>
+    {% endfor %}
+  </ul>
+  {% if s.zero_note or s.footnote %}<p class="stack-note">{{ s.zero_note }} {{ s.footnote }}</p>{% endif %}
+</figure>
+{% endmacro %}

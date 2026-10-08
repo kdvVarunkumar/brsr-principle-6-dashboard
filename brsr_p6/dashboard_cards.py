@@ -68,6 +68,7 @@ class CardView:
     quote: str = ""           # "46.42 crore GJ": the value as a sentence would say it ("" when unusable)
     delta_words: str = ""     # "2.0% less than last year" ("" when we cannot compare)
     shared_alert: bool = False    # its warning is shown once under the topic instead of on this card
+    change: float | None = None   # how much it changed: percent for amounts, percentage points for shares (None: not comparable)
     css: str = ""             # "doubtful" or "empty"
 
 
@@ -183,8 +184,19 @@ def build_card(report, info):
         value=now.value if shown else None,
         quote=(big + ("" if unit.startswith("%") else " ") + unit).strip() if shown else "",
         delta_words=_delta_words(comparison),
+        change=comparison.amount,
         css="doubtful" if comparison.trust == DOUBTFUL else ("empty" if not has_number(now) else ""),
     )
+
+
+def figure_getter(info):
+    """A function (report, side) -> Cell for one dashboard figure, side being "current" or "previous".
+
+    Lets the trend and summary pages ask for the same figure the dashboard card shows, from any filing."""
+    def get(report, side):
+        metric = reading(report, info)
+        return getattr(metric, side) if metric is not None else Cell()
+    return get
 
 
 def _scale(info, cell):

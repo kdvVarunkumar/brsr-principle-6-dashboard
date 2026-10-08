@@ -64,16 +64,16 @@ def main(argv: list[str] | None = None) -> int:
     return 0
 
 
-def explain_failure(error, company_text, fy_text, output_dir, open_page, trends=False) -> int:
+def explain_failure(error, company_text, fy_text, output_dir, open_page, tool="main") -> int:
     """Print the problem and write the error page.  Returns the exit code (1 = something went wrong).
 
-    Shared by main.py and trends.py; `trends=True` makes the suggested commands use trends.py."""
+    Shared by main.py, trends.py and summary.py; `tool` ("main", "trends" or "summary") makes the suggested commands use that command."""
     if isinstance(error, BrsrError):
         print(f"Error: {error}")
     else:
         print(f"Unexpected problem ({type(error).__name__}: {error}). Run again with --debug to see the details.")
     try:
-        page = write_error_page(build_error_view(error, company_text, fy_text, trends), company_text, fy_text, output_dir)
+        page = write_error_page(build_error_view(error, company_text, fy_text, tool), company_text, fy_text, output_dir)
     except OSError as problem:   # even the explanation page could not be saved (for example a read-only folder)
         print(f"(Could not write the explanation page: {problem})")
         return 1

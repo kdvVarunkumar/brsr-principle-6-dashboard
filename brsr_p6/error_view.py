@@ -89,10 +89,10 @@ UNEXPECTED = ErrorInfo(
 )
 
 
-def build_error_view(error, company_text="", fy_text="", trends=False):
+def build_error_view(error, company_text="", fy_text="", tool="main"):
     """The ErrorView for an exception.  `company_text` and `fy_text` are what the user typed.
 
-    `trends=True` when the failed command was trends.py: the suggested commands then use trends.py instead of main.py."""
+    `tool` is the command that failed ("main", "trends" or "summary"): the suggested commands then use that command."""
     if isinstance(error, BrsrError):
         info = next(ERROR_INFO[cls] for cls in type(error).__mro__ if cls in ERROR_INFO)
         message, unexpected = str(error), False
@@ -102,17 +102,15 @@ def build_error_view(error, company_text="", fy_text="", trends=False):
 
     view = ErrorView(info.kind, info.title, message, _asked(company_text, fy_text), list(info.hints), technical=unexpected)
     if isinstance(error, AmbiguousCompany):
-        year = _usable_year(fy_text)
         view.options_title = "Companies that match what you typed"
-        view.options = [OptionView(f"{c.name} ({c.symbol})", _trend_command(c.symbol) if trends else _command(c.symbol, year))
-                        for c in error.candidates]
-    elif isinstance(error, NoFilingFound) and error.symbol and error.available and trends:
+        view.options = [OptionView(f"{c.name} ({c.symbol})", _command_for(tool, c.symbol, fy_text)) for c in error.candidates]
+    elif isinstance(error, NoFilingFound) and error.symbol and error.available and tool == "trends":
         first, last = error.available[0], error.available[-1]
         view.options_title = "The years NSE has for this company"
         view.options = [OptionView(f"FY {first} to FY {last}", _trend_command(error.symbol, first, last))]
     elif isinstance(error, NoFilingFound) and error.symbol and error.available:
         view.options_title = "Financial years NSE has for this company"
-        view.options = [OptionView(f"FY {fy}", _command(error.symbol, fy)) for fy in error.available]
+        view.options = [OptionView(f"FY {fy}", _command(error.symbol, fy, _script(tool))) for fy in error.available]
     return view
 
 
@@ -133,10 +131,26 @@ def _usable_year(fy_text):
         return EXAMPLE_YEAR
 
 
-def _command(symbol, fy):
-    return f'python main.py --company "{symbol}" --fy {fy}'
+def _script(tool):
+    return "summary.py" if tool == "summary" else "main.py"
+
+
+def _command(symbol, fy, script="main.py"):
+    return f'python {script} --company "{symbol}" --fy {fy}'
 
 
 def _trend_command(symbol, first=None, last=None):
     years = f" --from {first} --to {last}" if first else ""
     return f'python trends.py --company "{symbol}"{years}'
+
+
+def _command_for(tool, symbol, fy_text):
+    """One command for one company, in the style of the command that failed."""
+    if tool == "trends":
+        return _trend_command(symbol)
+    if tool == "summary":                                   # the summary picks the latest year by itself unless a real year was typed
+        try:
+            return _command(symbol, parse_fiscal_year(fy_text), "summary.py")
+        except BrsrError:
+            return f'python summary.py --company "{symbol}"'
+    return _command(symbol, _usable_year(fy_text))

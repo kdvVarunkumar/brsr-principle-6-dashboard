@@ -3,7 +3,7 @@
 from dashboard_samples import NO_UNIT, SCALE_SLIP, ZERO_MEANING, blank_report, put
 
 from brsr_p6.comparison import IMPROVED, SAME, UNSURE, WORSE
-from brsr_p6.dashboard_cards import build_card, per_crore
+from brsr_p6.dashboard_cards import build_card, figure_getter, per_crore
 from brsr_p6.metric_info import METRICS
 from brsr_p6.models import Cell, Status
 
@@ -26,6 +26,24 @@ def test_a_normal_card_says_the_number_the_direction_and_where_it_came_from():
     assert c.badge == "✔ Reported by the company" and c.alerts == [] and c.css == ""
     assert c.quote == "46.42 crore GJ" and c.delta_words == "2.0% less than last year"
     assert c.what and c.why                                                   # every card explains itself
+
+
+def test_a_card_carries_the_size_of_its_change_as_a_number_for_the_summary_page():
+    report = blank_report()
+    put(report, "E1.total", 75, 100)
+    assert abs(card(report, "energy_total").change - -25.0) < 1e-9
+    put(report, "E8.total", 0, 0, unit="tonnes")
+    assert card(report, "waste_total").change is None                         # 0 -> 0 has no size
+    assert card(report, "air_voc").change is None                             # not reported: no number at all
+
+
+def test_figure_getter_reads_either_year_of_a_figure_and_never_fails_when_the_figure_is_absent():
+    report = blank_report()
+    put(report, "E1.total", 75, 100)
+    get = figure_getter(INFO["energy_total"])
+    assert (get(report, "current").value, get(report, "previous").value) == (75, 100)
+    assert figure_getter(INFO["air_voc"])(report, "current").value is None               # in the filing, but empty
+    assert figure_getter(INFO["waste_intensity"])(report, "current").value is None       # not in this edition at all: an empty cell
 
 
 def test_every_figure_has_a_title_a_what_and_a_direction():

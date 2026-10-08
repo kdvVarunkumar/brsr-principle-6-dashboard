@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ view.company_name }}: what got better and worse in FY {{ view.fy }}</title>
+<style>
+{% include "style.css" %}
+{% include "dashboard.css" %}
+{% include "summary.css" %}
+</style>
+</head>
+<body>
+{# The year-on-year summary.  Everything it says was decided in summary_view.py; this file only prints it. #}
+{% from "dashboard_macros.html" import chip, card %}
+
+{% macro entry(e, kind) %}
+<div class="entry">
+  <p class="entry-head"><span class="rank rank-{{ kind }}" aria-label="Number {{ e.rank }}">{{ e.rank }}</span><span class="entry-headline">{{ e.headline }}</span></p>
+  {% for line in e.lines %}<p class="entry-line">{{ line }}</p>{% endfor %}
+  {{ card(e.card) }}
+  {% for note in e.notes %}<p class="entry-note">{{ note }}</p>{% endfor %}
+</div>
+{% endmacro %}
+
+<header class="page-header">
+  <div class="inner">
+    <p class="eyebrow">Business Responsibility &amp; Sustainability Report · Principle 6 (environment) · year on year</p>
+    <h1>{{ view.company_name }} <span class="symbol">({{ view.symbol }})</span></h1>
+    <p class="subtitle">FY {{ view.fy }} compared with FY {{ view.previous_fy }}</p>
+  </div>
+</header>
+
+<main class="trend-main">
+<div class="dash">
+
+  <section class="glance" aria-labelledby="sum-glance-h">
+    <h2 id="sum-glance-h">What got better, and what got worse, in FY {{ view.fy }}?</h2>
+    <p class="story">{{ view.story }}</p>
+    {% if view.improved or view.same_count or view.worse %}
+    <p class="score">{{ chip("chip-good", "✔ " ~ view.improved ~ " improved") }}{{ chip("chip-same", "≈ " ~ view.same_count ~ " about the same") }}{{ chip("chip-bad", "✖ " ~ view.worse ~ " got worse") }}</p>
+    {% endif %}
+  </section>
+
+  <section class="topic" aria-labelledby="sum-def-h">
+    <div class="topic-head"><h2 id="sum-def-h">How we decide what is “better”</h2></div>
+    <ul class="notes-list">
+      {% for line in view.definition %}<li class="note">{{ line }}</li>{% endfor %}
+    </ul>
+  </section>
+
+  <section class="topic best" aria-labelledby="sum-best-h">
+    <div class="topic-head"><h2 id="sum-best-h">✔ The biggest improvements</h2></div>
+    {% if view.best_note %}<p class="plain">{{ view.best_note }}</p>{% endif %}
+    {% if view.best %}<div class="entries">{% for e in view.best %}{{ entry(e, "good") }}{% endfor %}</div>{% endif %}
+  </section>
+
+  <section class="topic worst" aria-labelledby="sum-worst-h">
+    <div class="topic-head"><h2 id="sum-worst-h">✖ The biggest setbacks</h2></div>
+    {% if view.worst_note %}<p class="plain">{{ view.worst_note }}</p>{% endif %}
+    {% if view.worst %}<div class="entries">{% for e in view.worst %}{{ entry(e, "bad") }}{% endfor %}</div>{% endif %}
+  </section>
+
+  {% if view.same %}
+  <section class="topic" aria-labelledby="sum-same-h">
+    <div class="topic-head"><h2 id="sum-same-h">≈ About the same</h2></div>
+    <ul class="notes-list">{% for text in view.same %}<li class="note">{{ text }}</li>{% endfor %}</ul>
+  </section>
+  {% endif %}
+
+  {% if view.table %}
+  <section class="topic" aria-labelledby="sum-table-h">
+    <div class="topic-head"><h2 id="sum-table-h">Every figure we compared</h2></div>
+    <p class="plain">From the biggest improvement to the biggest setback. A star marks the ones shown above.</p>
+    <p class="swipe-hint">On a phone the table scrolls sideways: swipe to see every column.</p>
+    <div class="table-wrap">
+      <table class="sumtable">
+        <thead><tr><th scope="col">Figure</th><th scope="col">Last year (FY {{ view.previous_fy }})</th><th scope="col">This year (FY {{ view.fy }})</th><th scope="col">Change</th><th scope="col">Verdict</th></tr></thead>
+        <tbody>
+          {% for row in view.table %}
+          <tr{% if row.shown %} class="shown"{% endif %}><th scope="row">{% if row.shown %}★ {% endif %}{{ row.title }}</th><td class="num">{{ row.before }}</td><td class="num">{{ row.now }}</td><td class="num">{{ row.change }}</td><td>{{ chip(row.chip_class, row.chip_text) }}</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+  {% endif %}
+
+  {% if view.left_out %}
+  <section class="topic" aria-labelledby="sum-left-h">
+    <div class="topic-head"><h2 id="sum-left-h">Not ranked, and why</h2></div>
+    <p class="plain">Nothing is hidden: these figures were not ranked, and this is the reason for each.</p>
+    <ul class="notes-list">{% for item in view.left_out %}<li class="note"><b>{{ item.title }}</b>: {{ item.reason }}</li>{% endfor %}</ul>
+  </section>
+  {% endif %}
+
+  <section class="topic" aria-labelledby="sum-src-h">
+    <div class="topic-head"><h2 id="sum-src-h">Where last year's figures come from</h2></div>
+    <p class="plain">{{ view.source_note }}</p>
+  </section>
+
+</div>
+</main>
+
+<footer>
+  Source: the company's BRSR filing on NSE. Every figure comes from that filing; nothing is estimated. For the whole picture run
+  <code>python main.py --company "{{ view.symbol }}" --fy {{ view.fy }}</code>, or <code>python trends.py --company "{{ view.symbol }}"</code> for several years.
+</footer>
+
+</body>
+</html>

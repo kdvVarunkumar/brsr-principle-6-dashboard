@@ -13,7 +13,7 @@ from dataclasses import dataclass, field
 
 from brsr_p6 import friendly
 from brsr_p6.comparison import IMPROVED, UNSURE, WORSE, compare, has_number
-from brsr_p6.dashboard_cards import BETTER_LABELS, CHIPS, SCALABLE_UNITS, per_crore, reading
+from brsr_p6.dashboard_cards import BETTER_LABELS, CHIPS, SCALABLE_UNITS, figure_getter, per_crore, reading
 from brsr_p6.dashboard_view import short_name
 from brsr_p6.formatting import format_number, format_number_html
 from brsr_p6.metric_info import METRICS, TOPICS
@@ -142,18 +142,11 @@ def _column_view(column):
 
 
 # ------------------------------------------------------------------------------------------------ headline tables
-def _card_getter(info):
-    def get(report, side):
-        metric = reading(report, info)
-        return getattr(metric, side) if metric is not None else Cell()
-    return get
-
-
 def _headline_rows(trend, topic_id):
     rows = []
     for info in (i for i in METRICS if i.topic == topic_id):
         finish = per_crore if info.shape == "intensity" else None
-        items = trend_cells(trend, _card_getter(info), finish)
+        items = trend_cells(trend, figure_getter(info), finish)
         if info.only_if_present and not any(has_number(item.cell) for item in items):
             continue                                            # an item that no edition of this company's filings has
         unit, divisor, word = _row_scale(items, info.shape)

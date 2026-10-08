@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>No report: BRSR filings start with FY 2021-22</title>
+<title>No report: NSE has no BRSR filing for that company and year</title>
 <style>
 /* Styles for the generated report page. Everything is inline in the HTML so the page opens anywhere, offline. */
 :root {
@@ -147,19 +147,26 @@ code { background: #eef1f4; border-radius: 4px; padding: 2px 7px; font-family: u
   <div class="inner">
     <p class="eyebrow">BRSR Principle 6 report generator</p>
     <h1>We could not make this report</h1>
-<p class="subtitle">Company: Reliance · Financial year: 2019-20</p>  </div>
+<p class="subtitle">Company: Reliance · Financial year: 2021-22</p>  </div>
 </header>
 
 <main class="error-main">
   <section class="error-card" role="alert" aria-labelledby="error-title">
-    <p class="error-kind">Year too early</p>
-    <h2 id="error-title">BRSR filings start with FY 2021-22</h2>
-    <p class="error-message">FY 2019-20 is earlier than FY 2021-22. This tool only covers BRSR filings for FY 2021-22 and later.</p>
+    <p class="error-kind">No filing on NSE</p>
+    <h2 id="error-title">NSE has no BRSR filing for that company and year</h2>
+    <p class="error-message">NSE has no BRSR filing for Reliance Industries Limited for FY 2021-22. Filings available on NSE: FY 2022-23, FY 2023-24, FY 2024-25, FY 2025-26.</p>
 
+    <h3>Financial years NSE has for this company</h3>
+    <ul class="options">
+      <li><span class="option-label">FY 2022-23</span><code>python summary.py --company &#34;RELIANCE&#34; --fy 2022-23</code></li>
+      <li><span class="option-label">FY 2023-24</span><code>python summary.py --company &#34;RELIANCE&#34; --fy 2023-24</code></li>
+      <li><span class="option-label">FY 2024-25</span><code>python summary.py --company &#34;RELIANCE&#34; --fy 2024-25</code></li>
+      <li><span class="option-label">FY 2025-26</span><code>python summary.py --company &#34;RELIANCE&#34; --fy 2025-26</code></li>
+    </ul>
 
     <h3>What you can try</h3>
     <ul class="hints">
-<li>BRSR reporting began with FY 2021-22 (for the top 1,000 listed companies), so nothing earlier exists. Try 2021-22 or later.</li>    </ul>
+<li>Only the top 1,000 listed companies must file a BRSR, and only from FY 2021-22 onwards.</li><li>A very recent year may simply not have been filed yet.</li>    </ul>
   </section>
 
   <p class="error-note">No numbers were guessed or filled in. A page with a report appears only when the data could really be read.</p>
