@@ -164,9 +164,9 @@ SEBI revised the BRSR format in 2023 (BRSR Core). Filings for FY 2022-23 onwards
 - Two mapping tables → one common `Metric` structure; per-metric unit converters; sanity checks run after mapping.
 
 ### 4e. Still open (small; do not block Phase 2)
-- [ ] Is there a **turnover** tag in the filings (to compute intensities)? (check in Phase 2/4)
-- [ ] Minimal headers/cookies actually required (test in Phase 3)
-- [ ] List-table encodings (E10 sensitive areas, E11 EIA, L3 water-stress facilities, L6 initiatives) → Phase 4
+- [x] Is there a **turnover** tag in the filings (to compute intensities)? **Yes** (checked 2026-10-08 on all 21 filings on disk): `Turnover` in all 21; `RevenueFromOperations` and `TotalRevenueOfTheCompany` in the 15 newer ones. Not used so far: the dashboard shows the intensity the company filed, and marks it doubtful when it looks wrong (0, wrong scale). *Optional improvement, not built:* a clearly-labelled CALCULATED intensity (filed total ÷ filed turnover) when the filed one is doubtful. It would need the turnover's unit and basis to be checked first, and it would change what several samples show, so it needs a decision (and a new D-number) before it is built
+- [ ] *(left open on purpose)* Minimal headers/cookies actually required: only worth testing if NSE changes its requirements (the current requests work and are polite)
+- [x] List-table encodings (E10 sensitive areas, E11 EIA, L3 water-stress facilities, L6 initiatives): done in Phase 2/4 (`extractor.py`, `p6_mapping.py`)
 
 ## 5. Environment
 

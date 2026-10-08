@@ -187,6 +187,8 @@ Folders under `data\raw\`. NSE itself has more years than these (all years from 
 | Wipro | `WIPRO` | 2021-22 to 2025-26 |
 | Mahindra & Mahindra | `M&M` (folder `M_M`) | 2024-25 |
 | ITC | `ITC` | 2024-25 |
+| TCS | `TCS` | 2024-25 |
+| ONGC | `ONGC` | 2023-24 *(files its air pollutants as concentrations, not tonnes)* |
 
 Any other company works too: it is fetched from NSE the first time. **Tip: run each company you plan to demo once on the same day, so a flaky connection cannot hurt.** A *new* company always needs internet.
 

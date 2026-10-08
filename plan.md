@@ -83,7 +83,7 @@ Time estimates are rough hours for you working with my help. Core (Phases 0-7) i
 ### Phase 0: Setup (~1 h) ✅ DONE (git deferred to the end by your choice)
 **Why:** A clean, reproducible project from the start. "Runs from a clean checkout" is a deliverable.
 - [x] Confirm PyCharm uses the project `.venv` (Python 3.14.2)
-- [ ] `git init` → **deferred to the end** (git is not installed; you chose to focus on the problem first, see `learnings.md` §5 for the exact steps)
+- [x] `git init` → deferred to the end by your choice, then done in Phase 11 (git installed, repository with commits; see `learnings.md` Phase 11)
 - [x] Create `.gitignore` (`.venv/`, `__pycache__/`, `.idea/`), create the folders above
 - [x] Create `requirements.txt` (`requests`, `Jinja2`, `pytest`) and install
 - [x] Create `README.md` skeleton and start an **AI-usage log** (the assignment requires telling them which AI tools were used and for what)
@@ -112,7 +112,7 @@ Time estimates are rough hours for you working with my help. Core (Phases 0-7) i
 - [x] `sebi_template.py`: all 12 Essential + 9 Leadership questions of the May 2021 form, official wording and row labels, as data
 - [x] `errors.py` gained `UnparseableFiling`
 - [x] Newer-format filings vs the 2021 template (D4/D13/D14/D19): the 2021 layout is rendered; rows that modern XBRL splits are CALCULATED; extras live in `report.extras`
-- [ ] Check whether the filings contain a **turnover** figure (needed to compute a fallback intensity) → still open, optional
+- [x] Check whether the filings contain a **turnover** figure (needed to compute a fallback intensity) → **answered (Phase 12 audit): yes**, a `Turnover` tag is in all 21 downloaded filings (newer ones also `RevenueFromOperations` / `TotalRevenueOfTheCompany`). It is **not used yet**: a calculated fallback intensity for the doubtful filed ones is an optional improvement, see `context.md` §4e
 - **You'll learn:** `dataclass`, `Enum`, type hints, custom exceptions, "data instead of code" (the template).
 - **Done when:** a Principle6Report can be built from any downloaded filing and printed. ✅ `python extract_report.py --company Reliance --fy 2023-24`
 
@@ -145,7 +145,7 @@ Time estimates are rough hours for you working with my help. Core (Phases 0-7) i
 - [x] `report_io.py`: clean JSON in `data/parsed/<SYMBOL>/<FY>.json`; `report_text.py`: SEBI-style plain-text view; `extract_report.py`: one command
 - [x] **Accuracy check:** Tata Steel FY25-26 compared to its PDF → regression tests (`tests/extraction/test_real_filings.py`); all 18 downloaded filings (5 companies, both editions) extract without crashing
 - [x] 160 automated tests pass (no internet needed; real-filing tests skip if data is absent)
-- [ ] Later refinement: **inferring a legacy energy unit** from the next year's filing (idea only; Phase 8)
+- [x] ~~Later refinement: **inferring a legacy energy unit** from the next year's filing~~ → **decided against** (D66, Phase 8): units are never inferred, they are shown as filed and marked
 - **You'll learn:** XML parsing, dictionaries/lists, functions, unit tests.
 - **Done when:** filings parse cleanly and spot-checked numbers match the PDFs. ✅
 
