@@ -22,7 +22,7 @@ write the page. Everything else is a sub-command of the same file (`python flow.
 
 ![The dashboard for Reliance Industries, FY 2023-24](docs/dashboard_reliance.png)
 
-> **Demo cheat-sheet:** [`commands.md`](commands.md) has every command with copy-paste examples.
+> **Demo guide:** [`demo.md`](demo.md) explains the problem, the flow and every module in plain words. **Command cheat-sheet:** [`commands.md`](commands.md) has every command with copy-paste examples.
 > **Sample pages** (open in a browser, no setup): open [`samples/index.html`](samples/index.html), choose a company and a year, or see the [list](samples/README.md).
 
 ## Quick start
@@ -335,7 +335,7 @@ The design was prototyped first with real numbers: [`design/dashboard_mockup.htm
 pytest
 ```
 
-About 680 tests, under a minute, no internet. They cover unit conversion, the XBRL reader, every SEBI row, the verdict and sentence rules, HTML
+About 720 tests, under a minute, no internet. They cover unit conversion, the XBRL reader, every SEBI row, the verdict and sentence rules, HTML
 well-formedness, escaping of filing text, the error pages, and (when the filings are on disk) real-filing spot checks, the trace of every value to
 the raw XML, and "the committed sample pages are up to date". The test folders mirror the code folders (`tests/views` tests `brsr_p6/views`, and so on), so
 `pytest tests/views` runs one layer. `tests/test_architecture.py` checks the layer rule below on every run.
@@ -363,7 +363,7 @@ samples/             sample report, trend, summary, comparison and error pages (
 design/              the dashboard prototype
 docs/                screenshots used in this README
 data/                filings downloaded from NSE (11 are committed, see data/README.md) and the cleaned JSON
-plan.md  context.md  learnings.md  commands.md             the plan, project notes, plain-English explanations, demo commands
+plan.md  context.md  learnings.md  commands.md  demo.md   the plan, decisions, what-to-learn notes and interview checklist, demo commands, the demo guide
 ```
 
 **The layer rule.** The packages are listed from the bottom layer up. A package may import only from itself and from packages *above* it in

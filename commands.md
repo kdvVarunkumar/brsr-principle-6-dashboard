@@ -1,5 +1,7 @@
 # Commands cheat-sheet (for the demo)
 
+> For the story, the flow chart and what every module does, read [demo.md](demo.md). For the concepts and the interview checklist, read [learnings.md](learnings.md).
+
 Every command here was run and checked. Replace the company name and the year with whatever the interviewer asks for.
 **Run all commands from the project folder**, in the **PyCharm Terminal** (it activates the project's environment, so you see `(.venv)` at the start of the line).
 
@@ -199,7 +201,7 @@ Step 2 is the only one that is required, plus step 4 to see it on the home page.
 
 | Step | Command | What to say |
 |---|---|---|
-| 1 | `pytest -q` | "About 680 automatic tests pass, with no internet needed." |
+| 1 | `pytest -q` | "About 720 automatic tests pass, with no internet needed." |
 | 2 | `python flow.py download --company "<NEW COMPANY>"` | "It finds the company on NSE, downloads each year politely (3 s apart), and flags years NSE does not have." |
 | 3 | *(run step 2 again)* | "Second run: 0 requests. Everything is cached." |
 | 4 | `python flow.py extract --company "<NEW COMPANY>" --fy 2024-25 --questions E1,E6` | "XML â†’ clean SEBI rows. Calculated, converted and doubtful values are marked, and nothing is invented: missing = Not reported." |
@@ -344,7 +346,7 @@ How to read a page: *Not reported* = the filing has nothing (never shown as 0) Â
 ## 8. Tests
 
 ```powershell
-pytest -q                              # everything (about 680 tests, under a minute, no internet)
+pytest -q                              # everything (about 720 tests, under a minute, no internet)
 pytest tests/views -q                  # one layer: the test folders mirror brsr_p6/ (core, download, parsing, extraction, analysis, views, ...)
 pytest tests/extraction/test_extractor.py -v      # one file, one line per test
 pytest tests/test_architecture.py -q   # only the "layers import downwards" rule

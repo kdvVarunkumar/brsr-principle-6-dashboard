@@ -1,81 +1,54 @@
 # Learnings
 
-> **Command names changed in Phase 18.** There is now ONE command, `python flow.py` (the whole flow), and every other command is a sub-command of it: `flow.py download`, `extract`, `trends`, `summary`, `compare`, `hub`, `samples`. The commands written in these notes were updated. Older text that names a file such as `main.py`, `trends.py` or `make_samples.py` is history: read it as `flow.py`, `flow.py trends` or `flow.py samples`. `cli/main_cli.py` became `cli/flow_cli.py`.
+Plain-English notes on everything this project uses, written for someone new to programming. It is organised **by topic** (what you need to know),
+not by date. The history of what was decided and when lives in `context.md` (decision log D1, D2, ...) and in `git log`; it is not repeated here.
 
+**How to use it.** Read one part, close the file, and explain it out loud in your own words. Part 7 is the interview checklist (questions with short
+answers); Part 8 has small exercises. For the demo itself use `demo.md`; for copy-paste commands use `commands.md`.
 
-Plain-English notes on every concept we use, written for someone new to programming.
-One section per phase. Each new term is explained the first time it appears.
-**Tip for the interview:** after reading a section, close the file and try to explain it out loud in your own words.
-
----
-
-# Phase 0: Project setup
-
-## 0. What did we do in Phase 0, and why?
-
-Before writing any "real" logic, we built the **empty house**: folders, a list of libraries we need, a way to run the program, and a way to test it. Why? So that:
-
-- anyone (you, a teammate, the reviewer) can set the project up on a fresh computer with a few commands,
-- we always have something that **runs and is tested**, and we grow it step by step instead of building everything and hoping it works.
-
-| What we made | In one line |
+| Part | What it covers |
 |---|---|
-| `.venv/` + installed libraries | A private toolbox for this project |
-| `requirements.txt` | The shopping list of libraries |
-| `.gitignore` | The "don't save these" list for git |
-| `README.md` | The project's front page / instruction manual |
-| `main.py`, `brsr_p6/cli/main_cli.py` | The program's door: reads what you type |
-| `tests/cli/test_cli.py`, `pytest.ini` | Automatic checks that the door works |
-| `data/`, `samples/`, `tests/` folders | Places where things will live later |
-| `plan.md`, `context.md`, `learnings.md` | Our notes: the plan, the memory, and this file |
-
-> **Git is not set up yet.** You chose to do that at the end. Section 5 explains what git is so you understand it, and shows exactly what we will run later.
-
----
-
-## 1. The terminal (PowerShell)
-
-A **terminal** is a window where you control the computer by typing **commands** instead of clicking. On Windows ours is **PowerShell**. PyCharm has one built in (bottom tool-window called *Terminal*).
-
-- A **command** is an instruction, e.g. `python flow.py --help`.
-- A **folder path** is the address of a folder, e.g. `C:\Users\<your name>\PycharmProjects\...`.
-- The terminal always has a **current folder** ("where you are"). Commands like `python flow.py` look for `main.py` in that current folder. In PyCharm's terminal it starts in your project folder.
-- An **argument / option** is extra information after a command: in `python flow.py --company "Tata Steel"`, `--company` is an option and `"Tata Steel"` is its value. Quotes are needed when the value has spaces.
+| 1 | The basics: terminal, Python, libraries, virtual environment, git, tests |
+| 2 | The problem and the data: NSE, XBRL, and the messy things inside real filings |
+| 3 | The flow, step by step: download, read, clean, decide, print, errors, trace |
+| 4 | The dashboard: what makes it clear and honest |
+| 5 | The extensions: trends, year-on-year, comparison, the two viewer pages, the one command |
+| 6 | Habits that kept the numbers right |
+| 7 | Interview checklist: questions and short answers |
+| 8 | Try it yourself |
+| 9 | Glossary |
 
 ---
 
-## 2. Python, libraries and `pip`
+# Part 1. The basics
 
-- **Python** is the programming language we write in.
-- A **library** (also called *package*) is code written by other people that we reuse instead of rewriting. Example: `requests` knows how to download things from websites.
-- **pip** is Python's "app store" for libraries. `pip install requests` downloads and installs `requests`.
+## 1.1 The terminal
 
-Our three libraries and why:
+A **terminal** is a window where you control the computer by typing **commands** instead of clicking (on Windows: PowerShell; PyCharm has one built in at the bottom).
 
-| Library | Used for (later phases) |
+- A **command** is an instruction, for example `python flow.py --help`.
+- The terminal has a **current folder** ("where you are"). `python flow.py` looks for `flow.py` in that folder. PyCharm's terminal starts in the project folder.
+- An **option** is extra information after a command. In `python flow.py --company "Tata Steel"`, `--company` is the option and `"Tata Steel"` its value. Quotes are needed when the value has spaces.
+- Every program ends with an **exit code**: `0` means success, anything else means something went wrong (argparse uses `2` for "you typed it wrong").
+
+## 1.2 Python, libraries and `pip`
+
+- **Python** is the language the project is written in. A **library** (package) is code written by other people that we reuse. **pip** is Python's "app store" for libraries.
+- The project uses only **three** libraries:
+
+| Library | Used for |
 |---|---|
-| `requests` | Download filings from NSE |
-| `Jinja2` | Fill HTML templates with data to build the report page |
-| `pytest` | Run automatic tests |
+| `requests` | Download filings from NSE over HTTP |
+| `Jinja2` | Fill HTML templates with data to build the pages |
+| `pytest` | Run the automatic tests |
 
----
+Reading the XBRL (XML) files needs no library: Python's built-in `xml.etree.ElementTree` does it. Fewer libraries means fewer things that can break on a stranger's computer.
 
-## 3. Virtual environment (`.venv`)
+## 1.3 Virtual environment (`.venv`) and `requirements.txt`
 
-**Problem:** Project A needs `requests` version 2.20, project B needs version 2.34. If everything is installed in one global place they fight.
-
-**Solution:** a **virtual environment** = a private folder containing its own copy of Python and its own libraries, **for this project only**. Ours is the folder `.venv`.
-
-- Created with: `python -m venv .venv` (already done by PyCharm for you).
-- **Activating** it means "make the commands `python` and `pip` use the ones inside `.venv`". On Windows: `.venv\Scripts\Activate.ps1`. PyCharm's terminal usually does this automatically (you will see `(.venv)` at the start of the prompt).
-- If PowerShell says *"running scripts is disabled on this system"* when activating, run once: `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`. Or skip activation and call Python directly: `.venv\Scripts\python.exe main.py --help`.
-- `.venv` is **big and specific to your computer**, so we never share it. We share the *shopping list* (`requirements.txt`) and let others rebuild it.
-
----
-
-## 4. `requirements.txt`
-
-A plain text file listing the libraries the project needs. Ours:
+- **Problem:** project A needs `requests` 2.20, project B needs 2.34; one global install makes them fight.
+- **Solution:** a **virtual environment** is a private folder with its own Python and its own libraries, for this project only. Create it with `python -m venv .venv`; **activate** it with `.venv\Scripts\Activate.ps1` (PyCharm does it for you: you see `(.venv)` at the start of the prompt). If PowerShell refuses ("running scripts is disabled"), run once `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`.
+- `.venv` is big and specific to your computer, so it is never shared. What is shared is **`requirements.txt`**, the shopping list:
 
 ```
 requests==2.34.2
@@ -83,1795 +56,578 @@ Jinja2==3.1.6
 pytest==9.1.1
 ```
 
-- Install everything in one go: `pip install -r requirements.txt` (`-r` = "read the list from this file").
-- `==2.34.2` means "exactly this version". We **pin** versions so everyone, including the reviewer, gets the same behaviour we tested. Without pinning, a future release could silently change something and break the project.
-- Lines starting with `#` are **comments**: notes for humans, ignored by pip.
-- We listed 3 libraries but 13 got installed. The other 10 (`urllib3`, `certifi`, `MarkupSafe`, ...) are **dependencies of our libraries** (libraries need libraries). pip installs them automatically. See everything with `pip freeze`.
+`pip install -r requirements.txt` installs everything. `==` **pins** an exact version, so everybody (including the reviewer) gets the behaviour we tested. A few more libraries get installed automatically: those are the *dependencies of our dependencies*.
+This file is what makes the brief's "runs from a clean checkout" true.
 
-**Why it matters for the assignment:** the brief says the code must "run from a clean checkout". This file is what makes that true.
+## 1.4 Git and GitHub
 
----
-
-## 5. Git (explained now, set up at the end)
-
-**Git** is a tool that records the **history** of your project. Think of "save points" in a video game, or "version history" in Google Docs, but much more powerful.
-
-What git gives you:
-- **Undo:** go back to how the project looked yesterday.
-- **History:** who changed what, when and why.
-- **Safe experiments:** try something risky without fear.
-- **Sharing:** upload the project so others can download it.
-
-Key words:
+**Git** records the history of a project: save points you can go back to, who changed what and why, safe experiments. **GitHub** is a website that keeps an online copy of a git repository. (Git is the tool on your computer; GitHub is the online home. Not the same thing.)
 
 | Word | Meaning |
 |---|---|
-| **Repository (repo)** | A project folder that git is tracking, plus its full history |
-| **`git init`** | "Start tracking this folder." Creates a hidden folder called `.git` inside your project where git stores all the history. Before `git init`, the folder is just a folder. You run it **once per project**. |
-| **Commit** | One save point: a snapshot of all tracked files plus a short message, e.g. "Phase 0: project skeleton" |
-| **`git add`** | Choose which changes go into the next commit (like putting items in a box before sealing it) |
-| **`git commit -m "message"`** | Seal the box: create the save point |
-| **`git status`** | "What has changed since the last save point?" |
-| **GitHub** | A **website** that stores git repositories online. **Git** is the tool on your computer; **GitHub** is the online home. (Not the same thing!) |
-| **`git push`** | Upload your commits to GitHub |
-| **`git clone`** | Download a repo from GitHub to a new computer |
+| **Repository (repo)** | A project folder git is tracking, with its full history |
+| **`git init`** | Start tracking this folder (once per project; creates a hidden `.git` folder) |
+| **`git add`** | Put changes on the "tray" for the next commit |
+| **`git commit -m "message"`** | Photograph the tray: one save point with a message |
+| **`git status` / `git diff` / `git log`** | What changed / the exact change / the history |
+| **`git push` / `git clone`** | Upload commits to GitHub / download a repo to a new computer |
+| **Staging** | `add` then `commit` lets you save code and notes as separate, logical commits |
 
-**Why the assignment needs it:** you must submit a **link to a GitHub repository**.
-
-**Current status:** git is not installed on your PC yet, and you decided to handle it at the end. When we do, the steps are:
+**Publishing (your step, it needs your GitHub login):** create an *empty* repository on github.com (do not tick README / .gitignore / licence), then in the project folder:
 
 ```powershell
-# 1. Install git (once), then restart PyCharm
-# 2. In the project folder:
-git init                              # start tracking
-git status                            # see what git sees (note: .venv etc. are NOT listed, thanks to .gitignore)
-git add .                             # put everything (except ignored files) in the box
-git commit -m "Phase 0: project skeleton"
-# 3. Create an empty repo on github.com, then:
-git branch -M main
-git remote add origin <the-url-github-gives-you>
+git remote add origin https://github.com/<your-username>/<repo-name>.git
 git push -u origin main
 ```
 
----
+Reload the repository page: you should see the README with its screenshots and the `samples/` folder. Open the link once in a private window to be sure the reviewers can see it. Common problems: *"git is not recognized"* (restart PyCharm so it sees the new PATH); *"remote origin already exists"* (`git remote set-url origin <url>`); *"rejected ... fetch first"* (the GitHub repo was created with a README: create an empty one instead).
 
-## 6. `.gitignore`
+**What goes into the repository, and what does not (`.gitignore`):**
 
-A text file that tells git: **"never track these files."** One pattern per line.
-
-Ours, line by line:
-
-| Line | Why ignored |
+| Ignored | Why |
 |---|---|
-| `.venv/` | Huge, and anyone can rebuild it from `requirements.txt` |
-| `__pycache__/` and `*.pyc` | Python's automatic speed-up caches; they change constantly and are useless to others |
-| `.pytest_cache/` | pytest's own cache |
-| `.idea/` | PyCharm's personal settings for your computer |
-| `Thumbs.db`, `.DS_Store` | Junk files Windows/macOS create |
+| `.venv/`, `__pycache__/`, `.pytest_cache/`, `.idea/` | Rebuildable or personal to your computer |
+| `output/`, `data/parsed/`, `*.pdf` | Generated files, and the brief's own PDF (it belongs to the company, not to us) |
+| `data/raw/*` **except** a few listed filings | The brief allows hand-downloaded filings "with documentation". A handful of small XML files (see `data/README.md`) make the samples and every test run offline on a fresh clone |
 
-`*` is a **wildcard** meaning "anything": `*.pyc` = every file ending in `.pyc`. A trailing `/` means "this is a folder".
+A later line in `.gitignore` beats an earlier one, and a folder must be re-included before its contents (`!data/raw/WIPRO/2025-26/`). Check with a dry run (`git add -n .`), never by guessing. `.gitkeep` is an empty file whose only job is to keep an otherwise empty folder in git. `.gitattributes` (`*.xml -text`) keeps the filings byte-for-byte as NSE published them.
 
-We did **not** ignore `data/raw/` yet, because we might need to commit hand-downloaded filings (the assignment allows it). We decide in Phase 1.
+**Before publishing:** every commit records an author name and email that anyone can read on a public repo (`git log --format="%an <%ae>"`), so check them, and search the text for your Windows user name and absolute paths. A public repository is forever.
 
----
+## 1.5 Markdown and the project notes
 
-## 7. `.gitkeep`
-
-Git only tracks **files**, not empty folders. If `data/raw/` is empty, git would forget it exists and a fresh download would lack the folder. So we put an empty file named `.gitkeep` inside. The name has no special meaning to git; it is just a common convention for "keep this folder".
-
----
-
-## 8. `README.md` and Markdown
-
-- **README** = the front page of the project. GitHub shows it automatically when someone opens the repo. The reviewer reads it first, and the assignment lists exactly what it must contain (setup, run commands, inputs to try, parts completed, extraction approach, limitations, AI tools used, design note).
-- **`.md` = Markdown**: a simple way to format text using plain characters: `# Heading`, `**bold**`, `- bullet`, `` `code` ``, and tables with `|`. PyCharm and GitHub display it nicely. Our `plan.md`, `context.md` and this `learnings.md` are Markdown too.
-
-Our README is a skeleton: setup/run sections are real, the rest says *TODO* and will be filled as we build.
-
----
-
-## 9. Our project notes
+`.md` is **Markdown**: plain text with light formatting (`# Heading`, `**bold**`, `- bullet`, tables with `|`). GitHub and PyCharm display it nicely.
 
 | File | Purpose |
 |---|---|
-| `plan.md` | The to-do list: phases and tasks in priority order |
-| `context.md` | The project's memory: requirements, facts we verified, decisions, progress log |
-| `learnings.md` | This file: concepts explained |
+| `README.md` | Front page: setup, run commands, what is done, approach, limitations, AI tools, design note (the brief lists exactly what it must contain) |
+| `commands.md` | Copy-paste cheat-sheet for the demo |
+| `demo.md` | How to give the demo: problem, flow, architecture, script |
+| `learnings.md` | This file |
+| `plan.md`, `context.md` | The to-do list by phase; the project memory (facts, decisions, progress log) |
 
----
+## 1.6 Tests and `pytest`
 
-## 10. Tour of the project folder
+A **test** is a small piece of code that checks another piece works. `pytest` runs them all: green = fine, red = something broke. Why bother? When you change code today, the tests tell you in seconds that you did not break something from last week, and for this project they also protect **data accuracy** (a graded item).
 
-```
-BRSR Principle 6 .../
-├── main.py            Entry point. Tiny on purpose.
-├── brsr_p6/           Our code lives here (a "package")
-│   ├── __init__.py    Marks the folder as a package
-│   └── cli.py         Reads command-line input
-├── tests/
-│   └── test_cli.py    Automatic checks for cli.py
-├── pytest.ini         Settings for pytest
-├── data/raw/          Downloaded filings will go here (cache)
-├── data/parsed/       Filings after we convert them to JSON
-├── samples/           Example generated HTML pages
-├── requirements.txt   Library shopping list
-├── .gitignore         Git "don't track" list
-├── README.md          Front page
-├── plan.md  context.md  learnings.md
-├── .venv/             Private toolbox (not shared)
-└── .idea/             PyCharm settings (not shared)
-```
+- `assert` = "this must be true, otherwise the test fails". `pytest.raises(...)` = "I expect this error". `capsys` captures what the code prints. `tmp_path` is a throw-away folder. `@pytest.mark.parametrize` runs one test with many inputs. `monkeypatch` swaps a function for a fake during one test. `pytest.skip` skips politely (for example when a real filing is not on disk).
+- Test files are named `test_*.py`, and the test folders **mirror** the code folders (`tests/views` tests `brsr_p6/views`), so `pytest tests/views` runs one layer.
+- **Dependency injection** makes the internet testable: the NSE client accepts a `session`, a `sleep` and a `clock` as arguments. Real runs pass the real ones; tests pass fakes. That is why hundreds of tests run in seconds with no internet and never wait 3 real seconds.
+- Four kinds of tests you should be able to name: **unit tests** (one small rule), **page tests** (the HTML), **guard tests** (they fail when someone forgets a step: unclassified warning, out-of-date samples, a wrong import direction) and **evidence tests** (the trace test checks every number against the raw XML).
 
-**A change from the plan:** `plan.md` originally put the code in `src/brsr_p6/`. We put it directly in `brsr_p6/` instead. Reason: this way `python flow.py` and `pytest` just work, with no extra "install your own project" step. Simpler for you and for the reviewer.
+## 1.7 Python ideas you meet in the code
 
-### `main.py`
-The file you run. It does one thing: call `main()` from `brsr_p6.cli`. We keep it tiny so the real logic lives in the package, where it can be tested and reused.
-
-### `brsr_p6/` and `__init__.py`
-- A **module** is a single `.py` file (like `cli.py`).
-- A **package** is a folder of modules that Python treats as one unit. The file `__init__.py` is what marks the folder as a package. It can be (nearly) empty.
-- That is why `main.py` can write `from brsr_p6.cli import main`: "from the package `brsr_p6`, module `cli`, bring in the function `main`".
-
-### `brsr_p6/cli/main_cli.py`: "CLI" = Command-Line Interface
-It reads what the user typed after `python flow.py`. It uses `argparse`, a tool that comes with Python (nothing to install). Walk-through:
-
-- `build_parser()` describes the options we accept: `--company` and `--fy`, both `required=True`. `argparse` then gives us `--help` and clear error messages for free.
-- `main(argv=None)`:
-  1. `parse_args(argv)` reads the options (if `argv` is `None` it reads the real command line; tests pass in their own list).
-  2. For now it just prints what it received. The real work comes in later phases.
-  3. `return 0` is the **exit code**: `0` = "success" (the operating system and other programs read this). Non-zero means failure. `argparse` uses `2` for "you typed it wrong".
-
----
-
-## 11. Small Python ideas you met in the code
-
-- **Function:** a named, reusable block: `def build_parser(): ...`. `return` hands back a result.
-- **Import:** `import argparse` / `from x import y` reuse code from elsewhere.
-- **Docstring:** the text in triple quotes `"""..."""` right under a function or at the top of a file: documentation for humans.
-- **f-string:** `f"Received company={args.company!r}"`. The `f` before the quote lets you put variables inside `{}`. The `!r` shows the value with quotes (`'Tata Steel'`), which is handy for spotting stray spaces.
-- **Type hints:** `argv: list[str] | None = None` means "argv is a list of strings, or `None`; default is `None`". `-> int` says the function returns a whole number. Python does not enforce these; they are documentation that helps you and your editor.
-- **`if __name__ == "__main__":`** When you **run** a file directly, Python sets a built-in variable `__name__` to `"__main__"`. When a file is **imported** by another, `__name__` is the module's name instead. So code under this `if` runs only when you run the file directly, not when tests or other files import it. That is why `main.py` uses it.
-- **`sys.exit(main())`** ends the program and passes `main()`'s return value to the operating system as the exit code.
-
----
-
-## 12. Tests and `pytest`
-
-A **test** is a small piece of code that checks another piece of code works. You run all tests with one command: `pytest`. Green = pass, red = something broke.
-
-Why bother? When we change code in Phase 6, the tests tell us in 1 second if we accidentally broke something from Phase 3. For this project, tests will also protect **data accuracy** (a graded item).
-
-Our three tests (`tests/cli/test_cli.py`):
-
-| Test | Checks |
+| Idea | In one line |
 |---|---|
-| `test_parser_reads_company_and_fy` | Typing `--company "Tata Steel" --fy 2023-24` gives back exactly those values |
-| `test_missing_arguments_exit_with_error` | Forgetting the options makes the program stop with exit code 2 |
-| `test_main_returns_zero_and_echoes_input` | A valid run returns 0 and prints the company name |
-
-Words in the tests:
-- **`assert`**: "this must be true, otherwise the test fails".
-- **`pytest.raises(SystemExit)`**: "I expect the code to stop the program; that is correct behaviour here".
-- **`capsys`**: a pytest helper that captures what the code `print`s so we can check it.
-- Test files must be named `test_*.py` and test functions `test_*`, so pytest finds them.
-- **`pytest.ini`** holds pytest settings. `pythonpath = .` lets tests write `from brsr_p6.cli import ...`.
-
----
-
-## 13. What we tested, and the results
-
-| Check | Result |
-|---|---|
-| PyCharm project interpreter is the project's `.venv` (Python 3.14.2) | OK |
-| `python flow.py --help` shows usage | OK |
-| `python flow.py --company "Tata Steel" --fy 2023-24` | OK: prints inputs, exit code 0 |
-| Missing `--fy` | OK: clear error, exit code 2 |
-| `pytest` | OK: 3 passed |
-| **Clean-checkout test:** copy only the project files to a new folder, build a brand-new `.venv`, `pip install -r requirements.txt`, then run `pytest` and `main.py` | OK: same 13 packages and versions, 3 passed, program runs |
-| Git (`git init`) | **Not done: git not installed, deferred by your choice** |
+| **Function, import, docstring** | `def name(...)`, `from x import y`, and the `"""text"""` under a function or at the top of a file (documentation for humans) |
+| **f-string** | `f"Company: {name}"`: variables inside `{}` |
+| **Type hints** | `argv: list[str] | None = None`, `-> int`: documentation Python does not enforce |
+| **`if __name__ == "__main__":`** | Code under it runs only when the file is run directly, not when imported (tests, other files) |
+| **Module / package / `__init__.py`** | One `.py` file / a folder of modules / the file that marks the folder as a package |
+| **`dataclass`** | A short way to write a class that only holds data (`frozen=True` = read-only). `field(default_factory=list)` gives each object its own list |
+| **`Enum`** | A fixed set of allowed values (`Status.CALCULATED`), so you cannot misspell it |
+| **dict, list, tuple, set** | `{key: value}`, `[...]`, `( , )` (cannot change), `{...}` (unique items). A **list comprehension** builds a list by filtering: `[f for f in facts if f.end == wanted]` |
+| **Exceptions** | `raise` stops a function and hands an error upward; `try/except` catches it where you know what to do. `class UnknownCompany(BrsrError)` means "is a" BrsrError, so one `except BrsrError` catches all our deliberate errors while real bugs still crash loudly |
+| **`pathlib.Path`** | File paths as objects: `raw_dir / "RELIANCE" / "2023-24"`, `.exists()`, `.write_text()` |
+| **Regular expression (`re`)** | A pattern language for text: `\d{4}` = exactly four digits |
+| **Default and keyword arguments** | `download_filings(query, fy=None, include_pdf=False)` |
+| **Callback** | A function passed in to be called later (`notify=print`): the callee does not know about printing, the caller decides |
+| **Never reuse built-in names** | A field named `list` hid Python's own `list` and crashed the program. Avoid `list`, `str`, `id`, `type` as your own names |
 
 ---
 
-## 14. Things that went wrong (and what we learned)
+# Part 2. The problem and the data
 
-1. **Git was not installed.** Tools like git are separate programs; being a programmer on Windows means installing them yourself. Deferred to the end.
-2. **A "pip is broken" error in our first clean-checkout attempt.** The folder was nested so deeply that the full file path went over Windows' **260-character path limit**, and Windows silently dropped some files. Same commands worked in a short path. Lesson: keep project paths short; and when something is "mysteriously broken", change one variable at a time (we compared a long path vs. a short path) to find the cause. Your own project is fine.
-3. **`main.py` already existed.** PyCharm creates a sample `main.py`. We replaced it with our real entry point.
+## 2.1 The task in one paragraph
 
----
+**BRSR** (Business Responsibility and Sustainability Report) is SEBI's mandatory ESG report for India's top 1,000 listed companies. **Principle 6** is the environment part: energy, water, air emissions, greenhouse gases, waste, protected areas, impact assessments, legal compliance. The raw filings are dense and hard to read. The task: given a **company** and a **financial year**, produce **one HTML page** with the company's Principle 6 disclosures twice: **(1)** exactly in SEBI's official format, and **(2)** as a **dashboard a non-expert can understand**. Public data only (NSE filings and SEBI's template), filings from FY 2021-22 onwards, no hard-coding to one company, never invent a number, be polite to NSE.
 
-## 15. Try it yourself (10 minutes)
+| Graded area | Weight | What a strong submission shows |
+|---|---|---|
+| Dashboard clarity | **30%** | A non-expert understands each metric, its direction and why it matters |
+| Data accuracy | **25%** | Figures match the filing; missing or converted values are flagged; works beyond the samples |
+| SEBI-format fidelity | 15% | Same question numbers, tables, row labels, units |
+| Error handling | 10% | Specific, helpful messages |
+| Code quality | 10% | Readable, sensibly organised, extraction separate from presentation |
+| Extensions | 10% | Depth and correctness of those attempted |
 
-1. In PyCharm's terminal run `python flow.py --help`. Read every line and match it to `cli.py`.
-2. Run `python flow.py --company "Tata Steel"` (no `--fy`). What does the error say? What is the exit code? (`echo $LASTEXITCODE`)
-3. Open `tests/cli/test_cli.py`, change `"2023-24"` in the first test to `"2024-25"`, run `pytest`, read the red failure message, then change it back and re-run.
-4. Open `.gitignore` and `requirements.txt` and say each line out loud in plain English.
+## 2.2 How a website really gets its data
 
-## 16. Interview self-check for Phase 0
-
-Can you answer these without looking?
-1. What is a virtual environment and why do we use one?
-2. What does `requirements.txt` do and what does `==` mean in it?
-3. What is the difference between **git** and **GitHub**? What does `git init` do?
-4. Why have a `.gitignore`? Name three things in ours.
-5. Why does `main.py` use `if __name__ == "__main__":`?
-6. What does the exit code `0` mean?
-7. Why is `main.py` tiny while the logic is in `brsr_p6/`?
-8. What does a test give us that running the program by hand does not?
-
-## 17. Mini glossary
-
-**CLI** command-line interface · **argument/option** extra info after a command · **library/package** reusable code from others · **dependency** a library our code needs · **pin** fix a library to an exact version · **venv** private Python environment · **repo** a git-tracked project · **commit** a saved snapshot · **module** one `.py` file · **package** a folder of modules · **exit code** number telling the OS if the program succeeded · **docstring** documentation text inside code · **assert** a statement that must be true in a test.
-
----
----
-
-# Phase 1: Discovery spike ("look before you build")
-
-## 1.1 Why a "spike"?
-
-A **spike** is a short, throw-away investigation to answer *"what are the facts?"* before committing to a design. Our big unknowns: *where does NSE keep the filings, in what format, and how are the numbers labelled inside?* If we guessed wrong, we would rewrite Phases 3-4. Three hours of looking now can save ten hours later.
-
-## 1.2 How a website really gets its data
-
-When you open the NSE BRSR page, two things happen:
-
-1. Your browser downloads the **page itself** (HTML, the layout). It is mostly empty.
-2. The page's **JavaScript** then quietly asks NSE's server for the data in the **background** ("background requests", also called **XHR / Fetch** requests) and draws the table from the reply.
-
-Our Python program can skip the page and ask for the data **directly, the same way**. The only trick is finding out *what* it asks for. The browser's **DevTools** shows exactly that.
-
-## 1.3 Words you need
+Open the NSE BRSR page and two things happen: your browser downloads the **page** (mostly empty HTML), and then the page's **JavaScript** quietly asks NSE's server for the data in the **background** ("XHR / Fetch" requests) and draws the table from the reply. Our Python program can skip the page and ask for the same data **directly**. The trick is finding out *what* the page asks for: the browser's **DevTools** (F12, Network tab, filter Fetch/XHR) shows exactly that. We also learned that **JavaScript is just text**: we read NSE's own script to find how the page asks for older years.
 
 | Word | Plain meaning |
 |---|---|
-| **Request / response** | You ask a server something (request), it answers (response). |
-| **URL** | The address. Often `https://site/api/thing?symbol=TATASTEEL`. The part after `?` is the **query string**: extra options as `name=value`, joined by `&`. |
-| **HTTP method** | The kind of request. **GET** = "give me this" (what we expect). **POST** = "here is data, process it". |
-| **Headers** | Small labels sent with the request or response, like the writing on an envelope: `User-Agent` (who is asking, e.g. "Chrome"), `Accept` (what format I want), `Referer` (which page I came from), `Cookie`. |
-| **Cookie** | A small token a site gives your browser on the first visit; the browser sends it back on later requests, like a visitor badge. NSE may refuse API calls that have no valid badge. In Python, `requests.Session()` remembers cookies for us. |
-| **Status code** | The server's one-number verdict. **200** OK · **403** forbidden (blocked) · **404** not found · **429** too many requests (slow down!) · **5xx** server problem. |
-| **API** | A door on a server meant for programs, not people. It returns data, not pretty pages. |
-| **JSON** | The usual API data format. Looks just like Python: `{"symbol": "TATASTEEL", "year": "2023-24"}`. `{}` = dictionary, `[]` = list. |
-| **Rate limit / being polite** | Servers block clients that ask too often. So we cache, wait between requests, and never loop wildly. |
+| **Request / response** | You ask a server something; it answers |
+| **URL, query string** | The address; the part after `?` is extra options as `name=value` joined by `&` |
+| **GET / POST** | "Give me this" / "here is data, process it" |
+| **Headers** | Labels sent with a request, like writing on an envelope: `User-Agent` (who is asking), `Referer`, `Cookie` |
+| **Cookie** | A badge the site hands you on the first visit and expects back later. NSE refuses API calls without one, so we visit its home page first. `requests.Session()` remembers cookies for us |
+| **Status code** | **200** OK, **403** forbidden (blocked), **404** not found, **429** slow down, **5xx** server trouble |
+| **API / JSON** | A door meant for programs; it answers in JSON: `{"symbol": "TATASTEEL", "year": "2023-24"}` (`{}` dictionary, `[]` list) |
 
-## 1.4 PDF vs XML
+## 2.3 What NSE gives us
 
-- **PDF** is made for human eyes. Tables inside a PDF are just text positioned on a page. Extracting them is fragile.
-- **XML** is made for programs. Data is wrapped in labelled **tags** that can be nested:
+- **Find the company:** `GET /api/smart-search/eqEtf?q=<text>` turns "Tata Steel" into the symbol `TATASTEEL`.
+- **List its filings:** `GET /api/corporate-bussiness-sustainabilitiy?index=equities&symbol=TATASTEEL&from_date=DD-MM-YYYY&to_date=DD-MM-YYYY` (yes, NSE's own spelling). It returns JSON with, for each filing: the year (`fyFrom`, `fyTo`), submission date, revision date, and **links** to the PDF and the XBRL file. Without dates the page quietly asks for the last 365 days only; asking from `01-04-2021` returns every year.
+- **One row per company per year; a revised filing replaces the original.** That is the rule we state for "which filing do we use": the one NSE currently lists.
+- **We always use the links from the answer.** File names follow no pattern, and a PDF link may literally end in `/null`.
 
-```xml
-<energy unit="GJ">
-  <electricity>1200</electricity>
-</energy>
-```
-`energy` and `electricity` are **elements**; `unit="GJ"` is an **attribute**; `1200` is the **value**. Python can read this with the built-in `xml.etree.ElementTree`.
+## 2.4 PDF vs XML, and XBRL in simple words
 
-## 1.5 XBRL in simple words
-
-**XBRL** = "XML for business reports". NSE requires every company to file the BRSR **both** as PDF and as XBRL. The main parts:
+A **PDF** is made for eyes: a table is just text placed on a page, so extracting it is fragile. **XML** is made for programs: values wrapped in named tags (`<electricity unit="GJ">1200</electricity>`). NSE requires both for each BRSR; we use the XML. **XBRL** is "XML for business reports":
 
 | Part | Meaning | Analogy |
 |---|---|---|
-| **Taxonomy** | The official **dictionary** of allowed tags (concepts) and what they mean, published by the regulator | A form with fixed field names |
-| **Instance document** | The **filled-in form** a company submits (the `.xml` file we download) | One company's filled form |
-| **Fact** | One reported value, e.g. "Total Scope 1 emissions = 1,234" | A single answer |
-| **Context** | *Who and when* a fact is about: the company, and the period (e.g. 1 Apr 2023 - 31 Mar 2024). This is how we tell **current year vs previous year** apart | The "date" label on the answer |
-| **Unit** | What the number is measured in (INR, tonnes...) | The "unit" label |
-| **Dimension (axis / member)** | Extra labels that let one tag represent table **rows**, e.g. one tag "waste generated" + member "plastic waste" | The row label in a table |
-| **Scale / decimals** | Hints about how the number is rounded or multiplied (e.g. in crores) | Fine print |
+| **Taxonomy** | The regulator's dictionary of allowed tags and what they mean | A form with fixed field names |
+| **Instance document** | The filled-in form a company submits (the `.xml` we download) | One company's filled form |
+| **Fact** | One reported value, e.g. `TotalScope1Emissions = 64` | A single answer |
+| **Context** | *Who and when* a fact is about (company, period): how we tell current year from previous year | The date label on the answer |
+| **Unit** | What the number is measured in | The unit label |
+| **Dimension** | Extra labels that let one tag represent table rows | The row label |
 
-So reading a filing = collecting facts, then using each fact's **context** (which year? which row?) and **unit** to decide where it belongs in the SEBI table.
+Reading a filing therefore means collecting facts, then using each fact's **context** (which year?) and **unit** to decide where it belongs in SEBI's table. We decide the year from the **period end dates**, never from the context's id text. A filing holds **two** years: its own and the year before (this matters in Part 5). Its **element names** are what makes every number traceable: a PDF table gives you nothing to point at.
 
-## 1.6 Known data-quality traps (from a published analysis of FY 2022-23 BRSR XBRL filings)
+## 2.5 Five editions, two lookup tables
 
-*Source: xbrl.org, "Unearthing Insights from India's ESG Disclosures". We will verify these ourselves on the real files.*
+Every filing names the version of SEBI's form it used (the `.../xbrl/2021-09-30/in-capmkt` part). We met five: 2021-09-30 and 2023-06-30 (**legacy**), 2024-04-30, 2025-05-31 and 2026-02-28 (**modern**). Legacy filings have about 400 tags, no proper units (energy has none at all; emissions units are free text such as "Kg/Month"). Modern ones have about 660-700 tags with real unit labels and a richer layout (renewable / non-renewable split, PPP). So the program has **two mapping tables** and picks one by reading the edition date. (The fifth edition only appeared when a second company was tested: **test on more than one company**.)
 
-1. **Wrong scale:** some companies typed values in crore/lakh instead of plain rupees.
-2. **Zeros for mandatory metrics** (e.g. Scope 2, water withdrawal): is `0` real, or "didn't bother"? We must be careful to never present a suspicious `0` as certain truth.
-3. **Free-text units** for emissions ("Metric tonnes of CO2 equivalent", "CO2 in MT", ...): we must normalise unit strings.
-4. **Scaled intensity denominators:** "per rupee of turnover" is often really "per crore/million rupees", explained only in the PDF.
-5. **PDF and XBRL can disagree.**
+## 2.6 The messy-data traps (each one became a rule)
 
-What this means for our design: keep original value and unit next to the cleaned one, mark conversions, add **sanity-check warnings** instead of silently trusting numbers. This is directly the assignment's "honest handling of messy data".
-
-## 1.7 Hands-on steps (you do these in your browser)
-
-**A. Find the background request (DevTools)**
-1. Open **Chrome or Edge** and go to: `https://www.nseindia.com/companies-listing/corporate-filings-bussiness-sustainabilitiy-reports` (yes, the spelling "bussiness" and "sustainabilitiy" is NSE's own).
-2. Press **F12** (or Ctrl+Shift+I). Click the **Network** tab. Tick **Preserve log** and **Disable cache**. Click the filter button **Fetch/XHR**.
-3. Click the 🚫 (clear) icon to empty the list, then **search for a company** on the page (e.g. `TATASTEEL`) and pick a period if the page offers one. New rows appear in the Network list.
-4. Click the row that looks like the data request (name often starts with `corporate...` or `api/...`). Look at tabs: **Headers** (Request URL, Request Method, Status Code, Request Headers) and **Response** / **Preview** (the JSON).
-5. Note down: the full **Request URL**, the **query parameters**, and the **JSON field names** of one record.
-
-**B. Download filings by hand** (into `data/raw/<SYMBOL>/<FY>/`)
-Suggested set (adapt if a company did not file that year): Tata Steel FY 2021-22, 2022-23, 2023-24 · Infosys FY 2023-24 · HDFC Bank FY 2023-24 · plus any company that shows **two rows for the same year** (a revised filing). For each, download **both the PDF and the XML/XBRL file** if the page offers both. Keep the original file names.
-
-**C. Look inside an XML file**: open it in PyCharm (double-click). Find: the first lines (namespaces), `context` blocks (periods!), `unit` blocks, and the facts. We will explore it together with a small script.
-
-## 1.7b What we found (Tata Steel FY 2025-26)
-
-**The request you found in DevTools was exactly the right one.** In plain words:
-
-```
-GET https://www.nseindia.com/api/corporate-bussiness-sustainabilitiy
-        ?index=equities & symbol=TATASTEEL & issuer=Tata Steel Limited
-```
-returns JSON like `{"data": [ {symbol, companyName, fyFrom, fyTo, submissionDate, revisionDate, attachmentFile (PDF link), xbrlFile (XML link)} ]}`.
-- `fyFrom: 2025, fyTo: 2026` means **FY 2025-26**.
-- `revisionDate: "-"` means "never revised".
-- The two links are the files to download. We always **use the links the API gives us** and never guess file names.
-- This answer held **only one filing** (the latest), because NSE's page quietly asks only for the **last 365 days**. Section 1.7c shows how we found the way to ask for older years.
-
-**Can Python do the same as the browser?** Yes. We visited the NSE home page first (to receive cookies, like a visitor badge), then called the API, then downloaded the XML and the PDF, always waiting 3+ seconds in between. All answered `200 OK`.
-
-**What is inside the XML?** A standard XBRL file:
-- ~2,800 **facts** in 791 **contexts** (one "context" = who + which period + which table row), 11 **units**.
-- Principle 6 values are mostly **one named tag per row**: `TotalScope1Emissions`, `WaterWithdrawalBySurfaceWater`, `NOx`, `PlasticWaste`... each appearing twice: once with the **current-year** context, once with the **previous-year** context. That is perfect for the SEBI table's two columns.
-- The period lives in the context's dates (1 Apr 2025 to 31 Mar 2026). We always read the dates and never trust the id text.
-
-**XBRL vs the company's PDF: do the numbers match?** Mostly yes (energy, water, air, waste all matched). But we also caught **four traps**, which is exactly the "messy data" the assignment talks about:
-
-| Trap | What happened | Lesson |
-|---|---|---|
-| Scaled number | Scope 1 = `64` with unit `MtCO2e` (which means *metric tonnes*). The PDF says "64 **million** tonnes": Tata Steel typed the number in millions under a unit that says tonnes. | Never trust a unit label blindly; check the size against other numbers (see §1.7e). *(An earlier version of this note wrongly said `MtCO2e` meant million tonnes; corrected after we saw Reliance and Infosys.)* |
-| Lost value | Scope 1+2 intensity is `0` in the XML; the PDF says 0.0005. | A `0` is not always zero. Warn the reader. |
-| Wrong unit label | PPP energy intensity `9081` labelled "GJ per rupee"; really "GJ per million USD". | Cross-check magnitudes ("is this plausible?"). |
-| "Not material" stored as 0 | PDF: "Not material for steel"; XML: `0`. | The file cannot tell "measured zero" from "not applicable". |
-
-**Another discovery: the template version.** This filing follows the **newer** BRSR format (e.g. energy is already split into renewable / non-renewable, there are PPP and physical-output intensities). Our assignment's official layout is the **2021** one. So the program has to *translate* between them, and where a 2021 row (like "total electricity") must be built by adding two newer rows, we mark it **CALCULATED**.
-
-**Standalone vs consolidated:** a company can report for itself alone (standalone) or including subsidiaries (consolidated). The XML has a `ReportingBoundary` fact ("Standalone basis") and contains one set of numbers; the PDF shows both. We must always print which boundary we are showing.
-
-## 1.7c Finding the way to older years (a debugging story)
-
-You re-sent the same URL and said "check this". The URL really had nothing to change, so the answer had to be somewhere else. **A useful habit: when the data you see doesn't make sense, read the code that asks for it.**
-
-1. The NSE page loads a small script just for this page. It only wires buttons, but it told us which bigger script builds requests.
-2. In that bigger script (NSE's own public JavaScript) we found: for the BRSR page the date pickers default to **today minus 365 days → today**, and when both dates are set the code adds `&from_date=…&to_date=…` to the request. Dates use the format **DD-MM-YYYY**.
-3. We tried one wide range (`from_date=01-04-2021`): Tata Steel returned **4** filings. Infosys and HDFC Bank returned **5** each. The `issuer` part of the URL was never needed.
-4. The same script showed the **company search** the page uses: `/api/smart-search/eqEtf?q=<text>`. We can use it to turn "Tata Steel" into `TATASTEEL`.
-
-New concept: **JavaScript is just text.** The browser downloads it from a URL, so we can read it like any file. It is how websites decide what to ask the server.
-
-## 1.7d What older and different filings taught us
-
-**Five "editions" of the form.** Every filing names the version of SEBI's form it used (the `.../xbrl/2021-09-30/in-capmkt` part). We saw 2021-09-30, 2023-06-30, 2024-04-30, 2025-05-31 and 2026-02-28. (The fifth one, 2023-06-30, only appeared when we downloaded a second company's files: Reliance FY 2022-23. Lesson: test on more than one company!)
-- **2021 edition** (used for FY 2021-22 and FY 2022-23): about 400 tag names. Close to the SEBI template we must copy. But numbers have **no proper unit**; units for emissions are typed as free text ("Kg/Month", "tCO2 e", "Million tonnes of CO2 equivalent"...). Energy has no unit at all.
-- **2024-2026 editions:** about 660-700 tags, real unit labels, and a richer layout (renewable / non-renewable split, PPP). The three are almost identical for Principle 6.
-- So our parser needs **two lookup tables** and must pick the right one by reading that date.
-
-**More real-world messiness we found (each one becomes a rule in our code):**
-
-| What we found | Our rule |
+| What we found in real filings | What the program does |
 |---|---|
-| Tata Steel Scope 1 = 64 but really 64 *million* tonnes, while Reliance's 36,350,070 and Infosys's 180,737 are plain tonnes (same unit label `MtCO2e` = metric tonnes) | Cross-check sizes inside one filing (emissions ÷ energy); if it makes no sense, show the value as filed with a "doubtful" warning, never silently rescale |
-| Units differ by company (kg vs kilotonnes, tCO2e vs MtCO2e) | Convert everything to one unit, always show the original too |
-| Infosys FY21-22: air emissions per **month** | Never turn "per month" into "per year" silently |
-| Old files store `1,83,595` (Indian commas) as text | Clean numbers before using them |
-| Answers like `Yes`, `true`, `NA` | Normalise to Yes / No / Not applicable |
-| Infosys FY21-22 file contains illegal invisible characters, so a strict XML reader refuses the whole file | Clean them in memory, remember a warning; if still broken, show a clear "unparseable filing" message |
-| HDFC Bank has no NOx/SOx tags at all | That is a genuine "not reported", shown clearly (a bank has little stack emission) |
-| Tata Steel has no FY 2021-22 filing; the FY 2022-23 PDF link literally ends in `/null` | "No report for that year" is a normal case. The PDF is optional, so we rely on the XML |
-| Tata Steel's FY 2022-23 figures are **consolidated** (group), from FY 2023-24 they are **standalone** (company only) | Always print the reporting boundary; flag when it changes between years |
-| Tata Steel FY 2023-24 energy: 545.96 million GJ in its own filing, but 569.33 million GJ as "previous year" in the next filing (restated +4.3%) | Note restatements when comparing years |
-| NSE keeps one row per company per year, and a revised filing **replaces** the original (22 of 1,215 rows) | Use the row NSE gives us; show submission and revision dates |
+| Tata Steel's Scope 1 is `64` under unit `MtCO2e` (which means *metric tonnes*), but the PDF says 64 **million** tonnes: typed in millions | Cross-check against energy use (next section); show as filed with a "doubtful" note, **never silently rescale** |
+| A `0` can mean a real zero, "not measured", "not material", or "rounded away" | A reported 0 gets a note; an intensity of 0 whose total is not 0 is "not a real zero" |
+| Units differ by company (kg, kilotonnes, tCO2e, MtCO2e; Terajoule and Megajoule for energy) | Convert to one unit per topic and show the original in the fine print |
+| Legacy energy has no unit at all; some air figures are "per month" | Show "(unit not stated)"; never turn "per month" into "per year" |
+| Numbers stored as text with Indian grouping (`1,83,595`); answers like `true`, `NA` | Clean before use; `NA`/blank means *nothing*, not 0 |
+| An XML file with illegal invisible characters (a strict reader refuses the whole file) | Clean them in memory and add a warning; if still broken, a clear "unparseable filing" page |
+| Tag spelling differs in the same file (`WithOutTreatment` / `WithoutTreatment`) | Look tags up ignoring capitals |
+| The company has no filing for that year; a PDF link ends in `/null` | "No report for that year" is a normal case with its own message; the PDF is optional |
+| Standalone vs consolidated changes between years (Wipro flips almost every year) | Always print the reporting boundary; never compare across a change |
+| A later filing restates last year's figure | Keep each figure as filed in its own year; mark restatements |
+| An intensity written with **one digit** (`0.0000000004`) is rounded: `4e-10` means "between 3.5e-10 and 4.5e-10" | "Too coarse to compare": shown as filed, never given a percentage |
+| The same XBRL numbers and the PDF can disagree (a PPP intensity labelled "per rupee" is really per million US dollars) | Say so; PPP and per-tonne intensities appear only in the SEBI tab |
 
-## 1.7e The "does this number make sense?" check
+## 2.7 "Does this number make sense?"
 
-A unit label tells you what the company *says*; it does not prove the number was typed in that unit. Tata Steel's Scope 1 is `64` under a unit meaning "tonnes", but a steel giant cannot emit 64 tonnes. How can a program notice that?
-
-**Compare against another number in the same filing.** Burning fuel releases a fairly predictable amount of CO₂ per unit of energy, roughly 0.01 to 0.5 tonnes per gigajoule. So divide (Scope 1 + Scope 2, in tonnes) by (total energy, in GJ):
+A unit label tells you what the company *says*; it does not prove the number was typed in that unit. Burning fuel releases a fairly predictable amount of CO2 per unit of energy (roughly 0.01 to 0.5 tonnes per gigajoule). So divide Scope 1+2 (tonnes) by total energy (GJ):
 
 | Company | Emissions (t) | Energy (GJ) | Ratio | Verdict |
 |---|---|---|---|---|
-| Reliance (Scope 1 only) | 36,350,070 | 478,033,842 | 0.076 | plausible |
+| Reliance (Scope 1) | 36,350,070 | 478,033,842 | 0.076 | plausible |
 | Infosys | 63,031 | 839,448 | 0.075 | plausible |
 | HDFC Bank | 586,080 | 3,032,974 | 0.193 | plausible |
-| Tata Steel (as typed) | 69 | 623,812,739 | 0.0000001 | **implausible**; ×1,000,000 gives 0.11, so it was typed in millions |
+| Tata Steel (as typed) | 69 | 623,812,739 | 0.0000001 | **implausible**; x1,000,000 gives 0.11, so it was typed in millions |
 
-Our decision: when the ratio is implausible, **show the number exactly as filed and add a "scale doubtful" warning**. We never silently "fix" a company's number.
+Decision: when the ratio is implausible, **show the number exactly as filed, with a note, and no verdict**.
 
-## 1.8 Safety and politeness during discovery
-- Do **not** paste cookie values or login tokens anywhere. Header **names** are enough.
-- Browse at human speed: a handful of searches, no rapid-fire refreshing.
-- Everything on this NSE page is public data.
+## 2.8 Being polite to NSE
 
-## 1.9 Interview self-check for Phase 1
-
-Try to answer without looking:
-1. How does a web page get its data, and how did we find the request behind it?
-2. Why did the API return only one filing at first, and how did we fix it?
-3. What is a cookie and why do we visit the NSE home page before calling the API?
-4. What is a taxonomy, an instance document, a fact, a context? How do we tell current year from previous year?
-5. Why did we choose XBRL over parsing the PDF? Name one thing the PDF is still useful for.
-6. Give two examples where the XBRL number or unit could mislead a reader, and what our program should do about each.
-7. What happens when a company has no filing for the year asked? What if a filing's XML is broken?
-8. Why must the page always show whether a report is standalone or consolidated?
-9. Why do we need two mapping tables ("legacy" and "modern")?
-10. How polite were we to NSE? (How many requests, how far apart, what do we cache?)
-
+Cache everything (company search, the filing list for 24 hours, the files themselves), wait at least **3 seconds** between requests, stop at once on 403/429, retry only temporary failures (timeouts, 5xx) with growing pauses, never loop wildly, and do not paste cookie values anywhere.
 
 ---
----
 
-# Phase 3a: The download script (built early, on request)
+# Part 3. The flow, step by step
 
-## 3a.1 Why this exists
+## 3.1 The big picture
 
-During Phase 1 *I* fetched files with throwaway scripts that lived outside your project. That is fine for exploring, but useless for you: tomorrow an interviewer may say "now download company X". So the project must contain its own script that anyone can run. Rule of thumb: **anything the final result depends on must live in the project and be runnable by someone who is not me.**
-
-## 3a.2 How to use it
-
-```powershell
-python flow.py download --company Reliance                      # every year NSE has
-python flow.py download --company "Tata Steel" --fy 2023-24      # one year
-python flow.py download --company TATASTEEL --with-pdf           # also the PDF (optional)
-python flow.py download --company Reliance --refresh             # ask NSE for a fresh filing list
-python flow.py download --help
-```
-Files land in `data/raw/<SYMBOL>/<FY>/`. A second run reuses what is on disk, so it sends **no** requests (the last line of the summary says how many it sent).
-
-## 3a.3 What happens when you press Enter (the pipeline)
+The program is a **conveyor belt**: a filing goes in at one end and a web page comes out at the other. Each step has its own folder (a Python **package**):
 
 ```
-"Reliance" --> check the FY text --> search NSE for the company --> ask NSE for the filing list
-                (no network)           (smart-search, cached)         (from_date..to_date, cached 24 h)
-        --> pick the year(s) --> for each: XML already on disk? --> yes: skip   no: download (3 s apart)
-        --> write filing.json next to the files --> print a summary
+python flow.py --company "Tata Steel" --fy 2025-26
+   cli          read what was typed; on failure write an error page         cli/flow_cli.py
+   workflows    the order of the steps (the "manager")                      workflows/pipeline.py
+   download     company text -> NSE symbol -> filing list -> the XML file   download/
+   parsing      the XML -> plain facts (element, value, unit, period)       parsing/
+   extraction   facts -> ONE clean Principle6Report, doubts flagged         extraction/
+   views        decide every number, word and verdict (no HTML)             views/
+   rendering    fill the HTML templates, write ONE page                     rendering/
+   output/TATASTEEL_2025-26.html
 ```
 
-## 3a.4 The files and what each one is for
-
-| File (in `brsr_p6/`) | Job | Why separate? |
-|---|---|---|
-| `errors.py` | All our custom error types | One place; every error carries the message we show the user |
-| `fiscal_year.py` | `"FY2023-24"` → `"2023-24"`, rejects years before FY 2021-22 | Pure logic, trivial to test, no internet needed |
-| `nse_client.py` | **The only code that touches the internet**: pacing, retries, block detection, safe saving | Politeness rules live in one place |
-| `company_lookup.py` | `"Reliance"` → `RELIANCE` | Matching rules are tested separately from the web call |
-| `filings.py` | Ask NSE for the filing list, choose the right row | Knows NSE's list format and its quirks |
-| `downloader.py` | Connects the steps above and decides folders/caching | The "manager" that calls the specialists |
-| `download_cli.py` + `download_filings.py` | Reads the command line and prints the summary | Same idea as `cli.py`/`main.py`: tiny entry, logic elsewhere |
-
-## 3a.5 New Python ideas (each appears in the code)
-
-- **Exceptions and inheritance** (`errors.py`): `class UnknownCompany(BrsrError)` means "an UnknownCompany *is a* BrsrError". The command-line code writes `except BrsrError` once and catches all of our deliberate errors, while real bugs still crash loudly (which is what we want).
-- **`raise` and `try/except`**: `raise` stops the current function and hands an error upward; `try/except` catches it where we know what to do.
-- **`dataclass`** (`Company`, `FilingRecord`, ...): a short way to write a class that only holds data. `frozen=True` makes it read-only. It auto-creates `__init__`, printing, and equality.
-- **Type hints with `|`**: `str | None` = "a string or nothing".
-- **`pathlib.Path`**: file paths as objects. `raw_dir / "RELIANCE" / "2023-24"` joins with the correct slash for your OS; `.exists()`, `.mkdir()`, `.write_bytes()` are methods on it.
-- **`Path(__file__).resolve().parent.parent`**: `__file__` is the location of the current file. Going two folders up gives the project root, so the script works **whatever folder you run it from**.
-- **Default arguments and keyword arguments**: `download_filings(query, fy=None, include_pdf=False, ...)`.
-- **`json.loads` / `json.dumps`**: text ↔ Python dictionaries and lists.
-- **`@property`** (in a test): a method you read like a variable.
-- **Regular expressions** (`re`) in `fiscal_year.py`: a pattern language for text. `\d{4}` = exactly four digits.
-- **Sorting with a key**: `sorted(items, key=lambda r: r.fy_from)`.
-
-## 3a.6 Ideas behind the design (be ready to explain these)
-
-1. **Cache first.** Before asking NSE, look on disk. This is the assignment's "cache locally, do not hammer the site" in code. Three caches: company search results, the filing list (24 h), and the files themselves.
-2. **Throttle.** `_wait_turn` guarantees at least 3 seconds between any two requests.
-3. **Retry only what is worth retrying.** Timeouts and NSE 5xx errors are temporary, so we retry with growing pauses (4 s, then 8 s). A 403/429 means "stop", so we stop at once and tell the user.
-4. **One bad file must not ruin the batch.** HTTP 404 on one file marks only that file "missing"; the others continue.
-5. **Never save garbage as data.** Before writing, we check the first bytes: an XML file must start with `<?xml`, a PDF with `%PDF`. A block page ("Access Denied", HTML) is refused.
-6. **Write safely.** We write to `name.xml.part` and rename when finished, so a crash never leaves a half file that later looks valid.
-7. **Validate cheap things first.** A bad year like `2019-20` fails *before* any request.
-8. **Take links from the answer, never invent them.** File names on NSE follow no pattern.
-9. **Dependency injection (for tests).** `NseClient` accepts `session`, `sleep` and `clock` as arguments. In real use they are the real internet and real time; in tests we pass fakes. That is why 72 tests run in half a second with no internet and never wait 3 real seconds.
-
-## 3a.7 The tests (`tests/`)
-
-| File | What it checks |
+| Package | Its job in one line |
 |---|---|
-| `test_fiscal_year.py` | Spellings accepted, bad years rejected with the right error |
-| `test_company_lookup.py` | Tata Steel/HDFC-style results: bonds ignored, main share series preferred, ambiguity listed |
-| `test_filings.py` | NSE's list parsed, `null` PDF links, revised rows, which years are missing, cache rules |
-| `test_nse_client.py` | 3-second spacing, no retry on 403, retries on 503, block pages refused, no leftover `.part` files |
-| `test_downloader.py` | The whole flow with a fake NSE: folders, second run = zero requests, one missing file, a manual file reused |
+| `core/` | Shared words and tools: the data model (`Cell`, `Metric`, `Principle6Report`), errors, financial years, units, number formatting, file locations, SEBI's template |
+| `download/` | Talk to NSE politely and keep the files on disk |
+| `parsing/` | Open the XBRL file and read its raw facts (no cleaning yet) |
+| `extraction/` | Clean the facts into one report; flag doubtful numbers, never change them |
+| `analysis/` | Compare years: better / worse / same, trends (pure logic) |
+| `views/` | Decide *what each page says* (sentences, numbers, flags) |
+| `rendering/` | Fill the HTML templates and write the file |
+| `workflows/` | Whole jobs: company + year in, page out |
+| `cli/` | The commands you type; each calls a workflow |
 
-Run all: `pytest` (expect 72 passed).
+**The layer rule.** The table is ordered from the bottom up. *A package may import only from itself and from packages earlier in the list.* `core` knows nothing about `views`; `views` knows nothing about how a page is saved. Why: circular imports crash Python at start-up; you can change the top layers without breaking the bottom; and "where does this new function go?" always has an answer. A rule that lives only in a README gets broken in a hurry, so **`tests/test_architecture.py` enforces it**: it reads every file's `import` lines (Python's `ast` module turns code into a tree you can inspect) and fails with the exact file and line of any upward import. It also fails if a loose module appears in `brsr_p6/` outside a package. Code that checks code.
 
-## 3a.8 What we proved on the real NSE
+**One command.** The root folder holds a single file, `flow.py` (ten lines, no logic). With `--company` and `--fy` it is *the flow*; the first word can instead name a step or an extra: `download`, `extract`, `trends`, `summary`, `compare`, `hub`, `samples` (like `git commit` / `pip install`). In `cli/flow_cli.py` a dictionary `COMMANDS` maps each name to the function to run, and only the **first** word counts, so `--company trends` is still a company.
 
-| Try | Result |
+## 3.2 Step 1: Download (`download/`)
+
+| File | Job |
 |---|---|
-| `--company Reliance` | Found *Reliance Industries Limited (RELIANCE)*, downloaded FY 2022-23 to 2025-26 in 20 s; reported FY 2021-22 as not filed |
-| Same command again | 0 requests, 0.4 s |
-| `--company "HDFC Bank" --fy 2022-23 --with-pdf` | XML and a 9.6 MB PDF |
-| `--company "M&M"` | Folder `M_M` (the `&` is not safe in folder names) |
-| `--company "Sakuma Exports"` | Clear message: NSE lists no BRSR for this company |
-| `--company Tata` | Lists 10 matching companies and tells you to use a symbol |
-| `--fy 2019-20`, `--fy banana`, `--fy 2021-22` (Tata Steel), 1-letter company | A specific message each |
+| `nse_client.py` | **The only code that touches the internet**: pacing, retries, block detection, safe saving |
+| `company_lookup.py` | `"Reliance"` -> `RELIANCE` (several matches -> `AmbiguousCompany` with the list) |
+| `filings.py` | Ask NSE for the filing list, parse it, choose the row for the year |
+| `downloader.py` | The manager: validate -> find the company -> list filings -> pick -> download -> write `filing.json` |
 
-**A surprise from the new data:** Reliance FY 2022-23 uses a *fifth* edition of SEBI's form (2023-06-30), which we had not seen for Tata Steel or Infosys. It would have surprised the parser later; testing a second company found it now.
+In order, `download_filings()` does: **(1)** check the year text (a typo never costs a request), **(2)** company text -> symbol, **(3)** list the filings (cached 24 h), **(4)** choose which to fetch, **(5)** for each: XML already on disk? skip, else download. Files land in `data/raw/<SYMBOL>/<FY>/` with a small `filing.json` (company name, dates, links).
 
-## 3a.9 Try it yourself
+Ideas to be ready to explain:
+1. **Cache first.** Three caches: company search, filing list (24 h), the files. A second run sends 0 requests.
+2. **Throttle.** `_wait_turn` guarantees 3 seconds between any two requests.
+3. **Retry only what is worth retrying.** Timeouts and 5xx are temporary; 403/429 mean "stop".
+4. **One bad file must not ruin the batch.** A 404 on one file marks only that file missing.
+5. **Never save garbage as data.** Check the first bytes: XML must start with `<?xml`, a PDF with `%PDF`; a block page is refused.
+6. **Write safely.** Write to `name.xml.part`, rename when finished, so a crash never leaves a half file that looks valid.
+7. **Take links from the answer, never invent them.**
+8. **Fallback.** If NSE cannot be reached and a saved filing list exists (even older than 24 h), use it and print a notice; with `--refresh` a failure is reported, not hidden.
 
-1. `python flow.py download --company Infosys` then open `data\raw\INFY` and look at the folders and `filing.json`.
-2. Run the same command again and read the last line.
-3. Try a company of your own choice. If it says several companies match, rerun with the symbol it suggests.
-4. Open `brsr_p6/download/nse_client.py` and find where the 3-second wait happens (`_wait_turn`).
-5. In `tests/download/test_nse_client.py`, find the test that proves a 403 is *not* retried. What would break if we retried?
+## 3.3 Step 2: Read the file (`parsing/`)
 
-## 3a.10 Interview self-check
+`xbrl_reader.read_filing(path)` opens the XML (cleaning forbidden characters first, remembering a warning), reads the **contexts** (who/when), works out the **current and previous year from the dates**, finds the **form's release date** in the header to pick the legacy or modern family, and returns simple `Fact` objects you can look up by tag name. `p6_mapping.py` says **which tag feeds which SEBI row**, separately for each family. It knows nothing about units or warnings: it only reads.
 
-1. Walk through what happens between typing a company name and files appearing on disk.
-2. Where in the code is "politeness to NSE" implemented? List three separate rules.
-3. What is the difference between a 403 and a 503 for our retry logic, and why?
-4. Why do tests use a fake client and fake clock?
-5. What happens if the same command is run twice? Which three caches are involved?
-6. Why do we check the first bytes of a download before saving it?
-7. How does the code decide that "Tata Steel" means `TATASTEEL` and not `TATASTLPP`?
-8. What would you change if NSE changed the listing URL?
+## 3.4 Step 3: Clean it into one report (`extraction/`, `core/`)
 
+The XML is a **box of raw ingredients**: about 3,000 loose facts, two editions, units missing or wrong. Neither page should deal with that, so we prepare the ingredients **once** and hand both pages the same clean result.
 
----
----
-
-# Phase 2: Clean data in the SEBI shape (this also covers the core of the old Phase 4)
-
-## 2.1 The problem in one picture
-
-The XML file from NSE is like a **box of raw ingredients**: ~3,000 loose facts, in two different "editions", with unit labels that are sometimes missing or wrong. Neither the SEBI page nor the dashboard should have to deal with that mess. So we **prepare the ingredients once** and hand both pages the same clean result:
-
-```
-raw XML file ──► read ──► fill SEBI template rows ──► clean + convert units ──► check for doubts ──► ONE clean report
-                                                                                                        ├─► text view (now)
-                                                                                                        ├─► JSON file (now)
-                                                                                                        ├─► SEBI-format HTML page (Phase 5)
-                                                                                                        └─► dashboard page (Phase 6)
-```
-
-## 2.2 How to run it
-
-```powershell
-python flow.py extract --company Reliance --fy 2023-24                     # whole report, printed + saved
-python flow.py extract --company TATASTEEL --fy 2025-26 --questions E1,E6  # only some questions
-python flow.py extract --company Infosys --fy 2021-22 --quiet              # only save the JSON
-```
-It downloads the filing first if it is not on disk (using the Phase 3a code), then prints the Principle 6 report in SEBI's order and saves `data/parsed/<SYMBOL>/<FY>.json`.
-
-## 2.3 The key idea: a number never travels alone
-
-If we passed around bare numbers like `64`, we would lose everything we learned in Phase 1 (unit? converted? doubtful?). So every number is a **`Cell`** (`models.py`):
+**A number never travels alone.** Every number is a `Cell`:
 
 | Field | Meaning | Example (Tata Steel Scope 1) |
 |---|---|---|
 | `value` | the number (or text) | `64.0` |
-| `unit` | the standard unit we show | `tCO2e` |
-| `status` | how we got it (below) | `reported` |
+| `unit` | the standard unit shown | `tCO2e` |
+| `status` | how we got it | `reported` |
 | `as_filed` | exactly what the filing said | `64 MtCO2e` |
-| `note` | harmless explanation | `""` |
-| `warnings` | reasons to doubt it | "looks 1,000,000 times too small for this company's energy use..." |
+| `note`, `warnings` | harmless explanation / reasons to doubt it | "about 1,000,000 times too small ... not corrected" |
+| `origin` | **where in the file it came from** (element, text, unit, year) | `TotalScope1Emissions = 64 MtCO2e` |
 
-`status` has four values: **reported** (the filing gave it), **not_reported** (the filing has nothing; *never* shown as 0), **calculated** (we added reported numbers, e.g. electricity = renewable + non-renewable), **converted** (we changed the unit, e.g. kilotonnes → tonnes). This is how we keep the assignment's promise: *never invent numbers, say so when something is missing, converted or estimated.*
+`status` is one of **reported** (the filing gave it), **not_reported** (the filing has nothing: *never* shown as 0), **calculated** (we added reported numbers, e.g. electricity = renewable + non-renewable) or **converted** (we changed the unit). A table row is a `Metric` (label + current-year `Cell` + previous-year `Cell`); the whole result is a `Principle6Report` (header facts, a dictionary of metrics, list tables, facilities, assurance, extras).
 
-A table row is a **`Metric`** = label + a `Cell` for the current year + a `Cell` for the previous year. The whole result is a **`Principle6Report`**: header facts (company, FY, reporting boundary, form edition...), a dictionary of metrics, list tables, facility blocks, assurance notes and extras.
-
-## 2.4 The files and what each one does (all in `brsr_p6/`)
+**Data instead of code.** SEBI's form is a *list* in `core/sebi_template.py` (12 Essential and 9 Leadership questions with the official wording and row labels); the *mapping* in `p6_mapping.py` says where each row's number comes from. To support a new filing format you edit data, not logic; the SEBI page simply loops over the template; the official wording lives in one place.
 
 | File | Job |
 |---|---|
-| `models.py` | The shapes above (`Cell`, `Metric`, `Principle6Report`, ...) |
-| `xbrl_reader.py` | Opens the XML, removes forbidden characters, works out current vs previous year from dates, hands back simple `Fact` objects you can look up by tag name |
-| `values.py` | Cleaning small bits of text: `"1,83,595"` → `183595`; `"NA"`/blank → *nothing* (not 0); `"true"` → `Yes` |
-| `units.py` | Puts numbers into one unit per topic (energy GJ, water kL, waste/air tonnes, greenhouse gases tCO₂e) and explains every change |
-| `sebi_template.py` | **SEBI's official Principle 6 form as data**: 21 questions with the official wording and row labels |
-| `p6_mapping.py` | **Which XBRL tag feeds which row**, separately for the old ("legacy") and new ("modern") edition |
-| `extractor.py` | The loop that fills the template: for each row → find tag → clean → convert → `Cell` |
+| `extractor.py` | The loop that fills the template: for each row -> find tag -> clean -> convert -> `Cell` |
+| `values.py` | Cleaning small bits of text: `"1,83,595"` -> `183595`; `"NA"` -> nothing; counting significant digits |
+| `core/units.py` | One unit per topic (energy GJ from Terajoule/Petajoule/Megajoule, water kL, waste and air tonnes, greenhouse gases tCO2e, intensities "per ₹") and an explanation of every change |
 | `checks.py` | Looks for numbers that do not make sense and **adds warnings** (never changes a number) |
-| `report_text.py` | Prints the report as plain text in SEBI's layout |
-| `report_io.py` | Saves the report as JSON |
-| `extract_cli.py` + `extract_report.py` | The command (same "tiny launcher + package" pattern as before) |
+| `report_io.py` | Saves the report as JSON in `data/parsed/` |
 
-## 2.5 "Data instead of code": the template and the mapping
-
-Instead of writing code like "print the energy table, then the water table...", the SEBI form itself is a list in `sebi_template.py`:
-
-```python
-Question("E1", ESSENTIAL, 1, "Details of total energy consumption ...", "table", rows=(
-    Row("E1.electricity", "Total electricity consumption (A)"),
-    Row("E1.fuel", "Total fuel consumption (B)"),
-    ...
-```
-and the mapping in `p6_mapping.py` says where each row's number comes from:
-
-```python
-"E1.electricity": both("energy",
-                       ("TotalElectricityConsumptionFromRenewableSources", "TotalElectricityConsumptionFromNonRenewableSources"),  # new edition: ADD these two
-                       "TotalElectricityConsumption"),                                                                              # old edition: one tag
-```
-Why this is good: to support a new filing format you edit **data**, not logic; the Phase 5 SEBI page can simply *loop over the template*; and the official wording lives in one place.
-
-## 2.6 New Python ideas in this phase
-
-- **Dictionaries** (`dict`): `report.metrics["E1.total"]` finds a row by its key. `{key: value}`.
-- **Tuples** `( , )`: like a list that cannot change. Template rows are tuples. `*rows` "unpacks" a tuple into another one.
-- **`Enum`** (`Status`): a fixed set of allowed values, so you cannot misspell `"calcualted"`.
-- **`@dataclass(frozen=True)`**: a read-only data holder (`frozen`) like `Row` and `Question`.
-- **`field(default_factory=list)`**: each object gets its **own** empty list (a shared default list would be a classic bug).
-- **List comprehension**: `[f for f in facts if f.end == wanted_end]` = "build a list by filtering".
-- **`sorted(..., key=...)`**, **`sum(...)`**, **`getattr(obj, "current")`** (read an attribute whose name is in a variable), **`isinstance`**, **sets** `{...}` (unique items).
-- **Regular expressions** to find the form's release date inside the file header.
-- **`try/except ET.ParseError`**: turn a cryptic XML error into our own clear message.
-- In tests: **`tmp_path`** (a throw-away folder), **`@pytest.mark.parametrize`** (one test, many inputs), **`pytest.approx`** (compare decimals safely), **`pytest.skip`**.
-
-## 2.7 Bugs we found by *reading the real output* (a habit worth keeping)
-
-All the automatic tests passed at first. Only when we read the real report line by line, next to the company's PDF, did we find these:
-
-| What we saw | Cause | Fix |
-|---|---|---|
-| "(v) Others – No treatment" said *Not reported* although the filing had it | NSE writes `WithOutTreatment` in one tag and `WithoutTreatment` in the next | Look tags up **ignoring upper/lower case** |
-| Business-continuity details (L7) said *Not reported* | My reader skipped every tag containing the letters "link", which also killed `...WebLink...` tags | Skip only the real "linkbase" elements |
-| Energy assurance said "Not reported" although a statement was attached | In some editions the only energy assurance tag has "UnderLeadershipIndicators" in its name | Prefer the normal tag, fall back to that one |
-| Scope 3 (also typed in millions) had no warning | The scale check looked only at Scope 1+2 | A scale warning on Scope 1+2 also marks Scope 3 |
-| The same warning printed 6 times under one table | One warning per row | Group identical messages under a table |
-
-Lesson: **tests prove the code does what you thought; reading real output shows whether what you thought was right.** Both are needed.
-
-## 2.8 What the checks do (`checks.py`)
+**What `checks.py` looks for:**
 
 | Check | Example | What the reader sees |
 |---|---|---|
-| Rounded-away intensity | Tata's Scope 1+2 intensity is `0` while emissions are not | "Reported as 0 ... not a real zero" |
-| Air pollutant zero | POP/VOC/HAP = 0 (the PDF says "not material") | "A reported 0 can mean none, or not measured / not material" |
-| Totals add up | The total differs from the sum of its rows by more than 1% | "The rows above add up to X but the filing's own total is Y" |
-| Scale check | Tata Scope 1 = 64 for 624 million GJ of energy | "about 1,000,000 times too small ... may have been typed in millions. Shown as filed; not corrected" |
-| Unit missing | Old filings: energy has no unit | "(unit not stated)" + warning |
-| Monthly figure | Infosys FY21-22 air emissions "Kg/Month" | Converted to tonnes but labelled "per month"; never ×12 |
+| Scale | Scope 1 = 64 for 624 million GJ of energy | "about 1,000,000 times too small ... may have been typed in millions. Shown as filed; not corrected" |
+| Rounded-away intensity | Intensity `0` while the total is not 0 | "not a real zero" |
+| Air pollutant zero | POP/VOC/HAP = 0 (the PDF says "not material") | "A reported 0 can mean none, or not measured" |
+| Totals add up | A filed total differs from its rows by more than 1% | "The rows above add up to X but the filing's own total is Y" |
+| One digit of precision | `0.0000000004` | "Too coarse to compare" |
+| Unit missing / monthly | Legacy energy; "Kg/Month" | "(unit not stated)"; labelled "per month", never x12 |
 
-Your decision from earlier is built in: **clean what we can, report what we cannot, show doubtful values as filed with a warning.**
+## 3.5 Step 4: Decide what to say (`views/`)
 
-## 2.9 How the two pages will use this (preview of Phases 5 and 6)
+**Python decides, the template only prints.** `sebi_view.py`, `dashboard_view.py` and `trace_view.py` turn the report into plain objects (`CellView`, `RowView`, `TableView`, `CardView`...): ready-to-print text, numbers and flags. This pattern is called a **view-model**. Why: a decision like "which footnote number does this note get?" or "is this figure better or worse?" is easy to write and **test** in Python and awkward inside HTML. Every sentence and verdict can be tested without a browser, and the two pages cannot disagree because both are built from the same report.
 
-- **SEBI view (Phase 5):** `for question in QUESTIONS:` print its text; for each row, `report.metrics[row.key].current` and `.previous`; show "Not reported" for empty cells; show a small mark for calculated/converted/warning cells.
-- **Dashboard (Phase 6):** its own list of metrics, each with plain-English text ("what it measures", "why it matters", "lower is better"), reading the *same* cells, e.g. `report.metrics["E6.scope1"]`, so every number on the dashboard can be traced to the SEBI table and to the filing.
+## 3.6 Step 5: Print the page (`rendering/`)
 
-## 2.10 Try it yourself
+`render.render_page()` builds the three views and hands them to the Jinja2 template `base.html`, which writes **one self-contained HTML file** (CSS inline, no JavaScript, opens offline).
 
-1. `python flow.py extract --company Reliance --fy 2023-24 --questions E1,E3` and compare with the previous-year numbers printed in the FY 2022-23 run.
-2. Open `data\parsed\RELIANCE\2023-24.json` in PyCharm. Find `E1.electricity` and read each field.
-3. Run the same for `--company Infosys --fy 2021-22` and read the top warning and the "(unit not stated)" notes.
-4. Open `brsr_p6/core/sebi_template.py` and find the text of question E6.
-5. Open `brsr_p6/parsing/p6_mapping.py` and find which tag feeds `E5.nox` in the two editions.
-6. Run `pytest` (expect 160 passed). In `tests/extraction/test_extractor.py`, read `test_emissions_far_too_small_for_the_energy_use_are_flagged_as_probably_millions`.
+**HTML in five minutes.** Text with tags: `<h1>`-`<h3>` headings, `<p>` paragraph, `<table> <thead> <tbody> <tr> <th> <td>` tables (`colspan` makes a cell span columns), `<ul><li>` lists, `<sup>` superscript, `<a href="#fn-E1-1">` a link (`#...` jumps to the element with that `id`), `class="..."` / `id="..."` names for styling and pointing.
 
-## 2.11 Interview self-check
+**Jinja2 in five minutes.** `{{ value }}` prints; `{% for %}...{% endfor %}` repeats; `{% if %}` chooses; `{% macro %}` is a reusable mini-template; `{% include "sebi.html" %}` pastes another template; `{# ... #}` is a comment. **Autoescape** turns `<`, `>`, `&` in your data into `&lt;`, `&gt;`, `&amp;`, so text from a filing can never be mistaken for HTML (the filing is data from outside; never run it as code).
 
-1. Why does every number carry a unit, a status and an "as filed" value?
-2. What do the four statuses mean? Give one real example of each.
-3. Why is the SEBI template stored as data? What does the mapping file add?
-4. Why do we need two mappings (legacy and modern)? How does the code know which one to use?
-5. How is "current year" decided? Why not use the context names like `DCYMain`?
-6. Why do checks only add warnings instead of fixing numbers? Explain the Tata Steel "64" case.
-7. What is the difference between "not reported" and `0`?
-8. Name two bugs we only found by reading the real output, and how we fixed them.
-9. What can the structured filing *not* give us for the SEBI form (hint: waste categories, E12 table, level of treatment)? How do we show that honestly?
-10. How will the dashboard and the SEBI page stay consistent with each other?
+**CSS in five minutes.** A rule is `selector { property: value; }`. **Variables** (`--accent: #0f6b5c;`, used as `var(--accent)`) change a colour in one place. When two rules disagree the more **specific** selector wins. `@media (max-width: 640px)` applies only on narrow screens. **CSS grid** `repeat(auto-fit, minmax(270px, 1fr))` lets cards arrange themselves into 3 columns on a laptop and 1 on a phone. **CSS-only tabs:** two hidden radio buttons plus labels, and `#view-sebi:checked ~ .panel-sebi { display: block; }`. `<details>/<summary>` gives collapsible "Fine print" with no script. Every dashboard rule starts with `.dash` so it cannot restyle the SEBI tab.
 
+**How to read the SEBI tab:** *Not reported* (grey italic) = the filing has nothing, never shown as 0 · `calc.` = we added reported numbers · `conv.` = we changed the unit · a small `ⓘ1` = a note under the table (**Note:** something unusual; **Doubtful:** the figure may be wrong) · `(unit not stated)` = older filings do not say · numbers use Indian grouping (2,47,98,900) while the full-precision value stays in the data.
+
+## 3.7 Errors are pages, not crashes (`core/errors.py`, `views/error_view.py`)
+
+The brief grades "a clear, specific message on the page". So every failure writes a real page, `error_<company>_<year>.html` (named `error_...` so it can never overwrite a good report, for example when NSE is down), with the exact sentence, what you typed, what to try, and **commands to copy**.
+
+| Error class | When |
+|---|---|
+| `InvalidFiscalYear` / `UnsupportedYear` / `InvalidYearRange` | not a year / before FY 2021-22 / trend range reversed |
+| `UnknownCompany` / `AmbiguousCompany` | NSE does not know it / several match (one command per match) |
+| `NoFilingFound` | no BRSR for that year (lists the years it has: one command per year) |
+| `NSEUnavailable` | NSE unreachable or blocking |
+| `UnparseableFiling` / `FileNotAvailable` | the XML is damaged / NSE lists it but the file is gone |
+| `SameCompany` | comparing a company with itself |
+
+Ideas worth knowing: **exceptions carry data, not only text** (`NoFilingFound` carries the symbol and the available years, which is how the page offers commands). **One table, looked up by class**: `ERROR_INFO` maps each class to a title and hints, looked up through `type(error).__mro__` (this class, then its parent, then its grandparent), so a new error class we forget still gets its parent's page. **Two layers of catching** in the CLI: `except BrsrError` for expected problems, `except Exception` at the very outside for *bugs* (safe only there, because the program is ending anyway); `--debug` re-raises so a developer sees the traceback. **Even the explanation can fail** (a read-only folder): print the original error plus "could not write the explanation page", never hide the first problem. **Never promise in an error message something you have not tested.**
+
+## 3.8 Every number traces back to the filing
+
+The brief: *"Every figure shown must trace back to a filing."* An honest audit showed we only did half: the page named the source file, but an ordinary number did not say *which part* of it came from. The fix is a chain a stranger can follow:
+
+```
+a dashboard card -> Fine print: "Where it is in the filing: TotalScope1Emissions = 64 MtCO2e"
+a SEBI number    -> hover: "From the filing: ..."
+last section of the SEBI tab, "Where every number comes from": value, how we got it, element(s), text as filed
+the page header  -> link to the XBRL file on NSE: search for the element name, the same text is there
+terminal         -> python flow.py extract --company ... --fy ... --trace
+```
+
+How it is built: **a value remembers its origin** (`Cell.origin`, filled at the one place the number is read); **quote the file's spelling**, not ours (a reader searching the XML must find it); **a cell never loses its trace** (a calculated number lists every ingredient; a value the filing lacks remembers which elements were *looked for*, nothing is made up); only `https://` links become clickable (checked twice).
+
+**How we KNOW the trace is true** (explain this in an interview): `tests/extraction/test_origin.py` builds the report with our code, then **separately** reads the raw XML with a plain regular expression, and asserts that every value shown (4,605 on the author's machine) matches an `(element, text as filed)` pair in the file. A test that checks a program with the program's own parser only proves it agrees with itself; a second, simpler way of reading the same file is evidence.
 
 ---
----
 
-# Phase 5: The SEBI-format HTML page
+# Part 4. The dashboard
 
-## 5.1 What we built
+## 4.1 Who it is for, and the four questions
 
-One command now produces a real web page:
+The reader is an **investor, journalist or student who has never opened a BRSR**. The page is ordered to answer what that person asks: **How big is the footprint? Better or worse than last year? Is it under control? Can I trust these numbers?** Structure: one plain sentence and a scoreboard first, then six topics in story order (energy, climate/greenhouse gases, water, air, waste, safeguards), then "Can I trust these numbers?" and a glossary. Detail comes after the summary.
 
-```powershell
-python flow.py --company "Tata Steel" --fy 2025-26 --open      # writes output\TATASTEEL_2025-26.html and opens it
-```
-The page has a header with the key facts (reporting boundary, filing date, form edition), two **tabs** (SEBI-format report / Dashboard; the dashboard is filled in Phase 6), and the Principle 6 report laid out like SEBI's form: same question numbers, same wording, same tables and row labels, current and previous year side by side.
+**Design first, with real numbers.** Before coding we built `design/dashboard_mockup.html` with real Reliance figures, not dummy ones: dummy data is always tidy, real files are full of awkward cases, and a design that never met them breaks on the first real company. It also let the user say "this is friendly" while changing it was still cheap.
 
-## 5.2 The pipeline in one picture
+## 4.2 The honest rules (the heart of the dashboard)
 
-```
-Principle6Report ──► sebi_view.py ──► Jinja templates ──► one .html file
- (clean data)        "what to show"     "how it looks"      (opens in any browser, offline)
-```
-Why two steps? **The template should only print; Python should decide.** Anything like "which footnote number does this warning get?" is easy to write and test in Python, and awkward inside HTML. So `sebi_view.py` prepares simple objects (`CellView`, `RowView`, `TableView`...) and the template just loops over them. This pattern is called a **view-model**.
+1. **"Better" means better than the company's OWN figure last year.** Not a rating, not a score. The filings contain no benchmark or legal limit; inventing one would break "never invent numbers". A box on the page says so.
+2. **Each figure has a direction:** lower is better for energy, gases, water and waste per ₹ of sales and for each air pollutant; higher is better for the renewable share and the recycled share. The directions are data (`metric_info.py`).
+3. **"About the same"** = within 1% (amounts) or half a percentage point (shares).
+4. **A doubtful figure** is shown exactly as filed, gets **no verdict**, and is **left out of every sentence** ("The greenhouse gas figure looks doubtful, so we do not quote it").
+5. **A figure that only needs care** (unit not stated, a zero that may mean "not measured") is compared, with an asterisk and a note.
+6. **Missing means "Not reported"**, never 0, never an arrow.
+7. **A zero last year gives no percentage** ("Last year's figure was 0, so a percentage change cannot be worked out"): the zero probably means "not measured". **0 in both years** is "no change" but does not count in the scoreboard.
+8. **A figure with no unit is not quoted in a sentence.**
+9. **Intensity is shown per ₹ 1 crore** (filed figure x 10,000,000), because 0.0000807 GJ per ₹ is unreadable. Only the unit changes; the filed figure stays in the Fine print.
+10. **Figures we calculate** are marked "calculated by us", inherit their ingredients' warnings and say how they were built.
 
-## 5.3 HTML in five minutes
-
-HTML is text with tags: `<tag>content</tag>`.
-
-| Piece | Meaning |
-|---|---|
-| `<h1>`, `<h2>`, `<h3>` | headings (big to small) |
-| `<p>` | a paragraph |
-| `<table>` `<thead>` `<tbody>` `<tr>` `<th>` `<td>` | a table: head/body, row, header cell, data cell. `colspan="3"` makes a cell span 3 columns |
-| `<th scope="row">` | tells screen readers "this cell labels its row" (accessibility) |
-| `<ul>` `<li>` | bullet list |
-| `<sup>` | superscript (our footnote numbers) |
-| `<a href="#fn-E1-1">` | a link; `#...` jumps to the element with that `id` |
-| `class="..."`, `id="..."` | names we use to style things (class) or point at them (id) |
-
-## 5.4 Jinja2 in five minutes
-
-Jinja2 turns a **template** into a finished page by replacing placeholders:
-
-| Syntax | Meaning | Example (from our template) |
-|---|---|---|
-| `{{ ... }}` | print a value | `{{ report.company_name }}` |
-| `{% for ... %}` ... `{% endfor %}` | repeat | one `<tr>` per row |
-| `{% if ... %}` ... `{% else %}` ... `{% endif %}` | choose | show "Not reported" or the number |
-| `{% macro name(args) %}` ... `{% endmacro %}` | a reusable mini-template (like a function) | `cell(...)`, `value_table(...)` |
-| `{% include "sebi.html" %}` | paste another template here | the base page includes the SEBI view |
-| `{# ... #}` | a comment | |
-
-**Autoescape:** Jinja converts `<`, `>` and `&` in your data into `&lt;`, `&gt;`, `&amp;` so text from a filing can never be mistaken for HTML. This matters: the filing is data from outside, and we must never run it as code.
-
-## 5.5 CSS in five minutes (the `style.css` file)
-
-- **Rules** look like `selector { property: value; }`, e.g. `td.val { text-align: right; }` = "right-align cells with class `val`".
-- **Variables**: `--accent: #0f6b5c;` then `color: var(--accent);`: change the colour in one place.
-- **Specificity**: when two rules disagree, the *more specific* selector wins (`table.sebi td` beats `td.val`). Our numbers were left-aligned until we made the right-align rule as specific as the left-align one.
-- **Media query** `@media (max-width: 640px) { ... }`: rules that apply only on narrow screens (phones).
-- **CSS-only tabs:** two hidden radio buttons + labels; `#view-sebi:checked ~ .panel-sebi { display: block; }` means "when the first radio is selected, show the first panel". No JavaScript.
-- We **never rely on colour alone**: warnings are amber *and* carry the symbol ⚠ and the word "Doubtful".
-
-## 5.6 How to read the page
-
-| You see | Meaning |
-|---|---|
-| *Not reported* (grey italic) | the filing has nothing for that item (never shown as 0) |
-| `calc.` label | we **calculated** it by adding reported numbers (e.g. electricity = renewable + non-renewable) |
-| `conv.` label | we **converted** the unit (e.g. kilotonnes to tonnes) |
-| small number ¹ ² | a note under the table |
-| ⚠ + amber note | a **doubtful** value, shown exactly as filed, with the reason |
-| "(unit not stated)" | old filings do not say the unit of energy figures |
-| "Note from this tool" (green box) | something SEBI's form asks for that the structured filing cannot give (e.g. recovery per waste category) |
-
-## 5.7 New Python ideas
-
-- **Dataclasses with defaults** and `field(default_factory=list)`. **Gotcha we hit:** naming a field `list` hid Python's own `list` for the lines after it, so `default_factory=list` silently became `None` and crashed. Never reuse built-in names (`list`, `str`, `id`, `type`...) for your own fields or variables.
-- **Closures/macros**: Jinja macros are like functions you call from the template.
-- **`markupsafe.Markup`**: a string we promise is safe HTML (used for the small "×10⁻⁶" superscript).
-- **`str.partition(".")`**, **`rstrip`**, f-string formats like `f"{x:.2f}"`, scientific notation `f"{x:.2e}"`.
-- **Regular expression** to turn `4.60e-06` into `4.60×10⁻⁶`.
-- **`Path(__file__).resolve().parent / "templates"`**: find the templates folder next to the code, wherever you run from.
-- Testing HTML: a small `HTMLParser` subclass that checks every opening tag is closed.
-
-## 5.8 How we checked the page (a real browser engine, no guessing)
-
-1. Tests: every official question text and every row label must appear in the page **in SEBI's order**; all 18 downloaded filings must produce well-formed HTML; text from a filing must not inject HTML.
-2. Looking at it: Microsoft Edge (already on your PC) can take screenshots without opening a window: `msedge --headless --screenshot=file.png page.html`. To test a phone, we load the page inside a 375-pixel-wide frame.
-3. Reading the output as a user would. This found things no test would: numbers left-aligned, tables sticking out on a phone, a repeated remark, and a **real calculation bug**.
-
-## 5.9 The bug the page revealed (worth remembering)
-
-On the Reliance page, Leadership 1 showed an amber note: *"The rows above add up to 6,958,071 but the filing's own total is 6,826,744."* The gap (131,327) was exactly **half** of the "other sources" row (262,654). That pattern means *double counting*. Looking at the raw facts: the filing gives a plain total (131,327) **and** a breakdown row with the same 131,327, and our code added both. The fix: use the plain total if there is one; add rows only when there is no total. After the fix, **none of the 18 filings has any "rows don't add up" warning**, which also shows the companies' own totals are consistent.
-
-Lesson: the sanity check we wrote to protect readers from *company* mistakes also caught a *programmer* mistake. Checks that compare numbers with each other are worth their cost.
-
-## 5.10 Try it yourself
-
-1. `python flow.py --company Reliance --fy 2023-24 --open` and compare Essential 1 with the earlier text printout.
-2. Click the ⚠ marks and footnote numbers; they jump to the note under the table.
-3. Open the Infosys FY 2021-22 page (`python flow.py --company INFY --fy 2021-22 --open`) and find the amber "About this filing" box and the "(unit not stated)" figures.
-4. Shrink the browser window to phone width: the tables should stay on screen.
-5. Open `brsr_p6/rendering/templates/sebi.html` and find the macro `value_table`; change a heading word, regenerate, and see it change.
-6. Open `brsr_p6/rendering/templates/style.css` and change `--accent` to another colour; regenerate.
-7. Run `pytest` (expect 200 passed) and read `test_every_official_question_and_row_label_appears_in_sebi_order`.
-
-## 5.11 Interview self-check
-
-1. Why is the page built in two steps (`sebi_view.py` then templates)? What would go wrong if the template made all the decisions?
-2. What does Jinja2's autoescape protect us from? Give an example.
-3. How does the SEBI page show a value that is missing / calculated / converted / doubtful? Why not just colours?
-4. Why does the Unit column exist only for E5, E6 and L4?
-5. Why are numbers grouped as 2,47,98,900? Where is the full-precision number kept?
-6. How do CSS-only tabs work without JavaScript?
-7. Explain the double-counting bug: how was it found, what caused it, how was it fixed?
-8. How can you prove the page matches SEBI's form "one to one"? (Hint: the test with the loop over QUESTIONS.)
-9. Why did a field called `list` crash the program?
-10. How did we check the phone layout without a phone?
-
-
----
----
-
-# Phase 6: The plain-English Dashboard
-
-## 6.1 What we built
-
-The page now opens on a **Dashboard** tab that answers four questions a non-expert asks about a company:
-
-| The reader asks | The page answers with |
-|---|---|
-| How big is the footprint? | a big number in plain units: **46.42 crore GJ**, **3.77 crore tonnes CO₂e** |
-| Better or worse than last year? | a chip (✔ Improved / ✖ Got worse / ≈ About the same / ? Can't compare) + an arrow + the percentage |
-| Is it under control? | renewable share, waste recycled share, nine safeguard questions, outside audit |
-| Can I trust the numbers? | a badge on every card, amber warnings, a "Can I trust these numbers?" section |
-
-The SEBI-format report is still there as the second tab, untouched.
-
-## 6.2 Design first, with real numbers (not dummy ones)
-
-Before writing code we built `design/dashboard_mockup.html`: a hand-written page using **real Reliance numbers**. Why not dummy data? Because dummy data is always tidy. The real files are full of awkward cases (a figure typed in millions, a unit that is missing, a zero that means "not measured"), and a design that has never met them breaks on the first real company. Looking at the mockup *before* coding also let you say "yes, this is friendly" while changing it was still cheap.
-
-## 6.3 The pipeline in one picture
-
-```
-Principle6Report ──► metric_info.py   (the WORDS: titles, what it is, why it matters, which direction is better)
- (clean data)    ──► comparison.py    (the RULES: better / worse / same / can't tell)
-                 ──► dashboard_cards.py (one figure -> one card)
-                 ──► dashboard_view.py  (cards -> topics, charts, sentences, safeguards, trust panel)
-                          │
-                          ▼
-                 dashboard.html + dashboard.css  ──►  the Dashboard tab of the one HTML file
-```
-Same idea as Phase 5: **Python decides, the template only prints.** That is why we could test every sentence and verdict without opening a browser.
-
-## 6.4 The new files
-
-| File | Job |
-|---|---|
-| `units.py` (extended) | now converts the exact SI multiples real filings use (Terajoule, Megajoule, ktCO₂e) and "per ₹" intensity units |
-| `warning_kinds.py` | sorts each warning: **doubtful** (the number is probably wrong) or **check** (probably right, handle with care) |
-| `friendly.py` | how numbers are *said*: lakh/crore, 2 decimals, "0.15%", "<0.01" |
-| `comparison.py` | this year vs last year, and the honest "can't tell" cases |
-| `metric_info.py` | all the plain-English wording as data (so wording can change without touching logic) |
-| `dashboard_cards.py` | builds one card: number, unit, verdict, bars, badge, warnings, fine print |
-| `dashboard_view.py` | builds topics, charts, headline sentences, the at-a-glance summary, safeguards, trust panel |
-| `templates/dashboard.html`, `dashboard.css` | print it, style it (every CSS rule starts with `.dash` so it cannot disturb the SEBI tab) |
-
-## 6.5 The honest rules (the heart of the phase)
-
-1. **"Better" means better than the company's OWN figure last year.** Not a rating, not a score. The filing has no industry benchmark or legal limit, and inventing one would break "never invent numbers". A box on the page says so.
-2. **"About the same"** = within ±1% (amounts) or ±0.5 percentage points (shares).
-3. **A doubtful figure** (scale slip, parts that do not add up, an intensity of 0) is still shown exactly as filed, in amber, but gets **no verdict** and is **left out of every sentence**. The sentence says why: *"The greenhouse gas figure looks doubtful, so we do not quote it."*
-4. **A figure that only needs care** (unit not stated, zero that may mean "not measured") is compared, with an asterisk and a note.
-5. **Missing means "Not reported"**, never 0, never an arrow.
-6. **A zero last year gives no percentage.** HDFC Bank files 0 water last year and 21 lakh kL this year. "Got worse" would be a guess, since the 0 probably means "not measured". So the card says *"Last year's figure was 0, so a percentage change cannot be worked out."*
-7. **0 in both years** is "no change", but it does not count in the scoreboard (it says nothing about improving).
-8. **A figure with no unit is not quoted in a sentence** ("used 19,75,098 unit not stated of energy" is gibberish).
-9. **Intensity is shown per ₹ 1 crore** (filed figure × 10,000,000), because 0.0000807 GJ per ₹ is unreadable. Only the unit changes; the filed figure stays in the Fine print.
-10. **Figures we calculate** (Scope 1 + 2, renewable share, recovered share) are marked "calculated by us", inherit the warnings of their ingredients, and say how they were built.
-
-## 6.6 How to read a card
+## 4.3 How to read a card
 
 ```
 Total energy used                        Lower is better ↓      <- plain title + which direction is good
-46.42 crore GJ                                                  <- big number, friendly unit
+46.42 crore GJ                                                  <- big number, friendly unit (lakh / crore)
 ✔ Improved   ▼ 2.0% lower than last year                        <- verdict in WORDS + symbol + arrow
 2023-24 ████████████████  46.42                                 <- bars start at zero (never a cut-off axis)
 2022-23 █████████████████ 47.36
 What it is: ...    Why it matters: ...                          <- always visible, no jargon
-▸ Fine print                                                    <- full numbers, how we calculated, SEBI source
+▸ Fine print                                                    <- full numbers, how we calculated, where in the filing
 ✔ Reported by the company                                       <- where the number came from
 ```
 
-## 6.7 New ideas in this phase
+**Never colour alone:** every verdict is words plus a symbol (✔ ✖ ≈ ?) plus an arrow, so the page works in black and white, for colour-blind readers, and on a phone.
 
-- **Data instead of code (again):** `metric_info.py` is a list of `MetricInfo(...)` entries. To improve a sentence you edit one line of data.
-- **Dataclass "view" objects** (`CardView`, `TopicView`...): just bundles of ready-to-print values.
-- **"Default to the cautious side":** a warning nobody has classified is treated as *doubtful*. A **guard test** fails when a new warning text appears, so nobody forgets to classify it.
-- **Floating-point noise:** in Python `3.47e-8 * 1000` is `3.4700000000000004e-05`. We clean converted numbers with `float(f"{x:.12g}")`.
-- **CSS grid** (`repeat(auto-fit, minmax(270px, 1fr))`): cards arrange themselves into 3 columns on a laptop and 1 on a phone, with no media query.
-- **`<details>` / `<summary>`**: collapsible "Fine print" with no JavaScript.
-- **Inline SVG icons** drawn once as `<symbol>` and reused with `<use href="#i-bolt">`.
-- **Namespacing CSS** (`.dash .card`): the SEBI tab already used the class names `.legend` and `.panel`; without a prefix the two tabs would silently restyle each other.
-- **`Counter`** (from `collections`) to count verdicts and repeated warnings; **`str.partition`** to split `"derived:ghg_scope_1_2"`.
-- **Lifting shared warnings:** if the same warning appears on two or more cards of a topic, it is shown once under the cards (HDFC Bank's six air pollutants would otherwise repeat it six times).
+## 4.4 Notes are calm, not alarming
 
-## 6.8 What reading the real output taught us
+Of 22 saved reports, 21 carried notes. Almost all describe **how the company filed** (unit not stated, a 0 that may mean "not measured", one digit of precision), not a mistake in the numbers, yet each used to be a loud yellow box with a warning triangle. The design rule now:
+
+- **One neutral grey-blue "note" style on every page, the symbol ⓘ, never a warning triangle.** (Amber is kept only on error pages.)
+- **Severity is said in words, not colour:** a footnote says **"Note:"** for something unusual and **"Doubtful:"** only for a figure that may be wrong. `analysis/warning_kinds.py` sorts every warning into *check* (probably right, handle with care) or *doubtful* (probably wrong); a warning nobody has classified defaults to *doubtful* ("when in doubt, say so") and a **guard test** fails when a new warning text appears, so nobody forgets to classify it.
+- **Say it once.** If the same note applies to several cards of a topic it appears once under the cards (HDFC Bank's six air pollutants would otherwise repeat it six times).
+- **The numbers are unchanged.** A doubtful figure is still shown as filed with no verdict. If someone asks "why not just fix Tata Steel's 64?": we cannot know what the company meant; correcting it would be inventing a number.
+
+## 4.5 What reading real output taught us (the habit that matters)
+
+All the tests passed at first; the problems below appeared only when we read real pages next to the companies' own PDFs.
 
 | Found by looking at real companies | What we did |
 |---|---|
-| ITC and Wipro file energy in Terajoule / Megajoule; `units.py` said "I cannot convert". The emissions-vs-energy scale check **only runs for GJ**, so it was silently skipped for both | converted the exact SI multiples; the check now runs for them too |
-| HDFC Bank: "Water taken in ▲ Up from 0 → Got worse" | a zero base gives "can't compare", never a guess |
-| HDFC Bank sentence "used 19,75,098 unit not stated of energy" | a figure with no unit is left out of sentences, with a reason |
-| "NOx, SOx, PM... stayed about the same" when all were 0 | zeros are named as zeros; they do not count in the scoreboard |
-| "Largest source was other sources (100.0%)" and a grey 100% bar | a chart that only says "other" is not drawn; "100.0%" now reads "100%" |
-| Shares: "1.5% … last year 1.4%" looked like a 0.1 jump when the change was 0.05 | small shares keep two decimals |
-| My mockup said "0.06 percentage points"; the exact value is 0.0547 | the code was right and the hand-typed mockup was wrong: compute, never type |
-| A constant defined twice in one file (`KEY_FIGURES`): the later one silently replaced the earlier | removed the duplicate. Python does not warn about this |
-| Twice I looked at a **stale output page** made before my last change | regenerate before judging a screenshot |
-
-## 6.9 Try it yourself
-
-1. `python flow.py --company "Reliance" --fy 2023-24 --open`. The Dashboard opens first; click **SEBI-format report** for the form.
-2. Open `design/dashboard_mockup.html` next to the real page. Which numbers are identical?
-3. `python flow.py --company "Tata Steel" --fy 2025-26 --open` and read the **Climate** section: dashed amber cards, "Can't compare", and a headline that refuses to quote a doubtful figure.
-4. `python flow.py --company "HDFC Bank" --fy 2022-23 --open`: an older filing. Find "unit not stated", "Last year's figure was 0", and the air pollutants "reported as 0 in both years".
-5. `python flow.py --company "Wipro" --fy 2025-26 --open`: its energy is filed in megajoules; the page shows it in GJ marked "unit changed by us". Open **Fine print** to see the original.
-6. Open `brsr_p6/views/metric_info.py`, change the *Why it matters* line of "Water taken in", regenerate, and see it change.
-7. Open `brsr_p6/analysis/comparison.py` and change `SAME_WITHIN_PERCENT` from `1.0` to `5.0`; regenerate Reliance and watch verdicts turn into "About the same". Change it back.
-8. **The two-minute test:** show the page to someone who knows nothing about ESG. Ask them to explain the Water section back to you. Anything they cannot explain is a sentence to rewrite.
-9. `pytest -q` (expect 298 passed).
-
-## 6.10 Interview self-check
-
-1. Who is the dashboard for, and which four questions does the page order answer?
-2. What does "better" mean on the page, and why is there no rating against other companies?
-3. A company's Scope 1 is typed as 64 instead of 64 million. What does the dashboard show, and what does it deliberately NOT do?
-4. Why is a "0 last year, 21 lakh this year" change not called "Got worse"?
-5. What is the difference between a *doubtful* and a *check* warning? Why does an unclassified warning default to doubtful?
-6. Why do we show intensity per ₹ crore, and how do we make sure nobody thinks we changed the company's number?
-7. Why do bars start at zero, and why are renewable shares drawn on a 0–100 scale even though the bar is thin?
-8. Why is the page built as `dashboard_view.py` (Python) + `dashboard.html` (template) instead of putting the rules in the template?
-9. Why did every CSS rule need the `.dash` prefix?
-10. What does the guard test in `test_warning_kinds.py` protect against?
-11. How would you add a new card (say, "Hazardous waste")? Which file(s) would you touch?
-12. What did the real data teach us that the mockup alone could not?
-
+| Double counting: a filing gives a plain total **and** a breakdown row with the same value, and we added both (a "rows don't add up" note exposed it: the gap was exactly half of one row) | Use the plain total if there is one; add rows only when there is none |
+| ITC and Wipro file energy in Terajoule/Megajoule; the scale check ran only for GJ and was silently skipped | Convert the exact SI multiples so the check runs for them too |
+| HDFC Bank: "Water taken in ▲ Up from 0 -> Got worse" | A zero base gives "can't compare", never a guess |
+| A sentence "used 19,75,098 unit not stated of energy" | A figure with no unit stays out of sentences |
+| "NOx, SOx, PM... stayed about the same" when all were 0 | Zeros are named as zeros and do not count in the scoreboard |
+| Shares: "1.5% ... last year 1.4%" looked like a 0.1 jump when the change was 0.05 | Small shares keep two decimals |
+| ICICI Bank: "Waste per ₹ crore was 100% more", but the filing wrote the figure with one digit (`2e-10` then `4e-10`): the true change is anywhere from +40% to +200% | **False precision.** Count significant digits; one digit = "Too coarse to compare"; the exact total is ranked instead |
+| My hand-typed mockup said "0.06 percentage points"; the exact value is 0.0547 | The code was right: compute, never type |
+| A constant defined twice in one file silently replaced the first | Python does not warn about this; read your own code |
 
 ---
----
 
-# Phase 7: Error pages, samples, README, and "does it run from scratch?"
+# Part 5. The extensions
 
-## 7.1 What we built
+## 5.1 Multi-year trends (`flow.py trends`)
 
-| New | What it does |
+One page with a **column per financial year**: the five topics with a mini bar per year and a verdict, then every figure of SEBI's tables year by year, then the figures later filings changed.
+
+**The idea that makes it possible: every filing holds two years** (its own and the year before). So (1) a **missing year can still be shown**: NSE has no Tata Steel FY 2021-22 filing, but the FY 2022-23 filing's previous-year column holds the company's own FY 2021-22 figures; we show them in a shaded column marked "figures from the FY 2022-23 filing": never a zero, never a guess. (2) A year can be **checked against what the next filing says about it**; if they differ, the company **restated** the figure.
+
+What the real data taught us before we wrote the rules:
+
+| Found | Rule |
 |---|---|
-| **Error pages** | When a command fails, `python flow.py ...` still writes an HTML page (`output/error_<company>_<year>.html`) that explains what went wrong, what you typed, what to try, and gives commands you can copy |
-| **`samples/`** | 5 report pages (Tata Steel, Reliance, Wipro, Infosys, HDFC Bank) and 4 error pages, all made by one command: `python flow.py samples` |
-| **Offline fallback** | If NSE cannot be reached, a company you downloaded before still works from the saved filing list |
-| **README v1** | Setup, run commands, inputs to try, what is completed (honestly), how the data is extracted, error handling, known limitations, AI tools used, design note |
-| **A clean-checkout test** | A brand-new folder + brand-new virtual environment + `pip install` + one command, to prove the project runs from scratch |
+| Tata Steel FY 2022-23 energy "857" (consolidated, no unit) vs next filing 559,969,887 GJ (standalone) | A restatement only counts when **both years are on the same basis**; otherwise mark "≠ different basis, not comparable" |
+| Wipro FY 2022-23 energy is exactly 1,000 times the next filing's figure | Only compare figures with the **same, stated unit**; do not guess it was a unit slip |
+| Wipro 6515.4 vs 6515.0 | Differences under **0.5%** are rounding, not restatements |
+| Tata Steel electricity 28.4 M GJ vs 19.5 M GJ in the next filing | A real restatement: keep the figure **as filed in its own year**, mark ⟲, show the later figure on hover |
 
-## 7.2 Why an error PAGE and not only a message?
+**The verdict** takes the latest year with a figure and walks back one year at a time **while the basis and the unit stay the same**; the result is compared with the first year of that block. If earlier years were left out the sentence says why; if only one year is left the chip says "Can't compare" with the specific reason. A damaged year becomes a flagged column and the page still works; only problems with the whole request give an error page.
 
-The assignment grades error handling as "a clear, specific message **on the page**". Someone who opens our output in a browser should never
-see a blank screen or an old report. So every failure produces a real page, in the same look as the report, with:
+**Code in three layers, each testable alone:** `workflows/trend_loader.py` (files + NSE; one bad year becomes a flagged entry, not a crash), `analysis/trend_model.py` (pure logic: columns, borrowed years, restatements, basis changes), `views/trend_view.py` + `trends.html` (words and print).
 
-- the exact sentence the program raised (specific, not "something went wrong"),
-- what you typed,
-- "What you can try", and
-- **commands to copy**: for an ambiguous name, one command per matching company; for a year NSE does not have, one command per year it does have.
+**Two bugs found by LOOKING at the page:** a doubtful "64 tonnes" in a row scaled in crores rounded to **0** (a reader would see a zero for something that is not zero: now a figure too small for the row's scale is written in its own unit); and the table collapsed into a stack of boxes because its CSS class `trend` collided with `.dash .trend { display: flex }` (found by having the browser print `TABLE display=flex`). **When a layout is weird, measure instead of guessing, and keep class names specific.**
 
-Error pages are named `error_<company>_<year>.html`. That start means an error page can never overwrite a good report page (imagine NSE being down
-when you re-run a company you already have: your good page must survive).
+## 5.2 Year-on-year summary (`flow.py summary`)
 
-## 7.3 How it is built (the same two-step idea as before)
+One page that answers: *since last year, which three figures improved most and which three got worse?* You give only the company; the newest year NSE has is used. The page prints **how "better" is decided**, lists every figure it compared, and every figure it did **not** rank with the reason; it never pads the list ("Only 2 figures improved").
 
-```
-an exception ──► error_view.py ──► error.html ──► the error page
-                 (Python decides    (the template
-                  the words)         only prints)
-```
+Three rules came from printing a text ranking for four real companies and reading it:
 
-- **Exceptions carry data, not only text.** `NoFilingFound` now carries the NSE `symbol` and the `available` years; `AmbiguousCompany` already carried its
-  `candidates`. That is how the page can offer commands.
-- **One table, looked up by class.** `ERROR_INFO` maps each error class to a title and hints. The lookup walks `type(error).__mro__`, which is
-  Python's list of "this class, then its parent, then its grandparent...". So a brand-new error class we forget to list still gets the page of its
-  parent (`BrsrError`) instead of a crash. A test checks that every error class in `errors.py` is in the table.
-- **Two layers of catching in `cli.py`:** `except BrsrError` is for problems we expected; `except Exception` at the very outside is for *bugs*. Catching
-  everything is only safe at the outermost layer, because the program is ending anyway and the user deserves an explanation. `--debug` re-raises so a
-  developer can still read the traceback.
-- **Even the explanation can fail** (a read-only folder). Then we print the original error plus "could not write the explanation page", never hide the first problem.
-
-## 7.4 When NSE is down: a graceful fallback
-
-The filing list for a company is saved for 24 hours. Before this phase, after 24 hours even a company you had downloaded needed NSE again. Now,
-if NSE cannot be reached and *any* saved list exists, we use it and say so ("the filing list saved on 07-Oct-2026 is used (it may be out of date)").
-
-- If you ask for `--refresh`, you want NSE's latest answer, so a failure is reported, not hidden.
-- With no saved list at all, it is a real error page ("We could not get the data from NSE").
-- The function takes a `notify` argument, a small function it calls with a sentence. That is a **callback**: `filings.py` does not know about
-  printing; the caller decides what to do with the message.
-- While writing this we noticed an old error message promised "place the file by hand and the tool will use it". That was only half true (the filing
-  list is needed too), so we corrected the message. **Never promise in an error message something you have not tested.**
-
-## 7.5 The samples, and why a test guards them
-
-`python flow.py samples` rebuilds everything in `samples/`, including `samples/README.md`, from one list in `brsr_p6/workflows/samples.py`. The page of a company is built
-from the filing already on disk (no internet); only a filing that is missing is downloaded.
-
-The error samples are made by **really triggering the errors** with offline inputs (an unknown name, the year 2019-20, a real saved filing list asked for FY 2021-22,
-and a deliberately cut-off XML file). So they show exactly what a user would see.
-
-**The test `committed_report_pages_are_up_to_date`** rebuilds every sample page and compares it, character for character, with the committed file. Twice in this
-project we looked at a stale page by mistake; now a stale sample makes the test fail until someone runs `python flow.py samples`.
-
-## 7.6 The README is part of the product
-
-The first thing a reviewer reads. Ours says plainly what is done and **what is not** (when this was written none of the three optional extensions was built; the README has been kept in sync as each one landed), lists known limitations
-(waste split by category, treatment level, errors a few percent wide that no check can catch...), discloses the AI tool and what it was used for, and has the design note.
-Honest limits build more trust than a long list of features.
-
-## 7.7 "Does it run from scratch?" (what we did)
-
-1. Copied the project to a new folder **without** `.venv`, `data/`, `output/` and caches (what a fresh clone would contain).
-2. `python -m venv .venv` and `pip install -r requirements.txt` in it.
-3. `pytest`: **324 passed, 16 skipped** (the skipped ones need downloaded filings, so they skip politely).
-4. `python flow.py --company "ITC" --fy 2024-25`: downloaded from NSE and wrote the page in about **11 seconds**.
-
-## 7.8 New Python and tooling ideas
-
-- `type(error).__mro__` (method resolution order) and `isinstance`; inheritance as a safety net.
-- Optional arguments on exceptions (`def __init__(self, message, symbol="", available=())`) while keeping the message.
-- A callback parameter (`notify=print`-style).
-- `tempfile.TemporaryDirectory()` to create a file that is deleted afterwards; `Path.write_text`, `Path.mkdir(parents=True)`.
-- pytest: `monkeypatch` (swap a function for a fake during one test), `pytest.skip`, `pytest.raises`, shared helpers in `tests/helpers/html_checks.py`.
-- Making one command produce many files from a list of data (`SAMPLE_COMPANIES`, `SAMPLE_ERRORS`).
-
-## 7.9 Small things that went wrong and what they taught us
-
-| What happened | Lesson |
+| What we saw | Rule |
 |---|---|
-| My first "damaged file" sample said "does not look like a SEBI filing" instead of "not valid XML (line, column)": the fake file lacked the SEBI namespace so it took a different branch | When you demonstrate an error, check you reached the branch you meant to |
-| A test looked for `view-dashboard` in the error page and failed because the shared stylesheet contains that word | Test for the real element (`id="view-dashboard"`), not a word |
-| A PowerShell command was blocked: in a Python script I had a line starting with `del` (PowerShell's alias for Remove-Item) | Tools can misread innocent text; use `pop()` and move on |
-| `robocopy` "failed" with exit code 1 | For robocopy, 1 means "files copied", which is success |
+| Tata Steel's renewable share went 0.0655% -> 0.2415%: **+269%**, the biggest "improvement", but only **0.18 of a percentage point** | Rank **shares in percentage points**, amounts in percent |
+| Total energy and "energy per ₹ of sales" are the same story and would fill two of six places; a total rises when a company just grows | Rank the **per-sales figure instead of its total**; quote the total as context |
+| HDFC's recycled share was 100% both years and the page said "reported as 0 in both years" | A result carries the **signed size of the change**; only a real 0 -> 0 is left out |
 
-## 7.10 Try it yourself
+**Where last year's figures come from:** the previous-year column of the **same** filing, so both years use the same reporting basis. Last year's *own* filing is a bonus (it only marks figures restated since). Two different failures, two different results: **last year's own filing missing or damaged** is *not* an error (the page says why, e.g. "NSE has no BRSR filing of its own for FY 2021-22"); **the newest filing missing or unreadable** means nothing to summarise, so an error page with the specific reason.
 
-1. `python flow.py --company "Tata Steel" --fy 2021-22 --open`: read the page, copy one of the commands, run it.
-2. `python flow.py --company "Xyzzy Quux" --fy 2023-24 --open` and `... --fy banana --open`: compare the two pages.
-3. `python flow.py --company "Tata" --fy 2024-25 --open` (needs the internet): an ambiguous name, one command per matching company.
-4. Open `samples/README.md`, then open two sample pages. Which sample would you show first to an interviewer, and why?
-5. Open `brsr_p6/views/error_view.py`, change a hint sentence, run `python flow.py samples`, and look at the sample page. Then run `pytest -q`: which test would
-   fail if you had *not* re-run `make_samples.py`? (Hint: `test_committed_error_pages_are_up_to_date`.)
-6. Switch your internet off and run a company you downloaded before. Read the console line about the saved filing list.
-7. Add `--debug` to a command that you know fails on purpose. Does it behave differently for a *known* error and for a bug? (Try it with a test that raises `KeyError`.)
+## 5.3 Company comparison (`flow.py compare`)
 
-## 7.11 Interview self-check
-
-1. Why does a failed run write a page instead of only printing a message? Why is the file called `error_...` and not the usual report name?
-2. What does an error object need to carry so the page can offer ready-to-run commands? Give two examples from the code.
-3. What is `__mro__` and why does the error lookup use it?
-4. Why is `except Exception` acceptable in `cli.py` but would be a bad habit in the middle of the program? What does `--debug` do?
-5. When NSE is unreachable, when do we use an old saved filing list, and when do we refuse? Why?
-6. How are the sample pages produced, and what stops them from going stale?
-7. What is a callback, and where do we use one in this phase?
-8. Which parts of the project are *not* done, and where does the README say so?
-9. How did you prove the project runs from a clean checkout? What would you do differently with git installed?
-10. Name two known limitations of the data extraction and say why they exist.
-
-
----
----
-
-# Phase 11: Git, the repository, and "does a stranger's computer run it?"
-
-## 11.1 What git is doing for us (a recap in one paragraph)
-
-Git is a **time machine for a folder**. Each **commit** is a labelled snapshot ("save point") with an author and a message; you can look back, compare and
-undo. **GitHub** is a website that keeps a copy of your repository so other people (the reviewers) can see it. Git works on your PC; GitHub is only the copy.
-
-## 11.2 What we did, step by step
-
-| Step | Command / action | Why |
-|---|---|---|
-| Install git | `winget install --id Git.Git` | git was never installed on this PC (we postponed it to the end on purpose) |
-| Create the repository | `git init -b main` | turns the folder into a repository; `main` is the name of the main line of history |
-| Decide what NOT to save | `.gitignore` | big, generated or private files stay out (virtual environment, caches, PDFs, generated JSON, `output/`) |
-| Check before saving | `git add -n .` (a *dry run*) | lists what would be added without adding anything: we saw 108 files and no PDFs |
-| Save in logical pieces | `git add <paths>` then `git commit -m "..."` | 4 commits: code, tests, samples + data, notes. A reader can follow the story |
-| Prove it | `git clone` into a new folder + new venv | a clone contains **only what was committed**, exactly what a reviewer gets |
-
-## 11.3 Ideas worth understanding
-
-- **Staging.** `git add` puts files on a "tray"; `git commit` photographs the tray. That is why you can commit code and notes separately.
-- **`.gitignore` with exceptions.** `data/raw/*` ignores every downloaded filing; then lines like `!data/raw/WIPRO/2025-26/` bring back the few we want. Rule: *a later line beats an
-  earlier one*, and a folder must be re-included before its contents can be. We checked the result with the dry run, not by guessing.
-- **Why commit a few filings?** The brief allows hand-downloaded filings "with documentation". Eight small XML files (about 8 MB) make the samples and **every one of the 340
-  tests** run offline on a fresh clone. The big PDFs are not needed, so they are not committed. `data/README.md` explains each file.
-- **`.gitattributes`.** Windows and Linux end lines differently. `* text=auto` lets git tidy text files; `*.xml -text` tells it to leave the filings byte-for-byte as NSE published them.
-  The warnings "LF will be replaced by CRLF" you saw are only git saying this; they are harmless.
-- **The commit author.** Every commit records a name and email, and on a **public** repository anyone can read them. Before publishing, check `git log --format="%an <%ae>"`.
-  GitHub also offers a private "no-reply" address if you do not want your real email shown.
-- **Privacy scan before publishing.** We searched all text for the Windows user name, e-mail addresses and absolute paths and removed two. A public repository is forever.
-- **The assignment brief (`*.pdf`) is not committed.** It belongs to the company, not to us.
-
-## 11.4 Publishing to GitHub (you do this part: it needs your GitHub login)
-
-1. In the browser: **github.com > New repository**. Name it, for example, `brsr-principle6-dashboard`. Choose **Public** (simplest) or **Private** (then add the reviewers under
-   *Settings > Collaborators*). **Do not** tick "Add a README", ".gitignore" or "licence": the repository must be empty.
-2. In the project folder, with your own repository address:
-   ```powershell
-   git remote add origin https://github.com/<your-username>/brsr-principle6-dashboard.git
-   git push -u origin main
-   ```
-   The first push opens a browser window to sign in (Git Credential Manager is part of Git for Windows).
-3. Reload the repository page: you should see `README.md` with the screenshots, and the `samples/` folder.
-4. Put the link in your submission. Test it once from a private/incognito window (or ask a friend) to be sure the reviewers can open it.
-
-Common problems: *"git is not recognized"* (close and reopen PyCharm so it sees the new PATH), *"remote origin already exists"* (`git remote set-url origin <url>`),
-*"rejected ... fetch first"* (you created the GitHub repository with a README: either delete the repository and create an empty one, or ask for help before using any force option).
-
-## 11.5 Try it yourself
-
-1. `git log --oneline` (the story of the project in 4 lines) and `git log --stat -1` (what the last commit changed).
-2. `git status`: it should say "nothing to commit, working tree clean". Edit one word in `README.md`, run `git status` again, then `git diff` to see the change; undo it with `git restore README.md`.
-3. `git ls-files data` shows which data files are tracked; `git check-ignore -v data/raw/ITC/2024-25/filing.json` shows *which line of `.gitignore`* ignores a file.
-4. Make a change, run `python flow.py samples`, then `pytest`: which test notices if a sample page was not regenerated?
-
-## 11.6 Interview self-check
-
-1. What is the difference between git and GitHub?
-2. What does `git add` do, and how is it different from `git commit`?
-3. Why is `.venv/` ignored? Why is `data/parsed/` ignored but eight raw filings are committed?
-4. How did you check what would be committed *before* committing? How did you prove a stranger can run the project?
-5. Why does the commit author matter on a public repository?
-6. What would you do if you had accidentally committed a file with a password in it? (Think: rotating the password first.)
-
-
----
----
-
-# Phase 8: Extension 1, several years side by side (`trends.py`)
-
-## 8.1 What we built
-
-```powershell
-python flow.py trends --company "Tata Steel" --from 2021-22 --to 2025-26 --open
-```
-One page with a **column per financial year**: the five topics (energy, climate, water, air, waste) with a mini bar per year and a trend verdict, then **every figure of SEBI's Principle 6 tables**
-year by year, then the list of figures that later filings changed. `--from` and `--to` are optional (default: FY 2021-22 up to the newest filing NSE has).
-
-## 8.2 The idea that makes it possible: every filing holds TWO years
-
-A filing for FY 2023-24 contains its own year (the *current* column) and FY 2022-23 (the *previous* column). That gives us two powerful tricks, both with real data only:
-
-1. **A missing year can still be shown.** NSE has no Tata Steel filing for FY 2021-22, but the FY 2022-23 filing's previous-year column holds the company's own FY 2021-22 figures. We show them, in a shaded column
-   that says "no filing on NSE; figures from the FY 2022-23 filing". It is never a zero and never a guess.
-2. **A year can be checked against what the next filing says about it.** If the two differ, the company changed (**restated**) the figure.
-
-## 8.3 What the real data taught us (we looked BEFORE designing the rules)
-
-We compared, for every pair of neighbouring years on disk, the figure in the first filing with the same year in the next filing:
-
-| What we found | Rule we wrote |
-|---|---|
-| Tata Steel FY 2022-23 says energy = 857 (consolidated, no unit). The next filing says 559,969,887 GJ (standalone). A naive check would call that a "restatement" | Only call it a restatement when **both years are on the same basis**. Otherwise mark it ≠ ("different basis, not comparable") |
-| Wipro FY 2022-23 energy is exactly **1,000 times** the next filing's figure (probably megajoules vs gigajoules) | Only compare figures that have the **same, stated unit**. We do not guess that it was a unit slip |
-| Tata Steel FY 2023-24 electricity (28.4 million GJ) appears in the next filing as 19.5 million GJ: a real restatement of 31% | Keep the figure **as filed in its own year**, mark it ⟲ and show the later figure in the tooltip and in a table |
-| Wipro's 6515.4 vs 6515.0 | Differences under **0.5%** are rounding, not restatements |
-| Wipro reports standalone, then consolidated, then consolidated again | Every column shows its basis; the verdict only compares years on the same basis |
-
-## 8.4 How the trend verdict is decided
-
-For each row we take the **latest year with a figure** and walk back one year at a time **while the basis and the unit stay the same and a figure exists**. The result is compared with the first year of that block:
-*"▲ 14.3% higher than FY 2023-24"*. If earlier years were left out, the sentence says why. If only one year is left, the chip says "Can't compare" and gives the specific reason
-("FY 2022-23 is on a different basis (Consolidated instead of Standalone)", "No figure for FY 2022-23", "FY 2022-23's figure was 0", "The figure looks doubtful").
-
-## 8.5 The code, in three layers (each can be tested without the others)
-
-| Layer | File | Touches | Job |
-|---|---|---|---|
-| Load | `trend_loader.py` | files + NSE | list what NSE has, download the years (politely, cached), read each one; **a problem in one year becomes a flagged entry, not a crash** |
-| Logic | `trend_model.py` | nothing | build the columns, borrow missing years, find restatements and basis changes |
-| Words | `trend_view.py` + `trends.html` | nothing | rows, cells, marks, notes, sentences; the template only prints |
-
-Plus small changes elsewhere: `compare(..., earlier="FY 2023-24")` (so the wording can say *than FY 2023-24* instead of *than last year*), `download_filings(first=..., last=...)`,
-`NoFilingFound(symbol, available)`, the error `InvalidYearRange`, `fiscal_years_between`, and error pages whose suggested commands use `trends.py` for a trend request.
-
-## 8.6 Two bugs found by LOOKING at the page (not by the tests)
-
-1. **A doubtful figure printed as "0".** Tata's emissions are about 8 crore tonnes in the early years and then "64 tonnes" (typed in millions). On a "crore" scale for the whole row, 64 rounds to 0. A reader would see a
-   zero for something that is not zero. Fix: a figure too small for the row's scale is written in its own scale and unit ("64 tonnes CO₂e"), and a doubtful zero intensity says "Filed as 0".
-2. **The table was laid out like a stack of boxes.** I named the table's CSS class `trend`, and the dashboard stylesheet already had a rule `.dash .trend { display: flex }` for the card's "▲ 2% lower" line. The table
-   became a flexbox, so header cells and body cells no longer lined up. I found it by asking the browser itself: a tiny script printed `TABLE display=flex`. The class is now `trendtable`, and a test forbids the old name.
-   **Lesson: when a layout is "weird", measure instead of guessing, and keep class names specific.**
-
-## 8.7 Smaller design choices worth knowing
-
-- **Bars start at zero** and are scaled to the row's largest figure, as on the dashboard. Doubtful figures get no bar.
-- **The first column stays in place** (sticky) when a phone scrolls the table sideways.
-- **Samples:** 3 trend pages (Tata Steel, Wipro, Reliance) and 1 trend error page in `samples/`; the freshness test covers them too. Tata Steel's FY 2022-23 to FY 2024-25 filings were added to the repository for this.
-- **What we do NOT do:** infer a missing unit from the next filing (even where the same number is repeated with a unit), or use a later restated figure instead of the filed one.
-
-## 8.8 Try it yourself
-
-1. `python flow.py trends --company "Tata Steel" --from 2021-22 --to 2025-26 --open`. Find: the shaded FY 2021-22 column, the purple *Consolidated* → blue *Standalone* chips, a ⟲ mark (hover it), the "Can't compare" in Climate.
-2. Run the same for Wipro `--from 2023-24 --to 2025-26`: which two years does each verdict compare, and why?
-3. `python flow.py trends --company "Reliance" --from 2025-26 --to 2021-22` and read the error page.
-4. Open `brsr_p6/analysis/trend_model.py` and change `RESTATEMENT_TOLERANCE` from `0.005` to `0.05`; regenerate Tata Steel: how many figures are still marked as restated? Change it back and run `pytest`.
-5. In `tests/analysis/test_trend_model.py` find the test about Wipro's "1,000 times" energy. What would go wrong if we flagged it as a restatement?
-6. Open the page on a phone-width window: where does the "swipe sideways" hint appear?
-
-## 8.9 Interview self-check
-
-1. What two years does one filing contain, and how does that let us show a year NSE has no filing for? Why is that not "making up a number"?
-2. How do we decide that a later filing *restated* a figure? Name three cases we deliberately do NOT call a restatement and why.
-3. Why do trend verdicts stop at a change of basis? Show an example from Tata Steel.
-4. Why do we keep the figure as filed in its own year instead of replacing it with the restated one?
-5. What happens to the page when one year's file is damaged? Which errors do produce a full error page?
-6. How did you find the table layout bug, and what was the cause?
-7. Why is the loader separate from the model? How are they tested?
-8. What would you build next (Extension 2 or 3) and how would the existing pieces help?
-
----
-
-# Phase 9: Extension 2, "what got better and what got worse?" (`summary.py`)
-
-## 9.1 What we built
-
-```powershell
-python flow.py summary --company "Tata Steel" --open
-```
-One page that answers one question: **since last year, which three figures improved most and which three got worse?** You only give the company; the newest year NSE has is found by itself
-(`--fy` is optional). Each of the six entries has a plain headline ("SOx (sulphur oxides) was 45.7% more than last year"), last year's and this year's number, which way is better,
-and the same card as on the dashboard. The page also prints **how "better" is decided**, lists every figure it compared, and lists every figure it did **not** rank, with the reason.
-
-## 9.2 What does "better" mean? (the hardest question of this phase)
-
-A page that says "better" must say better *than what*. Our answer, printed on the page, is deliberately small:
+"Which company is better?" is easy to get wrong: Tata Steel's total energy is **888 times** Wipro's, because a steel plant burns more than an office. Printing "Wipro: lower" next to a total would be true and misleading. The brief says to compare **fairly**: think of totals vs intensity, differing units, and fields one company did not report. Every rule below is a test.
 
 | Rule | Why |
 |---|---|
-| Better means better than the **company's own last year** | The filings contain no industry benchmark or legal limit. Inventing one would break "never invent numbers" |
-| Each figure has a **direction**: lower is better for energy, gases, water and waste per ₹ of sales and for each air pollutant; higher is better for the renewable and recycled shares | Less pollution is good, more recycling is good. The directions are data in `metric_info.py`, not code |
-| Under **1%** (a share: under half a percentage point) is **"about the same"**, not ranked | Tiny changes are rounding, not news. The same margin as the dashboard, so the two pages cannot disagree |
-| **Amounts** are ranked by percent change, **shares** by percentage points | See 9.3 |
-| A figure **per ₹ of sales is ranked instead of its total** | See 9.3 |
+| **Totals are shown, never ranked** ("Depends on size" and a plain ratio like "888 times") | A total measures size as much as effort |
+| **Verdicts only on the figure per ₹ 1 crore of sales and on shares** | They do not grow just because the company is bigger |
+| **A share is compared in percentage points**; "N times" is said only for amounts | 0.07% -> 0.24% is "+269%" but 0.17 of a point |
+| **Both numbers of a row use one unit and one scale**, but never "0 crore" (the shared scale is used only if the smaller number is still at least 0.1 of it) | You can only read across a row in the same words; a real small figure must not vanish |
+| **Not reported says "Not reported" and who**, never 0 | A zero would look like a good result |
+| **A different or unstated unit, a doubtful figure or a one-digit intensity is shown as filed and not compared** | The promise of the whole project |
+| **Standalone vs consolidated is warned about**; no benchmark exists | A consolidated figure includes subsidiaries |
 
-## 9.3 What the real data taught us (we looked BEFORE writing the ranking)
+The existing `compare()` function (the one that says improved/worse between two *years*) is reused with the two *companies* in the two *years'* places; only its words changed.
 
-I printed a text version of the ranking for four real companies and read it. Three things were wrong with the first idea ("sort everything by percent change"):
+## 5.4 The two viewer pages (`flow.py hub`)
 
-| What we saw | Rule we wrote |
-|---|---|
-| Tata Steel's renewable share went from 0.0655% to 0.2415%. In percent that is **+269%**, the biggest "improvement" on the page, but it is only **0.18 of a percentage point** (Wipro's recycled waste share showed +145%) | Rank shares in **percentage points**. A rise from 80% to 90% counts as 10 |
-| Total energy and "energy per ₹ of sales" are the same story. Both would fill two of the six places, and a total rises when a company simply grows | Rank the **per-sales figure instead of its total**, and quote the total as context ("For comparison, total energy used was 6.2% more than last year"). Nothing is hidden |
-| HDFC Bank's recycled share was 100% last year and 100% this year, and the page said "reported as 0 in both years". "No change" results carried no number, so the code could not tell "100 → 100" from "0 → 0" | A result now carries the **signed size of the change** (`Comparison.amount`). Only a real zero-to-zero is left out |
+`output/` fills up with pages, so the viewer gathers them behind **two simple pages**: `index.html` (pick a **company**, a **year** and what to **show**: Report / Year-on-year / Multi-year trend; a button is greyed out, with a tooltip naming the command, when that page was not made) and `compare_companies.html` (pick a year and two companies). A big **Compare two companies** button joins them. The first design had a search box, a long dropdown of every page, Previous/Next and a compare panel on one screen and the dashboard started in the middle of the page; the lesson: **one job per screen, the rest one click away.**
 
-Figures that cannot be ranked fairly are **not dropped silently**. Each is listed under "Not ranked, and why":
-- missing, or the company filed no figure → "Not reported";
-- looks doubtful (a mis-scaled number) → we do not compare it, as everywhere else;
-- a different unit in the two years, or **0 last year** (a percentage cannot be worked out, and the zero may mean "not measured");
-- 0 in both years → nothing to compare.
+- **Why JavaScript here (and only here):** a dropdown that changes what you see cannot be done with HTML and CSS alone. The report pages inside still have none. Each viewer is one self-contained file when embedded (the two link to each other, so keep them in one folder); without a script they show a plain list of links.
+- **Keeping it safe:** pages travel as JSON with every `<` written `<`, so a `</script>` inside a page cannot end the block early; names go in with `textContent`, never `innerHTML`; the shown page lives in `<iframe sandbox="allow-popups ...">` without `allow-scripts`, so even a page with a script could not run it.
+- **In-page links in a framed page:** a page shown through `srcdoc` takes the *viewer's* address, so a link such as `#dash-energy` tried to load the viewer into the frame (a 404). Fix: add `<base href="about:srcdoc">` for the frame only. This was reproduced in Edge before fixing.
+- **The picker keeps the order you chose.** The file `RELIANCE_vs_TATASTEEL...` is alphabetical, so showing it used to flip "A = Tata Steel, B = Reliance" and the next change opened the wrong pair. Anything that "syncs" a control to a page must not undo what the user just chose.
+- **Offline filling (`workflows/missing_pages.py`):** `hub` first makes, from saved filings only, the comparisons, year-on-year summaries and trends that would otherwise be greyed out, **never overwriting** a page made by `summary`/`trends`, never inventing a year (a trend covers only years in a row that are all saved), and saying "not saved on this computer" when last year's own filing is absent. `--only-existing` skips this.
+- **How JavaScript was tested without a JavaScript test tool:** pytest checks everything that is plain Python (names, groups, the JSON, the written file, the safety checks). The behaviour was checked in **real Edge** by a throw-away copy of the page with a script that acts like a user (picks, clicks, changes the address) and prints what happened, captured in a screenshot. A test can be wrong too: the first such script came out blank because *it* was broken.
 
-When fewer than three figures improved (or got worse), the page says so ("Only 2 figures improved", "Nothing got worse by more than the 'about the same' margin"). It never pads the list.
+## 5.5 The samples and the "freshness" test
 
-## 9.4 Where last year's figures come from (and what if last year's report is missing)
-
-This is the same trick as the trends (§8.2): **every filing holds two years**, its own and the year before. So the summary compares the two columns of **one filing**. That has a useful side effect: both years use
-the same reporting basis (standalone or consolidated), so the basis problem of the trends cannot happen here.
-
-Last year's *own* filing is a bonus, not a requirement. If NSE has it and it can be read, we compare it with the previous-year column only to mark figures the company has **restated** since (the comparison uses
-the newer figure, and the page says so). If it is missing or damaged, nothing breaks. The page says why: Reliance's earliest filing is FY 2022-23, and the page for that year says *"NSE has no BRSR filing of its own for FY 2021-22"*.
-
-Two different failures, two different results (the brief asks for both to be handled):
-
-| What is missing | What happens |
-|---|---|
-| Last year's **own** filing (not on NSE, or damaged) | Not an error. The previous-year column of the newest filing is used, and the page explains |
-| The **newest** filing (unknown company, a year NSE does not have, a damaged file) | There is nothing to summarise, so an error page with the specific reason and ready-to-run `summary.py` commands |
-
-## 9.5 The code, in three layers (after the Phase 12 reorganisation each is in its own folder)
-
-| Layer | File | Touches | Job |
-|---|---|---|---|
-| Load | `brsr_p6/workflows/summary_loader.py` | files + NSE | find the newest year, download **only that year and the one before** (politely, cached), read both |
-| Logic + words | `brsr_p6/views/summary_view.py` | nothing | build the dashboard cards, rank, find what to leave out and why, write the sentences |
-| Page | `brsr_p6/rendering/templates/summary.html` | nothing | only prints; reuses the dashboard's card and chip (`dashboard_macros.html`) |
-
-Small changes elsewhere, all reusing what already existed: `download_filings(pick=...)` (the years are chosen **after** NSE's list is known, so the newest year needs no guessing), `Comparison.amount` and
-`CardView.change` (the size of a change), `MetricInfo.replaces` (which total a per-sales figure stands in for), `figure_getter` (one way to read a figure, shared by the trends and the summary),
-and `summary` error pages. Because the cards come from `build_card`, a figure cannot be "better" here and "worse" on the dashboard.
-
-## 9.6 Smaller design choices worth knowing
-
-- **Ties** keep the dashboard's order (NOx before PM when both rose 12.5%), because the sort is stable.
-- **A share reads as a sentence**, not a percent: "Waste recycled or reused went up from 36.9% to 90.4%."
-- **"unit not stated"** is written "(unit not stated)" so it does not read like "0.2 unit not stated".
-- **"About the same" figures show both years**, and carry their total's story when the total moved more.
-- **If the unit is unclear** the title says "per unit of sales", not "per ₹ 1 crore". We never dress up a number we cannot convert.
-- **Samples:** Tata Steel (1 improved, 3 same, 4 worse), Wipro (all 9 improved, so the "setbacks" box says nothing got worse), Reliance FY 2022-23 (no previous filing on NSE), and one `summary.py` error page.
-
-## 9.7 Try it yourself
-
-1. `python flow.py summary --company "Tata Steel" --open`. Read "How we decide what is better", then find the figure that was **not** ranked because its per-sales figure was (Total energy used), and the sentence that still tells you it rose 6.2%.
-2. `python flow.py summary --company "Wipro" --open`: why is the "biggest setbacks" box empty, and does the page still say something useful there?
-3. `python flow.py summary --company "Reliance" --fy 2022-23 --open`, then read the last box. Then try `--fy 2021-22` and read the error page.
-4. In `tests/views/test_summary_view.py` read `test_a_share_is_ranked_by_percentage_points_not_by_percent` and `demo_report()` in `tests/helpers/summary_samples.py`. Why were 10% to 25% and a two-thirds fall in waste chosen as the example numbers? What would the order be if shares were ranked in percent?
-5. Change `TOP = 3` to `2` in `brsr_p6/views/summary_view.py` and run `pytest tests/views tests/rendering -q`. Which tests notice, and why is that a good thing? Change it back.
-6. Open `brsr_p6/analysis/comparison.py` and raise `SAME_WITHIN_PERCENT` from 1 to 5. Re-run Tata Steel: which figure moves into "about the same"? (Then run `pytest`: the dashboard tests notice too. Change it back.)
-
-## 9.8 Interview self-check
-
-1. How do you define "better"? Why only against the company's own last year?
-2. Why rank shares in percentage points and amounts in percent? Give the Tata Steel example.
-3. Why is "energy per ₹ of sales" ranked instead of "total energy"? Is the total hidden anywhere?
-4. What happens to a figure that cannot be ranked? Where does the reader see it?
-5. What are the two kinds of "missing report", and what does the page do in each?
-6. Why do both years come from the same filing? When is last year's own filing used, and for what?
-7. How was the "0 in both years" bug found (HDFC Bank), and what was the cause?
-8. How would you reuse these pieces to build Extension 3, the comparison of two companies?
+`python flow.py samples` rebuilds everything in `samples/` (5 report pages, trend, summary and comparison pages, error pages, and the two viewers) from one list in `workflows/samples.py`; reports are built from filings already on disk, and the error samples are made by **really triggering the errors**. The test `committed_..._are_up_to_date` rebuilds every sample and compares it character for character with the committed file, so a stale sample fails the build until someone re-runs the command. (Twice we judged a design on an out-of-date page by mistake.)
 
 ---
 
-# Phase 12: From one flat folder to layers
+# Part 6. Habits that kept the numbers right
 
-## 12.1 What was wrong
+1. **Look before you build.** A short spike (DevTools, a few downloads, a script that prints facts) answered "what are the facts?" before any design. Three hours of looking saved ten of rewriting.
+2. **Test on more than one company.** A second company revealed the fifth form edition; four never-used companies (NTPC, HUL, ICICI Bank, L&T) proved "not hard-coded".
+3. **Read real output next to the PDF.** Tests prove the code does what you *thought*; reading real output shows whether what you thought was *right*. Both are needed.
+4. **Judge a design on output made by the current code.** Regenerate before looking at a screenshot (stale pages misled us several times). The samples test now enforces this.
+5. **A test (or a check) can be wrong too.** When a result surprises you, check the checker. An assertion that can never fail (`text[:0]`) proves nothing; ask "what change to the code would make this fail?".
+6. **Guard tests for things people forget:** every warning is classified; samples are up to date; imports only go one way; every error class has a page; no ⚠ or yellow creeps back.
+7. **Evidence tests, not agreement tests:** check output with a *second, simpler* reader (the raw-XML test).
+8. **Measure, do not guess:** when a layout is weird, have the browser print what it computed.
+9. **Change one variable at a time:** the "pip is broken" clean-checkout failure was Windows' 260-character path limit (a deeply nested folder silently lost files); the same commands worked in a short path. Keep paths short; run clean-clone checks in `%TEMP%\x`.
+10. **Safe renames:** commit first; look at the real import graph; `git mv` so history follows; rewrite imports with a script that reads each file's syntax tree (a find-and-replace breaks multi-line imports); let the tests and the freshness test be the safety net; run the real commands from another folder. Code that finds files from its own position (`Path(__file__).parent.parent`) breaks silently when files move: keep **one** place (`core/paths.py`) that knows the project root. When many files mention an old name, search for **every** mention (code, docstrings, page text, tooltips, tests, docs, committed samples).
+11. **Say what is true.** If the page and command exist but the viewer does not offer them yet, the answer to "is it done?" is "not completely". Never promise in a message something you have not tested.
+12. **Tool traps:** in PowerShell a backtick is an escape character (a backtick inside a double-quoted string silently inserted an invisible NUL into a document); after scripted edits to text files, search for strange characters. A script that "does everything" can undo a decision you already made (it re-created two companies the user had removed): check its result against earlier decisions.
+13. **Where a module lives is decided by its users.** `friendly.py` ("4.7% less than last year") sits in `core`, not `views`, because `analysis` uses it; putting it in `views` would make `analysis` import *upwards*.
 
-`brsr_p6/` held **39 files side by side**. Nothing in the folder said which file reads the internet, which one decides wording, which one writes HTML. A new reader (or an interviewer) had to open files to find out.
-It worked, and the tests passed, but code quality is not only "does it run": it is also "can a stranger find their way?".
+---
 
-## 12.2 The idea: one folder per step of the journey
+# Part 7. Interview checklist
 
-The program is a conveyor belt. A filing goes in at one end and a web page comes out at the other. So each step of the belt got its own folder (a Python **package**):
+First practise the **60-second answer** to "walk me through the project":
 
-| Folder | Its job, in one line |
+> "Give it a listed Indian company and a financial year and it produces one HTML page with that company's BRSR Principle 6 environment disclosures twice: exactly in SEBI's format, and as a plain-English dashboard. It uses NSE's structured XBRL filing instead of PDF tables. The flow is: find the company, download its filing politely, read the XML, map each value to SEBI's template rows, clean and check it, decide what to say, and print the HTML. Three rules run through everything: never invent a number, show doubt instead of hiding it, and keep extraction separate from presentation."
+
+If you remember one sentence: **"Python decides, the template only prints."**
+
+## 7.1 Flow and architecture
+
+| Question | Short answer |
 |---|---|
-| `core/` | the shared words and tools: the data model (`Cell`, `Principle6Report`), errors, financial years, units, number formatting, file locations |
-| `download/` | talk to NSE politely and keep the files on disk |
-| `parsing/` | open the XBRL file and read its raw facts (no cleaning yet) |
-| `extraction/` | clean the facts into one `Principle6Report`; flag doubtful numbers, never change them |
-| `analysis/` | compare years: better / worse / same, trends. Pure logic |
-| `views/` | decide *what each page says* (sentences, numbers, flags) |
-| `rendering/` | fill the HTML templates and write the file |
-| `workflows/` | whole jobs: company + year in, page out |
-| `cli/` | the commands you type; each one calls a workflow |
+| Walk me through what happens when I run the command. | `flow.py` -> `cli/flow_cli` reads the options -> `workflows/pipeline` orders the steps -> `download` finds the company and saves the XML (**first**) -> `parsing` reads it into facts -> `extraction` fills SEBI's rows, converts units, adds warnings -> `views` decide the words and verdicts -> `rendering` prints one HTML page. |
+| How is the code organised? | Nine packages in a strict order (`core`, `download`, `parsing`, `extraction`, `analysis`, `views`, `rendering`, `workflows`, `cli`); a package imports only from itself and earlier ones; a test enforces it. |
+| Why separate views from templates? | Decisions are testable in Python and awkward in HTML; both pages are built from the same report so they cannot disagree. |
+| Why one `flow.py`? | One entry point like `git`/`pip`: the whole flow by default, each step or extra a sub-command with its own `--help`. The root has no logic. |
+| Why no database? | Files are enough: raw filings, cached lists, a clean JSON per report. Nothing needs querying. |
+| Why only three libraries? | "Keep dependencies reasonable." The XML reader is Python's built-in; fewer libraries, fewer ways to break on a stranger's computer. |
+| How do I run it from a clean checkout? | Clone, create a venv, `pip install -r requirements.txt`, `python flow.py --company "Tata Steel" --fy 2025-26 --open` (tested in a fresh clone). |
 
-Your three questions from the brief map straight onto it: *downloading* is `download/`, *parsing* is `parsing/` and `extraction/`, *generating HTML* is `rendering/`.
+## 7.2 Data, NSE and accuracy
 
-## 12.3 The one rule: imports only go one way
-
-The table above is ordered from bottom to top. **A folder may use itself and the folders above it in the table, never the ones below.** `core` knows nothing about `views`; `views` knows nothing about how a page is saved.
-
-Why a rule?
-- If A imports B and B imports A (a **circular import**), Python can crash on start-up, and nobody can understand either file alone.
-- You can test and change the bottom layers without worrying about the top. Changing a template cannot break the download code.
-- When the rule is clear, "where does this new function go?" has an answer.
-
-A rule that lives only in a README gets broken the first time someone is in a hurry, so **`tests/test_architecture.py` checks it**. It reads every file as *data* (Python's `ast` module turns code into a tree you can inspect), collects the `import` lines and fails with the file and line number of any upward import.
-This is a nice example of "code can check code".
-
-## 12.4 How the move was done safely
-
-1. **Commit first.** The unfinished Phase 9 work was committed, so the move is a separate step that can be undone with one command.
-2. **Look before moving.** I drew the real import graph with a small script. It had **no cycles**, which means the folders could follow the dependencies that already existed; nothing had to be redesigned.
-3. **`git mv`, not copy-and-delete.** Git then records a *rename* (81 of them), so `git log --follow <file>` still shows a file's whole history.
-4. **A script for the imports.** About 70 files import from `brsr_p6`. Editing them by hand would have meant typos, so a script read each file's syntax tree and rewrote only the import statements (and sorted them the way the project already did). A find-and-replace would have broken multi-line imports.
-5. **The tests were the safety net.** All 467 tests had to pass, and the *freshness* tests were the strongest proof: they rebuild every sample page and compare it byte for byte with the committed one. After the move, `make_samples.py` changed **nothing**.
-6. **Run the real commands, from a different folder.** Tests do not prove `python flow.py` works. I ran all five entry points, once from another working directory.
-
-## 12.5 What bites when you move files (all four happened here)
-
-- **Code that finds files from its own position.** `PROJECT_ROOT = Path(__file__).parent.parent` meant "two levels up from `downloader.py`". When a file moves one folder deeper, "two levels up" is a different folder, and the program would silently look for `data/raw` in the wrong place. Four tests did the same with `Path(__file__).parent.parent / "data" / "raw"`. Fix: **one** place (`core/paths.py`) knows where the project root is, and everyone else asks it.
-- **A hidden dependency in the wrong layer.** `render.py` (making HTML) imported `PROJECT_ROOT` and `safe_name` from `downloader.py` (downloading). That is "making a page depends on downloading", the exact thing the layers forbid. Moving the paths into `core` removed it.
-- **One test file importing from another.** `test_summary_page.py` borrowed a helper from `test_summary_view.py`. Once they sit in different folders that import breaks, and it was a smell anyway: a helper used by two test files belongs in `tests/helpers/`.
-- **A name that means two things.** The old `cli.py` held the main command *and* the failure handler every command shares. In a `cli/` folder that would be `cli/cli.py`, so it became `main_cli.py` (the `main.py` command) and `common.py` (what every command shares).
-
-One judgment call worth knowing: `friendly.py` ("4.7% less than last year") sits in `core`, not `views`, because `comparison.py` in `analysis` uses it. If it lived in `views`, `analysis` would import *upwards*, breaking the rule. Putting a module where its **users** are is how you decide.
-
-## 12.6 Try it yourself
-
-1. `python -c "import brsr_p6; print(open(brsr_p6.__file__).read())"` and read the map of the packages. Open one `__init__.py` from each folder.
-2. Break the rule on purpose: add `from brsr_p6.views.summary_view import build_summary_view` at the top of `brsr_p6/core/models.py`, run `pytest tests/test_architecture.py`, and read the failure message. Then undo it.
-3. `git log --follow --oneline brsr_p6/core/units.py`: the history reaches back before the move.
-4. `pytest tests/views -q` runs only the tests of one layer. Which folder would you run after changing `comparison.py`?
-5. Open `brsr_p6/core/paths.py`. If you moved it into `brsr_p6/core/config/paths.py`, which single line must change, and why?
-6. Run `python flow.py summary --company "Wipro" --output-dir C:\Temp` from a different folder (use the full path to `summary.py`). Why does it still find the filings?
-
-## 12.7 Interview self-check
-
-1. Why split a flat folder into packages when the program already worked? Give two concrete benefits.
-2. State the layer rule in one sentence. What bug does it prevent, and how is it enforced here?
-3. How did you check that the move changed no behaviour? Which test was the strongest proof, and why?
-4. `PROJECT_ROOT` used `Path(__file__).parent.parent`. What risk did moving files create, and how did you remove it for good?
-5. Why `git mv` instead of copying the files and deleting the old ones?
-6. Why did `friendly.py` go into `core` and not `views`?
-7. What would you do if a new feature needed `core` to call something in `workflows`?
-8. Why do the test folders mirror the code folders?
-
----
-
-# Phase 13: Every number traces back to the filing
-
-## 13.1 The rule in the brief, and an honest audit
-
-The brief says: **"Never invent numbers. Every figure shown must trace back to a filing. If a value is missing or you had to estimate or convert it, say so on the page."** There are two halves:
-
-| Half | Where we stood before this phase |
+| Question | Short answer |
 |---|---|
-| "Say so if it is missing, estimated or converted" | Done early: every number has a status (reported / calculated / converted / not reported), a note and warnings. |
-| "Every figure must **trace back to a filing**" | **Only partly.** The page named the source *file*, and a converted number said "Filed as …". But an ordinary reported number did not say *which* part of the file it came from, and the link to the file on NSE was not even kept. |
+| How did you find the data source? | DevTools Network tab on NSE's BRSR page: the page calls `/api/corporate-bussiness-sustainabilitiy` after a cookie-setting home-page request; NSE's own JavaScript showed the `from_date`/`to_date` trick for older years. |
+| Why XBRL, not the PDF? | Structured (named elements, units, periods), so values are exact and traceable; PDF tables are fragile. The PDF stays optional. |
+| What is XBRL? | An XML format where every number has a name, a unit and a period. |
+| How do you know which year a number is? | From each fact's context **period end date**, matched to the year asked for and the year before. |
+| What is hard about the data? | Five form editions, units missing or wrong (Tata Steel typed millions as tonnes), numbers as text with Indian grouping, zeros that mean "not measured", illegal characters in one file, revisions, standalone vs consolidated. Each is handled and tested; the policy is **flag, never fix**. |
+| How do you handle a company with a revised filing? | NSE keeps one row per company per year and a revision replaces the original; we use the row NSE lists and print the dates. |
+| How polite are you to NSE? | Cache lists and files, 3 seconds between requests, stop on 403/429, retry only temporary failures; a second run sends 0 requests. |
+| Is it hard-coded to some companies? | No: the mapping is by SEBI's element names. Four never-used companies were run end to end. |
+| How do you handle different units? | `core/units` converts to one unit per topic (GJ, kL, tonnes, tCO2e, per ₹), says "unit changed by us" and keeps the original in the fine print. |
+| Why "Not reported" and not 0? | A zero claims the company measured and found none. If the filing has nothing, the honest statement is that nothing was reported. |
+| How do you know a number really comes from the filing? | Every `Cell` keeps its `origin`; a test re-reads the raw XML with a plain regex and checks every value shown. A value without a trace fails the test. |
+| What can you not detect? | A small error (a few percent) or a wrong figure that still looks plausible. It is in the README's limitations. |
 
-Lesson: a promise like "never invent numbers" is only as good as what a **stranger can check**. "Trust me, it is from the filing" is not a trace.
+## 7.3 Dashboard and SEBI fidelity
 
-## 13.2 What "trace" means here: a chain you can follow
-
-```
-number on a dashboard card
-  -> its Fine print says: SEBI question "Essential 1", and the filing's element
-number in the SEBI table  (hover it)
-  -> "From the filing: TotalEnergyConsumed... = 623812739.43 Gigajoule"
-the last section of the SEBI tab, "Where every number comes from"
-  -> the row: value shown, how we got it, the element(s), the text exactly as filed
-the XBRL file on NSE (a link in the page header)
-  -> search for the element name: the same text is there
-```
-An **XBRL element** is the name the company's filing gives a number (like a column name in a spreadsheet). Because XBRL is structured, every number has one. That is why the XML file was the right choice (Phase 1): a PDF table gives you no such name to trace to.
-
-## 13.3 How it is built (three small ideas)
-
-1. **A value remembers its origin.** `Cell` got an `origin` list. Each `Origin` holds: the element name, the text as written, the unit as written, the year it covers, and (for rows that were added up) how many rows. It is filled in at the one place the number is read (`extractor.py`), so it cannot be forgotten later.
-2. **Quote the file, not our own list.** NSE spells some element names inconsistently (`WithOutTreatment` and `WithoutTreatment`), and we look them up ignoring capitals. The trace quotes **the spelling in the file**, otherwise a reader searching the XML would not find it.
-3. **A cell never loses its trace.** A *calculated* number (electricity = renewable + non-renewable; the renewable share) lists **every** ingredient. The "per ₹ crore" view copies the origin. A value the filing does not have has no origin; instead it remembers which elements were *looked for* (or that the edition has no field at all). Nothing is made up to fill the gap.
-
-The words ("TotalScope1Emissions = 64 MtCO2e", "Calculated by us from reported figures") are decided in `views/trace_view.py`; the template `trace.html` only prints them, like every other page.
-
-## 13.4 How we KNOW the trace is true (the part worth explaining in an interview)
-
-Writing the trace is easy; **proving it is honest** is the point. The test `tests/extraction/test_origin.py` does this for all 21 real filings on disk:
-
-1. Build the report with our normal code.
-2. Separately, read the **raw XML text** with a plain regular expression (not our reader), collecting every `(element, text)` pair.
-3. For every value shown (4,605 of them on the author's PC, 2,178 in the 11 filings committed to the repository), assert that its `(element, text as filed)` is in that set, and that its year is the filing's current or previous year.
-4. A value shown with **no** origin fails the test.
-
-A test that checks a program with the program's own parser would only prove it agrees with itself. Using a second, simpler way to read the same file is what makes it evidence.
-It first failed on one thing worth remembering: the reader turns line breaks inside a long text into single spaces, so the test applies the same rule to the raw text (written openly in the test, not hidden).
-
-## 13.5 Small things that matter
-
-- **Only `https://` links are clickable.** The file link comes from NSE's answer, and it becomes a link on the page. A value like `javascript:...` must never become one, so the extractor keeps only `https://` links **and** the template checks again (two guards; a test tries `javascript:` and `http:`).
-- **Filing text can never inject HTML.** Element names, texts and notes are escaped; a test puts `<script>` into all of them.
-- **Long element names break phone layouts.** Names such as `TotalElectricityConsumptionFromNonRenewableSources` have no spaces. They needed `overflow-wrap`; we found it by looking at a 375 px screenshot.
-- **The section is at the END of the SEBI tab, not a third tab.** The brief asks for two views, and SEBI's own Principle 6 stays untouched above it.
-- **`extract_report.py --trace`** prints the same lines in the terminal (`↳ FY 2025-26: TotalScope1Emissions = 64 MtCO2e`).
-
-## 13.6 What it shows about Tata Steel (a nice interview story)
-
-Tata Steel's Scope 1 is flagged "doubtful" because it looks about a million times too small. The trace now lets anyone **see why**: the file says `TotalScope1Emissions = 64 MtCO2e`. The company typed 64 where it means 64 million. We show exactly what was filed, say it looks wrong, and never compare it. The warning is no longer our word against the company's: the evidence is in the line.
-
-## 13.7 Try it yourself
-
-1. `python flow.py extract --company "Tata Steel" --fy 2025-26 --questions E6 --trace` and read the `↳` lines under Scope 1.
-2. Open the dashboard for Tata Steel, open the Fine print of "Energy from renewable sources". Which two elements is it built from, and why are there two lines per year?
-3. In the SEBI tab, scroll to "Where every number comes from" and open *Essential 5*. Find a row that says "Unit changed by us". What does the line show next to it?
-4. Open the link in the page header. In the XML, search for `TotalScope1Emissions`. Is the value the same as on the page?
-5. In `tests/extraction/test_origin.py`, change one `raw` in a test's expected value and watch it fail. Then, in `extractor.py`, make `_read_text` return its `Cell` without `origin=origin` and run `pytest tests/extraction/test_origin.py`: which test catches it?
-6. Why does `Origin.element` use `fact.name` and not the `tag` from `p6_mapping.py`? (Hint: look at the test `test_the_element_is_quoted_in_the_filings_own_spelling`.)
-
-## 13.8 Interview self-check
-
-1. The brief says "every figure must trace back to a filing". What did the page already do, and what was missing? How did you find that out?
-2. What is an XBRL element, and why can a PDF not give you this trace?
-3. Describe the chain a reader follows from a dashboard card to the company's own file.
-4. How does a calculated number (the renewable share) keep its trace? What does the page say for a number the filing does not have?
-5. How do you know the trace is true? Why does the test read the raw XML instead of using your reader?
-6. Why quote the element in the filing's own spelling?
-7. The file link comes from NSE. What could go wrong if you made it clickable without checking, and what did you do?
-8. Where did you put the section on the page, and why not a third tab?
-
----
-
-# Phase 14: All pages in one place (`hub.py`)
-
-## 14.1 The problem
-
-Each command writes its own file: a report, a trend page, a summary, an error page. After a few runs `output/` holds a dozen files, and finding the one you want means opening folders and double-clicking.
-The brief asks for *a page* per request; nothing forbids a **way to browse** them. The user asked for one page with a dropdown or a search box.
-
-## 14.2 What we built
-
-```powershell
-python flow.py hub --open
-```
-It reads every `.html` file in `output/` and writes one more, `index.html`. In that page:
-- a **search box**: type `tata`, `2025-26`, `trend` or `error` and the list narrows;
-- a **dropdown** of the pages, grouped (Reports / Year-on-year summaries / Multi-year trends / Error pages);
-- **Previous / Next** buttons, and **Open in a new tab**;
-- the chosen page appears below, inside the same window.
-
-Two ways to hold the pages: **embedded** (default: the whole HTML of every page travels inside `index.html`, so one file can be moved or emailed) or **linked** (`--link`: the viewer only names the files next to it; much smaller).
-`make_samples.py` uses linked mode for `samples/index.html`, so the repository does not store every sample twice.
-
-## 14.3 Why this needs JavaScript (and why that is acceptable here)
-
-A dropdown that *changes what you see* and a search box that *filters as you type* cannot be done with HTML and CSS alone. Everything else in the project avoids JavaScript on purpose (CSS-only tabs, `<details>` for fine print), so adding it is a decision, written down (D83):
-
-- **Only the viewer has a script.** The report, trend, summary and error pages still have none.
-- **The script is small and does nothing risky.** It filters a list, sets one frame's content and updates the address.
-- **It fails gracefully:** without JavaScript the viewer shows a plain list of links to the files.
-
-## 14.4 Keeping it safe (three ideas worth knowing)
-
-1. **Data, not markup.** A whole HTML page cannot be pasted inside another page's `<script>` safely: one `</script>` inside it would end the block early. So the pages are stored as JSON with every `<` written as `<`. A test feeds it a page full of `</script><script>alert(1)</script>` and checks that nothing escapes.
-2. **Text, not HTML.** The script puts names into the dropdown with `textContent`, never `innerHTML`, so a strange page title can only ever be text.
-3. **A sandboxed frame.** The shown page lives in an `<iframe sandbox="allow-popups ...">` without `allow-scripts` or `allow-same-origin`: even if a page contained a script, the browser would refuse to run it.
-
-## 14.5 Small design choices
-
-- **Grouping comes from the file name**, because the names are made by our own code (`error_...`, `..._trend_...`, `..._summary_...`). **Labels come from each page's own `<title>`.** An error page's title is the same for every company, so the label also says what was asked.
-- **Search = every word must match** the label, the group or the file name, so `tata trend` finds only Tata's trend page.
-- **A copyable address:** `index.html#WIPRO_2025-26` opens that page, `index.html?q=tata` starts with that search.
-- **Empty folder:** it prints what to do first and exits with 1 (no new error class, so no error page is needed).
-
-## 14.6 How we tested JavaScript with no JavaScript test tool
-
-pytest cannot run a browser. We tested two ways:
-- **In pytest:** everything that is plain Python (names, groups, the JSON, the written file, the command), plus the safety checks above.
-- **In a real browser, by script:** I made a throw-away copy of the page with a script that *acts like a user* (types, presses Enter, clicks Next and Previous, presses Esc, types something that matches nothing, changes the address) and prints what the page did, then took a screenshot of that text.
-  It first came out blank, because my test script was broken (not the page); a test can be wrong too, so I rewrote it and it passed.
-
-## 14.7 Try it yourself
-
-1. `python flow.py hub --open`, type `tata`, press `Enter`, then press `Next`.
-2. Open `samples/index.html` and choose an *Error pages* entry. How is its label different from the others, and why?
-3. Open the address `output/index.html?q=wipro#WIPRO_2025-26` (use your own full path with `file:///`). What do you see?
-4. Run `python flow.py hub --link` and compare the size of `output/index.html` with before. Why is it so much smaller, and what do you lose?
-5. In `brsr_p6/views/hub_view.py` swap two names in `KINDS` and run `pytest` **before** regenerating anything: which tests fail, and what does each one protect? Then run `python flow.py samples`, `pytest` again, and look at the new order in the dropdown.
-6. Why does `workflows/hub.py` read the files but `views/hub_view.py` only receive their text? (Think about testing.)
-
-## 14.8 Interview self-check
-
-1. Why does the viewer need JavaScript when the rest of the project avoids it? What did you do to limit the risk?
-2. What is the difference between embedded and linked mode, and which does each of the two index files use? Why?
-3. Why is the data stored as JSON with `<` instead of just pasting the pages in?
-4. Why does the frame have `sandbox` and what does leaving out `allow-scripts` do?
-5. How do you test a page's JavaScript when you only have pytest?
-6. Which layer does each part live in (reading the folder, naming and grouping, the page, the command) and why?
-
----
-
-# Phase 15: Check it like the evaluator would
-
-## 15.1 Why this phase exists
-
-By now every feature had tests, but tests only prove what **we** thought of. An evaluator brings different companies, different typos and a fresh computer. So the question "are we ready?" was answered by **running things**, not by reading our own notes.
-
-## 15.2 What we ran (and what each run proves)
-
-| Run | What it proves |
+| Question | Short answer |
 |---|---|
-| Fresh `git clone`, a **brand-new virtual environment**, `pip install -r requirements.txt` (only `requests`, `Jinja2`, `pytest`), then the tests | The README's setup really works on a clean machine; nothing depends on libraries that happen to be on our PC |
-| Four companies **never used while building** (NTPC, Hindustan Unilever, ICICI Bank, L&T typed as the symbol `LT`) | "Not hard-coded to one company" is true: each made a page in about 11 s |
-| Summary and trends on those companies | The extensions are not tuned to the samples |
-| Unknown company, a year NSE does not have, years before BRSR, and a **deliberately damaged filing**, on all three commands | The graded errors give a specific message *on the page*; a damaged year inside a trend or summary is flagged and the page still works |
-| Three NTPC numbers read straight from the raw XML | The dashboard matches the filing (NTPC files energy in **Terajoule**; the page converts to GJ and says so on the card) |
+| Who is it for? | A non-expert: investor, journalist, student. Four questions in order: how big, better or worse, under control, can I trust it. |
+| How do you decide "better"? | Against the company's **own last year**: each figure has a direction (lower is better for energy, emissions, water, waste per ₹; higher for renewable and recycled shares); within 1% (half a point for shares) is "about the same". |
+| Why not compare with an industry benchmark? | The filings contain none; inventing one would break "never invent numbers". The page says so. |
+| When is a figure "can't compare"? | Missing, doubtful, different or unstated unit, one-digit precision, or zero last year (a percentage cannot be worked out). |
+| Why intensity per ₹ crore beside totals? | A bigger company uses more in total; the per-sales figure is fairer. |
+| What does the page do with Tata Steel's Scope 1 = 64? | Shows it as filed, with a note, no verdict, left out of sentences; the trace line shows `TotalScope1Emissions = 64 MtCO2e`. It never rescales it. |
+| Why are the notes grey and not yellow? | Most describe how the company filed, not a mistake; a calm ⓘ note with severity in words ("Note" vs "Doubtful") informs without alarming. |
+| How does the SEBI tab match the template? | Question numbers (E1-E12, L1-L9), tables, row labels and units come from `core/sebi_template.py`, the same data the extractor fills; a test checks every question and row label appears in SEBI's order. |
+| Why CSS-only tabs? | No JavaScript needed; the page is safe, portable and opens from a file. |
+| How do you know a non-expert understands it? | Honest answer: by reading every sentence against real data, and by the two-minute test with a non-technical person (do it and report what they said). |
 
-## 15.3 What it found: false precision
+## 7.4 Errors, tests and code quality
 
-ICICI Bank's summary said *"Waste for every ₹ 1 crore of sales was **100% more** than last year"*. The cause was in the filing: the company wrote the figure with **one digit**, `0.0000000002` and then `0.0000000004`.
-
-**The idea:** a number written with one digit is rounded. `4e-10` means "somewhere between 3.5e-10 and 4.5e-10". Likewise `2e-10` is between 1.5e-10 and 2.5e-10. So the true change is anywhere from about **+40% to +200%**. Printing "100%" claims accuracy that the filing does not contain. (The direction was right, because the exact total rose from 334.6 to 756.3 tonnes, but the number was not.)
-
-**What we did:**
-- `significant_digits("0.0000000004")` counts the real digits of the text as filed.
-- `checks.py` adds a warning to any per-rupee intensity with exactly one digit; the figure is **kept as filed**.
-- `warning_kinds` treats it as "cannot be compared", with its own reason ("Filed with one digit of precision, so too coarse to compare with another year") and its own box title ("Too coarse to compare.", not "Doubtful": nobody made a mistake).
-- In the year-on-year summary the **exact total** is then ranked in its place (the rule from Phase 9 doing its job: +126%).
-
-It affects 6% of the intensity values we have (mostly banks, IT firms and older layouts), including the committed HDFC Bank sample, which used to say "Improved*, 15% lower" for a change from `0.2` to `0.17`.
-
-## 15.4 Two smaller lessons
-
-- **A check can be wrong too.** My first "error page" probe misread a shared footer link as the page's suggestion, and a "Substring" failed in my own test script. Both were mistakes in the *checking*, not the product. When a result surprises you, check the checker.
-- **Characters can be eaten by your tools.** In PowerShell, a backtick is an escape character: writing `` `0.0000000004` `` inside a double-quoted string silently inserted an invisible NUL character into the README. The fix was a small Python script (no such traps). Lesson: after scripted edits to text files, search for strange characters.
-
-## 15.5 What we noticed but did not change (needs a decision)
-
-On NTPC the dashboard says *Energy: Got worse* because total energy rose 3.5%, while the fairer measure (energy per ₹ of sales) says *about the same* (+0.89%). The page explains that totals grow with company size, but the topic tile and the scoreboard still follow the total.
-The summary page already prefers the per-sales figure. Making the dashboard follow the same rule would remove the mixed message, but it changes every scoreboard, so it should be an explicit decision, not a last-minute edit.
-
-## 15.6 Try it yourself
-
-1. `python flow.py summary --company "ICICI Bank"`: find the waste-per-sales row in "Not ranked, and why". What reason does it give, and which figure is ranked instead?
-2. Open `samples/HDFCBANK_2022-23.html`, Climate section, the card "Greenhouse gases per unit of sales". What does it say now, and what did it say before this phase (see `git log -p`)?
-3. In `tests/extraction/test_coarse_intensity.py` find the test for `0.20`. Why does it count as two digits but `1200` as two as well, not four?
-4. Run `python -c "from brsr_p6.extraction.values import significant_digits as s; print(s('0.0000000004'), s('0.0000004786'), s('4e-10'))"`.
-5. Make a clean clone in a short folder (`%TEMP%\x`), create a new venv and run `pytest`. What would you check if it failed only there?
-
-## 15.7 Interview self-check
-
-1. How did you decide the project was ready? Why is "all tests pass" not enough?
-2. What is false precision? Show the ICICI Bank example with the range of the true change.
-3. Why does the card say "Too coarse to compare" and not "Doubtful"?
-4. What happens in the summary when a per-sales figure is too coarse? Why is that fine?
-5. Which tests would an evaluator's unknown company exercise that your samples did not?
-6. What did you decide *not* to change the night before the demo, and why?
-
----
-
-# Phase 16: Extension 3, two companies compared for one year
-
-## 16.1 The problem
-
-"Which company is better?" sounds easy and is easy to get wrong. Tata Steel's total energy in FY 2025-26 is **888 times** Wipro's. That is not because Wipro is careful; a steel plant simply burns more than an office. A page that printed "Wipro: ✔ lower" next to a total would be technically true and completely misleading.
-The brief says *compare intensity metrics fairly, show the unit used, and mark fields one company did not report*. Every rule in this phase is one of those three sentences made concrete.
-
-## 16.2 What we built
-
-```powershell
-python flow.py compare --company-a "Tata Steel" --company-b "Wipro" --fy 2025-26 --open
-```
-and, on the index page (`python flow.py hub --open`), a picker: **year, then Company A, then Company B**. It is a set of dropdowns of its own: the comparisons are **not** in the main report dropdown or its search box (see 16.7).
-
-The page is `views/compare_view.py` (all decisions) + `templates/compare.html` (only prints), exactly like the other pages.
-
-## 16.3 The fairness rules (each one is a test)
-
-| Rule | Why |
+| Question | Short answer |
 |---|---|
-| **Totals are shown, never ranked.** They get the label "Depends on size" and a plain ratio ("888 times") | A total measures size as much as effort |
-| **Verdicts only on the figure per ₹ 1 crore of sales and on the shares** (renewable energy, recycled waste) | These do not grow just because the company is bigger |
-| **A share is compared in percentage points**, and "N times" is only said for amounts | 0.07% to 0.24% is "+269%" but only 0.17 of a point. "369 times" for two shares was a bug I found by reading a real page |
-| **Both numbers of a row use one unit and one scale** | You can only read across a row if the numbers are in the same words |
-| **...but never "0 crore"** | 18,782,249 tonnes next to 7,932 tonnes would read "1.88 crore" beside "0 crore", hiding a real figure. So the shared scale is used only if the smaller number is still at least 0.1 of it |
-| **Not reported is "Not reported", never 0, and the row says who** | A zero would look like a good result |
-| **A different or unstated unit, a doubtful figure or a one-digit intensity is shown as filed and not compared** | Same promise as the rest of the project: never turn doubt into a verdict |
-| **Standalone vs consolidated is warned about** | A consolidated figure includes the subsidiaries; the two companies' totals do not cover the same thing |
-| **No benchmark** | The filings contain none, so we cannot say what is "good" |
+| Show me an error. | `python flow.py --company "Xyzzy Quux" --fy 2023-24 --open`, then `--fy 2019-20`. |
+| Why an error *page*? | The brief wants the message on the page; a page is what a non-technical user sees. The file is named `error_...` so it never overwrites a good report. |
+| What happens if one year of a trend is damaged? | It becomes a flagged column with its reason; the rest still shows. Only a problem with the whole request is an error page. |
+| What if last year's report is missing (summary)? | Not an error: the previous-year column of the newer filing is used and the page says why. |
+| What do the tests cover? | Unit conversion, the XBRL reader, every SEBI row, the verdict and sentence rules, HTML well-formedness and escaping, error pages, the command lines; plus the architecture, trace and samples-freshness tests. |
+| How is extraction separated from presentation? | `parsing`/`extraction` know nothing about HTML; `views` decide; `rendering` prints; the import rule is a test. |
+| Weakest part / what would you do with more time? | Small errors are undetectable; PPP and per-tonne intensities are unreliable so they appear only in the SEBI tab; tested in Edge on Windows only; dashboard topic tiles follow totals while the summary uses the per-sales figure (a decision left open). More time: a benchmark if a public source existed; more browsers. |
 
-Notice what was **reused**: `compare()` (the same function that says "improved / worse / about the same" between two years) is called here with the two *companies* in the place of the two *years*. Only its words had to be changed ("The two years use different units" becomes "The two companies state different units"). That is what the Phase 9 question "how would you reuse these pieces?" was pointing at.
+## 7.5 AI use and the extensions
 
-## 16.4 Putting it on the index page
-
-The picker is only a *chooser*. `hub.py` first writes a comparison page for **every pair of companies that have a report page for the same year**, reading the saved filings only (`workflows/compare.generate_all_comparisons`; no internet), and the picker opens the right one. Why not make the page when the user clicks?
-- The viewer is a single file with no server; a browser page cannot run Python.
-- It keeps the rule from Phase 14: only the viewer has JavaScript, and the pages inside it have none.
-- The cost is size: 21 report pages give 31 pairs. `--no-compare` turns it off, and `samples/index.html` is built without it, so it lists exactly the 3 sample comparisons.
-
-The picker's rules (year first; only the companies that have a report for that year; B never equals A) are small JavaScript functions. They were tested in a real browser by script, like Phase 14.
-
-## 16.5 Two honest mistakes in this phase
-
-- **I said it was done when it was only partly done.** The comparison page and command existed, but the index page did not offer them yet. The user asked "did you add it to the index page?" and the right answer was "not completely", then finish it. Say what is true.
-- **A test of mine could not fail.** I first wrote an assertion that sliced a string to zero length (`text[:0]`), which is always empty. An assertion that can never fail proves nothing; I replaced it with a check of the page title. After writing a test, ask: "what change to the code would make this fail?"
-
-## 16.6 Try it yourself
-
-1. `python flow.py compare --company-a "Reliance" --company-b "Tata Steel" --fy 2023-24 --open`. Which rows say "Depends on size"? Which say who is lower?
-2. Open `samples/HDFCBANK_vs_RELIANCE_2022-23.html`. Why do three of its fair rows say "Can't compare"? (Hint: look at the unit under the bank's number, and at what Reliance filed.)
-3. `python flow.py compare --company-a Wipro --company-b WIPRO --fy 2025-26`. Which error is it, and where is it caught: before or after any download? Then try `"Tata Steel"` and `TATASTEEL`: what changes?
-4. In `views/compare_view.py` change `MIN_SHARED_SCALE` to `0`. Which test fails, and what would the page have shown?
-5. Run `python flow.py hub --no-compare` and `python flow.py hub`. How many pages does each index hold, and why?
-
-## 16.7 A follow-up: comparisons get their own dropdowns
-
-*(Phase 17 went one step further: the comparisons now have a whole page of their own, `compare_companies.html`, and the home page has no search box. The lesson about the picker keeping the user's order still holds, and the code for it moved to `compare_hub.html`.)*
-
-With 21 reports the comparison pages added 31 more entries, so the main dropdown was mostly comparisons. The user asked for the compare part to be a separate dropdown, not in the main page list. Two small changes:
-- The viewer script builds a list `pages` (every entry that is not a comparison). The dropdown, its "(n of m)" count and the search read `pages`; the picker reads the comparisons. One test line checks `visible = pages.filter(` so nobody changes it back by accident.
-- The comparisons are still *in the data*. That is why `index.html#TATASTEEL_vs_WIPRO_2025-26` still opens one, and why the no-script link list still names them. Hiding something from a list is not the same as deleting it.
-
-**The bug this found.** I drove the page in a real browser (Edge) with a short script that changes the dropdowns the way a person would. Choosing Company A = Tata Steel and Company B = Reliance showed A = Reliance. The file is called `RELIANCE_vs_TATASTEEL_...` (alphabetical), and after opening it the picker copied the names from the file name. The next change (B = Wipro) then opened Reliance vs Wipro instead of Tata Steel vs Wipro. The fix is one check: if the page just opened is the pair the picker already shows (in either order), leave the picker alone. Lesson: the same page can be reached from two directions (A then B, or B then A), so any code that "syncs" a control to a page must not undo what the user just chose.
-
-## 16.8 Interview self-check
-
-1. Why are totals not ranked? What *is* ranked, and why is that fairer?
-2. A company did not report a figure. What does the page show, and why not 0?
-3. What does the page do when one company reports standalone and the other consolidated?
-4. Which existing function did you reuse, and what had to change?
-5. Why are the comparisons made in advance and not when the user clicks in the viewer?
-6. What does "Tata Steel's emissions are shown but not compared" mean, and how does the code decide it?
-
----
-
-# Phase 17: Making the viewer simple
-
-## 17.1 What the user saw, and why they were right
-
-The index page had become a control panel: the viewer's own green banner, a search card (search box, dropdown, Previous, Next, Open in a new tab), a compare card, a hint line, and *then* the report, which has a green banner of its own. When I looked at it in a browser, the actual dashboard started in the middle of the screen. The assignment says the dashboard must be **user friendly**; a page that makes you work out which of five controls to touch first is not.
-
-The user's idea was the right one: **one job per page.**
-- *Home page:* choose ONE company and the report appears. It already has two tabs: the plain-English **Dashboard** and the **SEBI-format report**.
-- *Compare page:* a button on the home page opens a different page where you choose TWO companies.
-
-> Lesson: more features on one screen is not "more helpful". Decide the one thing a screen is for, and put the rest one click away.
-
-## 17.2 The new layout
-
-```
-home page (index.html)
- ┌──────────────────────────────────────────────────────────────┐
- │ BRSR Principle 6: Environmental Dashboard   [Compare two companies ⇄] │  slim bar
- ├──────────────────────────────────────────────────────────────┤
- │ Company [Tata Steel ▾]  Year [FY 2025-26 ▾]  Show [Report|Year-on-year|Multi-year trend]
- ├──────────────────────────────────────────────────────────────┤
- │  the report (Dashboard tab | SEBI-format report tab)         │  fills the window
- └──────────────────────────────────────────────────────────────┘
-compare page (compare_companies.html)
-   [← All reports]  Compare two companies
-   Year [FY 2025-26 ▾]  Company A [▾]  vs  Company B [▾]
-   the comparison
-```
-
-What was taken away, and why:
-| Removed | Why |
+| Question | Short answer |
 |---|---|
-| The search box, Previous, Next, the keyboard keys | A dropdown of a handful of companies is quicker than typing. Fewer controls = nothing to explain in a demo. (It can come back if there are dozens of companies.) |
-| The list of *every* page in one dropdown | A person thinks "Tata Steel, 2025-26", not "TATASTEEL_summary_2025-26". The page now lets you choose by company, year and what to show |
-| The hint line | If a screen needs a paragraph of instructions, simplify the screen |
-| The viewer's second banner | The report has its own banner with the company name |
+| Which AI tools and for what? | Claude Code: planning in phases, exploring NSE and the XBRL files, writing and testing the code, reorganising into layers, writing the docs. Every result was run and checked against real filings (README lists it). |
+| What did the AI do and what did you do? | Be truthful about your part. The decisions are in `context.md`; this file explains each concept; read the part for whatever you are asked about. |
+| Explain this function. | Open it, read the docstring at the top, then read it aloud in plain words. |
+| Trends / summary / comparison in one line each | Trends: every metric, every year, missing years flagged, basis changes never look like improvements. Summary: three best and three worst vs last year with "better" defined. Comparison: totals shown not ranked, verdicts only on per-₹ figures and shares, one unit per row, "Not reported" says who. |
 
-Two details that make it feel finished:
-- **A view that does not exist is greyed out, not hidden.** *Year-on-year* and *Multi-year trend* are separate commands (`summary.py`, `trends.py`). If the page was never made, the button is grey and its tooltip says exactly which command makes it. Hiding it would leave the user wondering where the feature went.
-- **The pair is already shown when the compare page opens.** An empty page that says "choose something" makes the first impression a blank; a real comparison shows what the page is for.
+## 7.6 Hard questions that can come from anywhere
 
-## 17.3 How the code follows the same idea ("Python decides, the template prints")
-
-- `views/hub_view.py` decides everything: which companies there are, each company's years (newest first) with the ids of its report and its summary, the trend pages that cover it, and the pages that belong to no company (error pages). It reads this from the **file names** (`TATASTEEL_2025-26`, `TATASTEEL_summary_2025-26`, `TATASTEEL_trend_2021-22_to_2025-26`) and the company's name from the page `<title>`.
-- `hub.html` (home) and `compare_hub.html` (compare) only print and wire the dropdowns. They share one style (`hub.css`) and one small script of helpers (`hub.js`), so the two pages look like one tool and the helper code exists once.
-- The pages shown inside are still the same finished HTML files. Nothing about the numbers changed. This is why "back end wise everything is good" was true: only the layer that arranges the pages was redone.
-
-## 17.4 Looking at the real result found more
-
-- **Stale pages.** The report pages sitting in `output/` were written by older versions of the templates (their header still had the old text). Anything built from them looked different from what the code produces today. I rewrote them offline from the saved filings (no NSE requests) before judging the design. *Lesson: judge a design on output made by the current code.*
-- **A header that was too tall.** The report's banner and facts card took about 330 pixels before the dashboard began, mostly because the source-file name (60 characters) wrapped onto three lines. Now the name stays on one line (the whole name is in the tooltip and the footer) and the banner is smaller. Every page that shares `style.css` got the same tighter header.
-- **I put ITC and M&M back by accident**, because my rewrite loop took every filing on disk. You had asked for those two to be left out. I removed them again and added a skip to the loop. *Lesson: a script that "does everything" can undo a decision you already made; check its result against the earlier decisions.*
-
-## 17.5 Try it yourself
-
-1. `python flow.py hub --open`. Choose a company with no summary page and hover the greyed *Year-on-year* button. What does the tooltip say? Run that command and run `hub.py` again.
-2. Open `output/compare_companies.html`. Choose Company A = Tata Steel, Company B = Reliance. Does it keep that order? (Hint: the file is called `RELIANCE_vs_TATASTEEL...`; find the check in `compare_hub.html` that stops the dropdowns from swapping.)
-3. Delete every `*_vs_*.html` file from a copy of `output/` and run `python flow.py hub --no-compare`. What happens to the button, and to `compare_companies.html`?
-4. Move only `index.html` to the desktop and press the Compare button. Why does it fail, and why was it a good trade for not embedding everything twice?
-
-## 17.6 Interview self-check
-
-1. The assignment says "user friendly". What did you remove from the first viewer, and what did you keep? Why?
-2. Why is the comparison on its own page and not on the home page?
-3. What does a greyed-out *Year-on-year* button tell the user, and why is that better than hiding it?
-4. Which part of the code knows what "a company" is on the home page? Which part only prints?
-5. What did you check in a real browser that the unit tests cannot check?
+| Question | Short answer |
+|---|---|
+| Most important design decision? | Separating *what is true* (extraction) from *what to say* (views) from *how it looks* (templates). |
+| Hardest data problem? | Messy filings; the policy is to flag, not fix. |
+| What if NSE changes its website? | Only `nse_client` and `filings` change; everything after the download reads local files. |
+| What if SEBI changes the form? | Add the new element names to `p6_mapping`; the template and views do not change. |
+| Why should we trust the numbers? | Every number carries its origin, a test re-checks them against the raw XML, doubtful ones are shown as filed with a note. |
+| What is not done? | Say it plainly: no benchmark (none in the filings); small errors undetectable; Chromium/Windows only. |
 
 ---
 
-# Phase 18: One command, `python flow.py`
+# Part 8. Try it yourself
 
-## 18.1 What was wrong
+1. `python flow.py --help` and `python flow.py trends --help`: read every line and match it to `cli/flow_cli.py`. What does a bare `python flow.py` print?
+2. `python flow.py --company "Tata Steel" --fy 2025-26 --open`. Read the terminal lines in order: which step prints first? Then run it again: how many requests were sent?
+3. `python flow.py download --company Infosys`, then open `data\raw\INFY` and look at the folders and `filing.json`.
+4. `python flow.py extract --company TATASTEEL --fy 2025-26 --questions E6 --trace`: read the `↳` lines under Scope 1. Search the XML (link in the page header) for `TotalScope1Emissions`.
+5. Open `core/sebi_template.py` (find question E6) and `parsing/p6_mapping.py` (find which tag feeds `E5.nox` in the two editions).
+6. Open `data\parsed\RELIANCE\2023-24.json` and read each field of `E1.electricity`.
+7. Open the Tata Steel Climate section: find the dashed grey card, the "Can't compare" chip and the headline that refuses to quote the figure. Compare with HDFC Bank FY 2022-23 ("unit not stated", "Last year's figure was 0").
+8. In `views/metric_info.py` change the *Why it matters* line of "Water taken in", re-run, and see it change. In `analysis/comparison.py` change `SAME_WITHIN_PERCENT` from 1.0 to 5.0, re-run Reliance, then change it back and run `pytest` (the dashboard tests notice).
+9. Break the layer rule on purpose: add `from brsr_p6.views.summary_view import build_summary_view` at the top of `core/models.py` and run `pytest tests/test_architecture.py`. Read the failure, then undo.
+10. `python flow.py summary --company "Wipro"` (why is the setbacks box empty?) and `python flow.py compare --company-a "Tata Steel" --company-b "Wipro" --fy 2025-26`: which rows say "Depends on size"?
+11. `python flow.py hub --open`: pick a company with no summary page and hover the greyed button; press **Compare two companies**.
+12. **The two-minute test:** show the dashboard to someone who knows nothing about ESG and ask them to explain the Water section back to you. Anything they cannot explain is a sentence to rewrite.
+13. Make a clean clone in a short folder (`%TEMP%\x`), create a new venv, `pip install -r requirements.txt`, run `pytest`. What would you check if it failed only there?
 
-The root folder had eight `.py` files: `main.py`, `download_filings.py`, `extract_report.py`, `trends.py`, `summary.py`, `compare.py`, `hub.py`, `make_samples.py`. Open any of them and you see about ten lines: `from brsr_p6.cli.xxx_cli import main` and `sys.exit(main())`. They contained **no logic**. They existed only so you could type `python trends.py`.
+---
 
-The user's question was fair: why eight files that only call a `main()`? A person looking at the project sees eight things in the root and has to guess which one is "the program".
+# Part 9. Glossary
 
-## 18.2 What it is now
-
-```
-python flow.py --company "Tata Steel" --fy 2025-26 --open     the WHOLE flow: download -> read -> clean and check -> write the page
-python flow.py download --company "Tata Steel"                 only the first step
-python flow.py extract  --company "Tata Steel" --fy 2025-26    download if needed, read, clean, print as text, save JSON
-python flow.py trends | summary | compare | hub | samples ...  the extras and the tools around them
-```
-
-One file in the root. If you type a company and a year, you get the whole flow. If the first word is the name of a step or an extra, that command runs. Tools you already know work this way: `git commit`, `git push`; `pip install`, `pip list`.
-
-## 18.3 How the code does it (about 20 lines that matter)
-
-In `brsr_p6/cli/flow_cli.py`:
-
-```python
-COMMANDS = {"download": (download_cli.main, "..."), "extract": (...), "trends": (...), ...}
-
-def main(argv=None):
-    argv = list(sys.argv[1:] if argv is None else argv)
-    if argv and argv[0] in COMMANDS:             # the FIRST word is a command name
-        return COMMANDS[argv[0]][0](argv[1:])    # hand the rest of the line to that command
-    return run_flow(argv or ["--help"])          # otherwise it is the flow itself
-```
-
-- `COMMANDS` is a **dictionary**: a name on the left, the function to run on the right. Adding a new command is one line.
-- Each sub-command is **unchanged**: it still has its own argument parser (its own `--help`), only its `prog` now says `flow.py trends` instead of `trends.py`.
-- Only the **first** word counts. So `python flow.py --company trends --fy 2023-24` is still a company called "trends" (a test checks this).
-- A bare `python flow.py` prints the help, and the help ends with the list of the other commands.
-
-## 18.4 What did NOT change (and why that is the point)
-
-All the real code stayed where it was: `download/`, `parsing/`, `extraction/`, `views/`, `rendering/`, `workflows/`. The layer rule and its test still pass. Only the *front door* changed. That is what a good layering buys you: the user could ask for a new front door and it was a small change, not a rewrite.
-
-Why `workflows/pipeline.py` keeps its name: it is the code that puts the steps in order, and "pipeline" describes that well. The *command* is called `flow` because that is what the user does with it. The chain to remember: `flow.py` (type this) -> `cli/flow_cli.py` (reads what you typed) -> `workflows/pipeline.py` (does the steps in order) -> `download` -> `parsing` -> `extraction` -> `views` -> `rendering`.
-
-## 18.5 The checklist I used for a rename that touches many files
-
-1. **Find every place that mentions the old names** (`grep` for `main.py`, `trends.py`, ...): code, docstrings, the words on the error pages, the buttons' tooltips, tests, docs, the committed sample pages.
-2. **Change the code first, then run the tests.** They told me exactly which sentences still used the old names (18 failures).
-3. **Rewrite the commands in the documents with a small script**, but only whole command lines (`python trends.py` becomes `python flow.py trends`). A bare file name in a sentence can mean a real module (`workflows/compare.py` stays), so those were checked by hand.
-4. **Rebuild the committed samples**: they contain the commands on the error pages, and a test fails if they are out of date.
-5. **Look at the result as the user would**: `python flow.py` and `python flow.py hub --help`.
-
-## 18.6 Try it yourself
-
-1. `python flow.py` with nothing after it. What do you see at the bottom?
-2. `python flow.py trends --help` and `python flow.py hub --help`. Which word does each say after `usage:`?
-3. In `flow_cli.py`, add a command to `COMMANDS` that prints "hello" (give it a tiny function). What are the two things you must write?
-4. `python flow.py --company trends --fy 2023-24`. Is that the trends command? Why not?
-5. Open an error page in `samples/` and read the suggested command. Which command does it suggest?
-
-## 18.7 Interview self-check
-
-1. Why is there only one file in the root? What would you say if asked "why not eight small files?"
-2. How does `flow.py` decide between the flow and a sub-command?
-3. What stayed the same, and why was that easy?
-4. How did you make sure no old command name was left behind?
+**API** a door on a server meant for programs · **assert** a statement that must be true in a test · **autoescape** Jinja turning `<` into `&lt;` so data cannot become HTML · **BRSR** Business Responsibility and Sustainability Report · **cache** a saved copy so we do not ask again · **Cell** one number with its unit, status, origin and warnings · **CLI** command-line interface · **commit** a saved snapshot in git · **context (XBRL)** who and when a fact is about · **cookie** a visitor badge a site gives your browser · **dataclass** a class that only holds data · **dependency** a library our code needs · **dependency injection** passing in fakes so tests need no internet · **edition (form)** the version of SEBI's form a filing used · **element** the XBRL name of a number (`TotalScope1Emissions`) · **exit code** 0 = success · **fact** one reported value · **false precision** claiming accuracy the filing does not contain · **FY** financial year (FY 2025-26 = 1 Apr 2025 to 31 Mar 2026) · **GJ / kL / tCO2e** gigajoule / kilolitre / tonnes of CO2 equivalent · **guard test** a test that fails when someone forgets a step · **intensity** a figure per unit of sales (per ₹ crore) · **JSON** the usual data format of APIs · **layer rule** a package imports only from itself and earlier packages · **legacy / modern** the two families of form editions · **module / package** one `.py` file / a folder of them · **mro** the order Python searches a class and its parents · **origin** where in the filing a number was read · **pin** fix a library to an exact version · **PPP** purchasing-power-parity adjusted (per million US dollars) · **Principle 6** the environment part of BRSR · **repo** a git-tracked project · **restated** a later filing changed an earlier year's figure · **sandbox (iframe)** a frame that may not run scripts · **standalone / consolidated** the company alone / with its subsidiaries · **taxonomy** the regulator's dictionary of XBRL tags · **template (Jinja)** an HTML file with placeholders · **unit status** reported / not_reported / calculated / converted · **venv** a private Python environment · **view-model** plain objects holding ready-to-print values · **XBRL** XML for business reports · **XHR / Fetch** background requests a web page makes for its data

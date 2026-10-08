@@ -313,6 +313,13 @@ Time estimates are rough hours for you working with my help. Core (Phases 0-7) i
 - [x] Removed the repeated "See the note below the figures" line on every card (Air quality showed it six times)
 - [x] `tests/rendering/test_calm_notes.py` (7 tests): no ⚠, ⓘ in dashboard and SEBI marks, footnote wording by severity, no repeated line, no old yellow in any style sheet but the error page's
 - [x] 718 tests pass; looked at HDFC Bank (the page with the most notes) before and after
+
+### Phase 20: Simpler study notes and a demo file  ✅ DONE
+*Asked for by the user: `learnings.md` had grown huge and kept the history of every change; they wanted it summarised (not too short), redundancy removed, and a separate `demo.md` that explains the problem, the flow, who does what and how to trace one company, for someone with no coding background.*
+- [x] `learnings.md` rewritten by topic in nine parts (basics; the problem and the data; the flow step by step; the dashboard; the extensions; habits; one merged interview checklist; exercises; glossary). About 66 KB instead of 148 KB; the change history stays in `context.md` and `git log`
+- [x] `demo.md`: the problem, the 60-second pitch, a flow chart (ASCII + Mermaid), a step-by-step trace of one company (download first), every folder and file with its responsibility, the page's two views, the honesty rules, a 10-minute demo script, show-me-the-code order, fallbacks, ten words
+- [x] `docs/demo_guide.md` removed (merged into the two files above); README and commands.md point to `demo.md` and `learnings.md`
+- [x] Corrected a wrong statement from the earlier guide: the XML is read with Python's built-in `xml.etree`, not `lxml`
 ---
 
 ## 6. Milestones
