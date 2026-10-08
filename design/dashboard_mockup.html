@@ -1,0 +1,591 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dashboard design mockup</title>
+<style>
+/* DESIGN MOCKUP. Hand-written HTML with REAL numbers copied from the parsed Reliance FY 2023-24 filing.
+   In Phase 6 the same markup is produced by Jinja templates and this CSS moves into style.css. */
+:root {
+  --ink: #1d2733; --muted: #5d6b7a; --paper: #fff; --page: #f3f5f7; --line: #d5dce3;
+  --accent: #0f6b5c; --accent-soft: #e3f1ee; --head-bg: #e8eef2;
+  --good-ink: #0b6b4f; --good-bg: #e0f3ec; --good-line: #86c9b3;
+  --bad-ink: #9a3608; --bad-bg: #fde9dc; --bad-line: #eba67d;
+  --same-ink: #46525f; --same-bg: #eceff2; --same-line: #b9c3cc;
+  --warn-ink: #7a4b00; --warn-bg: #fff3d4; --warn-line: #e5b84a;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--page); color: var(--ink); font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+a { color: var(--accent); }
+.num { font-variant-numeric: tabular-nums; }
+.wrap { max-width: 1120px; margin: 0 auto; padding: 0 16px; }
+
+/* ---- mock banner + header (header is the same as the real page) ---- */
+.mock-banner { background: #1d2733; color: #fff; font-size: .85rem; padding: 8px 16px; text-align: center; }
+.page-header { background: var(--accent); color: #fff; padding: 22px 0 18px; }
+.page-header .eyebrow { margin: 0 0 4px; font-size: .85rem; letter-spacing: .04em; text-transform: uppercase; opacity: .9; }
+.page-header h1 { margin: 0; font-size: 1.7rem; line-height: 1.2; }
+.page-header .sub { margin: 4px 0 0; opacity: .95; }
+.tabs { margin-top: 18px; display: flex; gap: 6px; }
+.tab { padding: 8px 16px; border-radius: 8px 8px 0 0; background: rgba(255,255,255,.18); font-weight: 600; font-size: .95rem; }
+.tab.on { background: var(--page); color: var(--accent); }
+
+/* ---- jump menu ---- */
+.jump { position: sticky; top: 0; z-index: 5; background: var(--paper); border-bottom: 1px solid var(--line); }
+.jump ul { list-style: none; margin: 0; padding: 0; display: flex; gap: 4px; overflow-x: auto; white-space: nowrap; }
+.jump a { display: block; padding: 10px 12px; text-decoration: none; font-weight: 600; font-size: .92rem; color: var(--ink); border-bottom: 3px solid transparent; }
+.jump a:hover, .jump a:focus-visible { border-bottom-color: var(--accent); color: var(--accent); outline: none; }
+
+/* ---- at a glance ---- */
+.glance { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 20px 22px; margin: 20px 0; }
+.glance h2 { margin: 0 0 6px; font-size: 1.35rem; }
+.glance .story { font-size: 1.06rem; margin: 0 0 14px; }
+.score { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 16px; align-items: center; }
+.score .lbl { color: var(--muted); font-size: .9rem; margin-right: 4px; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(136px, 1fr)); gap: 10px; }
+.tile { display: block; text-decoration: none; color: inherit; border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; background: #fbfcfd; }
+.tile:hover, .tile:focus-visible { border-color: var(--accent); outline: none; box-shadow: 0 0 0 2px var(--accent-soft); }
+.tile .t-name { display: flex; align-items: center; gap: 6px; font-weight: 700; margin-bottom: 6px; }
+.tile .t-name svg { width: 20px; height: 20px; color: var(--accent); }
+.tile .t-stat { display: block; font-size: .82rem; color: var(--muted); margin-top: 6px; }
+.fairness { margin: 14px 0 0; padding: 9px 12px; background: var(--accent-soft); border-radius: 8px; font-size: .88rem; }
+
+/* ---- chips (words + symbols, never colour alone) ---- */
+.chip { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: .8rem; font-weight: 700; border: 1px solid; white-space: nowrap; }
+.chip-good { color: var(--good-ink); background: var(--good-bg); border-color: var(--good-line); }
+.chip-bad  { color: var(--bad-ink);  background: var(--bad-bg);  border-color: var(--bad-line); }
+.chip-same { color: var(--same-ink); background: var(--same-bg); border-color: var(--same-line); }
+.chip-unsure { color: var(--same-ink); background: #fff; border-color: var(--same-line); border-style: dashed; }
+.chip-warn { color: var(--warn-ink); background: var(--warn-bg); border-color: var(--warn-line); }
+
+/* ---- topic sections ---- */
+section.topic { margin: 34px 0 0; scroll-margin-top: 52px; }
+.topic-head { display: flex; align-items: center; gap: 10px; border-bottom: 3px solid var(--accent); padding-bottom: 6px; }
+.topic-head svg { width: 30px; height: 30px; color: var(--accent); flex: none; }
+.topic-head h2 { margin: 0; font-size: 1.4rem; }
+.topic-head .src { margin-left: auto; font-size: .78rem; color: var(--muted); text-align: right; }
+.plain { margin: 10px 0 4px; color: var(--muted); }
+.headline { margin: 6px 0 14px; padding: 10px 14px; background: var(--paper); border-left: 5px solid var(--accent); border-radius: 0 8px 8px 0; font-size: 1.05rem; font-weight: 600; }
+
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 14px; }
+.minis { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; margin-top: 12px; }
+.card, .mini { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.card.doubtful, .mini.doubtful { border: 2px dashed var(--warn-line); background: #fffdf6; }
+.card.empty, .mini.empty { background: #fafbfc; border-style: dashed; }
+.card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+.card h3, .mini h3 { margin: 0; font-size: 1rem; line-height: 1.3; }
+.better { font-size: .74rem; color: var(--muted); border: 1px solid var(--line); border-radius: 4px; padding: 1px 6px; white-space: nowrap; }
+.big { margin: 0; line-height: 1.1; }
+.big .v { font-size: 2.1rem; font-weight: 700; letter-spacing: -.01em; }
+.big .u { font-size: 1rem; color: var(--muted); margin-left: 4px; }
+.mini .big .v { font-size: 1.55rem; }
+.big.none .v { font-size: 1.3rem; font-weight: 600; color: var(--muted); font-style: italic; }
+.trend { margin: 0; font-size: .93rem; display: flex; flex-wrap: wrap; gap: 6px 8px; align-items: center; }
+.bars { display: grid; gap: 4px; }
+.bar-row { display: grid; grid-template-columns: 78px 1fr 64px; gap: 8px; align-items: center; font-size: .78rem; color: var(--muted); }
+.bar-row .bv { text-align: right; font-variant-numeric: tabular-nums; }
+.bar { display: block; height: 10px; background: #edf0f3; border-radius: 5px; overflow: hidden; }
+.bar i { display: block; height: 100%; background: var(--accent); border-radius: 5px; }
+.bar-row.prev .bar i { background: #9fb0bd; }
+.what, .why { margin: 0; font-size: .88rem; }
+.what b, .why b { color: var(--ink); }
+.why { color: var(--muted); }
+details.fine { font-size: .84rem; color: var(--muted); border-top: 1px dashed var(--line); padding-top: 6px; }
+details.fine summary { cursor: pointer; font-weight: 600; color: var(--accent); }
+details.fine p { margin: 6px 0 0; }
+.badge { font-size: .76rem; color: var(--muted); margin-top: auto; padding-top: 2px; }
+.alert { margin: 0; padding: 7px 10px; background: var(--warn-bg); border: 1px solid var(--warn-line); border-left-width: 5px; border-radius: 6px; color: var(--warn-ink); font-size: .86rem; }
+
+/* ---- stacked "where does it go" bars ---- */
+figure.stack { margin: 16px 0 0; background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; }
+figure.stack figcaption { font-weight: 700; margin-bottom: 8px; }
+.stack-bar { display: flex; height: 22px; border-radius: 6px; overflow: hidden; background: #edf0f3; }
+.stack-bar span { display: block; height: 100%; min-width: 3px; }
+.legend { list-style: none; margin: 10px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(310px, 1fr)); gap: 5px 22px; font-size: .88rem; }
+.legend li { display: grid; grid-template-columns: 12px 3.5em 1fr; gap: 0 8px; align-items: baseline; }
+.legend .sw { width: 12px; height: 12px; border-radius: 3px; transform: translateY(1px); }
+.legend .pct { font-weight: 700; text-align: right; }
+.legend .amt { color: var(--muted); }
+.c1 { background: #0f6b5c; } .c2 { background: #3b6ea8; } .c3 { background: #7a5aa6; } .c4 { background: #8fc1e3; } .c5 { background: #9aa7b3; }
+.g1 { background: #0f6b5c; } .g2 { background: #5fb9a5; } .g3 { background: #a9ddd0; }
+.o1 { background: #e08a2e; } .o2 { background: #8a5a2b; } .o3 { background: #9aa7b3; }
+.grey { background: #cfd6dc; }
+
+/* ---- air small cards ---- */
+.mini .name { display: block; font-size: .76rem; font-weight: 400; color: var(--muted); }
+.minis { grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); }
+@media (min-width: 900px) { .mini.wide { grid-column: span 2; } }
+/* on wide screens reserve two lines for titles so the big numbers line up across a row */
+@media (min-width: 700px) { .card-top { min-height: 2.7em; } .sg h3 { min-height: 2.6em; } }
+
+/* ---- safeguards ---- */
+.safe { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 12px; }
+.sg { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; }
+.sg h3 { margin: 0; font-size: .98rem; line-height: 1.3; }
+.sg .ans { font-weight: 700; }
+.sg .what { color: var(--muted); }
+.quote { margin: 6px 0 0; padding: 6px 10px; border-left: 3px solid var(--line); color: var(--ink); font-size: .85rem; }
+
+/* ---- trust + glossary ---- */
+.panel { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; }
+.trust-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; }
+.panel h3 { margin: 0 0 6px; font-size: 1rem; }
+.panel ul { margin: 6px 0 0; padding-left: 1.2em; }
+dl.gloss { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 8px 28px; margin: 0; }
+dl.gloss dt { font-weight: 700; }
+dl.gloss dd { margin: 0 0 6px; color: var(--muted); font-size: .92rem; }
+
+.gallery-note { margin: 0 0 10px; color: var(--muted); }
+footer { padding: 22px 16px 40px; color: var(--muted); font-size: .85rem; max-width: 1120px; margin: 0 auto; }
+@media (max-width: 560px) { .topic-head { flex-wrap: wrap; } .topic-head .src { margin-left: 40px; flex-basis: 100%; text-align: left; } .big .v { font-size: 1.8rem; } .page-header h1 { font-size: 1.4rem; } .glance { padding: 16px 14px; } .bar-row { grid-template-columns: 70px 1fr 58px; } }
+</style>
+</head>
+<body>
+
+<!-- icons: drawn once, reused with <use> (inline SVG) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-bolt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></symbol>
+  <symbol id="i-cloud" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M7 18a4 4 0 0 1-.5-7.97A6 6 0 0 1 18 9a4.5 4.5 0 0 1 0 9z"/></symbol>
+  <symbol id="i-drop" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2.5s6 6.2 6 10.5a6 6 0 0 1-12 0c0-4.3 6-10.5 6-10.5z"/></symbol>
+  <symbol id="i-wind" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10a3 3 0 1 0-3-3M3 12h14a3 3 0 1 1-3 3M3 16h7"/></symbol>
+  <symbol id="i-bin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></symbol>
+</svg>
+
+<div class="mock-banner"><strong>DESIGN MOCKUP</strong>: hand-written page using the <strong>real</strong> Reliance FY 2023-24 figures from our parsed filing (nothing invented). Phase 6 generates this same layout for any company.</div>
+
+<header class="page-header">
+  <div class="wrap">
+    <p class="eyebrow">Business Responsibility &amp; Sustainability Report · Principle 6 (environment)</p>
+    <h1>Reliance Industries Limited <span style="font-weight:400;opacity:.85">(RELIANCE)</span></h1>
+    <p class="sub">Financial year 2023-24, compared with 2022-23 · Standalone: figures cover the company on its own, not its subsidiaries</p>
+    <div class="tabs" aria-hidden="true"><span class="tab on">Dashboard</span><span class="tab">SEBI-format report</span></div>
+  </div>
+</header>
+
+<nav class="jump" aria-label="Jump to a topic">
+  <div class="wrap"><ul>
+    <li><a href="#energy">Energy</a></li><li><a href="#climate">Climate</a></li><li><a href="#water">Water</a></li>
+    <li><a href="#air">Air</a></li><li><a href="#waste">Waste</a></li><li><a href="#safeguards">Safeguards</a></li>
+    <li><a href="#trust">Can I trust this?</a></li><li><a href="#glossary">Glossary</a></li>
+  </ul></div>
+</nav>
+
+<main class="wrap">
+
+<!-- =========================================================== AT A GLANCE -->
+<section class="glance" aria-labelledby="glance-h">
+  <h2 id="glance-h">How is Reliance Industries doing on the environment?</h2>
+  <p class="story">In 2023-24 Reliance used <b>46.42 crore GJ</b> of energy (2.0% less than last year) and released <b>3.77 crore tonnes</b> of greenhouse gases (about the same). It took in <b>20.41 crore kL</b> of water (1.8% more) and produced <b>6.66 lakh tonnes</b> of waste (10.9% more), of which <b>97%</b> was recycled or reused.</p>
+
+  <p class="score"><span class="lbl">Of the 13 headline figures we can compare with last year:</span>
+    <span class="chip chip-good">✔ 5 improved</span><span class="chip chip-same">≈ 4 about the same</span><span class="chip chip-bad">✖ 4 got worse</span></p>
+
+  <div class="tiles">
+    <a class="tile" href="#energy"><span class="t-name"><svg><use href="#i-bolt"/></svg>Energy</span><span class="chip chip-good">✔ Improved</span><span class="t-stat">3 figures compared</span></a>
+    <a class="tile" href="#climate"><span class="t-name"><svg><use href="#i-cloud"/></svg>Climate</span><span class="chip chip-same">≈ About the same</span><span class="t-stat">2 figures compared</span></a>
+    <a class="tile" href="#water"><span class="t-name"><svg><use href="#i-drop"/></svg>Water</span><span class="chip chip-bad">✖ Got worse</span><span class="t-stat">2 figures compared</span></a>
+    <a class="tile" href="#air"><span class="t-name"><svg><use href="#i-wind"/></svg>Air</span><span class="chip chip-same">◐ Mixed</span><span class="t-stat">3 improved, 1 worse</span></a>
+    <a class="tile" href="#waste"><span class="t-name"><svg><use href="#i-bin"/></svg>Waste</span><span class="chip chip-bad">✖ Got worse</span><span class="t-stat">2 figures compared</span></a>
+    <a class="tile" href="#safeguards"><span class="t-name"><svg><use href="#i-shield"/></svg>Safeguards</span><span class="chip chip-good">✔ 5 of 9 “Yes”</span><span class="t-stat">0 “No”, 4 with details or n/a</span></a>
+  </div>
+  <p class="fairness"><b>How to read “better” and “worse”:</b> it only compares the company with <b>itself last year</b>. It is not a rating against other companies or legal limits; the filing does not contain those. A bigger business can use more in total, so we always show the figure <b>per ₹ of sales</b> next to the total.</p>
+</section>
+
+<!-- =========================================================== ENERGY -->
+<section class="topic" id="energy" aria-labelledby="energy-h">
+  <div class="topic-head"><svg><use href="#i-bolt"/></svg><h2 id="energy-h">Energy</h2><span class="src">SEBI Essential 1 · Leadership 1</span></div>
+  <p class="plain">Factories, offices and vehicles run on electricity and fuel. Here is how much the company used, how much it uses for each ₹ of sales, and how much came from renewable sources such as solar and wind.</p>
+  <p class="headline">Reliance used 2.0% less energy than last year, but only 1.5% of its energy came from renewable sources.</p>
+
+  <div class="cards">
+    <article class="card">
+      <div class="card-top"><h3>Total energy used</h3><span class="better">Lower is better ↓</span></div>
+      <p class="big"><span class="v num">46.42</span><span class="u">crore GJ</span></p>
+      <p class="trend"><span class="chip chip-good">✔ Improved</span><span>▼ 2.0% lower than last year</span></p>
+      <div class="bars" role="img" aria-label="This year 46.42 crore gigajoules; last year 47.36 crore gigajoules">
+        <div class="bar-row"><span>2023-24</span><span class="bar"><i style="width:98%"></i></span><span class="bv">46.42</span></div>
+        <div class="bar-row prev"><span>2022-23</span><span class="bar"><i style="width:100%"></i></span><span class="bv">47.36</span></div>
+      </div>
+      <p class="what"><b>What it is:</b> all the electricity, fuel and other energy the company used.</p>
+      <p class="why"><b>Why it matters:</b> energy use drives both costs and greenhouse-gas emissions. Bigger companies use more, so also check the next card.</p>
+      <details class="fine"><summary>Fine print</summary><p>Filed as 46,42,00,812 GJ (last year 47,35,90,585). SEBI Essential 1, “Total energy consumption (A+B+C)”.</p></details>
+      <p class="badge">✔ Reported by the company</p>
+    </article>
+
+    <article class="card">
+      <div class="card-top"><h3>Energy for every ₹ 1 crore of sales</h3><span class="better">Lower is better ↓</span></div>
+      <p class="big"><span class="v num">807</span><span class="u">GJ per ₹ crore</span></p>
+      <p class="trend"><span class="chip chip-good">✔ Improved</span><span>▼ 1.4% lower than last year</span></p>
+      <div class="bars" role="img" aria-label="This year 807 gigajoules per crore rupees; last year 819">
+        <div class="bar-row"><span>2023-24</span><span class="bar"><i style="width:98.6%"></i></span><span class="bv">807</span></div>
+        <div class="bar-row prev"><span>2022-23</span><span class="bar"><i style="width:100%"></i></span><span class="bv">819</span></div>
+      </div>
+      <p class="what"><b>What it is:</b> energy used divided by sales (called “energy intensity”).</p>
+      <p class="why"><b>Why it matters:</b> the fairest way to judge efficiency, because it still works when the company grows.</p>
+      <details class="fine"><summary>Fine print</summary><p>Filed as 0.0000807367 GJ per ₹ (last year 0.0000819236). We show it per ₹ crore (× 1,00,00,000) because the filed figure is too small to read. Only the unit changed.</p></details>
+      <p class="badge">⇄ Reported by the company · shown per ₹ crore</p>
+    </article>
+
+    <article class="card">
+      <div class="card-top"><h3>Energy from renewable sources</h3><span class="better">Higher is better ↑</span></div>
+      <p class="big"><span class="v num">1.5</span><span class="u">% of all energy</span></p>
+      <p class="trend"><span class="chip chip-same">≈ About the same</span><span>▲ 0.05 percentage points above last year (1.42%)</span></p>
+      <div class="bars" role="img" aria-label="This year 1.47 percent renewable; last year 1.42 percent">
+        <div class="bar-row"><span>2023-24</span><span class="bar"><i style="width:1.47%;min-width:3px"></i></span><span class="bv">1.47%</span></div>
+        <div class="bar-row prev"><span>2022-23</span><span class="bar"><i style="width:1.42%;min-width:3px"></i></span><span class="bv">1.42%</span></div>
+      </div>
+      <p class="what"><b>What it is:</b> the part of all energy that came from renewables such as solar and wind.</p>
+      <p class="why"><b>Why it matters:</b> the more energy comes from renewables, the fewer greenhouse gases the same work causes.</p>
+      <details class="fine"><summary>Fine print</summary><p>Calculated by us: renewable 68,26,744 GJ ÷ (renewable + non-renewable 45,73,74,068 GJ). Source: SEBI Leadership 1, which is optional for companies to report. The bars use a 0-100% scale, so a thin bar means a small share.</p></details>
+      <p class="badge">∑ Calculated by us from reported figures</p>
+    </article>
+  </div>
+
+  <figure class="stack">
+    <figcaption>What kind of energy was it?</figcaption>
+    <div class="stack-bar" role="img" aria-label="Fuel 99.2 percent, electricity 0.8 percent, other 0.03 percent">
+      <span class="c2" style="width:99.16%"></span><span class="c1" style="width:0.81%"></span><span class="c5" style="width:0.03%"></span>
+    </div>
+    <ul class="legend">
+      <li><i class="sw c2"></i><span class="pct">99.2%</span><span>Fuel <span class="amt">· 46.03 crore GJ</span></span></li>
+      <li><i class="sw c1"></i><span class="pct">0.8%</span><span>Electricity <span class="amt">· 37.54 lakh GJ</span></span></li>
+      <li><i class="sw c5"></i><span class="pct">0.03%</span><span>Other sources <span class="amt">· 1.31 lakh GJ</span></span></li>
+    </ul>
+  </figure>
+</section>
+
+<!-- =========================================================== CLIMATE -->
+<section class="topic" id="climate" aria-labelledby="climate-h">
+  <div class="topic-head"><svg><use href="#i-cloud"/></svg><h2 id="climate-h">Climate: greenhouse gases</h2><span class="src">SEBI Essential 6 · Leadership 4</span></div>
+  <p class="plain">Burning fuel releases gases, mainly carbon dioxide (CO₂), that warm the planet. They are counted in tonnes of “CO₂-equivalent” (tCO₂e). <b>Scope 1</b> is what the company releases itself; <b>Scope 2</b> comes from the electricity it buys; <b>Scope 3</b> is everything else in its supply chain (optional to report).</p>
+  <p class="headline">Scope 1 + 2 emissions were 3.77 crore tonnes of CO₂e, about the same as last year (0.7% lower). 98% of it was released directly from the company’s own plants.</p>
+
+  <div class="cards">
+    <article class="card">
+      <div class="card-top"><h3>Greenhouse gases released (Scope 1 + 2)</h3><span class="better">Lower is better ↓</span></div>
+      <p class="big"><span class="v num">3.77</span><span class="u">crore tonnes CO₂e</span></p>
+      <p class="trend"><span class="chip chip-same">≈ About the same</span><span>▼ 0.7% lower than last year</span></p>
+      <div class="bars" role="img" aria-label="This year 3.77 crore tonnes; last year 3.79 crore tonnes">
+        <div class="bar-row"><span>2023-24</span><span class="bar"><i style="width:99.3%"></i></span><span class="bv">3.77</span></div>
+        <div class="bar-row prev"><span>2022-23</span><span class="bar"><i style="width:100%"></i></span><span class="bv">3.79</span></div>
+      </div>
+      <p class="what"><b>What it is:</b> gases from the company’s own operations (Scope 1) plus from the electricity it buys (Scope 2).</p>
+      <p class="why"><b>Why it matters:</b> these gases trap heat in the atmosphere. This is the main number used to judge a company’s climate impact.</p>
+      <details class="fine"><summary>Fine print</summary><p>Calculated by us: Scope 1 3,69,00,275 + Scope 2 7,81,764 = 3,76,82,039 tCO₂e (last year 3,79,45,728). The filing gives the two scopes separately.</p></details>
+      <p class="badge">∑ Calculated by us from reported figures</p>
+    </article>
+
+    <article class="card">
+      <div class="card-top"><h3>Greenhouse gases for every ₹ 1 crore of sales</h3><span class="better">Lower is better ↓</span></div>
+      <p class="big"><span class="v num">65.5</span><span class="u">tCO₂e per ₹ crore</span></p>
+      <p class="trend"><span class="chip chip-same">≈ About the same</span><span>▼ 0.15% lower than last year</span></p>
+      <div class="bars" role="img" aria-label="This year 65.5; last year 65.6">
+        <div class="bar-row"><span>2023-24</span><span class="bar"><i style="width:99.8%"></i></span><span class="bv">65.5</span></div>
+        <div class="bar-row prev"><span>2022-23</span><span class="bar"><i style="width:100%"></i></span><span class="bv">65.6</span></div>
+      </div>
+      <p class="what"><b>What it is:</b> Scope 1 + 2 emissions divided by sales (“emission intensity”).</p>
+      <p class="why"><b>Why it matters:</b> shows whether the company is getting cleaner per unit of business, even while it grows.</p>
+      <details class="fine"><summary>Fine print</summary><p>Filed as 0.0000065539 tCO₂e per ₹ (last year 0.000006564). Shown per ₹ crore; only the unit changed.</p></details>
+      <p class="badge">⇄ Reported by the company · shown per ₹ crore</p>
+    </article>
+
+    <article class="card empty">
+      <div class="card-top"><h3>Supply-chain emissions (Scope 3)</h3><span class="better">Lower is better ↓</span></div>
+      <p class="big none"><span class="v">Not reported</span></p>
+      <p class="trend"><span class="chip chip-unsure">? Can’t compare</span><span>No figure for either year</span></p>
+      <p class="what"><b>What it is:</b> emissions from suppliers, transport and customers, which the company does not control directly.</p>
+      <p class="why"><b>Why it matters:</b> for many companies this is the biggest part of their footprint, so a missing figure leaves a gap.</p>
+      <p class="badge">∅ Not reported. This is an optional disclosure; “not reported” never means zero.</p>
+    </article>
+  </div>
+
+  <figure class="stack">
+    <figcaption>Where do the greenhouse gases come from?</figcaption>
+    <div class="stack-bar" role="img" aria-label="Scope 1 97.9 percent, Scope 2 2.1 percent, Scope 3 not reported">
+      <span class="c1" style="width:97.93%"></span><span class="c3" style="width:2.07%"></span>
+    </div>
+    <ul class="legend">
+      <li><i class="sw c1"></i><span class="pct">97.9%</span><span>Scope 1: the company’s own plants <span class="amt">· 3.69 crore t</span></span></li>
+      <li><i class="sw c3"></i><span class="pct">2.1%</span><span>Scope 2: electricity it buys <span class="amt">· 7.82 lakh t</span></span></li>
+      <li><i class="sw grey"></i><span class="pct">—</span><span><i>Scope 3: not reported</i></span></li>
+    </ul>
+  </figure>
+</section>
+
+<!-- =========================================================== WATER -->
+<section class="topic" id="water" aria-labelledby="water-h">
+  <div class="topic-head"><svg><use href="#i-drop"/></svg><h2 id="water-h">Water</h2><span class="src">SEBI Essential 3-4 · Leadership 2-3</span></div>
+  <p class="plain">Many industries use huge amounts of water to cool, clean or make products. Here is how much was taken in, how much the company says it used up, and where it came from.</p>
+  <p class="headline">Reliance took in 1.8% more water than last year (20.41 crore kL). 44% of it was seawater.</p>
+
+  <div class="cards">
+    <article class="card">
+      <div class="card-top"><h3>Water taken in</h3><span class="better">Lower is better ↓</span></div>
+      <p class="big"><span class="v num">20.41</span><span class="u">crore kL</span></p>
+      <p class="trend"><span class="chip chip-bad">✖ Got worse</span><span>▲ 1.8% higher than last year</span></p>
+      <div class="bars" role="img" aria-label="This year 20.41 crore kilolitres; last year 20.05 crore">
+        <div class="bar-row"><span>2023-24</span><span class="bar"><i style="width:100%"></i></span><span class="bv">20.41</span></div>
+        <div class="bar-row prev"><span>2022-23</span><span class="bar"><i style="width:98.2%"></i></span><span class="bv">20.05</span></div>
+      </div>
+      <p class="what"><b>What it is:</b> all water drawn from rivers, groundwater, the sea or suppliers (1 kL = 1,000 litres).</p>
+      <p class="why"><b>Why it matters:</b> fresh water is scarce in many parts of India. Taking less leaves more for people and farms.</p>
+      <details class="fine"><summary>Fine print</summary><p>Filed as 20,41,00,042 kL (last year 20,05,18,912). SEBI Essential 3, “Total volume of water withdrawal”. The company reports the same figure for water <i>consumed</i>.</p></details>
+      <p class="badge">✔ Reported by the company</p>
+    </article>
+
+    <article class="card">
+      <div class="card-top"><h3>Water for every ₹ 1 crore of sales</h3><span class="better">Lower is better ↓</span></div>
+      <p class="big"><span class="v num">355</span><span class="u">kL per ₹ crore</span></p>
+      <p class="trend"><span class="chip chip-bad">✖ Got worse</span><span>▲ 2.3% higher than last year</span></p>
+      <div class="bars" role="img" aria-label="This year 355 kilolitres per crore rupees; last year 347">
+        <div class="bar-row"><span>2023-24</span><span class="bar"><i style="width:100%"></i></span><span class="bv">355</span></div>
+        <div class="bar-row prev"><span>2022-23</span><span class="bar"><i style="width:97.7%"></i></span><span class="bv">347</span></div>
+      </div>
+      <p class="what"><b>What it is:</b> water consumed divided by sales (“water intensity”).</p>
+      <p class="why"><b>Why it matters:</b> shows whether each ₹ of business needs more or less water than before.</p>
+      <details class="fine"><summary>Fine print</summary><p>Filed as 0.0000354983 kL per ₹ (last year 0.0000346865). Shown per ₹ crore; only the unit changed.</p></details>
+      <p class="badge">⇄ Reported by the company · shown per ₹ crore</p>
+    </article>
+
+    <article class="card">
+      <div class="card-top"><h3>Water given back (discharged)</h3><span class="better">Context only</span></div>
+      <p class="big"><span class="v num">3.46</span><span class="u">crore kL</span></p>
+      <p class="trend"><span class="chip chip-same">≈ Context</span><span>▲ 3.7% higher than last year (3.34 crore)</span></p>
+      <p class="what"><b>What it is:</b> treated or untreated water the company released back to rivers, the sea or other receivers.</p>
+      <p class="why"><b>Why it matters:</b> discharged water can carry pollutants. Whether it was treated first is the key question.</p>
+      <details class="fine"><summary>Fine print</summary><p>SEBI Leadership 2 (optional). 100% of the discharge is reported as treated before release. The filing’s discharge, withdrawal and consumption figures are shown exactly as filed.</p></details>
+      <p class="badge">✔ Reported by the company</p>
+    </article>
+  </div>
+
+  <figure class="stack">
+    <figcaption>Where did the water come from?</figcaption>
+    <div class="stack-bar" role="img" aria-label="Surface water 48.2 percent, seawater 44.4 percent, third party 6.1 percent, groundwater 1.2 percent, other 0.1 percent">
+      <span class="c2" style="width:48.24%"></span><span class="c4" style="width:44.38%"></span><span class="c3" style="width:6.08%"></span><span class="c1" style="width:1.19%"></span><span class="c5" style="width:0.11%"></span>
+    </div>
+    <ul class="legend">
+      <li><i class="sw c2"></i><span class="pct">48.2%</span><span>Surface water (rivers, lakes) <span class="amt">· 9.85 crore kL</span></span></li>
+      <li><i class="sw c4"></i><span class="pct">44.4%</span><span>Seawater <span class="amt">· 9.06 crore kL</span></span></li>
+      <li><i class="sw c3"></i><span class="pct">6.1%</span><span>Bought from suppliers <span class="amt">· 1.24 crore kL</span></span></li>
+      <li><i class="sw c1"></i><span class="pct">1.2%</span><span>Groundwater <span class="amt">· 24.26 lakh kL</span></span></li>
+      <li><i class="sw c5"></i><span class="pct">0.1%</span><span>Other sources <span class="amt">· 2.21 lakh kL</span></span></li>
+    </ul>
+  </figure>
+</section>
+
+<!-- =========================================================== AIR -->
+<section class="topic" id="air" aria-labelledby="air-h">
+  <div class="topic-head"><svg><use href="#i-wind"/></svg><h2 id="air-h">Air quality</h2><span class="src">SEBI Essential 5</span></div>
+  <p class="plain">Besides greenhouse gases, furnaces and chimneys release gases and particles that harm health and cause smog and acid rain. Lower is better for every one of them.</p>
+  <p class="headline">Three of the four main air pollutants fell compared with last year; VOC rose slightly (1.3%).</p>
+
+  <div class="minis">
+    <article class="mini"><h3>NOx <span class="name">nitrogen oxides</span></h3>
+      <p class="big"><span class="v num">32,485</span><span class="u">tonnes</span></p>
+      <p class="trend"><span class="chip chip-good">✔ Improved</span><span>▼ 5.4%</span></p>
+      <p class="what">From burning fuel; cause smog and breathing problems.</p><p class="badge">Last year 34,337 · ✔ Reported</p></article>
+    <article class="mini"><h3>SOx <span class="name">sulphur oxides</span></h3>
+      <p class="big"><span class="v num">14,974</span><span class="u">tonnes</span></p>
+      <p class="trend"><span class="chip chip-good">✔ Improved</span><span>▼ 14.1%</span></p>
+      <p class="what">From burning coal and oil; cause acid rain.</p><p class="badge">Last year 17,438 · ✔ Reported</p></article>
+    <article class="mini"><h3>PM <span class="name">particulate matter</span></h3>
+      <p class="big"><span class="v num">1,280</span><span class="u">tonnes</span></p>
+      <p class="trend"><span class="chip chip-good">✔ Improved</span><span>▼ 22.8%</span></p>
+      <p class="what">Tiny dust and soot particles that reach deep into lungs.</p><p class="badge">Last year 1,659 · ✔ Reported</p></article>
+    <article class="mini"><h3>VOC <span class="name">volatile organic compounds</span></h3>
+      <p class="big"><span class="v num">46,877</span><span class="u">tonnes</span></p>
+      <p class="trend"><span class="chip chip-bad">✖ Got worse</span><span>▲ 1.3%</span></p>
+      <p class="what">Vapours from fuels and solvents that help form smog.</p><p class="badge">Last year 46,275 · ✔ Reported</p></article>
+    <article class="mini wide"><h3>POP and HAP <span class="name">long-lasting toxic chemicals · hazardous air pollutants</span></h3>
+      <p class="big"><span class="v num">0</span><span class="u">tonnes each, this year and last</span></p>
+      <p class="trend"><span class="chip chip-warn">⚠ Check</span><span>no change</span></p>
+      <p class="alert">A reported 0 can mean “none” or “not measured / not material”. The filing does not say which, so we do not call this good or bad.</p></article>
+  </div>
+</section>
+
+<!-- =========================================================== WASTE -->
+<section class="topic" id="waste" aria-labelledby="waste-h">
+  <div class="topic-head"><svg><use href="#i-bin"/></svg><h2 id="waste-h">Waste</h2><span class="src">SEBI Essential 8-9</span></div>
+  <p class="plain">Waste can be recycled, reused, burned or buried. The better a company is at recovering it, the less ends up polluting land and air.</p>
+  <p class="headline">Waste rose 10.9% to 6.66 lakh tonnes, but 97% of it was recycled or reused.</p>
+
+  <div class="cards">
+    <article class="card">
+      <div class="card-top"><h3>Waste produced</h3><span class="better">Lower is better ↓</span></div>
+      <p class="big"><span class="v num">6.66</span><span class="u">lakh tonnes</span></p>
+      <p class="trend"><span class="chip chip-bad">✖ Got worse</span><span>▲ 10.9% higher than last year</span></p>
+      <div class="bars" role="img" aria-label="This year 6.66 lakh tonnes; last year 6.01 lakh tonnes">
+        <div class="bar-row"><span>2023-24</span><span class="bar"><i style="width:100%"></i></span><span class="bv">6.66</span></div>
+        <div class="bar-row prev"><span>2022-23</span><span class="bar"><i style="width:90.2%"></i></span><span class="bv">6.01</span></div>
+      </div>
+      <p class="what"><b>What it is:</b> all waste produced, of every kind.</p>
+      <p class="why"><b>Why it matters:</b> less waste means fewer resources thrown away and less to clean up. A growing company may produce more, so read it with the share recovered.</p>
+      <details class="fine"><summary>Fine print</summary><p>Filed as 6,66,046 tonnes (last year 6,00,609). SEBI Essential 8, “Total (A + B + C + D + E + F + G + H)”. Of this, 99,229 t (+12.0%) is “other hazardous waste”: waste that can harm people or nature if not handled carefully.</p></details>
+      <p class="badge">✔ Reported by the company</p>
+    </article>
+
+    <article class="card">
+      <div class="card-top"><h3>Waste recycled or reused</h3><span class="better">Higher is better ↑</span></div>
+      <p class="big"><span class="v num">97.1</span><span class="u">% of waste handled</span></p>
+      <p class="trend"><span class="chip chip-same">≈ About the same</span><span>▼ 0.15 percentage points (last year 97.2%)</span></p>
+      <div class="bars" role="img" aria-label="This year 97.1 percent recovered; last year 97.2 percent">
+        <div class="bar-row"><span>2023-24</span><span class="bar"><i style="width:97.1%"></i></span><span class="bv">97.1%</span></div>
+        <div class="bar-row prev"><span>2022-23</span><span class="bar"><i style="width:97.2%"></i></span><span class="bv">97.2%</span></div>
+      </div>
+      <p class="what"><b>What it is:</b> the share of waste that was recycled, reused or otherwise recovered instead of burned or buried.</p>
+      <p class="why"><b>Why it matters:</b> recovered waste does not end up in landfills or chimneys, so this is the best single sign of good waste handling.</p>
+      <details class="fine"><summary>Fine print</summary><p>Calculated by us: recovered 6,46,429 t ÷ (recovered + disposed 19,617 t). The two add up to the 6,66,046 t produced.</p></details>
+      <p class="badge">∑ Calculated by us from reported figures</p>
+    </article>
+  </div>
+
+  <figure class="stack">
+    <figcaption>What happened to the waste?</figcaption>
+    <div class="stack-bar" role="img" aria-label="Recycled 84.5 percent, reused 12.6 percent, incinerated 1.9 percent, landfill 1.1 percent">
+      <span class="g1" style="width:84.50%"></span><span class="g2" style="width:12.56%"></span><span class="o1" style="width:1.88%"></span><span class="o2" style="width:1.06%"></span>
+    </div>
+    <ul class="legend">
+      <li><i class="sw g1"></i><span class="pct">84.5%</span><span>Recycled <span class="amt">· 5.63 lakh t</span></span></li>
+      <li><i class="sw g2"></i><span class="pct">12.6%</span><span>Reused <span class="amt">· 83,624 t</span></span></li>
+      <li><i class="sw o1"></i><span class="pct">1.9%</span><span>Burned (incinerated) <span class="amt">· 12,554 t</span></span></li>
+      <li><i class="sw o2"></i><span class="pct">1.1%</span><span>Buried in landfill <span class="amt">· 7,053 t</span></span></li>
+    </ul>
+    <p class="why" style="margin-top:8px;font-size:.84rem">Green shades = recovered; orange/brown = disposed. “Other recovery” (0 t) and “other disposal” (10 t) are too small to draw.</p>
+  </figure>
+</section>
+
+<!-- =========================================================== SAFEGUARDS -->
+<section class="topic" id="safeguards" aria-labelledby="safe-h">
+  <div class="topic-head"><svg><use href="#i-shield"/></svg><h2 id="safe-h">Nature and safeguards</h2><span class="src">SEBI Essential 2, 4, 7, 10-12 · Leadership 7, 9</span></div>
+  <p class="plain">Numbers alone cannot show whether a company is in control. These questions show whether it has the safeguards regulators expect. We show the company’s own words so you can judge.</p>
+  <p class="headline">Reliance answers “Yes” to 5 of 9 safeguard questions, lists 5 locations in or near sensitive nature areas, and reports no “No” answers.</p>
+
+  <div class="safe">
+    <article class="sg"><h3>Has sites covered by the government’s energy-saving scheme (PAT)?</h3><p class="ans"><span class="chip chip-good">✔ Yes</span></p>
+      <p class="what">PAT sets energy-saving targets for big industrial sites.</p>
+      <details class="fine"><summary>What the company says</summary><p class="quote">“RIL’s Oil to Chemicals business has several sites identified as DCs (Designated Consumers) under the PAT scheme. The sector wise status of each DC with respect to PAT targets is provided below…”</p></details></article>
+
+    <article class="sg"><h3>Has a “zero liquid discharge” mechanism (no wastewater released)?</h3><p class="ans"><span class="chip chip-good">✔ Yes</span></p>
+      <p class="what">Treats and reuses wastewater instead of releasing it.</p>
+      <details class="fine"><summary>What the company says</summary><p class="quote">“All our manufacturing sites have set up comprehensive effluent treatment plants… The Silvassa Manufacturing Division maintains zero liquid discharge status at all times.”</p></details></article>
+
+    <article class="sg"><h3>Has projects to cut greenhouse gases?</h3><p class="ans"><span class="chip chip-good">✔ Yes</span></p>
+      <p class="what">Concrete projects, not just promises.</p>
+      <details class="fine"><summary>What the company says</summary><p class="quote">“Reliance has committed to become a Net Carbon Zero company by 2035. The Company has taken several GHG mitigation measures this year to reduce greenhouse gas emissions…”</p></details></article>
+
+    <article class="sg"><h3>Checked the environmental impact of new projects?</h3><p class="ans"><span class="chip chip-same">3 projects listed</span></p>
+      <p class="what">Impact assessments (EIAs) before building or expanding.</p>
+      <details class="fine"><summary>Which projects</summary><p>Dahej Manufacturing Division expansion · Nagothane Manufacturing Division expansion · Jamnagar Manufacturing Division expansion.</p></details></article>
+
+    <article class="sg"><h3>Works in or near sensitive nature areas?</h3><p class="ans"><span class="chip chip-same">5 locations listed</span></p>
+      <p class="what">Places such as forests, wetlands and coastal zones need extra approvals. </p>
+      <details class="fine"><summary>Which places</summary><p>Jamnagar (Gujarat) · Hazira (Gujarat) · Dahej (Gujarat) · KGD6 block operations (Gadimoga) · Chennai (Vellur), Tamil Nadu.</p></details></article>
+
+    <article class="sg"><h3>Complies with environmental laws?</h3><p class="ans"><span class="chip chip-same">n/a Not applicable</span></p>
+      <p class="what">Shown exactly as the company filed it (“Not applicable”).</p></article>
+
+    <article class="sg"><h3>Has an emergency and business-continuity plan?</h3><p class="ans"><span class="chip chip-good">✔ Yes</span></p>
+      <p class="what">A plan for keeping operations safe in a crisis.</p></article>
+
+    <article class="sg"><h3>Checks its suppliers’ environmental impact?</h3><p class="ans"><span class="chip chip-same">38% of partners checked</span></p>
+      <p class="what">Share of supply-chain partners (by business value) assessed for environmental impact.</p></article>
+
+    <article class="sg"><h3>Figures independently checked by outside auditors?</h3><p class="ans"><span class="chip chip-good">✔ Yes · 8 of 9 sections</span></p>
+      <p class="what">An independent check makes the numbers more trustworthy. Not checked: Scope 3 (not reported).</p>
+      <details class="fine"><summary>What the company says</summary><p class="quote">“Deloitte Haskins &amp; Sells LLP has carried out an independent assurance of the selected non-financial disclosures presented in the Business Responsibility and Sustainability Report (BRSR) for FY 2023-24…”</p></details></article>
+  </div>
+</section>
+
+<!-- =========================================================== TRUST -->
+<section class="topic" id="trust" aria-labelledby="trust-h">
+  <div class="topic-head"><h2 id="trust-h">Can I trust these numbers?</h2></div>
+  <p class="plain">We never invent a number. Here is where each figure on this page came from, and the cases that need extra care.</p>
+  <div class="panel trust-grid">
+    <div>
+      <h3>Where the 80 numbers came from</h3>
+      <ul>
+        <li><b>69</b> ✔ reported by the company, as filed</li>
+        <li><b>3</b> ∑ added up by us from reported figures</li>
+        <li><b>1</b> ⇄ unit changed by us (the original is kept)</li>
+        <li><b>7</b> ∅ not reported (never shown as 0)</li>
+        <li><b>10</b> ⚠ carry a note about the figure</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Notes on this company’s figures</h3>
+      <ul>
+        <li>POP and HAP air pollutants are filed as 0, which may mean “not measured”.</li>
+        <li>Scope 3 emissions and the Scope 3 intensity are not reported.</li>
+        <li>Eight extra intensity figures (per tonne of product, or PPP-adjusted) have unclear unit labels. They stay in the SEBI tab, not here.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Why a figure may be flagged</h3>
+      <ul>
+        <li>The unit is missing or unusual.</li>
+        <li>A value looks far too big or too small for the company’s size.</li>
+        <li>Parts do not add up to the filed total.</li>
+        <li>A zero that may not be a real zero.</li>
+      </ul>
+      <p style="margin:6px 0 0;font-size:.88rem;color:var(--muted)">Flagged values are shown exactly as filed, never silently fixed.</p>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================================== GALLERY OF AWKWARD CASES (mock only) -->
+<section class="topic" id="gallery" aria-labelledby="gal-h">
+  <div class="topic-head"><h2 id="gal-h">How awkward data looks (mockup only)</h2></div>
+  <p class="gallery-note">These real cases from other filings show the rules: a doubtful number is still shown exactly as filed, but it gets a warning, no “better / worse” verdict, and it is kept out of the headline sentence.</p>
+  <div class="cards">
+    <article class="card doubtful">
+      <div class="card-top"><h3>Scope 1 emissions <span class="name" style="font-weight:400;color:var(--muted)">· Tata Steel 2025-26</span></h3><span class="better">Lower is better ↓</span></div>
+      <p class="big"><span class="v num">64</span><span class="u">tCO₂e</span></p>
+      <p class="trend"><span class="chip chip-unsure">? Can’t compare</span><span>Figure looks wrong</span></p>
+      <p class="alert"><b>⚠ Doubtful figure.</b> This looks about 1,000,000 times too small for the company’s energy use. It may have been typed in millions of tonnes. Shown exactly as filed, not corrected.</p>
+      <p class="what"><b>What it is:</b> gases from the company’s own operations (Scope 1).</p>
+      <p class="badge">⚠ Check this figure</p>
+    </article>
+    <article class="card">
+      <div class="card-top"><h3>Total energy used <span class="name" style="font-weight:400;color:var(--muted)">· HDFC Bank 2022-23</span></h3><span class="better">Lower is better ↓</span></div>
+      <p class="big"><span class="v num">19,75,098</span><span class="u">unit not stated</span></p>
+      <p class="trend"><span class="chip chip-bad">✖ Got worse*</span><span>▲ 23.7% higher than last year</span></p>
+      <p class="alert">The filing does not say which unit its energy figures use. *The change is valid only if both years use the same unit, which is likely but not certain.</p>
+      <p class="badge">⚠ Check this figure · older filing layout</p>
+    </article>
+    <article class="card doubtful">
+      <div class="card-top"><h3>Greenhouse gases per ₹ of sales <span class="name" style="font-weight:400;color:var(--muted)">· Tata Steel 2025-26</span></h3><span class="better">Lower is better ↓</span></div>
+      <p class="big none"><span class="v">Filed as 0</span></p>
+      <p class="trend"><span class="chip chip-unsure">? Can’t compare</span><span>Not a usable number</span></p>
+      <p class="alert">A real intensity is never exactly 0, so this 0 means “rounded away or left blank”. It is not a real zero.</p>
+      <p class="badge">⚠ Check this figure</p>
+    </article>
+  </div>
+</section>
+
+<!-- =========================================================== GLOSSARY -->
+<section class="topic" id="glossary" aria-labelledby="gloss-h">
+  <div class="topic-head"><h2 id="gloss-h">Plain-English glossary</h2></div>
+  <div class="panel" style="margin-top:12px">
+  <dl class="gloss">
+    <div><dt>GJ (gigajoule)</dt><dd>A unit of energy. 1 GJ equals about 278 kWh, the “units” on an electricity bill.</dd></div>
+    <div><dt>kL (kilolitre)</dt><dd>1,000 litres of water, the same as fifty 20-litre water cans.</dd></div>
+    <div><dt>tCO₂e (tonnes of CO₂-equivalent)</dt><dd>One way to count all greenhouse gases together, by how much each warms the planet compared with CO₂.</dd></div>
+    <div><dt>Scope 1 / 2 / 3</dt><dd>Scope 1: released by the company itself. Scope 2: released by whoever makes the electricity it buys. Scope 3: everything else along its supply chain.</dd></div>
+    <div><dt>Intensity (“per ₹ of sales”)</dt><dd>The amount used or released for each ₹ of turnover. It lets you compare a company with itself even when it grows. We show it per ₹ 1 crore.</dd></div>
+    <div><dt>Lakh and crore</dt><dd>1 lakh = 1,00,000 (a hundred thousand). 1 crore = 1,00,00,000 (ten million).</dd></div>
+    <div><dt>Renewable energy</dt><dd>Energy from sources that do not run out, such as sun, wind and flowing water.</dd></div>
+    <div><dt>NOx, SOx, PM, VOC, POP, HAP</dt><dd>Air pollutants, listed on the Air quality card. None of them are greenhouse gases.</dd></div>
+    <div><dt>Zero liquid discharge</dt><dd>Treating and reusing all wastewater so none is released.</dd></div>
+    <div><dt>PAT scheme</dt><dd>“Perform, Achieve and Trade”: the Government of India’s energy-saving targets for big industrial sites.</dd></div>
+    <div><dt>EIA</dt><dd>Environmental Impact Assessment: a study of a project’s effect on nature, done before it is built.</dd></div>
+    <div><dt>Standalone vs consolidated</dt><dd>Standalone covers the company on its own. Consolidated adds its subsidiaries. The two should not be compared with each other.</dd></div>
+  </dl>
+  </div>
+</section>
+
+</main>
+<footer>Source: Reliance Industries’ BRSR filing on NSE (structured XBRL file). Every number comes from that filing. Numbers we added up or converted are marked, and doubtful ones carry a warning. This is a mockup of the dashboard layout.</footer>
+</body>
+</html>

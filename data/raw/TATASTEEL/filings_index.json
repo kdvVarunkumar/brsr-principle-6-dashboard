@@ -1,0 +1,55 @@
+{
+ "fetched_at": "2026-10-08T00:27:21",
+ "payload": {
+  "data": [
+   {
+    "attFileSize": "876.14 KB",
+    "attachmentFile": "https://nsearchives.nseindia.com/corporate/BRSR_500470_03062026200558.pdf",
+    "companyName": "Tata Steel Limited",
+    "fyFrom": 2025,
+    "fyTo": 2026,
+    "revisionDate": "-",
+    "submissionDate": "03-Jun-2026",
+    "symbol": "TATASTEEL",
+    "xbrlFile": "https://nsearchives.nseindia.com/corporate/xbrl/BRSR_500470_36202620558_BRSR_WebXMLFile_20260603_200625233.xml",
+    "xbrlFileSize": "1.13 MB"
+   },
+   {
+    "attFileSize": null,
+    "attachmentFile": "https://nsearchives.nseindia.com/corporate/SAKSHIKAPUR_24062025185013_fy25-integratedreport.pdf",
+    "companyName": "Tata Steel Limited",
+    "fyFrom": 2024,
+    "fyTo": 2025,
+    "revisionDate": "-",
+    "submissionDate": "24-Jun-2025",
+    "symbol": "TATASTEEL",
+    "xbrlFile": "https://nsearchives.nseindia.com/corporate/xbrl/BRSR_1470548_24062025065142_WEB.xml",
+    "xbrlFileSize": null
+   },
+   {
+    "attFileSize": null,
+    "attachmentFile": "https://nsearchives.nseindia.com/corporate/SAKSHIKAPUR_24062024111447_BRSRNSEBSE.pdf",
+    "companyName": "Tata Steel Limited",
+    "fyFrom": 2023,
+    "fyTo": 2024,
+    "revisionDate": "-",
+    "submissionDate": "24-Jun-2024",
+    "symbol": "TATASTEEL",
+    "xbrlFile": "https://nsearchives.nseindia.com/corporate/xbrl/BRSR_1161775_24062024111522_WEB.xml",
+    "xbrlFileSize": null
+   },
+   {
+    "attFileSize": null,
+    "attachmentFile": "https://nsearchives.nseindia.com/corporate/null",
+    "companyName": "Tata Steel Limited",
+    "fyFrom": 2022,
+    "fyTo": 2023,
+    "revisionDate": "-",
+    "submissionDate": "15-Jun-2023",
+    "symbol": "TATASTEEL",
+    "xbrlFile": "https://nsearchives.nseindia.com/corporate/xbrl/BRSR_865376_15062023061915_WEB.xml",
+    "xbrlFileSize": null
+   }
+  ]
+ }
+}
