@@ -9,6 +9,7 @@ from pathlib import Path
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 from brsr_p6.core.paths import DEFAULT_OUTPUT_DIR, safe_name
+from brsr_p6.views.compare_view import build_compare_view
 from brsr_p6.views.dashboard_view import build_dashboard_view
 from brsr_p6.views.sebi_view import build_sebi_view
 from brsr_p6.views.summary_view import build_summary_view
@@ -98,6 +99,23 @@ def write_hub_page(view, folder: Path = DEFAULT_OUTPUT_DIR) -> Path:
     path = hub_page_path(folder)
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(render_hub_page(view), encoding="utf-8")
+    return path
+
+
+def render_compare_page(report_a, report_b) -> str:
+    """The HTML of the two-company comparison (both reports are for the same financial year)."""
+    return _environment().get_template("compare.html").render(view=build_compare_view(report_a, report_b))
+
+
+def compare_page_path(report_a, report_b, output_dir: Path = DEFAULT_OUTPUT_DIR) -> Path:
+    """output/<SYMBOL A>_vs_<SYMBOL B>_<FY>.html"""
+    return output_dir / f"{safe_name(report_a.symbol)}_vs_{safe_name(report_b.symbol)}_{report_a.fy}.html"
+
+
+def write_compare_page(report_a, report_b, output_dir: Path = DEFAULT_OUTPUT_DIR) -> Path:
+    path = compare_page_path(report_a, report_b, output_dir)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(render_compare_page(report_a, report_b), encoding="utf-8")
     return path
 
 

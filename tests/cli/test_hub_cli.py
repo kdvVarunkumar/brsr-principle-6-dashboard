@@ -17,6 +17,15 @@ def test_the_parser_defaults_to_the_output_folder_and_embedding():
     assert (args.dir, args.link, args.open) == (Path("samples"), True, True)
 
 
+def test_comparisons_are_on_by_default_and_no_compare_turns_them_off(monkeypatch):
+    seen = []
+    monkeypatch.setattr(hub_cli, "generate_hub", lambda folder, embed=True, compare=False: seen.append((embed, compare)))
+    assert build_parser().parse_args([]).no_compare is False and build_parser().parse_args(["--no-compare"]).no_compare is True
+    main([])
+    main(["--no-compare", "--link"])
+    assert seen == [(True, True), (False, False)]
+
+
 def test_the_command_writes_index_html_and_says_how_many_pages(tmp_path, capsys):
     write_page(tmp_path)
     write_page(tmp_path, "WIPRO_2025-26.html")

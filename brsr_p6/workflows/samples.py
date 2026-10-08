@@ -19,10 +19,11 @@ from brsr_p6.download.company_lookup import pick_company
 from brsr_p6.download.filings import parse_listing, select_filing
 from brsr_p6.extraction.report_io import save_report
 from brsr_p6.parsing.xbrl_reader import read_filing
-from brsr_p6.rendering.render import (HUB_FILE_NAME, error_page_path, trend_page_name, write_error_page, write_page, write_summary_page,
+from brsr_p6.rendering.render import (HUB_FILE_NAME, error_page_path, trend_page_name, write_compare_page, write_error_page, write_page, write_summary_page,
                                       write_trend_page)
 from brsr_p6.views.error_view import build_error_view
 from brsr_p6.views.hub_view import SAMPLES_TITLE
+from brsr_p6.workflows.compare import generate_comparison_page
 from brsr_p6.workflows.hub import generate_hub
 from brsr_p6.workflows.pipeline import generate_page, generate_summary_page, generate_trend_page, load_saved_report
 
@@ -52,6 +53,16 @@ class SampleSummary:
     fy: str
     shows: str
     previous_note: str = ""   # set only when NSE really has no filing for the year before (so last year's own report is not looked for)
+
+
+@dataclass(frozen=True)
+class SampleComparison:
+    symbol_a: str
+    company_a: str
+    symbol_b: str
+    company_b: str
+    fy: str
+    shows: str
 
 
 @dataclass(frozen=True)
@@ -101,6 +112,19 @@ SAMPLE_SUMMARIES = (
                   "NSE has no filing for FY 2021-22, so there is no report of last year's own: the comparison uses the previous-year column "
                   "of this filing, and the page says so.",
                   previous_note="NSE has no BRSR filing of its own for FY 2021-22."),
+)
+
+
+SAMPLE_COMPARISONS = (
+    SampleComparison("TATASTEEL", "Tata Steel", "WIPRO", "Wipro", "2025-26",
+                     "A steel maker against an IT firm: the totals differ by factors of hundreds, so only the per-rupee figures and the shares "
+                     "are ranked. One reports standalone and the other consolidated (the page warns), and Tata Steel's emissions are shown but not "
+                     "compared because they look mis-scaled."),
+    SampleComparison("RELIANCE", "Reliance", "TATASTEEL", "Tata Steel", "2023-24",
+                     "Two large companies on the same (standalone) basis: the fairest case, so most per-rupee rows get a verdict."),
+    SampleComparison("HDFCBANK", "HDFC Bank", "RELIANCE", "Reliance", "2022-23",
+                     "A bank against a conglomerate in the older filing layout: the bank's per-rupee figures have no stated unit and Reliance "
+                     "filed its own as 0, so none of them is compared; only the two shares get a verdict."),
 )
 
 
@@ -179,6 +203,12 @@ def make_samples(output_dir: Path = SAMPLES_DIR, progress=print) -> list:
         progress(f"wrote {page.name}")
         summary_pages.append((sample, page))
 
+    comparison_pages = []
+    for sample in SAMPLE_COMPARISONS:
+        page = _write_comparison(sample, output_dir, progress)
+        progress(f"wrote {page.name}")
+        comparison_pages.append((sample, page))
+
     for example in SAMPLE_ERRORS:
         try:
             example.trigger()
@@ -189,8 +219,8 @@ def make_samples(output_dir: Path = SAMPLES_DIR, progress=print) -> list:
         except FileNotFoundError as missing:             # the saved filing list for the example is not on disk: skip it, say so
             progress(f"skipped the example for {example.company} {example.fy}: {missing}")
 
-    (output_dir / "README.md").write_text(_readme(report_pages, trend_pages, summary_pages, error_pages), encoding="utf-8")
-    pages = [page for _, page in report_pages + trend_pages + summary_pages + error_pages]
+    (output_dir / "README.md").write_text(_readme(report_pages, trend_pages, summary_pages, comparison_pages, error_pages), encoding="utf-8")
+    pages = [page for _, page in report_pages + trend_pages + summary_pages + comparison_pages + error_pages]
     hub, _ = generate_hub(output_dir, embed=False, title=SAMPLES_TITLE)     # linked, not embedded: the pages are already in this folder
     progress(f"wrote {hub.name}")
     return pages + [hub]
@@ -205,6 +235,16 @@ def _summary_reports(sample):
         return report, None, sample.previous_note
     previous = load_saved_report(sample.symbol, previous_fiscal_year(sample.fy))
     return None if previous is None else (report, previous, "")
+
+
+def _write_comparison(sample, output_dir, progress):
+    """A comparison page built from the filings on disk; if one is not on disk, do what compare.py does (download politely, then read)."""
+    report_a, report_b = load_saved_report(sample.symbol_a, sample.fy), load_saved_report(sample.symbol_b, sample.fy)
+    if report_a is None or report_b is None:
+        progress(f"{sample.company_a} / {sample.company_b} FY {sample.fy}: not on disk, downloading ...")
+        page, _, _ = generate_comparison_page(sample.company_a, sample.company_b, sample.fy, output_dir=output_dir)
+        return page
+    return write_compare_page(report_a, report_b, output_dir)
 
 
 def _write_summary(sample, output_dir, progress):
@@ -231,7 +271,7 @@ def _write_trend(sample, output_dir, progress):
     return write_trend_page(build_trend(name, sample.symbol, entries), output_dir)
 
 
-def _readme(report_pages, trend_pages, summary_pages, error_pages):
+def _readme(report_pages, trend_pages, summary_pages, comparison_pages, error_pages):
     lines = [
         "# Sample pages",
         "",
@@ -251,6 +291,9 @@ def _readme(report_pages, trend_pages, summary_pages, error_pages):
     lines += ["", "## Year-on-year summaries (the 3 biggest improvements and setbacks: `python summary.py ...`)", "",
               "| File | Company and year | What it shows |", "|---|---|---|"]
     lines += [f"| [{page.name}]({page.name}) | {s.company}, FY {s.fy} | {s.shows} |" for s, page in summary_pages]
+    lines += ["", "## Company comparisons (two companies, one year: `python compare.py ...`)", "",
+              "| File | Companies and year | What it shows |", "|---|---|---|"]
+    lines += [f"| [{page.name}]({page.name}) | {s.company_a} vs {s.company_b}, FY {s.fy} | {s.shows} |" for s, page in comparison_pages]
     lines += ["", "## Error pages (what you see instead of a report when something goes wrong)", "",
               "| File | What was asked | What it shows |", "|---|---|---|"]
     lines += [f"| [{page.name}]({page.name}) | {e.company}, {e.fy} | {e.shows} |" for e, page in error_pages]
@@ -262,6 +305,7 @@ def expected_files():
     names = [f"{safe_name(s.symbol)}_{s.fy}.html" for s in SAMPLE_COMPANIES]
     names += [trend_page_name(s.symbol, s.fy_from, s.fy_to) for s in SAMPLE_TRENDS]
     names += [f"{safe_name(s.symbol)}_summary_{s.fy}.html" for s in SAMPLE_SUMMARIES]
+    names += [f"{safe_name(s.symbol_a)}_vs_{safe_name(s.symbol_b)}_{s.fy}.html" for s in SAMPLE_COMPARISONS]
     names += [error_page_path(e.company, e.fy, Path()).name for e in SAMPLE_ERRORS]
     names.append(HUB_FILE_NAME)                      # the viewer that holds all of them
     return names

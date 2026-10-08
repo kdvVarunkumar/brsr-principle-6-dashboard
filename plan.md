@@ -217,8 +217,8 @@ Time estimates are rough hours for you working with my help. Core (Phases 0-7) i
 - [x] Specific errors: missing report, unparseable filing, unknown company, each its own page with `summary.py` commands
 - [x] Samples: 3 summary pages (Tata Steel, Wipro, Reliance FY 2022-23) + 1 summary error page; 472 tests
 
-### Phase 10: Extension 3, company comparison (~3 h, only if time remains)
-- [ ] Two companies, one FY, side by side; compare **intensity** metrics fairly; show the unit used; mark fields one company didn't report
+### Phase 10: Extension 3, company comparison  ✅ DONE (built last; see Phase 16)
+- [x] Two companies, one FY, side by side; compare **intensity** metrics fairly; show the unit used; mark fields one company didn't report
 
 ### Phase 11: Final polish (~2-3 h)  (everything except the GitHub push and the optional screen recording is DONE)
 - [x] README complete: setup, run, inputs to try, parts completed, extraction approach, limitations, **AI tools used and for what**, design note
@@ -267,7 +267,20 @@ Time estimates are rough hours for you working with my help. Core (Phases 0-7) i
 - [x] Numbers checked independently against the raw XML (water, waste, energy incl. a Terajoule conversion)
 - [x] **Fix:** an intensity filed with one digit of precision is "too coarse to compare" (D84); found on ICICI Bank, present in the HDFC sample
 - [ ] *Open, needs a decision:* the dashboard's topic tiles and scoreboard follow the totals, the summary page the per-sales figure. See `context.md` Phase 15
-- [ ] *Not built:* Extension 3 (company comparison). Nothing of it is half-finished
+- [x] *Was not built at the time:* Extension 3 (company comparison); done in Phase 16
+
+### Phase 16: Extension 3, two companies compared for one financial year  ✅ DONE
+*Asked for by the user: "add comparison of 2 companies from the assignment in the index page, where they are compared for one FY".*
+- [x] `python compare.py --company-a A --company-b B --fy YYYY-YY [--open]` writes `<SYMBOL A>_vs_<SYMBOL B>_<FY>.html`; downloads what is missing (polite, cached)
+- [x] **Fairness (the brief's "compare intensity metrics fairly"):** totals are shown but never ranked ("Depends on size" and a plain ratio); verdicts only on the per-₹-crore figures (lower is better) and the shares (higher is better, percentage points); ±1% / ±0.5 point is "about the same"
+- [x] Units made the same (one unit and one lakh / crore scale per row, and a real figure is never shown as "0 crore"); a figure with no stated unit, a doubtful figure and a one-digit intensity are shown as filed and not compared; a figure one company did not report says "Not reported" and who (never 0)
+- [x] Warnings: standalone vs consolidated; different industries; no benchmark in the filings. The rules are printed on the page
+- [x] Layers kept: `views/compare_view.py` (decides everything), `workflows/compare.py` (loads both, or every pair of a folder), `rendering/templates/compare.html` + `compare.css`, `cli/compare_cli.py`; new error `SameCompany` with its own page and `compare.py` commands
+- [x] On the index page: a "Company comparisons" dropdown group and a picker (year, Company A, Company B). `hub.py` writes a comparison for every pair of companies with a report page for the same year (offline); `--no-compare` skips it
+- [x] Samples: 3 comparison pages (Tata Steel vs Wipro, Reliance vs Tata Steel, HDFC Bank vs Reliance); `samples/index.html` has them
+- [x] Checked in a real browser (Edge): the picker lists the years, A and B choices exclude each other, choosing opens the right page, the search finds "wipro vs"
+- [x] 664 tests pass; samples regenerated; the error-page footer now names `compare.py --help` too
+- [ ] *Not built:* more than two companies at once, or a comparison across different years; the picker never downloads (it offers the pairs whose pages exist)
 ---
 
 ## 6. Milestones
@@ -278,6 +291,7 @@ Time estimates are rough hours for you working with my help. Core (Phases 0-7) i
 | M1: **Core task complete** | 7 | Company + FY → HTML with SEBI view and dashboard. *This alone can score well.* |
 | M2: Trends | 8 | Extension 1 |
 | M3: YoY summary | 9 | Extension 2 |
+| M3b: Company comparison | 16 | Extension 3 |
 | M4: Submission-ready | 11 | README, samples, tests, GitHub |
 
 ## 7. Risks and fallbacks

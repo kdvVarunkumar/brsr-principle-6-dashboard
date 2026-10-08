@@ -11,7 +11,10 @@ A second command, `trends.py`, shows one company over **several years side by si
 changes of reporting basis and restated figures are marked, and trend verdicts only compare years that can really be compared.
 A third command, `summary.py`, answers "what got **better** and what got **worse** since last year?": the **3 biggest improvements and 3 biggest
 setbacks** of the newest filing, each explained in plain English, with the definition of "better" stated on the page.
-A fourth command, `hub.py`, puts **every page you have made behind one page** with a dropdown and a search box (see "All pages in one place").
+A fourth command, `compare.py`, puts **two companies side by side for the same year** and says which does better on the measures that can be compared
+fairly (a bigger company uses more, so totals are shown but never ranked).
+A fifth command, `hub.py`, puts **every page you have made behind one page** with a dropdown, a search box and a "compare two companies" picker
+(see "All pages in one place").
 
 ![The dashboard for Reliance Industries, FY 2023-24](docs/dashboard_reliance.png)
 
@@ -27,6 +30,7 @@ pip install -r requirements.txt
 python main.py --company "Reliance" --fy 2023-24 --open
 python trends.py --company "Tata Steel" --from 2021-22 --to 2025-26 --open     # several years side by side
 python summary.py --company "Tata Steel" --open                                # what got better / worse since last year
+python compare.py --company-a "Tata Steel" --company-b "Wipro" --fy 2025-26 --open   # two companies, one year
 ```
 
 The page is written to `output/RELIANCE_2023-24.html`. The first run for a company downloads its filing from NSE (about 10 seconds,
@@ -50,7 +54,8 @@ python main.py --company "Tata Steel" --fy 2025-26 --open     # the report page 
 python main.py --help                                         # all options (--output-dir, --debug as well)
 python trends.py --company "Tata Steel" --from 2021-22 --to 2025-26 --open   # several years side by side (--from / --to are optional)
 python summary.py --company "Tata Steel" --open                              # 3 best and 3 worst changes (--fy picks a year; default = newest)
-python hub.py --open                                                         # every page in output/ behind one dropdown + search box
+python compare.py --company-a "Tata Steel" --company-b "Wipro" --fy 2025-26 --open   # two companies side by side for one year
+python hub.py --open                                                         # every page in output/ behind one dropdown + search box (+ a comparison for every pair)
 
 python download_filings.py --company Reliance                 # only download: every year NSE has for the company
 python extract_report.py --company Reliance --fy 2023-24      # only clean: print the SEBI rows as text, save the JSON
@@ -82,6 +87,9 @@ pytest                                                        # the automatic te
 | `summary.py --company "Tata Steel"` | **Summary:** a mixed year. One figure improved (water per ₹ crore), three stayed about the same, four got worse (SOx +45.7%, NOx, PM). |
 | `summary.py --company "Wipro"` | **Summary:** all 9 comparable figures improved, so the page shows the three biggest and says plainly that nothing got worse. |
 | `summary.py --company "Reliance" --fy 2022-23` | **Summary:** NSE has no filing for FY 2021-22, so there is no report of last year's own; the page uses the previous-year column of this filing and says so. |
+| `compare.py --company-a "Tata Steel" --company-b "Wipro" --fy 2025-26` | **Comparison:** a steel maker against an IT firm. Totals differ by factors of hundreds and are not ranked; the per-₹ figures and shares are. The page warns that one reports standalone and the other consolidated. |
+| `compare.py --company-a "Reliance" --company-b "Tata Steel" --fy 2023-24` | **Comparison:** two large companies on the same basis, so most per-₹ rows get a verdict. |
+| `compare.py --company-a "HDFC Bank" --company-b "Reliance" --fy 2022-23` | **Comparison:** a bank against a conglomerate in the older layout: the bank's per-₹ figures have no stated unit and Reliance filed its own as 0, so only the two shares get a verdict. |
 | `--company "Xyzzy Quux" --fy 2023-24` | An error page: unknown company. |
 | `--company "Tata Steel" --fy 2021-22` | An error page: NSE has no filing for that year, and it lists the years it does have. |
 | `--company "Reliance" --fy 2019-20` | An error page: before BRSR reporting began. |
@@ -99,12 +107,12 @@ pytest                                                        # the automatic te
 | **Every figure traces back to the filing:** each number names the XBRL element and the text it was read from, with a link to NSE's file (see "Every number traces back to the filing") | ✅ |
 | Polite to NSE: 3 s between requests, cache everywhere, retries only for temporary problems, stops on 403 / 429 | ✅ |
 | Error pages for every failure, not only console messages | ✅ |
-| Sample pages in `samples/`: 5 company reports, 3 trend pages, 3 summaries and 6 error cases | ✅ |
-| One page for all outputs: `hub.py` puts every generated page behind a dropdown and a search box (`output/index.html`, `samples/index.html`) | ✅ |
+| Sample pages in `samples/`: 5 company reports, 3 trend pages, 3 summaries, 3 company comparisons and 6 error cases | ✅ |
+| One page for all outputs: `hub.py` puts every generated page behind a dropdown, a search box and a "compare two companies" picker (`output/index.html`, `samples/index.html`) | ✅ |
 | Code organised in nine layered packages (download, parsing, extraction, analysis, views, rendering, ...), the layer rule checked by a test | ✅ |
 | **Extension 1:** multi-year trends (`trends.py`): company + start year + end year, all figures side by side, missing years flagged, basis changes and restatements marked, error pages | ✅ |
 | **Extension 2:** year-on-year summary (`summary.py`): the newest year chosen automatically, 3 best + 3 worst against the previous year with a plain-English explanation each, "better" defined on the page, missing previous-year report handled, error pages | ✅ |
-| **Extension 3:** company comparison | ❌ not built |
+| **Extension 3:** company comparison (`compare.py`): two companies, one financial year, side by side; totals shown but not ranked, verdicts only on per-₹ figures and shares, units made the same, "Not reported" never 0, standalone vs consolidated warned, error pages. Also offered on the all-pages viewer as a year + company A + company B picker | ✅ |
 
 ## How the data is extracted
 
@@ -193,13 +201,37 @@ same reporting basis. If NSE also has last year's *own* filing and it can be rea
 (the comparison uses the newer figure and the page says so). If last year's own filing is missing (Reliance FY 2021-22 does not exist on NSE) or damaged, that is
 **not an error**: the page uses the previous-year column and says why. If the *newest* filing cannot be read there is nothing to summarise, so an error page is written.
 
+## Company comparison (Extension 3)
+
+`python compare.py --company-a "<name>" --company-b "<name>" --fy 2025-26` writes `output/<SYMBOL A>_vs_<SYMBOL B>_<FY>.html`: two companies, **one financial
+year**, side by side. It downloads whichever filing is missing (politely and cached, like every command). The page opens with one sentence and a scoreboard
+("Wipro is better on 4, Tata Steel on 1, 1 could not be compared"), then the two filings (boundary, filing date, a link to each file on NSE), then the rules, then
+one table per topic (energy, gases, water, air, waste). The rules are printed on the page too:
+
+- **Totals are shown but never ranked.** A bigger company uses more energy and water: Tata Steel's total energy in FY 2025-26 is 888 times Wipro's, which says nothing about effort.
+  Totals carry the label "Depends on size" and only that plain ratio.
+- **Verdicts only on the fair measures:** the figure per ₹ 1 crore of sales (lower is better) and the shares of renewable energy and of recycled waste
+  (higher is better, compared in percentage points). Within 1% (a share: half a point) counts as "about the same".
+- **Same unit, same scale.** Both numbers of a row are in one unit; they share lakh / crore only when the smaller one is still readable in it, so a real
+  figure is never shown as "0 crore". A figure whose unit one company did not state is shown as filed and not compared.
+- **Missing is not zero.** A figure a company did not report says "Not reported" and the row says who did not report it.
+- **Doubtful or too coarse is not compared.** A mis-scaled figure, or an intensity written with one digit of precision, is shown as filed with its note.
+- **Different scope is warned about.** If one company reports standalone and the other consolidated, a warning sits above the tables ("totals are not like-for-like").
+- **No benchmark.** The filings contain none, and companies in different industries use energy and water very differently; the page says so.
+
+Asking for the same company twice, an unknown company or a year NSE has no filing for gives an error page like every other command, with a suggested
+`compare.py` command.
+
 ## All pages in one place (`hub.py`)
 
 Every command writes its own page, so after a few runs `output/` holds many files. `python hub.py --open` puts them **all behind one page**,
 `output/index.html`:
 
-- **A search box and a dropdown.** Type part of a company, a year or a type (`tata`, `2025-26`, `trend`, `error`) and the dropdown narrows to the
-  matching pages, grouped as *Reports*, *Year-on-year summaries*, *Multi-year trends* and *Error pages*. Choosing one shows it right there.
+- **A search box and a dropdown.** Type part of a company, a year or a type (`tata`, `2025-26`, `trend`, `error`, `vs`) and the dropdown narrows to the
+  matching pages, grouped as *Reports*, *Company comparisons*, *Year-on-year summaries*, *Multi-year trends* and *Error pages*. Choosing one shows it right there.
+- **Compare two companies.** A picker above the dropdown takes a financial year, then Company A and Company B (only companies that have a report for that year,
+  and B can never be A) and opens their comparison. `hub.py` first writes a comparison for **every pair of companies that have a report page for the same
+  year**, from the filings already on disk (no internet; `--no-compare` skips this). For a pair that has no page yet, run `compare.py`.
   *Previous* and *Next* step through the matches, and *Open in a new tab* opens the chosen page on its own.
 - **Keyboard:** `/` jumps to the search box, `Enter` opens the first match, `Esc` clears the search.
 - **A shareable address.** `index.html#WIPRO_2025-26` opens that page, and `index.html?q=tata` starts with that search.
@@ -228,11 +260,15 @@ It names what went wrong, what you typed, what to try, and gives ready-to-run co
 | Trend request with the years the wrong way round, or too many years | "That range of years cannot be used", with an example |
 | Summary: last year's own filing missing or damaged | Not an error: the previous-year column of the newest filing is used and the page says why |
 | Summary: the filing for the chosen year is damaged, or NSE has none | The specific error page, with suggested commands that use `summary.py` |
+| Comparison: the same company twice, or either company/year has a problem | "A comparison needs two different companies", or the specific error page, with a suggested `compare.py` command |
 | Any unexpected bug | A page saying so with the technical reason; `--debug` shows the traceback |
 
 ## Known limitations
 
-- **Extension 3 (company comparison) is not built.**
+- **Comparison covers two companies and one year**, and only the headline figures (up to 14 rows, as in the summary), not every SEBI row. It is not a
+  ranking of "greener" companies: there is no benchmark in the filings, and a steel maker and an IT firm are not the same kind of business. A pair with
+  different reporting scope (standalone vs consolidated) is compared but warned about. The viewer's picker only offers pairs whose pages were written
+  (by `hub.py`, which does it for every pair, or by `compare.py`); it does not download anything.
 - **The one-year dashboard and the summary compare each figure with the previous-year column of the *same* filing**, which can differ from what the
   company reported last year if it restated. The summary checks last year's own filing when it can, and says which figures were restated.
 - **The summary ranks only the headline figures** (up to 14: energy, greenhouse gases, water, waste, the share of renewables and of recycled waste,
@@ -285,7 +321,7 @@ The design was prototyped first with real numbers: [`design/dashboard_mockup.htm
 pytest
 ```
 
-About 600 tests, a few seconds, no internet. They cover unit conversion, the XBRL reader, every SEBI row, the verdict and sentence rules, HTML
+About 660 tests, under a minute, no internet. They cover unit conversion, the XBRL reader, every SEBI row, the verdict and sentence rules, HTML
 well-formedness, escaping of filing text, the error pages, and (when the filings are on disk) real-filing spot checks, the trace of every value to
 the raw XML, and "the committed sample pages are up to date". The test folders mirror the code folders (`tests/views` tests `brsr_p6/views`, and so on), so
 `pytest tests/views` runs one layer. `tests/test_architecture.py` checks the layer rule below on every run.
@@ -298,7 +334,8 @@ download_filings.py  downloads filings from NSE (tiny entry point)
 extract_report.py    filing -> SEBI Principle 6 data, printed as text (tiny entry point)
 trends.py            one company over several years (tiny entry point)
 summary.py           what got better and worse since last year (tiny entry point)
-hub.py               every generated page behind one dropdown + search box (tiny entry point)
+compare.py           two companies side by side for one year (tiny entry point)
+hub.py               every generated page behind one dropdown + search box + compare picker (tiny entry point)
 make_samples.py      rebuilds the pages in samples/ (tiny entry point)
 brsr_p6/             the code, one package per step of the journey from NSE to the page:
   core/                the data model and small helpers everyone uses: models, errors, fiscal_year, units, formatting, friendly,
@@ -308,12 +345,12 @@ brsr_p6/             the code, one package per step of the journey from NSE to t
   extraction/          3. clean it into one Principle6Report: extractor, checks, values, report_io
   analysis/            4. compare years (pure logic): comparison, warning_kinds, trend_model
   views/               5. decide what each page says (the layout stays in the templates): metric_info, dashboard_cards,
-                       dashboard_view, sebi_view, trace_view, trend_view, summary_view, hub_view, error_view, report_text
+                       dashboard_view, sebi_view, trace_view, trend_view, summary_view, compare_view, hub_view, error_view, report_text
   rendering/           6. fill the HTML templates: render, templates/ (HTML + CSS)
-  workflows/           whole jobs end to end: pipeline, trend_loader, summary_loader, hub, samples
-  cli/                 the commands behind the entry points: main_cli, trend_cli, summary_cli, hub_cli, download_cli, extract_cli, common
+  workflows/           whole jobs end to end: pipeline, trend_loader, summary_loader, compare, hub, samples
+  cli/                 the commands behind the entry points: main_cli, trend_cli, summary_cli, compare_cli, hub_cli, download_cli, extract_cli, common
 tests/               automatic tests, in folders that mirror brsr_p6/ (helpers/ holds the shared test helpers)
-samples/             sample report pages, trend pages, summary pages and error pages (+ README)
+samples/             sample report, trend, summary, comparison and error pages (+ README)
 design/              the dashboard prototype
 docs/                screenshots used in this README
 data/                filings downloaded from NSE (11 are committed, see data/README.md) and the cleaned JSON
@@ -329,6 +366,6 @@ code easy to follow and free of circular imports, and `tests/test_architecture.p
 
 | Tool | Used for |
 |---|---|
-| Claude Code (Claude Sonnet 5.5) | Reading the brief and planning in phases; explaining each concept as it was introduced (`learnings.md`). Exploring NSE's endpoints and the XBRL files with throwaway probe scripts (kept outside the repository). Writing the downloader, XBRL reader, cleaner, SEBI page, dashboard, error pages, trends, year-on-year summary, samples and tests; reorganising the code into layered packages and writing the test that guards them. Reading real output to find bugs (double-counted energy, a mis-scaled emissions figure, false "got worse" claims) and fixing them. Writing this README, `commands.md` and `context.md`. |
+| Claude Code (Claude Sonnet 5.5) | Reading the brief and planning in phases; explaining each concept as it was introduced (`learnings.md`). Exploring NSE's endpoints and the XBRL files with throwaway probe scripts (kept outside the repository). Writing the downloader, XBRL reader, cleaner, SEBI page, dashboard, error pages, trends, year-on-year summary, two-company comparison, the all-pages viewer, samples and tests; reorganising the code into layered packages and writing the test that guards them. Reading real output to find bugs (double-counted energy, a mis-scaled emissions figure, false "got worse" claims) and fixing them. Writing this README, `commands.md` and `context.md`. |
 
 All code was run and checked against real filings and by the tests; the decisions behind it are recorded in `context.md`.

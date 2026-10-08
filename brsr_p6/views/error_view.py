@@ -11,7 +11,7 @@ a few "what you can try" hints, and, where we know them, ready-to-run commands (
 from dataclasses import dataclass, field
 
 from brsr_p6.core.errors import (AmbiguousCompany, BrsrError, FileNotAvailable, InvalidFiscalYear, InvalidYearRange, NoFilingFound,
-                                 NSEUnavailable, UnknownCompany, UnparseableFiling, UnsupportedYear)
+                                 NSEUnavailable, SameCompany, UnknownCompany, UnparseableFiling, UnsupportedYear)
 from brsr_p6.core.fiscal_year import parse_fiscal_year
 
 EXAMPLE_YEAR = "2023-24"
@@ -44,6 +44,10 @@ class ErrorView:
 
 # One entry per kind of error.  (Order does not matter: the most specific class is looked up first.)
 ERROR_INFO = {
+    SameCompany: ErrorInfo(
+        "Two different companies needed", "A comparison needs two different companies",
+        ("Give one company to --company-a and a different one to --company-b, for example Tata Steel and Wipro.",
+         "To see ONE company over several years, use trends.py instead.")),
     InvalidFiscalYear: ErrorInfo(
         "Financial year not understood", "We could not read that financial year",
         ("Write the year like 2023-24, meaning 1 April 2023 to 31 March 2024. 2023-2024, FY2023-24 and 2023/24 also work.",
@@ -110,7 +114,7 @@ def build_error_view(error, company_text="", fy_text="", tool="main"):
         view.options = [OptionView(f"FY {first} to FY {last}", _trend_command(error.symbol, first, last))]
     elif isinstance(error, NoFilingFound) and error.symbol and error.available:
         view.options_title = "Financial years NSE has for this company"
-        view.options = [OptionView(f"FY {fy}", _command(error.symbol, fy, _script(tool))) for fy in error.available]
+        view.options = [OptionView(f"FY {fy}", _command_in_style(tool, error.symbol, fy)) for fy in error.available]
     return view
 
 
@@ -135,6 +139,15 @@ def _script(tool):
     return "summary.py" if tool == "summary" else "main.py"
 
 
+def _compare_command(symbol, fy):
+    """A comparison needs two companies; we know only one, so the other is a placeholder to replace."""
+    return f'python compare.py --company-a "{symbol}" --company-b "<the other company>" --fy {fy}'
+
+
+def _command_in_style(tool, symbol, fy):
+    return _compare_command(symbol, fy) if tool == "compare" else _command(symbol, fy, _script(tool))
+
+
 def _command(symbol, fy, script="main.py"):
     return f'python {script} --company "{symbol}" --fy {fy}'
 
@@ -148,6 +161,8 @@ def _command_for(tool, symbol, fy_text):
     """One command for one company, in the style of the command that failed."""
     if tool == "trends":
         return _trend_command(symbol)
+    if tool == "compare":
+        return _compare_command(symbol, _usable_year(fy_text))
     if tool == "summary":                                   # the summary picks the latest year by itself unless a real year was typed
         try:
             return _command(symbol, parse_fiscal_year(fy_text), "summary.py")

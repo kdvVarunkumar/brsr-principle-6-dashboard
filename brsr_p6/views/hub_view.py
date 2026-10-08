@@ -14,12 +14,15 @@ import json
 import re
 from dataclasses import dataclass, field
 
-REPORTS, SUMMARIES, TRENDS, ERRORS, OTHER = "Reports", "Year-on-year summaries", "Multi-year trends", "Error pages", "Other pages"
+REPORTS, COMPARISONS, SUMMARIES, TRENDS, ERRORS, OTHER = ("Reports", "Company comparisons", "Year-on-year summaries", "Multi-year trends",
+                                                          "Error pages", "Other pages")
 HUB_TITLE = "BRSR Principle 6: Environmental Dashboard"     # the name in the header of the viewer
 SAMPLES_TITLE = HUB_TITLE + " (sample reports)"
-KINDS = (REPORTS, SUMMARIES, TRENDS, ERRORS, OTHER)          # the order of the groups in the dropdown
+KINDS = (REPORTS, COMPARISONS, SUMMARIES, TRENDS, ERRORS, OTHER)          # the order of the groups in the dropdown
 
 _REPORT_NAME = re.compile(r"^.+_\d{4}-\d{2}$")                # TATASTEEL_2025-26
+_COMPARE_NAME = re.compile(r"^(?P<a>.+?)_vs_(?P<b>.+)_(?P<fy>\d{4}-\d{2})$")                    # TATASTEEL_vs_WIPRO_2025-26
+_COMPARE_TITLE = re.compile(r"^(?P<a>.+?) vs (?P<b>.+?): .*FY (?P<fy>\d{4}-\d{2})")           # Tata Steel Limited vs Wipro Limited: ... FY 2025-26
 
 
 @dataclass
@@ -30,6 +33,7 @@ class HubEntry:
     kind: str                  # one of KINDS
     search: str                # lower-case text the search box looks in
     html: str | None = None    # the page itself when embedded
+    compare: dict | None = None    # a comparison page: {fy, a, b (symbols), a_name, b_name}; lets the viewer offer "company A vs company B"
 
 
 @dataclass
@@ -45,6 +49,8 @@ def kind_of(stem):
     """Which group a page belongs to, from its file name (the names are made by render.py)."""
     if stem.startswith("error_"):
         return ERRORS
+    if _COMPARE_NAME.match(stem):
+        return COMPARISONS
     if "_trend_" in stem:
         return TRENDS
     if "_summary_" in stem:
@@ -67,6 +73,16 @@ def label_for(kind, stem, title):
     return title
 
 
+def compare_info(stem, title):
+    """Who is compared in which year, from a comparison page's file name (symbols) and title (full names); None for any other page."""
+    named = _COMPARE_NAME.match(stem)
+    if not named:
+        return None
+    titled = _COMPARE_TITLE.match(title)
+    return {"fy": named["fy"], "a": named["a"], "b": named["b"],
+            "a_name": titled["a"] if titled else named["a"], "b_name": titled["b"] if titled else named["b"]}
+
+
 def build_hub_view(pages, embed=True, title=HUB_TITLE):
     """`pages` is a list of (file name, HTML text), for example [("TATASTEEL_2025-26.html", "<!doctype html>...")]."""
     entries = []
@@ -74,7 +90,8 @@ def build_hub_view(pages, embed=True, title=HUB_TITLE):
         stem = file.removesuffix(".html")
         kind = kind_of(stem)
         label = label_for(kind, stem, page_title(text, stem))
-        entries.append(HubEntry(stem, file, label, kind, f"{label} {kind} {file}".lower(), text if embed else None))
+        compare = compare_info(stem, label) if kind == COMPARISONS else None
+        entries.append(HubEntry(stem, file, label, kind, f"{label} {kind} {file}".lower(), text if embed else None, compare))
     entries.sort(key=lambda e: (KINDS.index(e.kind), e.label.casefold(), e.file))
     kinds = [kind for kind in KINDS if any(e.kind == kind for e in entries)]
     return HubView(title, entries, embed, kinds, _data_json(entries, embed))
@@ -82,5 +99,5 @@ def build_hub_view(pages, embed=True, title=HUB_TITLE):
 
 def _data_json(entries, embed):
     """The viewer's data as JSON that is safe inside <script>: every '<' is written \\u003c, so nothing in a page can end the block."""
-    rows = [{"id": e.id, "file": e.file, "label": e.label, "kind": e.kind, "search": e.search, **({"html": e.html} if embed else {})} for e in entries]
+    rows = [{"id": e.id, "file": e.file, "label": e.label, "kind": e.kind, "search": e.search, **({"html": e.html} if embed else {}), **({"compare": e.compare} if e.compare else {})} for e in entries]
     return json.dumps({"embed": embed, "entries": rows}, ensure_ascii=False).replace("<", "\\u003c")

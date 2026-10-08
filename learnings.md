@@ -1658,3 +1658,68 @@ The summary page already prefers the per-sales figure. Making the dashboard foll
 4. What happens in the summary when a per-sales figure is too coarse? Why is that fine?
 5. Which tests would an evaluator's unknown company exercise that your samples did not?
 6. What did you decide *not* to change the night before the demo, and why?
+
+---
+
+# Phase 16: Extension 3, two companies compared for one year
+
+## 16.1 The problem
+
+"Which company is better?" sounds easy and is easy to get wrong. Tata Steel's total energy in FY 2025-26 is **888 times** Wipro's. That is not because Wipro is careful; a steel plant simply burns more than an office. A page that printed "Wipro: ✔ lower" next to a total would be technically true and completely misleading.
+The brief says *compare intensity metrics fairly, show the unit used, and mark fields one company did not report*. Every rule in this phase is one of those three sentences made concrete.
+
+## 16.2 What we built
+
+```powershell
+python compare.py --company-a "Tata Steel" --company-b "Wipro" --fy 2025-26 --open
+```
+and, on the index page (`python hub.py --open`), a picker: **year, then Company A, then Company B**. Under it the same pages are also in the dropdown group *Company comparisons*.
+
+The page is `views/compare_view.py` (all decisions) + `templates/compare.html` (only prints), exactly like the other pages.
+
+## 16.3 The fairness rules (each one is a test)
+
+| Rule | Why |
+|---|---|
+| **Totals are shown, never ranked.** They get the label "Depends on size" and a plain ratio ("888 times") | A total measures size as much as effort |
+| **Verdicts only on the figure per ₹ 1 crore of sales and on the shares** (renewable energy, recycled waste) | These do not grow just because the company is bigger |
+| **A share is compared in percentage points**, and "N times" is only said for amounts | 0.07% to 0.24% is "+269%" but only 0.17 of a point. "369 times" for two shares was a bug I found by reading a real page |
+| **Both numbers of a row use one unit and one scale** | You can only read across a row if the numbers are in the same words |
+| **...but never "0 crore"** | 18,782,249 tonnes next to 7,932 tonnes would read "1.88 crore" beside "0 crore", hiding a real figure. So the shared scale is used only if the smaller number is still at least 0.1 of it |
+| **Not reported is "Not reported", never 0, and the row says who** | A zero would look like a good result |
+| **A different or unstated unit, a doubtful figure or a one-digit intensity is shown as filed and not compared** | Same promise as the rest of the project: never turn doubt into a verdict |
+| **Standalone vs consolidated is warned about** | A consolidated figure includes the subsidiaries; the two companies' totals do not cover the same thing |
+| **No benchmark** | The filings contain none, so we cannot say what is "good" |
+
+Notice what was **reused**: `compare()` (the same function that says "improved / worse / about the same" between two years) is called here with the two *companies* in the place of the two *years*. Only its words had to be changed ("The two years use different units" becomes "The two companies state different units"). That is what the Phase 9 question "how would you reuse these pieces?" was pointing at.
+
+## 16.4 Putting it on the index page
+
+The picker is only a *chooser*. `hub.py` first writes a comparison page for **every pair of companies that have a report page for the same year**, reading the saved filings only (`workflows/compare.generate_all_comparisons`; no internet), and the picker opens the right one. Why not make the page when the user clicks?
+- The viewer is a single file with no server; a browser page cannot run Python.
+- It keeps the rule from Phase 14: only the viewer has JavaScript, and the pages inside it have none.
+- The cost is size: 21 report pages give 31 pairs. `--no-compare` turns it off, and `samples/index.html` is built without it, so it lists exactly the 3 sample comparisons.
+
+The picker's rules (year first; only the companies that have a report for that year; B never equals A) are small JavaScript functions. They were tested in a real browser by script, like Phase 14.
+
+## 16.5 Two honest mistakes in this phase
+
+- **I said it was done when it was only partly done.** The comparison page and command existed, but the index page did not offer them yet. The user asked "did you add it to the index page?" and the right answer was "not completely", then finish it. Say what is true.
+- **A test of mine could not fail.** I first wrote an assertion that sliced a string to zero length (`text[:0]`), which is always empty. An assertion that can never fail proves nothing; I replaced it with a check of the page title. After writing a test, ask: "what change to the code would make this fail?"
+
+## 16.6 Try it yourself
+
+1. `python compare.py --company-a "Reliance" --company-b "Tata Steel" --fy 2023-24 --open`. Which rows say "Depends on size"? Which say who is lower?
+2. Open `samples/HDFCBANK_vs_RELIANCE_2022-23.html`. Why do three of its fair rows say "Can't compare"? (Hint: look at the unit under the bank's number, and at what Reliance filed.)
+3. `python compare.py --company-a Wipro --company-b WIPRO --fy 2025-26`. Which error is it, and where is it caught: before or after any download? Then try `"Tata Steel"` and `TATASTEEL`: what changes?
+4. In `views/compare_view.py` change `MIN_SHARED_SCALE` to `0`. Which test fails, and what would the page have shown?
+5. Run `python hub.py --no-compare` and `python hub.py`. How many pages does each index hold, and why?
+
+## 16.7 Interview self-check
+
+1. Why are totals not ranked? What *is* ranked, and why is that fairer?
+2. A company did not report a figure. What does the page show, and why not 0?
+3. What does the page do when one company reports standalone and the other consolidated?
+4. Which existing function did you reuse, and what had to change?
+5. Why are the comparisons made in advance and not when the user clicks in the viewer?
+6. What does "Tata Steel's emissions are shown but not compared" mean, and how does the code decide it?

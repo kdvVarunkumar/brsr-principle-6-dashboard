@@ -22,6 +22,9 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--dir", type=Path, default=DEFAULT_OUTPUT_DIR, help="Folder that holds the pages (default: output/)")
     parser.add_argument("--link", action="store_true",
                         help="Do not embed the pages: index.html only opens the files next to it (much smaller, but needs the folder)")
+    parser.add_argument("--no-compare", action="store_true",
+                        help="Do not make the company-vs-company comparison pages (by default one is made for every pair of companies "
+                             "that have a report page for the same year)")
     parser.add_argument("--open", action="store_true", help="Open index.html in your web browser")
     return parser
 
@@ -31,7 +34,7 @@ def main(argv: list[str] | None = None) -> int:
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
-    made = generate_hub(args.dir, embed=not args.link)
+    made = generate_hub(args.dir, embed=not args.link, compare=not args.no_compare)
     if made is None:
         print(f"There is no HTML page in {args.dir} yet. Make one first, for example:  python main.py --company \"Reliance\" --fy 2023-24")
         return 1

@@ -3,13 +3,13 @@
 import pytest
 from html_checks import assert_well_formed
 
-from brsr_p6.core.errors import (AmbiguousCompany, BrsrError, FileNotAvailable, InvalidFiscalYear, NoFilingFound, NSEUnavailable,
+from brsr_p6.core.errors import (AmbiguousCompany, BrsrError, FileNotAvailable, InvalidFiscalYear, NoFilingFound, NSEUnavailable, SameCompany,
                                  UnknownCompany, UnparseableFiling, UnsupportedYear)
 from brsr_p6.download.company_lookup import Company
 from brsr_p6.rendering.render import error_page_path, render_error_page, write_error_page
 from brsr_p6.views.error_view import ERROR_INFO, build_error_view
 
-ALL_ERRORS = [InvalidFiscalYear, UnsupportedYear, UnknownCompany, NoFilingFound, NSEUnavailable, UnparseableFiling, FileNotAvailable]
+ALL_ERRORS = [InvalidFiscalYear, UnsupportedYear, UnknownCompany, NoFilingFound, NSEUnavailable, UnparseableFiling, FileNotAvailable, SameCompany]
 
 
 @pytest.mark.parametrize("error_class", ALL_ERRORS)
@@ -132,6 +132,34 @@ def test_suggested_commands_use_trends_py_when_a_trend_request_failed():
     assert option.command == 'python trends.py --company "TATASTEEL" --from 2022-23 --to 2025-26'
     # ... and main.py as before for a one-year request
     assert build_error_view(none_in_range, "Tata Steel", "2021-22").options[0].command == 'python main.py --company "TATASTEEL" --fy 2022-23'
+
+
+# ------------------------------------------------------------------------------------------------ comparison commands (compare.py)
+def test_asking_for_the_same_company_twice_has_its_own_explanation():
+    view = build_error_view(SameCompany("'Wipro' and 'Wipro' are the same company."), "Wipro vs Wipro", "2025-26", tool="compare")
+    assert view.title == "A comparison needs two different companies" and view.kind == "Two different companies needed"
+    assert view.message == "'Wipro' and 'Wipro' are the same company." and any("trends.py" in hint for hint in view.hints)
+
+
+def test_suggested_commands_use_compare_py_with_a_placeholder_for_the_other_company():
+    ambiguous = AmbiguousCompany("Several.", [Company("TCS", "Tata Consultancy Services Limited")])
+    assert build_error_view(ambiguous, "Tata vs Wipro", "2025-26", tool="compare").options[0].command == (
+        'python compare.py --company-a "TCS" --company-b "<the other company>" --fy 2025-26')
+    missing = NoFilingFound("No filing for that year.", symbol="TATASTEEL", available=["2022-23", "2025-26"])
+    commands = [o.command for o in build_error_view(missing, "Tata Steel vs Wipro", "2019-20", tool="compare").options]
+    assert commands == ['python compare.py --company-a "TATASTEEL" --company-b "<the other company>" --fy 2022-23',
+                        'python compare.py --company-a "TATASTEEL" --company-b "<the other company>" --fy 2025-26']
+
+
+def test_a_garbage_year_never_ends_up_in_a_suggested_compare_command():
+    ambiguous = AmbiguousCompany("Several.", [Company("TCS", "Tata Consultancy Services Limited")])
+    assert build_error_view(ambiguous, "Tata vs Wipro", "banana", tool="compare").options[0].command.endswith("--fy 2023-24")
+
+
+def test_the_footer_of_an_error_page_points_to_every_commands_help():
+    html = render_error_page(build_error_view(UnknownCompany("No match."), "Xyzzy", "2023-24"))
+    for script in ("main.py", "trends.py", "summary.py", "compare.py"):
+        assert f"python {script} --help" in html, script
 
 
 # ------------------------------------------------------------------------------------------------ summary commands (summary.py)

@@ -52,6 +52,31 @@ def test_a_folder_without_pages_makes_no_viewer(tmp_path):
     assert generate_hub(tmp_path / "does_not_exist") is None
 
 
+def test_comparisons_are_made_first_only_when_asked_so_the_viewer_lists_them(tmp_path, monkeypatch):
+    from brsr_p6.workflows import hub
+
+    write(tmp_path, "A_2023-24.html")
+    write(tmp_path, "B_2023-24.html")
+    asked = []
+
+    def fake_comparisons(folder):
+        asked.append(folder)
+        write(folder, "A_vs_B_2023-24.html", "A Limited vs B Limited: BRSR Principle 6 compared, FY 2023-24")
+        return 1
+
+    monkeypatch.setattr(hub, "generate_all_comparisons", fake_comparisons)
+    path, count = generate_hub(tmp_path)
+    assert asked == [] and count == 2                                          # off by default: the samples viewer must not gain pages
+    path, count = generate_hub(tmp_path, compare=True)
+    assert asked == [tmp_path] and count == 3
+    entries = {row["id"]: row for row in data_of(path)["entries"]}
+    assert entries["A_vs_B_2023-24"]["kind"] == "Company comparisons" and entries["A_vs_B_2023-24"]["compare"]["b_name"] == "B Limited"
+
+
+def test_a_folder_with_no_page_makes_no_comparison_and_no_viewer(tmp_path):
+    assert generate_hub(tmp_path, compare=True) is None and not list(tmp_path.glob("*"))
+
+
 def test_the_title_of_the_viewer_can_be_chosen(tmp_path):
     write(tmp_path, "ITC_2024-25.html")
     assert "<h1>Sample pages</h1>" in generate_hub(tmp_path, title="Sample pages")[0].read_text(encoding="utf-8")

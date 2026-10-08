@@ -47,6 +47,10 @@ class NoFilingFound(BrsrError):
         self.available = list(available)
 
 
+class SameCompany(BrsrError):
+    """A comparison was asked between a company and itself."""
+
+
 class NSEUnavailable(BrsrError):
     """NSE could not be reached, refused the request, or returned something unexpected."""
 

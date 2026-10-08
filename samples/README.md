@@ -30,6 +30,14 @@ Open any file in a web browser. They are made by `python make_samples.py` (do no
 | [WIPRO_summary_2025-26.html](WIPRO_summary_2025-26.html) | Wipro, FY 2025-26 | A year where all 9 figures that can be compared improved: the page shows the three biggest, says plainly that nothing got worse, and still lists every figure. |
 | [RELIANCE_summary_2022-23.html](RELIANCE_summary_2022-23.html) | Reliance, FY 2022-23 | NSE has no filing for FY 2021-22, so there is no report of last year's own: the comparison uses the previous-year column of this filing, and the page says so. |
 
+## Company comparisons (two companies, one year: `python compare.py ...`)
+
+| File | Companies and year | What it shows |
+|---|---|---|
+| [TATASTEEL_vs_WIPRO_2025-26.html](TATASTEEL_vs_WIPRO_2025-26.html) | Tata Steel vs Wipro, FY 2025-26 | A steel maker against an IT firm: the totals differ by factors of hundreds, so only the per-rupee figures and the shares are ranked. One reports standalone and the other consolidated (the page warns), and Tata Steel's emissions are shown but not compared because they look mis-scaled. |
+| [RELIANCE_vs_TATASTEEL_2023-24.html](RELIANCE_vs_TATASTEEL_2023-24.html) | Reliance vs Tata Steel, FY 2023-24 | Two large companies on the same (standalone) basis: the fairest case, so most per-rupee rows get a verdict. |
+| [HDFCBANK_vs_RELIANCE_2022-23.html](HDFCBANK_vs_RELIANCE_2022-23.html) | HDFC Bank vs Reliance, FY 2022-23 | A bank against a conglomerate in the older filing layout: the bank's per-rupee figures have no stated unit and Reliance filed its own as 0, so none of them is compared; only the two shares get a verdict. |
+
 ## Error pages (what you see instead of a report when something goes wrong)
 
 | File | What was asked | What it shows |

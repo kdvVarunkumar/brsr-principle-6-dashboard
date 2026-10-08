@@ -4,7 +4,8 @@ import json
 
 import pytest
 
-from brsr_p6.views.hub_view import ERRORS, KINDS, OTHER, REPORTS, SUMMARIES, TRENDS, build_hub_view, kind_of, label_for, page_title
+from brsr_p6.views.hub_view import (COMPARISONS, ERRORS, KINDS, OTHER, REPORTS, SUMMARIES, TRENDS, build_hub_view, compare_info, kind_of, label_for,
+                                    page_title)
 
 
 def page(title):
@@ -15,6 +16,7 @@ PAGES = [
     ("TATASTEEL_2025-26.html", page("Tata Steel Limited: BRSR Principle 6, FY 2025-26")),
     ("TATASTEEL_trend_2021-22_to_2025-26.html", page("Tata Steel Limited: BRSR Principle 6 trends, FY 2021-22 to FY 2025-26")),
     ("TATASTEEL_summary_2025-26.html", page("Tata Steel Limited: what got better and worse in FY 2025-26")),
+    ("TATASTEEL_vs_WIPRO_2025-26.html", page("Tata Steel Limited vs Wipro Limited: BRSR Principle 6 compared, FY 2025-26")),
     ("error_Xyzzy_Quux_2023-24.html", page("No report: We could not find that company on NSE")),
     ("WIPRO_2025-26.html", page("Wipro Limited: BRSR Principle 6, FY 2025-26")),
     ("notes.html", page("Some other page")),
@@ -24,7 +26,8 @@ PAGES = [
 # ------------------------------------------------------------------------------------------------ naming and grouping
 @pytest.mark.parametrize("stem, kind", [
     ("TATASTEEL_2025-26", REPORTS), ("M_M_2024-25", REPORTS), ("TATASTEEL_summary_2025-26", SUMMARIES),
-    ("TATASTEEL_trend_2021-22_to_2025-26", TRENDS), ("error_Xyzzy_Quux_2023-24", ERRORS), ("notes", OTHER), ("index2", OTHER),
+    ("TATASTEEL_trend_2021-22_to_2025-26", TRENDS), ("TATASTEEL_vs_WIPRO_2025-26", COMPARISONS), ("M_M_vs_ITC_2024-25", COMPARISONS),
+    ("error_Xyzzy_vs_Quux_2023-24", ERRORS), ("error_Xyzzy_Quux_2023-24", ERRORS), ("notes", OTHER), ("index2", OTHER),
 ])
 def test_a_page_is_grouped_by_what_its_file_name_says(stem, kind):
     assert kind_of(stem) == kind
@@ -42,7 +45,7 @@ def test_an_error_page_label_says_what_was_asked_because_the_titles_are_all_alik
 
 def test_pages_are_listed_group_by_group_and_alphabetically_inside_a_group():
     view = build_hub_view(PAGES)
-    assert [e.kind for e in view.entries] == [REPORTS, REPORTS, SUMMARIES, TRENDS, ERRORS, OTHER]
+    assert [e.kind for e in view.entries] == [REPORTS, REPORTS, COMPARISONS, SUMMARIES, TRENDS, ERRORS, OTHER]
     assert [e.id for e in view.entries if e.kind == REPORTS] == ["TATASTEEL_2025-26", "WIPRO_2025-26"]
     assert view.kinds == [kind for kind in KINDS]                        # every group is present here, in the dropdown's order
 
@@ -72,6 +75,26 @@ def test_what_travels_inside_a_script_block_can_never_end_it():
     data = build_hub_view([nasty]).data_json
     assert "<" not in data and "</script" not in data.lower()
     assert json.loads(data)["entries"][0]["html"].endswith("<!-- <script>")      # and nothing is lost: the page comes back exactly
+
+
+def test_a_comparison_page_says_who_is_compared_in_which_year_from_its_name_and_title():
+    title = "Tata Steel Limited vs Wipro Limited: BRSR Principle 6 compared, FY 2025-26"
+    assert compare_info("TATASTEEL_vs_WIPRO_2025-26", title) == {
+        "fy": "2025-26", "a": "TATASTEEL", "b": "WIPRO", "a_name": "Tata Steel Limited", "b_name": "Wipro Limited"}
+    assert compare_info("M_M_vs_L_T_2024-25", "x") == {"fy": "2024-25", "a": "M_M", "b": "L_T", "a_name": "M_M", "b_name": "L_T"}     # no usable title: symbols
+    assert compare_info("TATASTEEL_2025-26", title) is None and compare_info("TATASTEEL_summary_2025-26", title) is None
+
+
+def test_only_comparison_entries_carry_the_compare_data_the_picker_reads():
+    rows = {row["id"]: row for row in json.loads(build_hub_view(PAGES).data_json)["entries"]}
+    assert rows["TATASTEEL_vs_WIPRO_2025-26"]["compare"]["a_name"] == "Tata Steel Limited"
+    assert [row["id"] for row in rows.values() if "compare" in row] == ["TATASTEEL_vs_WIPRO_2025-26"]
+    assert "compare" in json.loads(build_hub_view(PAGES, embed=False).data_json)["entries"][2]            # linked pages still carry it
+
+
+def test_the_comparisons_sit_between_the_reports_and_the_summaries_in_the_dropdown():
+    assert KINDS.index(REPORTS) < KINDS.index(COMPARISONS) < KINDS.index(SUMMARIES)
+    assert COMPARISONS == "Company comparisons"
 
 
 def test_text_from_a_title_is_data_not_markup():

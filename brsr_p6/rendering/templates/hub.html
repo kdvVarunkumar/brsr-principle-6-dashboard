@@ -18,6 +18,9 @@ body { margin: 0; background: var(--page); color: var(--ink); font: 16px/1.5 sys
 .hub-head .sub { margin: 2px 0 0; opacity: 0.9; font-size: 0.92rem; }
 main { max-width: 1280px; margin: 0 auto; padding: 12px 16px 24px; }
 .controls { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: flex-end; background: var(--paper); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; margin-bottom: 12px; }
+.controls[hidden] { display: none; }
+.controls.compare { border-left: 5px solid var(--accent); }
+.controls.compare .lead { flex: 1 1 100%; margin: 0; font-size: 0.95rem; }
 .field { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
 .field.grow { flex: 1 1 260px; }
 .field label { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
@@ -72,6 +75,12 @@ kbd { background: #eef1f4; border: 1px solid var(--line); border-radius: 4px; pa
       <button type="button" id="next">Next ▶</button>
       <a class="open" id="open-tab" href="#" target="_blank" rel="noopener">Open in a new tab ↗</a>
     </div>
+  </section>
+  <section class="controls compare js-only" id="compare-panel" aria-label="Compare two companies" hidden>
+    <p class="lead"><strong>Compare two companies in one financial year.</strong> Pick the year and two companies: the comparison opens below.</p>
+    <div class="field"><label for="cmp-fy">Financial year</label><select id="cmp-fy"></select></div>
+    <div class="field grow"><label for="cmp-a">Company A</label><select id="cmp-a"></select></div>
+    <div class="field grow"><label for="cmp-b">Company B</label><select id="cmp-b"></select></div>
   </section>
   <p class="hint js-only">Type to narrow the list, press <kbd>Enter</kbd> to open the first match, <kbd>/</kbd> to jump to the search box, <kbd>Esc</kbd> to clear it. The address bar keeps the page you chose, so you can copy it.</p>
 
@@ -145,6 +154,7 @@ kbd { background: #eef1f4; border: 1px solid var(--line); border-radius: 4px; pa
     }
     if (visible.indexOf(entry) !== -1) { select.value = id; }
     document.title = entry.label;
+    syncPicker(entry);
     try { history.replaceState(null, "", "#" + encodeURIComponent(id)); } catch (error) { /* the page still works without a saved address */ }
     setButtons();
   }
@@ -154,6 +164,77 @@ kbd { background: #eef1f4; border: 1px solid var(--line); border-radius: 4px; pa
     var target = at === -1 ? (delta > 0 ? 0 : visible.length - 1) : at + delta;
     if (target >= 0 && target < visible.length) { show(visible[target].id); }
   }
+
+  // ---- "compare two companies": the comparisons were made in advance (hub.py / compare.py), this only picks the right one
+  var comparisons = entries.filter(function (entry) { return entry.compare; });
+  var pickFy = document.getElementById("cmp-fy");
+  var pickA = document.getElementById("cmp-a");
+  var pickB = document.getElementById("cmp-b");
+
+  function setOptions(select, items) {
+    var keep = select.value;
+    select.textContent = "";
+    items.forEach(function (item) {
+      var option = document.createElement("option");
+      option.value = item.value;
+      option.textContent = item.text;
+      select.appendChild(option);
+    });
+    if (items.some(function (item) { return item.value === keep; })) { select.value = keep; }
+  }
+
+  function inYear(fy) { return comparisons.filter(function (entry) { return entry.compare.fy === fy; }); }
+
+  function companiesWith(list, only) {
+    var seen = {};
+    var found = [];
+    list.forEach(function (entry) {
+      [[entry.compare.a, entry.compare.a_name], [entry.compare.b, entry.compare.b_name]].forEach(function (pair) {
+        if (!seen[pair[0]] && (!only || only(entry, pair[0]))) { seen[pair[0]] = true; found.push({ value: pair[0], text: pair[1] }); }
+      });
+    });
+    return found.sort(function (x, y) { return x.text.localeCompare(y.text); });
+  }
+
+  function fillCompanyA() { setOptions(pickA, companiesWith(inYear(pickFy.value))); fillCompanyB(); }
+
+  function fillCompanyB() {
+    var a = pickA.value;
+    setOptions(pickB, companiesWith(inYear(pickFy.value).filter(function (entry) { return entry.compare.a === a || entry.compare.b === a; }),
+                                    function (entry, id) { return id !== a; }));
+  }
+
+  function openPicked() {
+    var fy = pickFy.value;
+    var a = pickA.value;
+    var b = pickB.value;
+    var match = inYear(fy).filter(function (entry) {
+      return (entry.compare.a === a && entry.compare.b === b) || (entry.compare.a === b && entry.compare.b === a);
+    })[0];
+    if (match) { show(match.id); }
+  }
+
+  function syncPicker(entry) {
+    if (!entry.compare || comparisons.length === 0) { return; }
+    pickFy.value = entry.compare.fy;
+    fillCompanyA();
+    pickA.value = entry.compare.a;
+    fillCompanyB();
+    pickB.value = entry.compare.b;
+  }
+
+  function setUpPicker() {
+    if (comparisons.length === 0) { return; }
+    document.getElementById("compare-panel").hidden = false;
+    var years = comparisons.map(function (entry) { return entry.compare.fy; })
+      .filter(function (fy, at, all) { return all.indexOf(fy) === at; }).sort().reverse();
+    setOptions(pickFy, years.map(function (fy) { return { value: fy, text: "FY " + fy }; }));
+    fillCompanyA();
+  }
+
+  pickFy.addEventListener("change", function () { fillCompanyA(); openPicked(); });
+  pickA.addEventListener("change", function () { fillCompanyB(); openPicked(); });
+  pickB.addEventListener("change", openPicked);
 
   search.addEventListener("input", fillList);
   search.addEventListener("keydown", function (event) {
@@ -180,6 +261,7 @@ kbd { background: #eef1f4; border: 1px solid var(--line); border-radius: 4px; pa
 
   search.value = new URLSearchParams(location.search).get("q") || "";
   fillList();
+  setUpPicker();
   var start = fromHash();
   show(byId[start] ? start : (visible[0] || entries[0]).id);
 })();

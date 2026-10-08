@@ -1,0 +1,34 @@
+/* The two-company comparison page.  It reuses the dashboard's chips, notes and headings; only the table and the two filing boxes are new. */
+.compare-main { max-width: 1280px; margin: 0 auto; padding: 0 16px 32px; }
+.compare-main .dash { margin-top: 4px; }
+.page-header .vs { font-weight: 400; opacity: 0.75; font-size: 0.75em; padding: 0 6px; }
+.dash .notes-list { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 8px; }
+.dash .note { padding: 9px 12px; background: var(--paper); border: 1px solid var(--line); border-left: 5px solid var(--same-line); border-radius: 6px; font-size: .92rem; }
+.dash .who { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; margin-top: 10px; }
+.dash .co-card { background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 12px 16px; min-width: 0; }
+.dash .co-card h3 { margin: 0 0 6px; font-size: 1.05rem; }
+.dash .co-card dl { margin: 0; display: grid; gap: 6px; }
+.dash .co-card dt { font-size: .75rem; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+.dash .co-card dd { margin: 0; overflow-wrap: anywhere; font-size: .92rem; }
+.dash .who-notes { margin: 14px 0 0; font-size: 1rem; }
+
+.swipe-hint { display: none; margin: 8px 0 0; font-size: .82rem; color: var(--muted); }
+@media (max-width: 700px) { .swipe-hint { display: block; } }
+.table-wrap { overflow-x: auto; background: var(--paper); border: 1px solid var(--line); border-radius: 10px; margin-top: 10px; }
+table.cmptable { width: 100%; min-width: 720px; border-collapse: collapse; font-size: .92rem; }
+table.cmptable th, table.cmptable td { padding: 9px 12px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+table.cmptable thead th { background: var(--head-bg); font-weight: 600; }
+table.cmptable thead th.co { width: 20%; }
+table.cmptable tbody tr:last-child th, table.cmptable tbody tr:last-child td { border-bottom: none; }
+table.cmptable tbody th { font-weight: 600; width: 28%; }
+table.cmptable .dir { display: block; font-weight: 400; font-size: .78rem; color: var(--muted); margin-top: 2px; }
+table.cmptable td.fig { font-variant-numeric: tabular-nums; }
+table.cmptable td.fig .num { font-size: 1.05rem; font-weight: 700; }
+table.cmptable td.fig .u { font-size: .8rem; color: var(--muted); }
+table.cmptable td.win { background: var(--accent-soft); }
+table.cmptable td.missing .num { font-weight: 400; font-style: italic; color: var(--muted); font-size: .95rem; }
+table.cmptable td.doubtful { background: var(--warn-bg); }
+table.cmptable .warn { color: var(--warn-ink); font-weight: 700; cursor: help; }
+table.cmptable tr.size { color: var(--muted); }
+table.cmptable tr.size td.fig .num { font-weight: 600; }
+table.cmptable td.res .detail { display: block; margin-top: 4px; font-size: .82rem; color: var(--muted); }

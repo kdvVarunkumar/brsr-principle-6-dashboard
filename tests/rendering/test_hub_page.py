@@ -51,6 +51,31 @@ def test_without_a_script_the_viewer_still_lists_every_page_as_a_link_under_its_
     assert "<strong>Reports</strong>" in fallback and "<strong>Error pages</strong>" in fallback
 
 
+COMPARISON = ("TATASTEEL_vs_WIPRO_2025-26.html", "<!doctype html><title>Tata Steel Limited vs Wipro Limited: BRSR Principle 6 compared, FY 2025-26</title><p>c</p>")
+
+
+def test_the_viewer_has_a_picker_for_two_companies_in_one_year_that_stays_hidden_until_the_script_runs():
+    html = render_hub_page(build_hub_view(PAGES + [COMPARISON]))
+    assert_well_formed(html)
+    panel = re.search(r'<section[^>]*id="compare-panel"[^>]*>', html).group(0)
+    assert "hidden" in panel and "js-only" in panel                      # without a script the panel stays out of sight (the link list below still works)
+    for part in ('id="cmp-fy"', 'id="cmp-a"', 'id="cmp-b"', "Compare two companies in one financial year", "Financial year", "Company A", "Company B"):
+        assert part in html, part
+
+
+def test_the_comparison_pages_are_listed_as_links_without_a_script_and_their_data_travels_with_the_viewer():
+    html = render_hub_page(build_hub_view(PAGES + [COMPARISON]))
+    fallback = html[html.index("<noscript>\n    <div"):html.index("</noscript>\n\n  <section")]
+    assert "<strong>Company comparisons</strong>" in fallback and 'href="TATASTEEL_vs_WIPRO_2025-26.html"' in fallback
+    assert '"compare": {"fy": "2025-26", "a": "TATASTEEL", "b": "WIPRO"' in html or '"compare":{"fy":"2025-26","a":"TATASTEEL","b":"WIPRO"' in html
+
+
+def test_the_picker_adds_no_script_and_nothing_a_comparison_page_holds_can_end_the_data_block():
+    nasty = ("A_vs_B_2024-25.html", "<!doctype html><title>A Ltd vs B Ltd: x, FY 2024-25</title></script><script>alert(1)</script>")
+    html = render_hub_page(build_hub_view(PAGES + [COMPARISON, nasty]))
+    assert len(re.findall(r"<script", html)) == 2 and len(re.findall(r"</script", html)) == 2
+
+
 def test_the_viewer_is_written_as_index_html_in_the_folder_it_describes(tmp_path):
     assert hub_page_path(tmp_path).name == HUB_FILE_NAME == "index.html"
     path = write_hub_page(build_hub_view(PAGES), tmp_path / "new")

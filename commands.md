@@ -3,7 +3,7 @@
 Every command here was run and checked. Replace the company name and the year with whatever the interviewer asks for.
 **Run all commands from the project folder**, in the **PyCharm Terminal** (it activates the project's environment, so you see `(.venv)` at the start of the line).
 
-> **Project status:** download ✅ · clean/parse ✅ · SEBI-format HTML page ✅ · plain-English dashboard ✅ (opens first) · error pages ✅ · `samples/` ✅ · README ✅ · **several years side by side (`trends.py`, Extension 1) ✅** · **what got better / worse (`summary.py`, Extension 2) ✅** · **every page in one dropdown + search (`hub.py`) ✅** · code in nine layered packages ✅. Extension 3 (company comparison) is not built.
+> **Project status:** download ✅ · clean/parse ✅ · SEBI-format HTML page ✅ · plain-English dashboard ✅ (opens first) · error pages ✅ · `samples/` ✅ · README ✅ · **several years side by side (`trends.py`, Extension 1) ✅** · **what got better / worse (`summary.py`, Extension 2) ✅** · **two companies compared for one year (`compare.py`, Extension 3) ✅** · **every page in one dropdown + search + compare picker (`hub.py`) ✅** · code in nine layered packages ✅. All three extensions are built.
 
 ---
 
@@ -16,7 +16,8 @@ Every command here was run and checked. Replace the company name and the year wi
 | Only **clean/parse** and print the data | `python extract_report.py --company "Reliance" --fy 2023-24` |
 | **Several years side by side** (Extension 1) | `python trends.py --company "Tata Steel" --from 2021-22 --to 2025-26 --open` |
 | **What got better / worse since last year** (Extension 2) | `python summary.py --company "Tata Steel" --open` |
-| **Every page in one place** (dropdown + search box) | `python hub.py --open` |
+| **Two companies, one year** (Extension 3) | `python compare.py --company-a "Tata Steel" --company-b "Wipro" --fy 2025-26 --open` |
+| **Every page in one place** (dropdown + search box + compare picker) | `python hub.py --open` |
 | Rebuild the pages in `samples/` | `python make_samples.py` |
 | Run all automatic tests | `pytest -q` |
 
@@ -124,21 +125,46 @@ What to point at (2 minutes):
 
 Errors give a page too, with suggested commands that use `summary.py`: an unknown company, a year NSE does not have (lists the years it does), a year before FY 2021-22, a damaged newest filing.
 
-### 2.6 All pages in one place: `hub.py`
+### 2.6 Two companies, one year: `compare.py`  ← Extension 3
+```powershell
+python compare.py --company-a "Tata Steel" --company-b "Wipro" --fy 2025-26 --open    # steel vs IT: totals differ 888 times, so they are not ranked
+python compare.py --company-a "Reliance" --company-b "Tata Steel" --fy 2023-24        # same basis (standalone): the fairest pair
+python compare.py --company-a "HDFC Bank" --company-b "Reliance" --fy 2022-23         # older layout: no stated unit / filed as 0, so only the two shares get a verdict
+```
+| Option | Meaning |
+|---|---|
+| `--company-a`, `--company-b` | the two companies (name or NSE symbol); they must be different |
+| `--fy` | the one financial year, the same for both (FY 2021-22 or later) |
+| `--open`, `--output-dir`, `--debug` | the same as `main.py` |
+
+Writes **`output\<SYMBOL A>_vs_<SYMBOL B>_<FY>.html`**. Downloads whichever of the two filings is missing (3 s apart, cached); two companies already downloaded need no internet.
+
+What to point at (2 minutes):
+1. **The sentence and scoreboard on top:** *"We compared Tata Steel and Wipro for FY 2025-26 on 6 fair measures: Tata Steel is better on 1, Wipro is better on 4, 1 could not be compared. Totals are shown for size but not ranked."*
+2. **"How we compare fairly":** the rules are on the page. Totals are shown but never ranked ("Depends on size", Tata Steel's total energy is 888 times Wipro's); verdicts only on the figure per ₹ 1 crore of sales (lower is better) and the shares (higher is better, in percentage points); within 1% is "about the same".
+3. **The two numbers of a row use one unit and one scale**, so you can read across; a real figure is never shown as "0 crore". A figure with no stated unit is not compared.
+4. **"Not reported" is never 0**, and the row says who did not report it (covered by tests; the samples happen not to contain such a row). A doubtful figure (Tata Steel's mis-scaled emissions, Reliance's FY 2022-23 intensities filed as 0) is shown as filed with its note and not compared.
+5. **The amber "Different reporting basis" box:** Tata Steel reports standalone and Wipro consolidated, so totals are not like-for-like.
+
+Errors give a page too, with suggested `compare.py` commands: the same company twice ("A comparison needs two different companies"), an unknown company, a year NSE has no filing for.
+
+### 2.7 All pages in one place: `hub.py`
 Every command writes its own file, so `output\` fills up with pages. This puts them **all behind one page** with a search box and a dropdown:
 
 ```powershell
 python hub.py --open                     # every page in output\  ->  output\index.html  (one self-contained file)
 python hub.py --dir samples              # another folder
 python hub.py --link                     # tiny index that only opens the files next to it
+python hub.py --no-compare               # do not make the company-vs-company pages
 ```
 | Option | Meaning |
 |---|---|
 | `--dir` | the folder that holds the pages (default `output`) |
 | `--link` | do not embed the pages; `index.html` opens the files in the same folder (what `make_samples.py` uses for `samples\index.html`) |
+| `--no-compare` | skip the comparisons (by default one is written for every pair of companies with a report page for the same year; offline, from the saved filings) |
 | `--open` | open `index.html` in your browser |
 
-**In the page:** type in the search box (`tata`, `2025-26`, `trend`, `error`) and the dropdown narrows, grouped as *Reports / Year-on-year summaries / Multi-year trends / Error pages*. Pick one and it shows below. *Previous* / *Next* step through the matches, *Open in a new tab* opens the page alone. Keys: `/` search, `Enter` opens the first match, `Esc` clears.
+**In the page:** type in the search box (`tata`, `2025-26`, `trend`, `error`, `vs`) and the dropdown narrows, grouped as *Reports / Company comparisons / Year-on-year summaries / Multi-year trends / Error pages*. Pick one and it shows below. **Compare two companies:** the picker above takes a year, then Company A and Company B, and opens their comparison. *Previous* / *Next* step through the matches, *Open in a new tab* opens the page alone. Keys: `/` search, `Enter` opens the first match, `Esc` clears.
 **Addresses you can copy:** `index.html#WIPRO_2025-26` opens that page; `index.html?q=tata` starts with that search.
 **Run it again** after making new pages (it reads whatever is in the folder). Talking point: the report pages still have no JavaScript; only this viewer does, and its frame is sandboxed.
 
@@ -148,7 +174,7 @@ python hub.py --link                     # tiny index that only opens the files 
 
 | Step | Command | What to say |
 |---|---|---|
-| 1 | `pytest -q` | "About 600 automatic tests pass, with no internet needed." |
+| 1 | `pytest -q` | "About 660 automatic tests pass, with no internet needed." |
 | 2 | `python download_filings.py --company "<NEW COMPANY>"` | "It finds the company on NSE, downloads each year politely (3 s apart), and flags years NSE does not have." |
 | 3 | *(run step 2 again)* | "Second run: 0 requests. Everything is cached." |
 | 4 | `python extract_report.py --company "<NEW COMPANY>" --fy 2024-25 --questions E1,E6` | "XML → clean SEBI rows. Calculated, converted and doubtful values are marked, and nothing is invented: missing = Not reported." |
@@ -156,7 +182,8 @@ python hub.py --link                     # tiny index that only opens the files 
 | 6 | click the **SEBI-format report** tab, then back | "Same data, two audiences. Every dashboard number comes from this table." |
 | 6b | `python trends.py --company "<COMPANY>" --open` | "Extension 1: the same company over every year NSE has. Missing years flagged, basis changes and restatements marked." |
 | 6c | `python summary.py --company "<COMPANY>" --open` | "Extension 2: the 3 biggest improvements and setbacks against last year, with the definition of 'better' stated on the page, and everything it could not rank listed with the reason." |
-| 6d | `python hub.py --open` | "Every page I generated, behind one dropdown and a search box: I can type 'tata' or 'trend' and switch between reports, trends, summaries and errors without hunting for files." |
+| 6d | `python compare.py --company-a "<COMPANY A>" --company-b "<COMPANY B>" --fy 2025-26 --open` | "Extension 3: two companies, one year. A bigger company uses more, so totals are shown but not ranked; only the figure per ₹ of sales and the shares get a verdict, and the page warns when one reports standalone and the other consolidated." |
+| 6e | `python hub.py --open` | "Every page I generated, behind one dropdown and a search box, with a picker to compare any two companies for a year: I can type 'tata' or 'trend' and switch between reports, comparisons, trends, summaries and errors without hunting for files." |
 | 7 | the error commands in section 6 | "Specific messages instead of crashes." |
 
 ### 3b. "Prove that this number is not invented" (about 90 seconds, no extra command)
@@ -239,6 +266,8 @@ python trends.py --company "Reliance" --from 2025-26 --to 2021-22      # years t
 python trends.py --company "Tata Steel" --from 2019-20                # a year before BRSR reporting began
 python summary.py --company "Reliance" --fy 2021-22                   # NSE has no filing for that year: lists the years it does have
 python summary.py --company "Xyzzy Quux"                              # unknown company
+python compare.py --company-a "Wipro" --company-b "Wipro" --fy 2025-26    # the same company twice: "A comparison needs two different companies"
+python compare.py --company-a "Tata Steel" --company-b "Wipro" --fy 2021-22   # NSE has no filing for that year: lists the years it does have
 ```
 Each one prints `Error: ...` with the specific reason, **and writes an explanation page** `output\error_<company>_<year>.html` (add `--open` to show it). Exit code 1, never a Python traceback.
 
@@ -256,6 +285,7 @@ python main.py --company "Tata Steel" --fy 2021-22 --open       # page lists FY 
 | NSE has no filing for the year | NSE has no BRSR filing for that company and year |
 | NSE unreachable or blocking | We could not get the data from NSE |
 | damaged or wrong kind of file | The filing on NSE could not be read |
+| the same company twice in `compare.py` | A comparison needs two different companies |
 | a bug in the tool | Something unexpected went wrong (run again with `--debug`) |
 
 Ready-made examples of six of these are in `samples\` (`error_*.html`): unknown company, year before FY 2021-22, year NSE does not have, damaged file, trend years the wrong way round, and a `summary.py` request for a missing year.
@@ -272,8 +302,9 @@ Ready-made examples of six of these are in `samples\` (`error_*.html`): unknown 
 | An error page | `output\error_<company>_<year>.html` | written by the same command when something fails |
 | The trend page | `output\<SYMBOL>_trend_<from>_to_<to>.html` | `python trends.py ... --open` |
 | The summary page | `output\<SYMBOL>_summary_<FY>.html` | `python summary.py ... --open` |
+| The comparison page | `output\<SYMBOL A>_vs_<SYMBOL B>_<FY>.html` | `python compare.py ... --open` (or the picker in `index.html`) |
 | **All of them in one page** | `output\index.html` (and `samples\index.html`) | `python hub.py --open` |
-| Sample pages (5 company reports, 3 trend pages, 3 summaries, 6 error pages) | `samples\` + `samples\README.md` | open in a browser; rebuild with `python make_samples.py` |
+| Sample pages (5 company reports, 3 trend pages, 3 summaries, 3 comparisons, 6 error pages) | `samples\` + `samples\README.md` | open in a browser; rebuild with `python make_samples.py` |
 
 Handy PowerShell lines:
 ```powershell
@@ -288,7 +319,7 @@ How to read a page: *Not reported* = the filing has nothing (never shown as 0) �
 ## 8. Tests
 
 ```powershell
-pytest -q                              # everything (about 600 tests, a few seconds, no internet)
+pytest -q                              # everything (about 660 tests, under a minute, no internet)
 pytest tests/views -q                  # one layer: the test folders mirror brsr_p6/ (core, download, parsing, extraction, analysis, views, ...)
 pytest tests/extraction/test_extractor.py -v      # one file, one line per test
 pytest tests/test_architecture.py -q   # only the "layers import downwards" rule
@@ -343,6 +374,9 @@ Then run `python download_filings.py --company "TCS"` again to show a real downl
 - **How do you handle a change from consolidated to standalone?** Every column shows its basis; trend verdicts only compare years on the same basis and unit, and the page says which years were left out.
 - **What is a restatement?** The next filing gives a different figure for the same year (more than 0.5% apart). We keep the figure as filed in its own year and mark it ⟲ with the later figure.
 - **Where do I find all the generated pages?** `python hub.py --open` puts every page in `output/` behind one dropdown and a search box (also `samples/index.html` for the committed samples). It is one self-contained file by default.
+- **How do you compare two companies fairly?** Same financial year, each from its own filing. Totals are shown but never ranked, because a bigger company uses more; only the figure per ₹ 1 crore of sales (lower is better) and the shares of renewable energy and recycled waste (higher is better, in percentage points) get a verdict. Both numbers of a row use one unit and one scale, a figure with no stated unit or a doubtful one is not compared, and "Not reported" is never 0.
+- **Why not say which company is "greener"?** There is no benchmark in the filings, and a steel maker and an IT firm use energy and water very differently. The page says so, and warns when one company reports standalone and the other consolidated.
+- **Where is the comparison on the index page?** Under the search box: pick a year, then Company A and Company B. `hub.py` writes a comparison for every pair of companies that have a report page for the same year, so any pair you pick already exists; they are also grouped as *Company comparisons* in the dropdown.
 - **Does the page use JavaScript?** The report, trend, summary and error pages do not. Only the viewer does, because a dropdown and a search cannot work without it; it shows the pages in a sandboxed frame and, without JavaScript, falls back to a plain list of links.
 - **How do you show that a number is not invented?** Every value remembers the filing's own XBRL element, the year, and the text and unit exactly as written. The dashboard's Fine print, a hover in the SEBI tab, the last section of the SEBI tab and `extract_report.py --trace` all show it, and the page links to NSE's file. A test checks every value of every downloaded filing against the raw XML.
 - **What if a number was converted or calculated?** It is labelled (*Unit changed by us* / *Calculated by us*), the filed text is quoted, and a calculated number lists every element it was built from.
@@ -373,6 +407,7 @@ The code is in `brsr_p6/`, one folder per step. Open the file in the right-hand 
 | the year-by-year logic (basis change, restatement) | `brsr_p6/analysis/` | `trend_model.py` |
 | what the **dashboard** says, and its wording | `brsr_p6/views/` | `dashboard_cards.py`, `metric_info.py` |
 | the **3 best / 3 worst** ranking | `brsr_p6/views/` | `summary_view.py` |
+| the **two-company comparison** (fairness rules, units, "Not reported") | `brsr_p6/views/compare_view.py` (decides), `brsr_p6/workflows/compare.py` (loads both filings, every pair), `brsr_p6/rendering/templates/compare.html` | `compare_view.py` |
 | how the **HTML** is made | `brsr_p6/rendering/` | `render.py` and `templates/` |
 | the error pages | `brsr_p6/views/error_view.py` and `brsr_p6/rendering/templates/error.html` | |
 | how a command runs end to end | `brsr_p6/workflows/` and `brsr_p6/cli/` | `pipeline.py`, `main_cli.py` |

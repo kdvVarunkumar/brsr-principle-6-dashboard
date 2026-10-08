@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ view.a.name }} vs {{ view.b.name }}: BRSR Principle 6 compared, FY {{ view.fy }}</title>
+<style>
+{% include "style.css" %}
+{% include "dashboard.css" %}
+{% include "compare.css" %}
+</style>
+</head>
+<body>
+{# Two companies, one financial year, side by side.  Everything it says was decided in compare_view.py; this file only prints it. #}
+{% from "dashboard_macros.html" import chip %}
+
+<header class="page-header">
+  <div class="inner">
+    <p class="eyebrow">Business Responsibility &amp; Sustainability Report · Principle 6 (environment) · two companies compared</p>
+    <h1>{{ view.a.short }} <span class="vs">vs</span> {{ view.b.short }}</h1>
+    <p class="subtitle">Financial year {{ view.fy }}, the same year for both companies</p>
+  </div>
+</header>
+
+<main class="compare-main">
+<div class="dash">
+
+  <section class="glance" aria-labelledby="cmp-glance-h">
+    <h2 id="cmp-glance-h">Which company does better, on the measures that can be compared fairly?</h2>
+    <p class="story">{{ view.story }}</p>
+    <p class="score">{{ chip("chip-good", "✔ " ~ view.a.short ~ " better: " ~ view.a_better) }}{{ chip("chip-good", "✔ " ~ view.b.short ~ " better: " ~ view.b_better) }}{{ chip("chip-same", "≈ about the same: " ~ view.same) }}{{ chip("chip-unsure", "? could not compare: " ~ view.unsure) }}</p>
+  </section>
+
+  <section class="topic" aria-labelledby="cmp-who-h">
+    <div class="topic-head"><h2 id="cmp-who-h">The two filings</h2></div>
+    <div class="who">
+      {% for c in (view.a, view.b) %}
+      <div class="co-card">
+        <h3>{{ c.name }} <span class="symbol">({{ c.symbol }})</span></h3>
+        <dl>
+          <div><dt>Reporting boundary</dt><dd>{{ c.boundary }}</dd></div>
+          <div><dt>Filed on NSE</dt><dd>{{ c.filed }}</dd></div>
+          <div><dt>Source file</dt><dd>{% if c.source_url.startswith("https://") %}<a href="{{ c.source_url }}" rel="noopener noreferrer" target="_blank">{{ c.source_file }}</a>{% else %}{{ c.source_file }}{% endif %}</dd></div>
+        </dl>
+      </div>
+      {% endfor %}
+    </div>
+    {% if view.basis_note %}<p class="alert shared"><b>⚠ Different reporting basis:</b> {{ view.basis_note }}</p>{% endif %}
+  </section>
+
+  <section class="topic" aria-labelledby="cmp-fair-h">
+    <div class="topic-head"><h2 id="cmp-fair-h">How we compare fairly</h2></div>
+    <ul class="notes-list">
+      {% for line in view.definition %}<li class="note">{{ line }}</li>{% endfor %}
+    </ul>
+  </section>
+
+  {% for topic in view.topics %}
+  <section class="topic" id="cmp-{{ topic.id }}" aria-labelledby="cmp-{{ topic.id }}-h">
+    <div class="topic-head"><h2 id="cmp-{{ topic.id }}-h">{{ topic.name }}</h2></div>
+    <p class="swipe-hint">On a phone the table scrolls sideways: swipe to see every column.</p>
+    <div class="table-wrap">
+      <table class="cmptable">
+        <thead><tr><th scope="col">Figure</th><th scope="col" class="co">{{ view.a.short }}</th><th scope="col" class="co">{{ view.b.short }}</th><th scope="col">Result</th></tr></thead>
+        <tbody>
+          {% for row in topic.rows %}
+          <tr class="{{ 'fair' if row.fair else 'size' }}">
+            <th scope="row">{{ row.title }}<span class="dir">{{ row.better if row.fair else "a total: shown for size, not ranked" }}</span></th>
+            {% for fig, side in ((row.a, "a"), (row.b, "b")) %}
+            <td class="fig {{ fig.css }}{% if row.result.winner == side %} win{% endif %}"><span class="num">{{ fig.text }}</span>{% if fig.unit %} <span class="u">{{ fig.unit }}</span>{% endif %}{% if fig.warned %} <span class="warn" title="This figure carries a note: see the notes at the bottom of the page">⚠</span>{% endif %}</td>
+            {% endfor %}
+            <td class="res">{{ chip(row.result.chip_class, row.result.chip_text) }}{% if row.result.detail %}<span class="detail">{{ row.result.detail }}</span>{% endif %}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+  {% endfor %}
+
+  {% if view.notes_a or view.notes_b %}
+  <section class="topic" aria-labelledby="cmp-notes-h">
+    <div class="topic-head"><h2 id="cmp-notes-h">Notes on the figures</h2></div>
+    <p class="plain">Every figure is shown exactly as filed. These are the notes that go with some of them.</p>
+    {% for company, notes in ((view.a, view.notes_a), (view.b, view.notes_b)) %}{% if notes %}
+    <h3 class="who-notes">{{ company.short }}</h3>
+    <ul class="notes-list">{% for titles, text in notes %}<li class="note"><b>{{ titles }}:</b> {{ text }}</li>{% endfor %}</ul>
+    {% endif %}{% endfor %}
+  </section>
+  {% endif %}
+
+</div>
+</main>
+
+<footer>
+  Source: each company's BRSR filing on NSE. Every figure comes from those filings; nothing is estimated. For one company in detail run
+  <code>python main.py --company "{{ view.a.symbol }}" --fy {{ view.fy }}</code>.
+</footer>
+
+</body>
+</html>

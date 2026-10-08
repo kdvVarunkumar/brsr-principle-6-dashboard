@@ -18,7 +18,7 @@ from brsr_p6.views.hub_view import SAMPLES_TITLE, build_hub_view
 from brsr_p6.workflows import samples
 from brsr_p6.workflows.hub import read_pages
 from brsr_p6.workflows.pipeline import load_saved_report
-from brsr_p6.workflows.samples import SAMPLE_COMPANIES, SAMPLE_ERRORS, SAMPLE_SUMMARIES, SAMPLE_TRENDS, expected_files
+from brsr_p6.workflows.samples import SAMPLE_COMPANIES, SAMPLE_COMPARISONS, SAMPLE_ERRORS, SAMPLE_SUMMARIES, SAMPLE_TRENDS, expected_files
 
 
 def test_there_are_at_least_two_companies_and_the_assignments_error_cases():
@@ -120,7 +120,7 @@ def test_the_committed_viewer_lists_every_sample_page_and_is_up_to_date():
 def test_the_viewer_groups_the_samples_the_way_the_readme_does():
     view = build_hub_view(read_pages(SAMPLES_DIR), embed=False)
     counts = {kind: sum(entry.kind == kind for entry in view.entries) for kind in view.kinds}
-    assert counts == {"Reports": len(SAMPLE_COMPANIES), "Year-on-year summaries": len(SAMPLE_SUMMARIES),
+    assert counts == {"Reports": len(SAMPLE_COMPANIES), "Company comparisons": len(SAMPLE_COMPARISONS), "Year-on-year summaries": len(SAMPLE_SUMMARIES),
                       "Multi-year trends": len(SAMPLE_TRENDS), "Error pages": len(SAMPLE_ERRORS)}
 
 
