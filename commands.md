@@ -1,6 +1,6 @@
 # Commands cheat-sheet (for the demo)
 
-> For the story, the flow chart and what every module does, read [demo.md](demo.md). For the concepts and the interview checklist, read [learnings.md](learnings.md).
+> For the high-level architecture (one diagram), read [architecture.md](architecture.md).
 
 Every command here was run and checked. Replace the company name and the year with whatever the interviewer asks for.
 **Run all commands from the project folder**, in the **PyCharm Terminal** (it activates the project's environment, so you see `(.venv)` at the start of the line).
