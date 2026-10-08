@@ -115,7 +115,7 @@ company text ─► NSE symbol ─► filing list ─► XBRL file (cached) ─�
 - **Standalone vs consolidated:** we do not choose. We use the filing NSE lists for that year, and the page header states its reporting
   boundary. A company can switch basis between years (Wipro does), so figures should not be compared across such years.
 - **Verification:** key numbers for Tata Steel FY 2025-26 were compared by hand with the company's own PDF report and are pinned in
-  tests (`tests/test_real_filings.py`); other companies are covered by the consistency checks above.
+  tests (`tests/extraction/test_real_filings.py`); other companies are covered by the consistency checks above.
 
 ## Multi-year trends (Extension 1)
 
@@ -201,9 +201,10 @@ The design was prototyped first with real numbers: [`design/dashboard_mockup.htm
 pytest
 ```
 
-About 410 tests, a few seconds, no internet. They cover unit conversion, the XBRL reader, every SEBI row, the verdict and sentence rules, HTML
+About 470 tests, a few seconds, no internet. They cover unit conversion, the XBRL reader, every SEBI row, the verdict and sentence rules, HTML
 well-formedness, escaping of filing text, the error pages, and (when the filings are on disk) real-filing spot checks and "the committed
-sample pages are up to date".
+sample pages are up to date". The test folders mirror the code folders (`tests/views` tests `brsr_p6/views`, and so on), so
+`pytest tests/views` runs one layer. `tests/test_architecture.py` checks the layer rule below on every run.
 
 ## Project structure
 
@@ -212,21 +213,32 @@ main.py              the report generator (tiny entry point)
 download_filings.py  downloads filings from NSE (tiny entry point)
 extract_report.py    filing -> SEBI Principle 6 data, printed as text (tiny entry point)
 trends.py            one company over several years (tiny entry point)
+summary.py           what got better and worse since last year (tiny entry point)
 make_samples.py      rebuilds the pages in samples/ (tiny entry point)
-brsr_p6/             the code:
-                       download:   nse_client, company_lookup, filings, downloader
-                       read+clean: xbrl_reader, values, units, sebi_template, p6_mapping, extractor, checks, models
-                       dashboard:  warning_kinds, friendly, comparison, metric_info, dashboard_cards, dashboard_view
-                       trends:     trend_loader (files + NSE), trend_model (the logic), trend_view, trend_cli
-                       pages:      sebi_view, formatting, render, error_view, templates/ (HTML + CSS), pipeline, samples
-                       other:      cli, report_io, report_text, errors, fiscal_year
-tests/               automatic tests
-samples/             sample report pages, trend pages and error pages (+ README)
+brsr_p6/             the code, one package per step of the journey from NSE to the page:
+  core/                the data model and small helpers everyone uses: models, errors, fiscal_year, units, formatting, friendly,
+                       sebi_template, paths
+  download/            1. get the filing: nse_client, company_lookup, filings, downloader
+  parsing/             2. read the XBRL file: xbrl_reader, p6_mapping
+  extraction/          3. clean it into one Principle6Report: extractor, checks, values, report_io
+  analysis/            4. compare years (pure logic): comparison, warning_kinds, trend_model
+  views/               5. decide what each page says (the layout stays in the templates): metric_info, dashboard_cards,
+                       dashboard_view, sebi_view, trend_view, summary_view, error_view, report_text
+  rendering/           6. fill the HTML templates: render, templates/ (HTML + CSS)
+  workflows/           whole jobs end to end: pipeline, trend_loader, summary_loader, samples
+  cli/                 the commands behind the entry points: main_cli, trend_cli, summary_cli, download_cli, extract_cli, common
+tests/               automatic tests, in folders that mirror brsr_p6/ (helpers/ holds the shared test helpers)
+samples/             sample report pages, trend pages, summary pages and error pages (+ README)
 design/              the dashboard prototype
 docs/                screenshots used in this README
 data/                filings downloaded from NSE (11 are committed, see data/README.md) and the cleaned JSON
 plan.md  context.md  learnings.md  commands.md             the plan, project notes, plain-English explanations, demo commands
 ```
+
+**The layer rule.** The packages are listed from the bottom layer up. A package may import only from itself and from packages *above* it in
+the list (`core` first), never from below: for example `core` knows nothing about `views`, and `views` knows nothing about how a page is
+laid out or saved. Only `download` talks to NSE, only `rendering` writes the pages, and `workflows` put the steps in order. This keeps the
+code easy to follow and free of circular imports, and `tests/test_architecture.py` fails with the exact file and line if someone breaks the rule.
 
 ## AI tools used
 

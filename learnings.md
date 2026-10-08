@@ -21,8 +21,8 @@ Before writing any "real" logic, we built the **empty house**: folders, a list o
 | `requirements.txt` | The shopping list of libraries |
 | `.gitignore` | The "don't save these" list for git |
 | `README.md` | The project's front page / instruction manual |
-| `main.py`, `brsr_p6/cli.py` | The program's door: reads what you type |
-| `tests/test_cli.py`, `pytest.ini` | Automatic checks that the door works |
+| `main.py`, `brsr_p6/cli/main_cli.py` | The program's door: reads what you type |
+| `tests/cli/test_cli.py`, `pytest.ini` | Automatic checks that the door works |
 | `data/`, `samples/`, `tests/` folders | Places where things will live later |
 | `plan.md`, `context.md`, `learnings.md` | Our notes: the plan, the memory, and this file |
 
@@ -209,7 +209,7 @@ The file you run. It does one thing: call `main()` from `brsr_p6.cli`. We keep i
 - A **package** is a folder of modules that Python treats as one unit. The file `__init__.py` is what marks the folder as a package. It can be (nearly) empty.
 - That is why `main.py` can write `from brsr_p6.cli import main`: "from the package `brsr_p6`, module `cli`, bring in the function `main`".
 
-### `brsr_p6/cli.py`: "CLI" = Command-Line Interface
+### `brsr_p6/cli/main_cli.py`: "CLI" = Command-Line Interface
 It reads what the user typed after `python main.py`. It uses `argparse`, a tool that comes with Python (nothing to install). Walk-through:
 
 - `build_parser()` describes the options we accept: `--company` and `--fy`, both `required=True`. `argparse` then gives us `--help` and clear error messages for free.
@@ -238,7 +238,7 @@ A **test** is a small piece of code that checks another piece of code works. You
 
 Why bother? When we change code in Phase 6, the tests tell us in 1 second if we accidentally broke something from Phase 3. For this project, tests will also protect **data accuracy** (a graded item).
 
-Our three tests (`tests/test_cli.py`):
+Our three tests (`tests/cli/test_cli.py`):
 
 | Test | Checks |
 |---|---|
@@ -281,7 +281,7 @@ Words in the tests:
 
 1. In PyCharm's terminal run `python main.py --help`. Read every line and match it to `cli.py`.
 2. Run `python main.py --company "Tata Steel"` (no `--fy`). What does the error say? What is the exit code? (`echo $LASTEXITCODE`)
-3. Open `tests/test_cli.py`, change `"2023-24"` in the first test to `"2024-25"`, run `pytest`, read the red failure message, then change it back and re-run.
+3. Open `tests/cli/test_cli.py`, change `"2023-24"` in the first test to `"2024-25"`, run `pytest`, read the red failure message, then change it back and re-run.
 4. Open `.gitignore` and `requirements.txt` and say each line out loud in plain English.
 
 ## 16. Interview self-check for Phase 0
@@ -587,8 +587,8 @@ Run all: `pytest` (expect 72 passed).
 1. `python download_filings.py --company Infosys` then open `data\raw\INFY` and look at the folders and `filing.json`.
 2. Run the same command again and read the last line.
 3. Try a company of your own choice. If it says several companies match, rerun with the symbol it suggests.
-4. Open `brsr_p6/nse_client.py` and find where the 3-second wait happens (`_wait_turn`).
-5. In `tests/test_nse_client.py`, find the test that proves a 403 is *not* retried. What would break if we retried?
+4. Open `brsr_p6/download/nse_client.py` and find where the 3-second wait happens (`_wait_turn`).
+5. In `tests/download/test_nse_client.py`, find the test that proves a 403 is *not* retried. What would break if we retried?
 
 ## 3a.10 Interview self-check
 
@@ -730,9 +730,9 @@ Your decision from earlier is built in: **clean what we can, report what we cann
 1. `python extract_report.py --company Reliance --fy 2023-24 --questions E1,E3` and compare with the previous-year numbers printed in the FY 2022-23 run.
 2. Open `data\parsed\RELIANCE\2023-24.json` in PyCharm. Find `E1.electricity` and read each field.
 3. Run the same for `--company Infosys --fy 2021-22` and read the top warning and the "(unit not stated)" notes.
-4. Open `brsr_p6/sebi_template.py` and find the text of question E6.
-5. Open `brsr_p6/p6_mapping.py` and find which tag feeds `E5.nox` in the two editions.
-6. Run `pytest` (expect 160 passed). In `tests/test_extractor.py`, read `test_emissions_far_too_small_for_the_energy_use_are_flagged_as_probably_millions`.
+4. Open `brsr_p6/core/sebi_template.py` and find the text of question E6.
+5. Open `brsr_p6/parsing/p6_mapping.py` and find which tag feeds `E5.nox` in the two editions.
+6. Run `pytest` (expect 160 passed). In `tests/extraction/test_extractor.py`, read `test_emissions_far_too_small_for_the_energy_use_are_flagged_as_probably_millions`.
 
 ## 2.11 Interview self-check
 
@@ -849,8 +849,8 @@ Lesson: the sanity check we wrote to protect readers from *company* mistakes als
 2. Click the ⚠ marks and footnote numbers; they jump to the note under the table.
 3. Open the Infosys FY 2021-22 page (`python main.py --company INFY --fy 2021-22 --open`) and find the amber "About this filing" box and the "(unit not stated)" figures.
 4. Shrink the browser window to phone width: the tables should stay on screen.
-5. Open `brsr_p6/templates/sebi.html` and find the macro `value_table`; change a heading word, regenerate, and see it change.
-6. Open `brsr_p6/templates/style.css` and change `--accent` to another colour; regenerate.
+5. Open `brsr_p6/rendering/templates/sebi.html` and find the macro `value_table`; change a heading word, regenerate, and see it change.
+6. Open `brsr_p6/rendering/templates/style.css` and change `--accent` to another colour; regenerate.
 7. Run `pytest` (expect 200 passed) and read `test_every_official_question_and_row_label_appears_in_sebi_order`.
 
 ## 5.11 Interview self-check
@@ -975,8 +975,8 @@ What it is: ...    Why it matters: ...                          <- always visibl
 3. `python main.py --company "Tata Steel" --fy 2025-26 --open` and read the **Climate** section: dashed amber cards, "Can't compare", and a headline that refuses to quote a doubtful figure.
 4. `python main.py --company "HDFC Bank" --fy 2022-23 --open`: an older filing. Find "unit not stated", "Last year's figure was 0", and the air pollutants "reported as 0 in both years".
 5. `python main.py --company "Wipro" --fy 2025-26 --open`: its energy is filed in megajoules; the page shows it in GJ marked "unit changed by us". Open **Fine print** to see the original.
-6. Open `brsr_p6/metric_info.py`, change the *Why it matters* line of "Water taken in", regenerate, and see it change.
-7. Open `brsr_p6/comparison.py` and change `SAME_WITHIN_PERCENT` from `1.0` to `5.0`; regenerate Reliance and watch verdicts turn into "About the same". Change it back.
+6. Open `brsr_p6/views/metric_info.py`, change the *Why it matters* line of "Water taken in", regenerate, and see it change.
+7. Open `brsr_p6/analysis/comparison.py` and change `SAME_WITHIN_PERCENT` from `1.0` to `5.0`; regenerate Reliance and watch verdicts turn into "About the same". Change it back.
 8. **The two-minute test:** show the page to someone who knows nothing about ESG. Ask them to explain the Water section back to you. Anything they cannot explain is a sentence to rewrite.
 9. `pytest -q` (expect 298 passed).
 
@@ -1056,7 +1056,7 @@ if NSE cannot be reached and *any* saved list exists, we use it and say so ("the
 
 ## 7.5 The samples, and why a test guards them
 
-`python make_samples.py` rebuilds everything in `samples/`, including `samples/README.md`, from one list in `brsr_p6/samples.py`. The page of a company is built
+`python make_samples.py` rebuilds everything in `samples/`, including `samples/README.md`, from one list in `brsr_p6/workflows/samples.py`. The page of a company is built
 from the filing already on disk (no internet); only a filing that is missing is downloaded.
 
 The error samples are made by **really triggering the errors** with offline inputs (an unknown name, the year 2019-20, a real saved filing list asked for FY 2021-22,
@@ -1084,7 +1084,7 @@ Honest limits build more trust than a long list of features.
 - Optional arguments on exceptions (`def __init__(self, message, symbol="", available=())`) while keeping the message.
 - A callback parameter (`notify=print`-style).
 - `tempfile.TemporaryDirectory()` to create a file that is deleted afterwards; `Path.write_text`, `Path.mkdir(parents=True)`.
-- pytest: `monkeypatch` (swap a function for a fake during one test), `pytest.skip`, `pytest.raises`, shared helpers in `tests/html_checks.py`.
+- pytest: `monkeypatch` (swap a function for a fake during one test), `pytest.skip`, `pytest.raises`, shared helpers in `tests/helpers/html_checks.py`.
 - Making one command produce many files from a list of data (`SAMPLE_COMPANIES`, `SAMPLE_ERRORS`).
 
 ## 7.9 Small things that went wrong and what they taught us
@@ -1102,7 +1102,7 @@ Honest limits build more trust than a long list of features.
 2. `python main.py --company "Xyzzy Quux" --fy 2023-24 --open` and `... --fy banana --open`: compare the two pages.
 3. `python main.py --company "Tata" --fy 2024-25 --open` (needs the internet): an ambiguous name, one command per matching company.
 4. Open `samples/README.md`, then open two sample pages. Which sample would you show first to an interviewer, and why?
-5. Open `brsr_p6/error_view.py`, change a hint sentence, run `python make_samples.py`, and look at the sample page. Then run `pytest -q`: which test would
+5. Open `brsr_p6/views/error_view.py`, change a hint sentence, run `python make_samples.py`, and look at the sample page. Then run `pytest -q`: which test would
    fail if you had *not* re-run `make_samples.py`? (Hint: `test_committed_error_pages_are_up_to_date`.)
 6. Switch your internet off and run a company you downloaded before. Read the console line about the saved filing list.
 7. Add `--debug` to a command that you know fails on purpose. Does it behave differently for a *known* error and for a bug? (Try it with a test that raises `KeyError`.)
@@ -1259,8 +1259,8 @@ Plus small changes elsewhere: `compare(..., earlier="FY 2023-24")` (so the wordi
 1. `python trends.py --company "Tata Steel" --from 2021-22 --to 2025-26 --open`. Find: the shaded FY 2021-22 column, the purple *Consolidated* → blue *Standalone* chips, a ⟲ mark (hover it), the "Can't compare" in Climate.
 2. Run the same for Wipro `--from 2023-24 --to 2025-26`: which two years does each verdict compare, and why?
 3. `python trends.py --company "Reliance" --from 2025-26 --to 2021-22` and read the error page.
-4. Open `brsr_p6/trend_model.py` and change `RESTATEMENT_TOLERANCE` from `0.005` to `0.05`; regenerate Tata Steel: how many figures are still marked as restated? Change it back and run `pytest`.
-5. In `tests/test_trend_model.py` find the test about Wipro's "1,000 times" energy. What would go wrong if we flagged it as a restatement?
+4. Open `brsr_p6/analysis/trend_model.py` and change `RESTATEMENT_TOLERANCE` from `0.005` to `0.05`; regenerate Tata Steel: how many figures are still marked as restated? Change it back and run `pytest`.
+5. In `tests/analysis/test_trend_model.py` find the test about Wipro's "1,000 times" energy. What would go wrong if we flagged it as a restatement?
 6. Open the page on a phone-width window: where does the "swipe sideways" hint appear?
 
 ## 8.9 Interview self-check
@@ -1273,3 +1273,82 @@ Plus small changes elsewhere: `compare(..., earlier="FY 2023-24")` (so the wordi
 6. How did you find the table layout bug, and what was the cause?
 7. Why is the loader separate from the model? How are they tested?
 8. What would you build next (Extension 2 or 3) and how would the existing pieces help?
+
+---
+
+# 12. Phase 12: from one flat folder to layers
+
+*(Numbered 12 because it is the twelfth phase of the plan. The notes for Phase 9, the year-on-year summary, will be added as §9; that phase is built but its notes are not written yet.)*
+
+## 12.1 What was wrong
+
+`brsr_p6/` held **39 files side by side**. Nothing in the folder said which file reads the internet, which one decides wording, which one writes HTML. A new reader (or an interviewer) had to open files to find out.
+It worked, and the tests passed, but code quality is not only "does it run": it is also "can a stranger find their way?".
+
+## 12.2 The idea: one folder per step of the journey
+
+The program is a conveyor belt. A filing goes in at one end and a web page comes out at the other. So each step of the belt got its own folder (a Python **package**):
+
+| Folder | Its job, in one line |
+|---|---|
+| `core/` | the shared words and tools: the data model (`Cell`, `Principle6Report`), errors, financial years, units, number formatting, file locations |
+| `download/` | talk to NSE politely and keep the files on disk |
+| `parsing/` | open the XBRL file and read its raw facts (no cleaning yet) |
+| `extraction/` | clean the facts into one `Principle6Report`; flag doubtful numbers, never change them |
+| `analysis/` | compare years: better / worse / same, trends. Pure logic |
+| `views/` | decide *what each page says* (sentences, numbers, flags) |
+| `rendering/` | fill the HTML templates and write the file |
+| `workflows/` | whole jobs: company + year in, page out |
+| `cli/` | the commands you type; each one calls a workflow |
+
+Your three questions from the brief map straight onto it: *downloading* is `download/`, *parsing* is `parsing/` and `extraction/`, *generating HTML* is `rendering/`.
+
+## 12.3 The one rule: imports only go one way
+
+The table above is ordered from bottom to top. **A folder may use itself and the folders above it in the table, never the ones below.** `core` knows nothing about `views`; `views` knows nothing about how a page is saved.
+
+Why a rule?
+- If A imports B and B imports A (a **circular import**), Python can crash on start-up, and nobody can understand either file alone.
+- You can test and change the bottom layers without worrying about the top. Changing a template cannot break the download code.
+- When the rule is clear, "where does this new function go?" has an answer.
+
+A rule that lives only in a README gets broken the first time someone is in a hurry, so **`tests/test_architecture.py` checks it**. It reads every file as *data* (Python's `ast` module turns code into a tree you can inspect), collects the `import` lines and fails with the file and line number of any upward import.
+This is a nice example of "code can check code".
+
+## 12.4 How the move was done safely
+
+1. **Commit first.** The unfinished Phase 9 work was committed, so the move is a separate step that can be undone with one command.
+2. **Look before moving.** I drew the real import graph with a small script. It had **no cycles**, which means the folders could follow the dependencies that already existed; nothing had to be redesigned.
+3. **`git mv`, not copy-and-delete.** Git then records a *rename* (81 of them), so `git log --follow <file>` still shows a file's whole history.
+4. **A script for the imports.** About 70 files import from `brsr_p6`. Editing them by hand would have meant typos, so a script read each file's syntax tree and rewrote only the import statements (and sorted them the way the project already did). A find-and-replace would have broken multi-line imports.
+5. **The tests were the safety net.** All 467 tests had to pass, and the *freshness* tests were the strongest proof: they rebuild every sample page and compare it byte for byte with the committed one. After the move, `make_samples.py` changed **nothing**.
+6. **Run the real commands, from a different folder.** Tests do not prove `python main.py` works. I ran all five entry points, once from another working directory.
+
+## 12.5 What bites when you move files (all four happened here)
+
+- **Code that finds files from its own position.** `PROJECT_ROOT = Path(__file__).parent.parent` meant "two levels up from `downloader.py`". When a file moves one folder deeper, "two levels up" is a different folder, and the program would silently look for `data/raw` in the wrong place. Four tests did the same with `Path(__file__).parent.parent / "data" / "raw"`. Fix: **one** place (`core/paths.py`) knows where the project root is, and everyone else asks it.
+- **A hidden dependency in the wrong layer.** `render.py` (making HTML) imported `PROJECT_ROOT` and `safe_name` from `downloader.py` (downloading). That is "making a page depends on downloading", the exact thing the layers forbid. Moving the paths into `core` removed it.
+- **One test file importing from another.** `test_summary_page.py` borrowed a helper from `test_summary_view.py`. Once they sit in different folders that import breaks, and it was a smell anyway: a helper used by two test files belongs in `tests/helpers/`.
+- **A name that means two things.** The old `cli.py` held the main command *and* the failure handler every command shares. In a `cli/` folder that would be `cli/cli.py`, so it became `main_cli.py` (the `main.py` command) and `common.py` (what every command shares).
+
+One judgment call worth knowing: `friendly.py` ("4.7% less than last year") sits in `core`, not `views`, because `comparison.py` in `analysis` uses it. If it lived in `views`, `analysis` would import *upwards*, breaking the rule. Putting a module where its **users** are is how you decide.
+
+## 12.6 Try it yourself
+
+1. `python -c "import brsr_p6; print(open(brsr_p6.__file__).read())"` and read the map of the packages. Open one `__init__.py` from each folder.
+2. Break the rule on purpose: add `from brsr_p6.views.summary_view import build_summary_view` at the top of `brsr_p6/core/models.py`, run `pytest tests/test_architecture.py`, and read the failure message. Then undo it.
+3. `git log --follow --oneline brsr_p6/core/units.py`: the history reaches back before the move.
+4. `pytest tests/views -q` runs only the tests of one layer. Which folder would you run after changing `comparison.py`?
+5. Open `brsr_p6/core/paths.py`. If you moved it into `brsr_p6/core/config/paths.py`, which single line must change, and why?
+6. Run `python summary.py --company "Wipro" --output-dir C:\Temp` from a different folder (use the full path to `summary.py`). Why does it still find the filings?
+
+## 12.7 Interview self-check
+
+1. Why split a flat folder into packages when the program already worked? Give two concrete benefits.
+2. State the layer rule in one sentence. What bug does it prevent, and how is it enforced here?
+3. How did you check that the move changed no behaviour? Which test was the strongest proof, and why?
+4. `PROJECT_ROOT` used `Path(__file__).parent.parent`. What risk did moving files create, and how did you remove it for good?
+5. Why `git mv` instead of copying the files and deleting the old ones?
+6. Why did `friendly.py` go into `core` and not `views`?
+7. What would you do if a new feature needed `core` to call something in `workflows`?
+8. Why do the test folders mirror the code folders?

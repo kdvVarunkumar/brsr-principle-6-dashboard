@@ -1,8 +1,8 @@
-"""Rebuild the sample pages in samples/ :  python make_samples.py   (a tiny entry point; the work is in brsr_p6/samples.py)"""
+"""Rebuild the sample pages in samples/ :  python make_samples.py   (a tiny entry point; the work is in brsr_p6/workflows/samples.py)"""
 
 import sys
 
-from brsr_p6.samples import make_samples
+from brsr_p6.workflows.samples import make_samples
 
 if __name__ == "__main__":
     if hasattr(sys.stdout, "reconfigure"):

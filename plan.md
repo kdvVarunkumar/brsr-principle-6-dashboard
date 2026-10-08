@@ -49,32 +49,30 @@ You asked: *how to fetch, how to store, how to show.* This is the whole pipeline
 | Charts | Inline SVG / CSS bars generated in Python | Works offline, no JS library needed, accessible. |
 | Storing numbers | A `Metric` object = `value + unit + status + source + note` | One place to enforce "never invent numbers": status is one of `REPORTED`, `NOT_REPORTED`, `CONVERTED`, `CALCULATED`. |
 
-## 4. Proposed project structure
+## 4. Project structure
+
+*(This was a sketch in Phase 0. The code grew to about 40 modules, so in Phase 12 it was reorganised into the layers below; the reasons are in `context.md` D69-D71 and `learnings.md` §12.)*
 
 ```
 BRSR Principle 6 .../
-├── plan.md  context.md  learnings.md  README.md  requirements.txt  .gitignore  pytest.ini
-├── main.py                  # command-line entry point (thin: just reads args, calls the pipeline)
+├── plan.md  context.md  learnings.md  commands.md  README.md  requirements.txt  .gitignore  pytest.ini
+├── main.py  trends.py  summary.py  download_filings.py  extract_report.py  make_samples.py   # thin entry points: read args, call a command
 ├── brsr_p6/                 # (no src/ folder: keeps `python main.py` and `pytest` working with zero extra setup)
-│   ├── cli.py               # reads --company / --fy from the command line (done in Phase 0)
-│   ├── errors.py            # custom, specific errors (UnknownCompany, NoFilingFound, ...)
-│   ├── models.py            # data classes: Metric, Filing, Principle6Report
-│   ├── sebi_template.py     # the official P6 layout as Python data (questions, rows, units)
-│   ├── company_lookup.py    # "Tata Steel" -> "TATASTEEL"
-│   ├── fiscal_year.py       # parse/validate "2023-24", reject < 2021-22
-│   ├── nse_client.py        # polite downloader + cache + manual-file fallback
-│   ├── xbrl_parser.py       # XML -> flat list of facts
-│   ├── p6_mapping.py        # XBRL tag -> (question, row, column)
-│   ├── units.py             # GJ/MWh/TJ, kL/m3/ML, kg/tonnes conversions
-│   ├── analysis.py          # better/worse logic, trends, YoY summary (extensions)
-│   ├── metric_info.py       # plain-English text per metric: what / why / direction
-│   └── render/              # Jinja2 templates + helpers (SEBI view, dashboard, charts)
+│   ├── core/                # data model + small helpers: models, errors, fiscal_year, units, formatting, friendly, sebi_template, paths
+│   ├── download/            # 1. NSE -> files on disk: nse_client, company_lookup, filings, downloader
+│   ├── parsing/             # 2. XBRL file -> raw facts: xbrl_reader, p6_mapping
+│   ├── extraction/          # 3. raw facts -> one clean Principle6Report: extractor, checks, values, report_io
+│   ├── analysis/            # 4. comparing years, pure logic: comparison, warning_kinds, trend_model
+│   ├── views/               # 5. what each page says: dashboard, SEBI form, trends, summary, errors
+│   ├── rendering/           # 6. Jinja2 templates + render.py
+│   ├── workflows/           # whole jobs end to end: pipeline, trend_loader, summary_loader, samples
+│   └── cli/                 # the commands behind the entry points
 ├── data/raw/  data/parsed/  # cache (raw files you hand-download also live here)
-├── samples/                 # generated HTML for >= 2 companies (committed)
-└── tests/
+├── samples/                 # generated HTML (committed)
+└── tests/                   # folders mirror brsr_p6/; helpers/ holds the shared test helpers
 ```
 
-**Why this split?** Each file does one job. `xbrl_parser` knows nothing about HTML; `render` knows nothing about NSE. That separation is exactly what "extraction separated from presentation" means in the grading table.
+**Why this split?** Each package does one job, and a package may only import from the packages *above* it in the list (`core` first). `parsing` knows nothing about HTML; `views` knows nothing about NSE; `rendering` knows nothing about how a filing is read. That separation is exactly what "extraction separated from presentation" means in the grading table, and `tests/test_architecture.py` keeps it true.
 
 ---
 
@@ -145,7 +143,7 @@ Time estimates are rough hours for you working with my help. Core (Phases 0-7) i
 - [x] `values.py`: Indian-grouped numbers (`1,83,595`), `NA`/blank → **not reported (never 0)**, Yes/No/true/NA cleaned
 - [x] `checks.py` (warnings only, never changes a number): rounded-to-zero intensity, air-pollutant 0 caveat, totals that don't add up, emissions-vs-energy **scale check** (catches Tata Steel's "64" typed in millions; also Scope 3)
 - [x] `report_io.py`: clean JSON in `data/parsed/<SYMBOL>/<FY>.json`; `report_text.py`: SEBI-style plain-text view; `extract_report.py`: one command
-- [x] **Accuracy check:** Tata Steel FY25-26 compared to its PDF → regression tests (`tests/test_real_filings.py`); all 18 downloaded filings (5 companies, both editions) extract without crashing
+- [x] **Accuracy check:** Tata Steel FY25-26 compared to its PDF → regression tests (`tests/extraction/test_real_filings.py`); all 18 downloaded filings (5 companies, both editions) extract without crashing
 - [x] 160 automated tests pass (no internet needed; real-filing tests skip if data is absent)
 - [ ] Later refinement: **inferring a legacy energy unit** from the next year's filing (idea only; Phase 8)
 - **You'll learn:** XML parsing, dictionaries/lists, functions, unit tests.
@@ -153,7 +151,7 @@ Time estimates are rough hours for you working with my help. Core (Phases 0-7) i
 
 ### Phase 5: SEBI-format HTML view (~3 h)  ✅ DONE
 **Why:** 15% of the grade. A reviewer holds it next to the template and expects a 1-to-1 match.
-- [x] Jinja2 templates with one small macro per table type (value table with/without Unit column, list table, notes, cell) in `brsr_p6/templates/sebi.html`; page shell with header facts, legend and **CSS-only tabs** in `base.html`; all styling inline in `style.css` (no JavaScript, no internet needed)
+- [x] Jinja2 templates with one small macro per table type (value table with/without Unit column, list table, notes, cell) in `brsr_p6/rendering/templates/sebi.html`; page shell with header facts, legend and **CSS-only tabs** in `base.html`; all styling inline in `style.css` (no JavaScript, no internet needed)
 - [x] `sebi_view.py`: all decisions in Python (footnote numbers, "Not reported" text, which unit goes where) so the template only prints
 - [x] Same numbering, wording, row labels and **column layout as SEBI's form** (Unit column only in E5, E6, L4 as in the official tables); "Not reported" never blank; the assurance note under each table; every converted/calculated value labelled (`calc.` / `conv.`) and every doubtful value marked with ⚠ + a note
 - [x] Indian digit grouping (`2,47,98,900`), tiny numbers as 4.6×10⁻⁶ (`formatting.py`)
@@ -227,6 +225,16 @@ Time estimates are rough hours for you working with my help. Core (Phases 0-7) i
 - [x] Regenerate and commit samples
 - [ ] Optional: 3-5 min screen recording
 - [ ] **Interview prep:** for each module, write 2-3 lines "what it does and why". You must be able to explain every part.
+
+### Phase 12: Restructure the package into layers (code quality, 10% of the grade)  ✅ DONE
+*Asked for by the user: 39 modules lay in one flat folder; "downloading, parsing and generating HTML should each be a module". Done before Extension 2 was finished.*
+- [x] Plan from the real import graph (no cycles) and group the modules into nine packages: `core`, `download`, `parsing`, `extraction`, `analysis`, `views`, `rendering`, `workflows`, `cli`
+- [x] Move with `git mv` (81 renames, history kept); rewrite imports with a script that reads the code structure; every package has an `__init__.py` that says what it is for
+- [x] `core/paths.py`: the project root and every data folder in one place (it was in `downloader.py`, so "make HTML" depended on "download"); `cli.py` split into `main_cli.py` + `common.py`
+- [x] Tests moved into folders that mirror the packages; shared helpers in `tests/helpers/`; the four tests that found `data/raw` from their own depth now use `core.paths`
+- [x] `tests/test_architecture.py`: layer rule, no circular imports, no loose modules, test folders mirror packages
+- [x] Proof: 472 tests pass, every entry point runs (also from another folder), `make_samples.py` changes no sample page
+- [ ] Still to do for **Phase 9**: README + `commands.md` + `learnings.md` §9, `context.md` decisions, clean-clone check
 
 ---
 

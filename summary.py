@@ -4,7 +4,7 @@
 
 import sys
 
-from brsr_p6.summary_cli import main
+from brsr_p6.cli.summary_cli import main
 
 if __name__ == "__main__":
     sys.exit(main())

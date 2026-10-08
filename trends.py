@@ -4,7 +4,7 @@
 
 import sys
 
-from brsr_p6.trend_cli import main
+from brsr_p6.cli.trend_cli import main
 
 if __name__ == "__main__":
     sys.exit(main())

@@ -102,7 +102,7 @@ If one year's filing is damaged, only that column is flagged. Errors give a page
 
 | Step | Command | What to say |
 |---|---|---|
-| 1 | `pytest -q` | "About 410 automatic tests pass, with no internet needed." |
+| 1 | `pytest -q` | "About 470 automatic tests pass, with no internet needed." |
 | 2 | `python download_filings.py --company "<NEW COMPANY>"` | "It finds the company on NSE, downloads each year politely (3 s apart), and flags years NSE does not have." |
 | 3 | *(run step 2 again)* | "Second run: 0 requests. Everything is cached." |
 | 4 | `python extract_report.py --company "<NEW COMPANY>" --fy 2024-25 --questions E1,E6` | "XML â†’ clean SEBI rows. Calculated, converted and doubtful values are marked, and nothing is invented: missing = Not reported." |
@@ -225,8 +225,10 @@ How to read a page: *Not reported* = the filing has nothing (never shown as 0) Â
 ## 8. Tests
 
 ```powershell
-pytest -q                              # everything (about 410 tests, a few seconds, no internet)
-pytest tests/test_extractor.py -v      # one file, one line per test
+pytest -q                              # everything (about 470 tests, a few seconds, no internet)
+pytest tests/views -q                  # one layer: the test folders mirror brsr_p6/ (core, download, parsing, extraction, analysis, views, ...)
+pytest tests/extraction/test_extractor.py -v      # one file, one line per test
+pytest tests/test_architecture.py -q   # only the "layers import downwards" rule
 pytest -k "scale" -v                   # only tests with "scale" in their name
 ```
 
