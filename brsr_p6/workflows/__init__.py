@@ -3,5 +3,6 @@
     pipeline         company + year -> report -> HTML page
     trend_loader     company + range of years -> every year read (one bad year never stops the others)
     summary_loader   the latest year, and the year before it
+    hub              every page of a folder -> one viewer page (index.html)
     samples          rebuild the sample pages in samples/  (python make_samples.py)
 """

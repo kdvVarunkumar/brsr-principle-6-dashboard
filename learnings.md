@@ -1530,3 +1530,72 @@ Tata Steel's Scope 1 is flagged "doubtful" because it looks about a million time
 6. Why quote the element in the filing's own spelling?
 7. The file link comes from NSE. What could go wrong if you made it clickable without checking, and what did you do?
 8. Where did you put the section on the page, and why not a third tab?
+
+---
+
+# Phase 14: All pages in one place (`hub.py`)
+
+## 14.1 The problem
+
+Each command writes its own file: a report, a trend page, a summary, an error page. After a few runs `output/` holds a dozen files, and finding the one you want means opening folders and double-clicking.
+The brief asks for *a page* per request; nothing forbids a **way to browse** them. The user asked for one page with a dropdown or a search box.
+
+## 14.2 What we built
+
+```powershell
+python hub.py --open
+```
+It reads every `.html` file in `output/` and writes one more, `index.html`. In that page:
+- a **search box**: type `tata`, `2025-26`, `trend` or `error` and the list narrows;
+- a **dropdown** of the pages, grouped (Reports / Year-on-year summaries / Multi-year trends / Error pages);
+- **Previous / Next** buttons, and **Open in a new tab**;
+- the chosen page appears below, inside the same window.
+
+Two ways to hold the pages: **embedded** (default: the whole HTML of every page travels inside `index.html`, so one file can be moved or emailed) or **linked** (`--link`: the viewer only names the files next to it; much smaller).
+`make_samples.py` uses linked mode for `samples/index.html`, so the repository does not store every sample twice.
+
+## 14.3 Why this needs JavaScript (and why that is acceptable here)
+
+A dropdown that *changes what you see* and a search box that *filters as you type* cannot be done with HTML and CSS alone. Everything else in the project avoids JavaScript on purpose (CSS-only tabs, `<details>` for fine print), so adding it is a decision, written down (D83):
+
+- **Only the viewer has a script.** The report, trend, summary and error pages still have none.
+- **The script is small and does nothing risky.** It filters a list, sets one frame's content and updates the address.
+- **It fails gracefully:** without JavaScript the viewer shows a plain list of links to the files.
+
+## 14.4 Keeping it safe (three ideas worth knowing)
+
+1. **Data, not markup.** A whole HTML page cannot be pasted inside another page's `<script>` safely: one `</script>` inside it would end the block early. So the pages are stored as JSON with every `<` written as `<`. A test feeds it a page full of `</script><script>alert(1)</script>` and checks that nothing escapes.
+2. **Text, not HTML.** The script puts names into the dropdown with `textContent`, never `innerHTML`, so a strange page title can only ever be text.
+3. **A sandboxed frame.** The shown page lives in an `<iframe sandbox="allow-popups ...">` without `allow-scripts` or `allow-same-origin`: even if a page contained a script, the browser would refuse to run it.
+
+## 14.5 Small design choices
+
+- **Grouping comes from the file name**, because the names are made by our own code (`error_...`, `..._trend_...`, `..._summary_...`). **Labels come from each page's own `<title>`.** An error page's title is the same for every company, so the label also says what was asked.
+- **Search = every word must match** the label, the group or the file name, so `tata trend` finds only Tata's trend page.
+- **A copyable address:** `index.html#WIPRO_2025-26` opens that page, `index.html?q=tata` starts with that search.
+- **Empty folder:** it prints what to do first and exits with 1 (no new error class, so no error page is needed).
+
+## 14.6 How we tested JavaScript with no JavaScript test tool
+
+pytest cannot run a browser. We tested two ways:
+- **In pytest:** everything that is plain Python (names, groups, the JSON, the written file, the command), plus the safety checks above.
+- **In a real browser, by script:** I made a throw-away copy of the page with a script that *acts like a user* (types, presses Enter, clicks Next and Previous, presses Esc, types something that matches nothing, changes the address) and prints what the page did, then took a screenshot of that text.
+  It first came out blank, because my test script was broken (not the page); a test can be wrong too, so I rewrote it and it passed.
+
+## 14.7 Try it yourself
+
+1. `python hub.py --open`, type `tata`, press `Enter`, then press `Next`.
+2. Open `samples/index.html` and choose an *Error pages* entry. How is its label different from the others, and why?
+3. Open the address `output/index.html?q=wipro#WIPRO_2025-26` (use your own full path with `file:///`). What do you see?
+4. Run `python hub.py --link` and compare the size of `output/index.html` with before. Why is it so much smaller, and what do you lose?
+5. In `brsr_p6/views/hub_view.py` swap two names in `KINDS` and run `pytest` **before** regenerating anything: which tests fail, and what does each one protect? Then run `python make_samples.py`, `pytest` again, and look at the new order in the dropdown.
+6. Why does `workflows/hub.py` read the files but `views/hub_view.py` only receive their text? (Think about testing.)
+
+## 14.8 Interview self-check
+
+1. Why does the viewer need JavaScript when the rest of the project avoids it? What did you do to limit the risk?
+2. What is the difference between embedded and linked mode, and which does each of the two index files use? Why?
+3. Why is the data stored as JSON with `<` instead of just pasting the pages in?
+4. Why does the frame have `sandbox` and what does leaving out `allow-scripts` do?
+5. How do you test a page's JavaScript when you only have pytest?
+6. Which layer does each part live in (reading the folder, naming and grouping, the page, the command) and why?

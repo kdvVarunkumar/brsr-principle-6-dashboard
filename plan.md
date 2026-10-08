@@ -249,6 +249,16 @@ Time estimates are rough hours for you working with my help. Core (Phases 0-7) i
 - [x] Samples regenerated; 529 tests; phone width checked
 - [ ] *Not done (extensions kept aside):* the multi-year trend page shows each column's source filing but not an element per cell
 
+### Phase 14: All pages in one place (`hub.py`)  ✅ DONE
+*Asked for by the user: "in outputs there are separate html pages; I need them all in one page such that I can use a dropdown or search to get the page".*
+- [x] `python hub.py [--dir output] [--link] [--open]` writes `index.html` for a folder: a search box, a dropdown grouped as Reports / Year-on-year summaries / Multi-year trends / Error pages, Previous / Next, "Open in a new tab"
+- [x] Self-contained by default (every page embedded, so one file can be moved or sent); `--link` makes a small index that opens the files next to it. `make_samples.py` builds `samples/index.html` in link mode
+- [x] Layers kept: `views/hub_view.py` (names, groups, safe data), `workflows/hub.py` (reads the folder), `rendering/templates/hub.html`, `cli/hub_cli.py`
+- [x] Safe: the data sits in a JSON block with every `<` escaped; the frame is sandboxed (no scripts, no same-origin); labels are inserted as text; without JavaScript a list of links shows
+- [x] Checked in a real browser (desktop and a 375 px frame): grouping, search, Enter, Esc, Previous / Next across three matches and at both ends, "no match", addresses `#id` and `?q=`
+- [x] 35 new tests; 564 in all; samples regenerated
+- [ ] *Not done:* the viewer is not refreshed automatically after `main.py` / `trends.py` / `summary.py`; run `python hub.py` again. Full-text search inside the pages is not offered (the search looks at the page's company, year and type)
+
 ---
 
 ## 6. Milestones

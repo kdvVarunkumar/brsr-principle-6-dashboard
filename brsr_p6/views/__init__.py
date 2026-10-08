@@ -6,5 +6,6 @@ prints.  The page layout is not decided here (that is the templates' job), so ev
     trace_view                                     the trace from every number back to the filing (element, text as filed)
     trend_view                                     the multi-year trend page
     summary_view                                   the year-on-year summary
+    hub_view                                       the names and groups of the pages in the all-pages viewer
     error_view                                     the explanation page for each kind of error
 """

@@ -3,7 +3,7 @@
 Every command here was run and checked. Replace the company name and the year with whatever the interviewer asks for.
 **Run all commands from the project folder**, in the **PyCharm Terminal** (it activates the project's environment, so you see `(.venv)` at the start of the line).
 
-> **Project status:** download ✅ · clean/parse ✅ · SEBI-format HTML page ✅ · plain-English dashboard ✅ (opens first) · error pages ✅ · `samples/` ✅ · README ✅ · **several years side by side (`trends.py`, Extension 1) ✅** · **what got better / worse (`summary.py`, Extension 2) ✅** · code in nine layered packages ✅. Extension 3 (company comparison) is not built.
+> **Project status:** download ✅ · clean/parse ✅ · SEBI-format HTML page ✅ · plain-English dashboard ✅ (opens first) · error pages ✅ · `samples/` ✅ · README ✅ · **several years side by side (`trends.py`, Extension 1) ✅** · **what got better / worse (`summary.py`, Extension 2) ✅** · **every page in one dropdown + search (`hub.py`) ✅** · code in nine layered packages ✅. Extension 3 (company comparison) is not built.
 
 ---
 
@@ -16,6 +16,7 @@ Every command here was run and checked. Replace the company name and the year wi
 | Only **clean/parse** and print the data | `python extract_report.py --company "Reliance" --fy 2023-24` |
 | **Several years side by side** (Extension 1) | `python trends.py --company "Tata Steel" --from 2021-22 --to 2025-26 --open` |
 | **What got better / worse since last year** (Extension 2) | `python summary.py --company "Tata Steel" --open` |
+| **Every page in one place** (dropdown + search box) | `python hub.py --open` |
 | Rebuild the pages in `samples/` | `python make_samples.py` |
 | Run all automatic tests | `pytest -q` |
 
@@ -123,13 +124,31 @@ What to point at (2 minutes):
 
 Errors give a page too, with suggested commands that use `summary.py`: an unknown company, a year NSE does not have (lists the years it does), a year before FY 2021-22, a damaged newest filing.
 
+### 2.6 All pages in one place: `hub.py`
+Every command writes its own file, so `output\` fills up with pages. This puts them **all behind one page** with a search box and a dropdown:
+
+```powershell
+python hub.py --open                     # every page in output\  ->  output\index.html  (one self-contained file)
+python hub.py --dir samples              # another folder
+python hub.py --link                     # tiny index that only opens the files next to it
+```
+| Option | Meaning |
+|---|---|
+| `--dir` | the folder that holds the pages (default `output`) |
+| `--link` | do not embed the pages; `index.html` opens the files in the same folder (what `make_samples.py` uses for `samples\index.html`) |
+| `--open` | open `index.html` in your browser |
+
+**In the page:** type in the search box (`tata`, `2025-26`, `trend`, `error`) and the dropdown narrows, grouped as *Reports / Year-on-year summaries / Multi-year trends / Error pages*. Pick one and it shows below. *Previous* / *Next* step through the matches, *Open in a new tab* opens the page alone. Keys: `/` search, `Enter` opens the first match, `Esc` clears.
+**Addresses you can copy:** `index.html#WIPRO_2025-26` opens that page; `index.html?q=tata` starts with that search.
+**Run it again** after making new pages (it reads whatever is in the folder). Talking point: the report pages still have no JavaScript; only this viewer does, and its frame is sandboxed.
+
 ---
 
 ## 3. A 5-minute demo flow
 
 | Step | Command | What to say |
 |---|---|---|
-| 1 | `pytest -q` | "About 530 automatic tests pass, with no internet needed." |
+| 1 | `pytest -q` | "About 560 automatic tests pass, with no internet needed." |
 | 2 | `python download_filings.py --company "<NEW COMPANY>"` | "It finds the company on NSE, downloads each year politely (3 s apart), and flags years NSE does not have." |
 | 3 | *(run step 2 again)* | "Second run: 0 requests. Everything is cached." |
 | 4 | `python extract_report.py --company "<NEW COMPANY>" --fy 2024-25 --questions E1,E6` | "XML → clean SEBI rows. Calculated, converted and doubtful values are marked, and nothing is invented: missing = Not reported." |
@@ -137,6 +156,7 @@ Errors give a page too, with suggested commands that use `summary.py`: an unknow
 | 6 | click the **SEBI-format report** tab, then back | "Same data, two audiences. Every dashboard number comes from this table." |
 | 6b | `python trends.py --company "<COMPANY>" --open` | "Extension 1: the same company over every year NSE has. Missing years flagged, basis changes and restatements marked." |
 | 6c | `python summary.py --company "<COMPANY>" --open` | "Extension 2: the 3 biggest improvements and setbacks against last year, with the definition of 'better' stated on the page, and everything it could not rank listed with the reason." |
+| 6d | `python hub.py --open` | "Every page I generated, behind one dropdown and a search box: I can type 'tata' or 'trend' and switch between reports, trends, summaries and errors without hunting for files." |
 | 7 | the error commands in section 6 | "Specific messages instead of crashes." |
 
 ### 3b. "Prove that this number is not invented" (about 90 seconds, no extra command)
@@ -256,6 +276,7 @@ Ready-made examples of six of these are in `samples\` (`error_*.html`): unknown 
 | An error page | `output\error_<company>_<year>.html` | written by the same command when something fails |
 | The trend page | `output\<SYMBOL>_trend_<from>_to_<to>.html` | `python trends.py ... --open` |
 | The summary page | `output\<SYMBOL>_summary_<FY>.html` | `python summary.py ... --open` |
+| **All of them in one page** | `output\index.html` (and `samples\index.html`) | `python hub.py --open` |
 | Sample pages (5 company reports, 3 trend pages, 3 summaries, 6 error pages) | `samples\` + `samples\README.md` | open in a browser; rebuild with `python make_samples.py` |
 
 Handy PowerShell lines:
@@ -271,7 +292,7 @@ How to read a page: *Not reported* = the filing has nothing (never shown as 0) �
 ## 8. Tests
 
 ```powershell
-pytest -q                              # everything (about 530 tests, a few seconds, no internet)
+pytest -q                              # everything (about 560 tests, a few seconds, no internet)
 pytest tests/views -q                  # one layer: the test folders mirror brsr_p6/ (core, download, parsing, extraction, analysis, views, ...)
 pytest tests/extraction/test_extractor.py -v      # one file, one line per test
 pytest tests/test_architecture.py -q   # only the "layers import downwards" rule
@@ -324,6 +345,8 @@ Then run `python download_filings.py --company "ITC"` again to show a real downl
 - **What does the trend page do with a missing year?** It flags it ("No filing", never 0). If the next filing exists, that filing's previous-year column holds the company's own figures for the missing year, so they are shown and marked.
 - **How do you handle a change from consolidated to standalone?** Every column shows its basis; trend verdicts only compare years on the same basis and unit, and the page says which years were left out.
 - **What is a restatement?** The next filing gives a different figure for the same year (more than 0.5% apart). We keep the figure as filed in its own year and mark it ⟲ with the later figure.
+- **Where do I find all the generated pages?** `python hub.py --open` puts every page in `output/` behind one dropdown and a search box (also `samples/index.html` for the committed samples). It is one self-contained file by default.
+- **Does the page use JavaScript?** The report, trend, summary and error pages do not. Only the viewer does, because a dropdown and a search cannot work without it; it shows the pages in a sandboxed frame and, without JavaScript, falls back to a plain list of links.
 - **How do you show that a number is not invented?** Every value remembers the filing's own XBRL element, the year, and the text and unit exactly as written. The dashboard's Fine print, a hover in the SEBI tab, the last section of the SEBI tab and `extract_report.py --trace` all show it, and the page links to NSE's file. A test checks every value of every downloaded filing against the raw XML.
 - **What if a number was converted or calculated?** It is labelled (*Unit changed by us* / *Calculated by us*), the filed text is quoted, and a calculated number lists every element it was built from.
 - **What does a missing value look like in the trace?** "Not reported", plus the elements we looked for (or "the structured filing has no field for this item"). It is never shown as 0.
@@ -356,6 +379,7 @@ The code is in `brsr_p6/`, one folder per step. Open the file in the right-hand 
 | how the **HTML** is made | `brsr_p6/rendering/` | `render.py` and `templates/` |
 | the error pages | `brsr_p6/views/error_view.py` and `brsr_p6/rendering/templates/error.html` | |
 | how a command runs end to end | `brsr_p6/workflows/` and `brsr_p6/cli/` | `pipeline.py`, `main_cli.py` |
+| the "all pages in one place" viewer | `brsr_p6/views/hub_view.py` (names, groups), `brsr_p6/workflows/hub.py` (reads the folder), `brsr_p6/rendering/templates/hub.html` (page + script) | `hub_view.py` |
 | the rule that keeps the layers apart | `tests/test_architecture.py` | the whole file |
 
 The tests live in folders with the same names (`tests/download/`, `tests/views/`, ...). `python make_samples.py` rebuilds `samples/`.

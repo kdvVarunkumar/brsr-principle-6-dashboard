@@ -19,8 +19,10 @@ from brsr_p6.download.company_lookup import pick_company
 from brsr_p6.download.filings import parse_listing, select_filing
 from brsr_p6.extraction.report_io import save_report
 from brsr_p6.parsing.xbrl_reader import read_filing
-from brsr_p6.rendering.render import error_page_path, trend_page_name, write_error_page, write_page, write_summary_page, write_trend_page
+from brsr_p6.rendering.render import (HUB_FILE_NAME, error_page_path, trend_page_name, write_error_page, write_page, write_summary_page,
+                                      write_trend_page)
 from brsr_p6.views.error_view import build_error_view
+from brsr_p6.workflows.hub import generate_hub
 from brsr_p6.workflows.pipeline import generate_page, generate_summary_page, generate_trend_page, load_saved_report
 
 
@@ -187,7 +189,10 @@ def make_samples(output_dir: Path = SAMPLES_DIR, progress=print) -> list:
             progress(f"skipped the example for {example.company} {example.fy}: {missing}")
 
     (output_dir / "README.md").write_text(_readme(report_pages, trend_pages, summary_pages, error_pages), encoding="utf-8")
-    return [page for _, page in report_pages + trend_pages + summary_pages + error_pages]
+    pages = [page for _, page in report_pages + trend_pages + summary_pages + error_pages]
+    hub, _ = generate_hub(output_dir, embed=False, title="Sample pages")     # linked, not embedded: the pages are already in this folder
+    progress(f"wrote {hub.name}")
+    return pages + [hub]
 
 
 def _summary_reports(sample):
@@ -231,6 +236,8 @@ def _readme(report_pages, trend_pages, summary_pages, error_pages):
         "",
         "Open any file in a web browser. They are made by `python make_samples.py` (do not edit them by hand).",
         "",
+        "**Easiest: open [index.html](index.html).** It puts every page below behind one dropdown and a search box (it opens the files in this folder).",
+        "",
         "## Report pages (Dashboard tab first, SEBI-format report second)",
         "",
         "| File | Company and year | What it shows |",
@@ -255,4 +262,5 @@ def expected_files():
     names += [trend_page_name(s.symbol, s.fy_from, s.fy_to) for s in SAMPLE_TRENDS]
     names += [f"{safe_name(s.symbol)}_summary_{s.fy}.html" for s in SAMPLE_SUMMARIES]
     names += [error_page_path(e.company, e.fy, Path()).name for e in SAMPLE_ERRORS]
+    names.append(HUB_FILE_NAME)                      # the viewer that holds all of them
     return names

@@ -82,6 +82,25 @@ def write_summary_page(report, previous=None, previous_note="", output_dir: Path
     return path
 
 
+HUB_FILE_NAME = "index.html"      # the viewer that holds every page of a folder: output/index.html, samples/index.html
+
+
+def render_hub_page(view) -> str:
+    """The HTML of the viewer with a dropdown and a search box (a HubView from hub_view.py)."""
+    return _environment().get_template("hub.html").render(view=view)
+
+
+def hub_page_path(folder: Path = DEFAULT_OUTPUT_DIR) -> Path:
+    return folder / HUB_FILE_NAME
+
+
+def write_hub_page(view, folder: Path = DEFAULT_OUTPUT_DIR) -> Path:
+    path = hub_page_path(folder)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(render_hub_page(view), encoding="utf-8")
+    return path
+
+
 def render_error_page(view) -> str:
     """The HTML of an error page (an ErrorView from error_view.py)."""
     return _environment().get_template("error.html").render(view=view)

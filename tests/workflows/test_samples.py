@@ -4,15 +4,19 @@ The most useful test here is "the committed samples are up to date": it rebuilds
 with the file in samples/.  If the templates or the rules change and nobody re-runs `python make_samples.py`, this fails.
 """
 
+import json
+
 import pytest
 from html_checks import assert_well_formed
 
 from brsr_p6.core.errors import BrsrError
 from brsr_p6.core.fiscal_year import fiscal_years_between
 from brsr_p6.core.paths import DEFAULT_RAW_DIR, SAMPLES_DIR
-from brsr_p6.rendering.render import error_page_path, render_error_page, render_page, render_summary_page
+from brsr_p6.rendering.render import error_page_path, render_error_page, render_hub_page, render_page, render_summary_page
 from brsr_p6.views.error_view import build_error_view
+from brsr_p6.views.hub_view import build_hub_view
 from brsr_p6.workflows import samples
+from brsr_p6.workflows.hub import read_pages
 from brsr_p6.workflows.pipeline import load_saved_report
 from brsr_p6.workflows.samples import SAMPLE_COMPANIES, SAMPLE_ERRORS, SAMPLE_SUMMARIES, SAMPLE_TRENDS, expected_files
 
@@ -102,6 +106,22 @@ def test_the_summary_samples_show_the_cases_they_claim_to():
     assert "Nothing got worse by more than the “about the same” margin." in wipro and wipro.count('class="entry"') == 3
     reliance = (SAMPLES_DIR / "RELIANCE_summary_2022-23.html").read_text(encoding="utf-8")
     assert "NSE has no BRSR filing of its own for FY 2021-22." in reliance and "previous-year column of the FY 2022-23 filing" in reliance
+
+
+def test_the_committed_viewer_lists_every_sample_page_and_is_up_to_date():
+    """samples/index.html puts all the sample pages behind one dropdown and search box; it must match what the code builds today."""
+    committed = (SAMPLES_DIR / "index.html").read_text(encoding="utf-8")
+    view = build_hub_view(read_pages(SAMPLES_DIR), embed=False, title="Sample pages")
+    assert committed == render_hub_page(view), "samples/index.html is out of date: run  python make_samples.py"
+    assert {entry.file for entry in view.entries} == set(expected_files()) - {"index.html"}      # every page, and nothing else
+    assert "html" not in json.loads(view.data_json)["entries"][0]                                  # linked, so the repository does not store each page twice
+
+
+def test_the_viewer_groups_the_samples_the_way_the_readme_does():
+    view = build_hub_view(read_pages(SAMPLES_DIR), embed=False)
+    counts = {kind: sum(entry.kind == kind for entry in view.entries) for kind in view.kinds}
+    assert counts == {"Reports": len(SAMPLE_COMPANIES), "Year-on-year summaries": len(SAMPLE_SUMMARIES),
+                      "Multi-year trends": len(SAMPLE_TRENDS), "Error pages": len(SAMPLE_ERRORS)}
 
 
 def test_a_summary_sample_with_a_missing_previous_report_never_looks_for_one():
