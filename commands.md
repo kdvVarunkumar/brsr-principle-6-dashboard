@@ -1,0 +1,250 @@
+# Commands cheat-sheet (for the demo)
+
+Every command here was run and checked. Replace the company name and the year with whatever the interviewer asks for.
+**Run all commands from the project folder**, in the **PyCharm Terminal** (it activates the project's environment, so you see `(.venv)` at the start of the line).
+
+> **Project status:** download ✅ · clean/parse ✅ · SEBI-format HTML page ✅ · plain-English dashboard ✅ (opens first) · error pages ✅ · `samples/` ✅ · README ✅. Optional extensions are not built.
+
+---
+
+## 1. Quick reference
+
+| I want to... | Command |
+|---|---|
+| **Make the report page** (does everything: download → clean → page) | `python main.py --company "Reliance" --fy 2023-24 --open` |
+| Only **download** the filings | `python download_filings.py --company "Reliance"` |
+| Only **clean/parse** and print the data | `python extract_report.py --company "Reliance" --fy 2023-24` |
+| Rebuild the pages in `samples/` | `python make_samples.py` |
+| Run all automatic tests | `pytest -q` |
+
+Pattern to remember: **`--company "<name or NSE symbol>"`** and **`--fy <year>`**, e.g. `--company "Tata Steel" --fy 2025-26`.
+
+---
+
+## 2. The three commands in detail
+
+### 2.1 Download from NSE: `download_filings.py`
+Downloads a company's BRSR filing files (XBRL) into `data\raw\<SYMBOL>\<FY>\`. Anything already on disk is reused.
+
+```powershell
+python download_filings.py --company "Reliance"                       # every year NSE has (FY 2021-22 onwards)
+python download_filings.py --company "Tata Steel" --fy 2023-24         # only one year
+python download_filings.py --company "HDFC Bank" --fy 2022-23 --with-pdf   # also the PDF (optional)
+python download_filings.py --company "Reliance" --refresh              # ignore the saved filing list, ask NSE again
+```
+| Option | Meaning |
+|---|---|
+| `--company` | company name or NSE symbol (required) |
+| `--fy` | one financial year; leave out for all years |
+| `--with-pdf` | also download the PDF (not needed for the report) |
+| `--refresh` | ask NSE for the filing list again instead of using the saved one (valid 24 h) |
+
+What you see: the company NSE matched, the years NSE has, one line per file (`downloaded` / `already on disk, skipped`), a summary, and **`Requests sent to NSE in this run: N`**.
+Talking point: a second run sends **0 requests**.
+
+### 2.2 Clean the data: `extract_report.py`
+Reads the downloaded XML, fills SEBI's 21 Principle 6 questions, prints them as text and saves clean JSON in `data\parsed\<SYMBOL>\<FY>.json`. If the filing is not on disk yet, it downloads it first.
+
+```powershell
+python extract_report.py --company "Reliance" --fy 2023-24                    # whole report as text
+python extract_report.py --company "TATASTEEL" --fy 2025-26 --questions E1,E6  # only some questions
+python extract_report.py --company "Infosys" --fy 2021-22 --quiet              # only save the JSON
+```
+| Option | Meaning |
+|---|---|
+| `--questions E1,E6,L4` | print only those questions (`E1`-`E12` = Essential, `L1`-`L9` = Leadership) |
+| `--quiet` | do not print, only save the JSON |
+
+Marks in the printout: `c` = calculated by us · `k` = converted by us · `!` = doubtful (note below the table).
+
+### 2.3 Make the page: `main.py`  ← the main one
+```powershell
+python main.py --company "Tata Steel" --fy 2025-26 --open
+```
+Downloads if needed, cleans, saves the JSON **and** writes one self-contained HTML page: **`output\<SYMBOL>_<FY>.html`**
+(two tabs: the plain-English **Dashboard**, which opens first, and the **SEBI-format report**). `--open` opens it in your browser; without it, double-click the file.
+
+| Option | Meaning |
+|---|---|
+| `--open` | open the page (or the error page) in your browser |
+| `--output-dir samples` | write the page into another folder (default `output`) |
+| `--debug` | on an *unexpected* problem, show the full Python traceback (normally you get an explanation page instead) |
+
+**If something goes wrong, the same command still writes a page**: `output\error_<company>_<year>.html` (see section 6).
+
+---
+
+## 3. A 5-minute demo flow
+
+| Step | Command | What to say |
+|---|---|---|
+| 1 | `pytest -q` | "298 automatic tests pass, with no internet needed." |
+| 2 | `python download_filings.py --company "<NEW COMPANY>"` | "It finds the company on NSE, downloads each year politely (3 s apart), and flags years NSE does not have." |
+| 3 | *(run step 2 again)* | "Second run: 0 requests. Everything is cached." |
+| 4 | `python extract_report.py --company "<NEW COMPANY>" --fy 2024-25 --questions E1,E6` | "XML → clean SEBI rows. Calculated, converted and doubtful values are marked, and nothing is invented: missing = Not reported." |
+| 5 | `python main.py --company "<NEW COMPANY>" --fy 2024-25 --open` | "One HTML page, two tabs. It opens on the plain-English **Dashboard**; the second tab is the **SEBI-format report**, same question numbers and wording as SEBI's form." |
+| 6 | click the **SEBI-format report** tab, then back | "Same data, two audiences. Every dashboard number comes from this table." |
+| 7 | the error commands in section 6 | "Specific messages instead of crashes." |
+
+### 3a. What to point at on the Dashboard (about 2 minutes)
+
+1. **"At a glance" box**: one plain sentence, the scoreboard (improved / same / worse) and six topic tiles.
+2. **One card**: plain title, "Lower is better", big number in lakh/crore, verdict chip + arrow, bars from zero, *What it is*, *Why it matters*, **Fine print** (full number, how we calculated it), and the badge saying where the number came from.
+3. **"How to read better and worse" box**: it compares the company with *itself last year* only. No invented benchmark.
+4. **Show the honesty** with a second company:
+   - `Tata Steel 2025-26`: Climate section is dashed amber: *"The greenhouse gas figure looks doubtful, so we do not quote it."* (the company typed millions of tonnes as tonnes).
+   - `HDFC Bank 2022-23`: older filing: "unit not stated", "Last year's figure was 0, so a percentage change cannot be worked out", air pollutants "reported as 0 in both years".
+   - `Wipro 2025-26`: energy filed in megajoules; shown in GJ with "unit changed by us"; open **Fine print** to see the original.
+5. **"Can I trust these numbers?"** panel: counts of reported / calculated / unit-changed / not reported / noted.
+
+---
+
+## 4. Swapping in the interviewer's company and year
+
+**Template (copy, then edit the two highlighted parts):**
+```powershell
+python main.py --company "COMPANY NAME OR SYMBOL" --fy YEAR --open
+```
+
+**Company** can be a name (`"Tata Steel"`, `"hdfc bank"`, `Reliance`) or the NSE symbol (`TATASTEEL`, `INFY`). Use **double quotes** if the name has a space or `&` (for example `"M&M"`). If several companies match (e.g. `Tata`), it lists them: re-run with the symbol it suggests.
+
+**Year** can be written `2023-24`, `2023-2024`, `FY2023-24` or `2023/24`. Only **FY 2021-22 and later** are covered; the latest filed year is **2025-26**.
+
+**Copy-paste examples**
+```powershell
+python main.py --company "Tata Steel" --fy 2025-26 --open     # a doubtful figure: shown as filed, warned, never compared
+python main.py --company "Reliance" --fy 2023-24 --open       # the cleanest example
+python main.py --company "Infosys" --fy 2021-22 --open        # old-style filing + a file that needed cleaning + monthly air figures
+python main.py --company "HDFC Bank" --fy 2022-23 --open      # a bank: older layout, no units, little environmental data
+python main.py --company "Wipro" --fy 2025-26 --open          # energy filed in megajoules, shown in GJ
+python main.py --company "ITC" --fy 2024-25 --open
+python main.py --company "M&M" --fy 2024-25 --open
+```
+
+**Timing you can expect:** a brand-new company takes about **10 s** for one year (about **20-30 s** to download every year); anything already downloaded takes **under 1 s**.
+
+---
+
+## 5. What is already downloaded on this PC
+
+Folders under `data\raw\`. NSE itself has more years than these (all years from FY 2021-22 that the company filed).
+
+| Company | NSE symbol | Years on disk |
+|---|---|---|
+| Tata Steel | `TATASTEEL` | 2022-23, 2023-24, 2024-25, 2025-26 *(NSE has no FY 2021-22 filing)* |
+| Reliance Industries | `RELIANCE` | 2022-23, 2023-24, 2024-25, 2025-26 *(none for 2021-22)* |
+| Infosys | `INFY` | 2021-22, 2023-24 |
+| HDFC Bank | `HDFCBANK` | 2022-23, 2023-24 |
+| Wipro | `WIPRO` | 2021-22 to 2025-26 |
+| Mahindra & Mahindra | `M&M` (folder `M_M`) | 2024-25 |
+| ITC | `ITC` | 2024-25 |
+
+Any other company works too: it is fetched from NSE the first time. **Tip: run each company you plan to demo once on the same day, so a flaky connection cannot hurt.** A *new* company always needs internet.
+
+---
+
+## 6. Showing the error handling
+
+```powershell
+python main.py --company "Xyzzy Quux" --fy 2023-24         # unknown company
+python main.py --company "Tata" --fy 2023-24                # ambiguous: lists 10 matches and says to use a symbol
+python main.py --company "Reliance" --fy 2019-20            # before FY 2021-22: refused with a clear message
+python main.py --company "Reliance" --fy banana             # not a year
+python main.py --company "Tata Steel" --fy 2021-22          # valid year, but NSE has no filing: lists the years it does have
+python main.py --company "Sakuma Exports" --fy 2023-24      # listed company with no BRSR filing
+```
+Each one prints `Error: ...` with the specific reason, **and writes an explanation page** `output\error_<company>_<year>.html` (add `--open` to show it). Exit code 1, never a Python traceback.
+
+What the page shows: the exact message, what you typed, "What you can try", and **ready-to-run commands** where we know them (the companies that matched an ambiguous name; the years NSE does have). Error pages never overwrite a report page.
+
+```powershell
+python main.py --company "Tata Steel" --fy 2021-22 --open       # page lists FY 2022-23 ... 2025-26, each with a command
+```
+
+| Situation | Page title |
+|---|---|
+| unknown company | We could not find that company on NSE |
+| several companies match | Please choose one company |
+| year not understood / before FY 2021-22 | We could not read that financial year / BRSR filings start with FY 2021-22 |
+| NSE has no filing for the year | NSE has no BRSR filing for that company and year |
+| NSE unreachable or blocking | We could not get the data from NSE |
+| damaged or wrong kind of file | The filing on NSE could not be read |
+| a bug in the tool | Something unexpected went wrong (run again with `--debug`) |
+
+Ready-made examples of four of these are in `samples\` (`error_*.html`).
+
+---
+
+## 7. Where to look at the results
+
+| What | Where | How to show it |
+|---|---|---|
+| Downloaded filings (XBRL) | `data\raw\<SYMBOL>\<FY>\*.xml` + `filing.json` | open the folder in PyCharm |
+| Clean data (JSON) | `data\parsed\<SYMBOL>\<FY>.json` | open in PyCharm; find `E6.scope1`: it has `value`, `unit`, `status`, `as_filed`, `warnings` |
+| The report page | `output\<SYMBOL>_<FY>.html` | `python main.py ... --open`, or double-click |
+| An error page | `output\error_<company>_<year>.html` | written by the same command when something fails |
+| Sample pages (5 companies, 4 error cases) | `samples\` + `samples\README.md` | open in a browser; rebuild with `python make_samples.py` |
+
+Handy PowerShell lines:
+```powershell
+Get-ChildItem data\raw -Directory | ForEach-Object { "{0,-10} {1}" -f $_.Name, ((Get-ChildItem $_.FullName -Directory).Name -join ", ") }   # what is downloaded
+Get-ChildItem output\*.html                                                                                                                  # pages generated so far
+Get-Content data\parsed\RELIANCE\2023-24.json -TotalCount 40                                                                                 # peek at the clean JSON
+```
+How to read a page: *Not reported* = the filing has nothing (never shown as 0) · `calc.` = we added reported numbers · `conv.` = we changed the unit · ⚠ = doubtful value, explained in the note under the table.
+
+---
+
+## 8. Tests
+
+```powershell
+pytest -q                              # everything (298 tests, a few seconds, no internet)
+pytest tests/test_extractor.py -v      # one file, one line per test
+pytest -k "scale" -v                   # only tests with "scale" in their name
+```
+
+---
+
+## 9. Starting fresh (to show the download from zero)
+
+This deletes only files that can be downloaded again:
+```powershell
+Remove-Item -Recurse -Force data\raw\ITC          # forget one company's downloads
+Remove-Item -Recurse -Force data\cache            # forget saved company searches
+```
+Then run `python download_filings.py --company "ITC"` again to show a real download.
+
+---
+
+## 10. If something goes wrong
+
+| Problem | Fix |
+|---|---|
+| `python` is not recognised, or `ModuleNotFoundError: requests` | You are not in the project's environment. Use the **PyCharm Terminal**, or run `.\.venv\Scripts\python.exe main.py ...` |
+| PowerShell says "running scripts is disabled" when activating | `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`, or skip activating and use `.\.venv\Scripts\python.exe` |
+| `Error: NSE refused the request (HTTP 403/429)` | NSE is limiting automated access. Wait a few minutes and retry. (We never retry hard; that is by design.) |
+| `Error: Could not get ... from NSE` | No internet or NSE is down. A company you have downloaded before still works: the tool uses the saved filing list and says so ("... may be out of date"). A company you never downloaded needs the internet. |
+| `Error: ... matches several companies` | Re-run with the exact NSE symbol it suggests, e.g. `--company TCS` |
+| `Error: NSE has no BRSR filing for ... for FY ...` | That company did not file that year; the message lists the years it did. |
+| The page opens but looks unstyled | Open the `.html` file itself in Chrome/Edge (not a preview inside an editor) |
+| A quoted name with `&` breaks | Always use double quotes: `--company "M&M"` |
+
+---
+
+## 11. One-line answers for likely questions
+
+- **How does it work end to end?** Company text → NSE symbol (NSE's own search) → filing list → XBRL file (cached) → read facts → fill SEBI's template rows → units cleaned, checks add warnings → JSON + HTML page.
+- **Why XBRL and not the PDF?** It is NSE's structured version of the same filing; far more reliable than PDF tables. We cross-checked numbers against a company PDF.
+- **Is it polite to NSE?** Yes: at least 3 seconds between requests, cache for everything, stop at once on a block, never hammer.
+- **What if a value is missing or odd?** Missing → "Not reported" (never 0). Converted or calculated → labelled. Doubtful (e.g. a figure typed in millions under a "tonnes" unit) → shown exactly as filed with a warning.
+- **Does it work for any company?** Yes, any NSE-listed company that filed a BRSR for FY 2021-22 or later; nothing is hard-coded.
+- **Two formats of filing?** Yes: filings before April 2024 use an older layout than later ones; the code detects which one and uses the matching tag mapping.
+- **Who is the dashboard for?** A non-expert. It answers four questions: how big is the footprint, better or worse than last year, is it under control, can I trust the numbers.
+- **What does "better" mean?** Better than the company's *own* figure last year, nothing more. The filing has no industry benchmark or legal limit, so we do not rate or score.
+- **What if a number looks wrong?** (Tata Steel typed Scope 1 as 64 instead of 64 million.) It is shown exactly as filed, in amber, with the reason; it gets no better/worse verdict and is kept out of the summary sentences.
+- **Why per ₹ crore?** The filed intensity (0.0000807 GJ per ₹) is unreadable. Only the unit changes; the filed number stays in the Fine print.
+- **How do you stop it inventing things?** Missing is "Not reported" (never 0), a zero last year gives "can't compare", figures with no unit are not quoted in sentences, and a test checks every warning in every real filing is classified.
+- **What happens on bad input?** The same command writes an *error page* instead of a report: the exact reason, what you typed, what to try, and commands you can copy (for example the years NSE does have). A real bug gets a page too, and `--debug` shows the traceback.
+- **What if NSE is down during a demo?** Companies already downloaded still work: an older saved filing list is used (and the console says so). Only a never-seen company needs the internet.
+- **Does it run from a clean checkout?** Yes: tested in a brand-new virtual environment: `pip install -r requirements.txt`, one command, and the page is written (about 11 seconds for a new company).
+- **Why Python + a template?** Python decides (verdicts, sentences, warnings), the HTML template only prints. That makes every rule testable without a browser.

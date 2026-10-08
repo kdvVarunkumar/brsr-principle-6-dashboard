@@ -1,0 +1,279 @@
+# Context: BRSR Principle 6 Report Generator & Dashboard
+
+This file is the project's memory: what we were asked to build, what we have verified, decisions made, and progress. Update it at the end of every phase.
+
+---
+
+## 1. Who / what / why
+
+- **Who:** the author of a take-home assignment for **Emcord AI**. Every step is explained (concept + why) in `learnings.md`, so that every part of the code can be explained in a follow-up interview.
+- **Brief received:** 7 Oct 2026. Source: `Assignment - BRSR Principle 6 Report Generator & Dashboard.pdf` (5 pages, in the project root).
+- **Time:** brief says "48 hours from receiving this brief" *and* "submit a GitHub link within 3-5 days". Treated as: aim to finish the core in 48 h. (Open: confirm with recruiter.)
+- **Working style:** phase by phase, plan first, **no coding until the user confirms the plan**, explain why at each step.
+
+## 2. Assignment requirements (distilled from the PDF)
+
+**Input:** company name or NSE symbol + financial year (e.g. `2023-24`).
+**Output:** one generated HTML page with two views:
+1. **SEBI-format report:** Principle 6 exactly as the SEBI template (same question numbers, table structures, row labels, units, current + previous FY columns). Not-reported fields shown **explicitly**, never blank.
+2. **Dashboard:** same P6 sub-sections for a non-specialist (investor / journalist / student). For every metric: **what it measures, whether it got better or worse, why it matters.**
+
+HTML may be static or a lightweight app; must open in a normal browser with no setup beyond the README.
+
+**Scope:** Principle 6 only. Essential Indicators (energy, water, air emissions, GHG, waste, ecologically sensitive areas, EIAs, legal compliance) + Leadership Indicators where reported. Filings **FY 2021-22 onwards only**; for an earlier year say so clearly. Works for **any NSE-listed company** that filed a BRSR (no hard-coding).
+
+**Data sources (public only):** NSE BRSR filings; SEBI BRSR format Annexure I (May 2021).
+
+**Extensions (optional, in order):**
+1. Multi-year trends (company, start FY, end FY): all metrics per year side by side; **missing years flagged, not skipped or zero-filled.**
+2. Year-on-year summary (company, latest FY auto): 3 best + 3 worst metrics vs previous year, plain-English explanation each; **state definition of "better"**; handle missing previous-year report.
+3. Company comparison (two companies, one FY): think about absolute vs intensity, differing units, fields one company didn't report.
+For Ext 1 & 2 error handling is graded: missing report, unparseable filing, unknown company → each a **clear, specific message on the page**.
+
+**Rules:**
+- AI tools allowed; **disclose which and for what**; must explain all code in interview.
+- Any language/stack; keep dependencies reasonable.
+- **Never invent numbers.** Every figure traces to a filing; say so if missing, estimated or converted.
+- **Be polite to NSE:** cache locally, add delays, don't hammer. If blocked, hand-download a few filings and include them in the repo, with documentation.
+- Prioritise dashboard clarity.
+
+**Hints from the brief:** many filings have PDF **and** XBRL/XML → structured data is easier than PDF tables. NSE loads data via background requests and may need browser-like headers/cookies (use the DevTools Network tab). Normalise units (GJ vs MWh, kL vs m³, tonnes vs tCO₂e) and show the unit used. Decide + state a rule for revised/consolidated filings. Intensity (per ₹ turnover) is often fairer than absolute totals.
+
+**Deliverables:** GitHub repo (public, or private with them added) containing: (1) code that runs from a clean checkout; (2) README: setup + run commands, inputs to try, parts completed, extraction approach, known limitations, AI tools used; (3) sample HTML outputs for **≥ 2 companies** committed; (4) design note (half a page, README OK). Optional: 3-5 min screen recording.
+
+**Grading:** Dashboard clarity 30% · Data accuracy 25% · SEBI-format fidelity 15% · Error handling 10% · Code quality 10% (extraction separate from presentation) · Extensions 10%. A complete, accurate core + excellent dashboard can score well with **no** extensions.
+
+## 3. SEBI Principle 6 template (May 2021 Annexure I), VERIFIED
+
+Verified by reading the official PDF (pages 22-30). Source: SEBI circular SEBI/HO/CFD/CMD-2/P/CIR/2021/562 dated 10 May 2021.
+- Circular page: https://www.sebi.gov.in/legal/circulars/may-2021/business-responsibility-and-sustainability-reporting-by-listed-entities_50096.html
+- Annexure I PDF: https://www.sebi.gov.in/sebi_data/commondocs/may-2021/Business%20responsibility%20and%20sustainability%20reporting%20by%20listed%20entitiesAnnexure1_p.PDF
+
+Heading: *"PRINCIPLE 6: Businesses should respect and make efforts to protect and restore the environment"*. Every table has columns **FY (Current) / FY (Previous)** unless noted. Tables marked ★ end with the note: *"Indicate if any independent assessment/evaluation/assurance has been carried out by an external agency? (Y/N) If yes, name of the agency."*
+
+### Essential Indicators (12)
+| # | Topic | Type | Rows / content (units) |
+|---|---|---|---|
+| E1 ★ | Energy consumption & intensity ("in Joules or multiples") | Table | Total electricity consumption (A); Total fuel consumption (B); Energy consumption through other sources (C); Total energy consumption (A+B+C); Energy intensity per rupee of turnover (total energy / turnover in rupees); Energy intensity (optional) |
+| E2 | PAT Scheme designated consumers | Y/N + text | If yes: targets achieved? If not, remedial action |
+| E3 ★ | Water | Table (kilolitres) | Withdrawal by source: (i) Surface (ii) Groundwater (iii) Third party (iv) Seawater/desalinated (v) Others; Total withdrawal (i+…+v); Total consumption; Water intensity per rupee of turnover (consumed / turnover); Water intensity (optional) |
+| E4 | Zero Liquid Discharge mechanism | Y/N + text | Coverage and implementation |
+| E5 ★ | Air emissions (other than GHG) | Table + **unit column** | NOx; SOx; Particulate matter (PM); Persistent organic pollutants (POP); Volatile organic compounds (VOC); Hazardous air pollutants (HAP); Others, please specify |
+| E6 ★ | GHG emissions Scope 1 & 2 and intensity | Table + unit column | Total Scope 1 (metric tonnes CO₂e; optional gas break-up CO₂, CH₄, N₂O, HFCs, PFCs, SF₆, NF₃); Total Scope 2 (same); Scope 1+2 per rupee of turnover; Scope 1+2 intensity (optional) |
+| E7 | Projects to reduce GHG | Y/N + text | |
+| E8 ★ | Waste management | 3 tables (metric tonnes) | (a) Generated: Plastic (A), E-waste (B), Bio-medical (C), Construction & demolition (D), Battery (E), Radioactive (F), Other hazardous (G), Other non-hazardous (H, by composition), Total (A..H). (b) Recovered, per category: Recycled / Re-used / Other recovery / Total. (c) Disposed, per category: Incineration / Landfilling / Other disposal / Total |
+| E9 | Waste management practices; strategy to reduce hazardous/toxic chemicals | Text | |
+| E10 | Ops in/around ecologically sensitive areas needing clearances | List table | S.No.; Location; Type of operations; Conditions of clearance complied? (Y/N) + reasons/corrective action |
+| E11 | Environmental Impact Assessments (current FY) | List table | Project name/brief; EIA Notification No.; Date; Independent external agency (Y/N); Results public (Y/N); Web link |
+| E12 | Compliance with environmental laws (Water Act, Air Act, EP Act…) | Y/N + list table | S.No.; Law not complied; Details; Fines/penalties/action; Corrective action |
+
+### Leadership Indicators (9)
+| # | Topic | Type |
+|---|---|---|
+| L1 ★ | Energy split: **renewable** (electricity A, fuel B, other C, total A+B+C) and **non-renewable** (D, E, F, total D+E+F) | Table |
+| L2 ★ | Water **discharge** by destination (surface / groundwater / seawater / third parties / others), each "no treatment" vs "with treatment (level)"; total discharged (kL) | Table |
+| L3 ★ | Water withdrawal, consumption & discharge **in water-stress areas**, per facility (name of area, nature of operations, then the same rows as E3 + L2) | Per-facility tables |
+| L4 ★ | **Scope 3** emissions (tCO₂e) + per rupee of turnover + optional intensity | Table |
+| L5 | Biodiversity impact in the sensitive areas of E10 + prevention/remediation | Text |
+| L6 | Initiatives / innovative tech for resource efficiency or lower emissions/effluent/waste | List table (Sr. No., Initiative, Details, Outcome) |
+| L7 | Business continuity & disaster management plan (100 words / link) | Text |
+| L8 | Significant adverse environmental impact from value chain + mitigation | Text |
+| L9 | % of value chain partners (by value of business) assessed for environmental impact | Number |
+
+### Newer format, UNVERIFIED (from memory, check in Phase 1)
+SEBI revised the BRSR format in 2023 (BRSR Core). Filings for FY 2022-23 onwards likely use a **different numbering** (≈13 Essential indicators, with extras such as renewable/non-renewable split inside Essential energy, PPP-adjusted intensity, intensity per physical output). This is why Phase 1 inspects real filings before Phase 2 fixes the data model.
+
+## 4. Data-source facts
+
+**Verified (web search / documents):**
+- NSE requires BRSR to be submitted in **both PDF and XBRL** (path in NEAPS: *Common XBRL Upload → Business Responsibility & Sustainability Report*).
+- Filings viewable at: https://www.nseindia.com/companies-listing/corporate-filings-bussiness-sustainabilitiy-reports
+- Filing files are served from `nsearchives.nseindia.com/corporate/...` with names like `SYMBOL_<ddmmyyyyHHMMSS>_<filename>.pdf` (example seen: `SFILFINANCE123_07092026192606_BRSR2026FINALSigned.pdf`).
+
+**Secondary-source findings (xbrl.org paper "Unearthing Insights from India's ESG Disclosures", analysing FY 2022-23 BRSR XBRL; not NSE docs, verify on real files):**
+- Filings were converted to xBRL-JSON for analysis → XBRL is machine-readable, as the brief hints.
+- Recurring quality problems: (a) scale errors (crore/lakh typed instead of raw values); (b) `0` entered for mandatory metrics like Scope 2 and water withdrawal; (c) emissions units are **free text** ("Metric tonnes of CO2 equivalent" / "CO2 in MT"); (d) intensity denominators often scaled (explained only in the PDF); (e) PDF vs XBRL mismatches.
+- Design implications: keep original value + unit; normalise unit strings; add sanity-check warnings (suspicious zeros, implausible magnitudes); never present converted/suspicious values as plain REPORTED.
+
+**Now verified in Phase 1 (see §4a/4b):** the API URL and JSON shape, the file URLs (taken from the JSON), scripted access works, XBRL instance structure + tag names (taxonomy 2026-02-28), current/previous contexts, the `ReportingBoundary` fact, and an XBRL-vs-PDF cross-check for Tata Steel FY 2025-26.
+
+**All big Phase 1 questions are now answered** (older FYs via `from_date`/`to_date`, older taxonomies, revised filings, company search). Only small items remain: see §4e. Do not assume anything not listed in §4a.
+
+## 4a. Phase 1 findings worksheet (the Phase 1 deliverable; status 2026-10-08)
+
+**Evidence:** user's DevTools capture; NSE's own page scripts (`corporate-filings.js`, `common.js`, read as static public files); ~25 polite requests (all HTTP 200, ≥3 s apart); 10 XBRL files inspected in `data/raw/`: Tata Steel FY22-23 → FY25-26 (4), Infosys FY21-22 + FY23-24, HDFC Bank FY23-24, + Tata Steel FY25-26 PDF.
+
+| # | Question | Answer | Status |
+|---|---|---|---|
+| 1 | Filing-list API | `GET https://www.nseindia.com/api/corporate-bussiness-sustainabilitiy?index=equities&symbol=<SYM>&from_date=DD-MM-YYYY&to_date=DD-MM-YYYY` | ✅ verified |
+| 2 | Parameters | `symbol` (NSE symbol), `from_date`/`to_date` in **DD-MM-YYYY** (they filter by submission date). **`issuer` is NOT needed** (tested INFY, HDFCBANK). The page defaults to the **last 365 days** (`moment().subtract(365,'d')` in NSE's JS), which is why the first capture showed only the latest filing. `from_date=01-04-2021` → today returns every FY (Tata Steel 4, Infosys 5, HDFC Bank 5). Leaving `symbol` out returns **all companies** for the window (1,215 records / 494 KB for 01-Jun-2026 → 08-Oct-2026) | ✅ verified |
+| 3 | Headers / cookies | Works from Python after one GET of `https://www.nseindia.com/` (cookies `_abck`, `ak_bmsc`, `bm_sz`) + browser-like `User-Agent`, `Accept: application/json`, `Referer` = the BRSR page. Archive files on `nsearchives.nseindia.com` need **no cookies**. Minimal set still untested | ✅ works |
+| 4 | JSON fields | `data[]`: `symbol`, `companyName`, `fyFrom`, `fyTo` (FY 2025-26 = 2025, 2026), `submissionDate` ("DD-Mon-YYYY"), `revisionDate` ("-" = never revised), `attachmentFile` (PDF), `attFileSize`, `xbrlFile` (XML), `xbrlFileSize` | ✅ verified |
+| 5 | File URLs | **Names follow no single pattern** (`BRSR_<code>_<ts>_WEB.xml`, `…_BRSR_WebXMLFile_…xml`, `BR_<SYM>_2021_2022_….xml`; PDFs named by whoever uploaded). **Always take URLs from the JSON.** The PDF link can be `https://nsearchives.nseindia.com/corporate/null` (Tata Steel & Infosys FY22-23) → **PDF is optional, XML always present** (14/14 rows) | ✅ verified |
+| 6 | XBRL available for every filing? | Yes for all 14 listed rows | ✅ (3 companies) |
+| 7 | XML format | Standard XBRL instance. Namespace `https://www.sebi.gov.in/xbrl/<release date>/in-capmkt`; **five releases seen: 2021-09-30** (Infosys FY21-22, Tata Steel FY22-23), **2023-06-30** (Reliance FY22-23; same legacy shape: 415 tags, 2 units), **2024-04-30** (FY23-24), **2025-05-31** (FY24-25), **2026-02-28** (FY25-26). So the release in force depends on *when/how the company filed*, not on the FY alone. Entity id = ISIN | ✅ verified |
+| 8 | Current vs previous FY | Contexts `DCYMain` / `DPYMain` in all 7 filings checked (date ranges inside). Still decide by **dates**, not ids | ✅ verified |
+| 9 | Row encoding | One named tag per row; dimensions only for list tables | ✅ verified |
+| 10 | Units | **Modern** (FY23-24+): real unit ids, but they **vary per company**: `Gigajoule`; `tCO2e` / `MtCO2e` (**both mean metric tonnes of CO₂e**: `MtCO2e` = "Metric tonnes CO2e", NOT million tonnes; Reliance 36,350,070 and Infosys 180,737 are plain tonnes); `Kg` / `Kilotonne` / `Tonne`; `Kiloliters`. **Legacy** (2021-09-30 and 2023-06-30): only `pure` or none; air-emission and GHG units are **free-text `UnitOf…` elements** ("Kg/Month", "tCO2 e", "Million tonnes of CO2 equivalent", "Kilotonnes/year", "0", "NA"); **energy has no unit at all**; water and waste units come only from the SEBI template (kL, metric tonnes) | ✅ verified |
+| 11 | FY21-22 vs later | **Legacy taxonomy (FY21-22, FY22-23)** matches the **2021 template directly** (`TotalElectricityConsumption`, `TotalEnergyConsumption`, `Nox`/`Sox`, `TotalScope1AndScope2EmissionsPerRupeeOfTurnover`; 403-408 tags, 2 units). **Modern taxonomy (FY23-24+)** has ~660-707 tags and follows the newer layout (renewable/non-renewable split, PPP + physical-output intensity). FY23-24, 24-25, 25-26 are nearly identical for P6 (only assurance text-block names differ) | ✅ verified |
+| 12 | Revised filings | **NSE keeps one row per company per FY; a revision replaces the original row** (it carries `revisionDate`, a new XML and PDF; `submissionDate` stays the original date). 22 of 1,215 rows revised; **0 duplicates** | ✅ verified |
+| 13 | Standalone vs consolidated | Fact `ReportingBoundary`. **Varies by company AND by year**: Tata Steel = *Consolidated* in the FY22-23 filing, *Standalone* in FY23-24 → FY25-26; Infosys = Consolidated; HDFC Bank = Standalone. The XBRL carries **one** boundary per filing | ✅ verified |
+| 14 | Scripted access | Works (all requests HTTP 200) | ✅ verified |
+| 15 | **Decision gate: XBRL or PDF?** | **XBRL** (confirmed on 3 companies × 4 taxonomy releases). PDF only for human cross-checking | ✅ **decided** |
+| 16 | Company search (name → symbol) | `GET /api/smart-search/eqEtf?q=<text>` (min 2 chars; the NSE page's typeahead). Returns a list of `{companyName, symbol, series, segment, …}`. **Mixed results**: "tata steel" → 4 items (TATASTEEL EQ, TATASTLBSL, TATASTLPP BE, TATASTLLP BE); "hdfc bank" → equity + 2 **bonds**. Filter to `segment == "in equity"`, prefer `series == "EQ"`, handle several matches | ✅ verified |
+| 17 | Missing years | Tata Steel has **no FY21-22 filing** in NSE's list; Infosys and HDFC Bank do. The FY22-23 filing carries FY21-22 only as the *previous-year column* | ✅ verified |
+| 18 | Malformed files | **Infosys FY21-22 XML is not well-formed XML**: 15 illegal control characters (`0x02`, probably Word soft-hyphens) inside long text answers. A strict parser rejects the whole file; numbers are fine | ✅ verified |
+
+### 4b. Cross-check: XBRL vs the filing's own PDF (Tata Steel FY 2025-26, Standalone, "Secondary" basis)
+
+| Metric | PDF says | XBRL says | Verdict |
+|---|---|---|---|
+| Total energy consumed | 623.81 PJ | 623,812,739.43 GJ | ✅ same (1 PJ = 1,000,000 GJ) |
+| Energy from renewables | 1.51 PJ | 1,506,640.93 GJ | ✅ |
+| Energy intensity per ₹ | 0.0045 PJ per ₹ crore | 0.0004464728 GJ/INR | ✅ (= 4,464.7 GJ per crore) |
+| Water: surface withdrawal | 66,296 Million Litres | 66,296,419.4 kL | ✅ (1 ML = 1,000 kL) |
+| Total water consumption | 99,055 ML | 99,054,737.06 kL | ✅ |
+| Water intensity per ₹ | 0.000071 kL/₹ | 0.0000708951 kL/INR | ✅ |
+| NOx / SOx / PM | 27 / 67 / 9 kilotonnes | 27 / 67 / 9 `Kilotonne` | ✅ |
+| Plastic waste / Total waste | 3,201 t / 1,87,82,249 t | 3201 / 18782249 `Tonne` | ✅ (PDF uses Indian digit grouping) |
+| Scope 1 / Scope 2 | 64 / 5 **Million tonnes** CO₂e | 64 / 5, unit `MtCO2e` | ❌ **Tata Steel typed the numbers in MILLION tonnes (as its PDF says) under unit `MtCO2e`, which means metric tonnes**: the structured value is wrong by 1,000,000×. (Reliance, which really emits ~36 million tonnes, typed 36,350,070 under the same unit.) Needs a plausibility check (§4c-2) |
+| Scope 1+2 intensity | 0.0005 (MT per ₹ crore) | **0** (`MtCO2ePerINR`) | ❌ **suspicious zero** (real value lost) |
+| PPP-adjusted energy intensity | 0.0091 PJ per **million USD** | 9081.18 labelled `GigajoulePerINR` | ❌ **wrong unit label** |
+| POP / VOC / HAP | "Not material for the steel manufacturing company" | `0` Kilotonne | ⚠️ XBRL can't tell "measured zero" from "not applicable" |
+
+### 4c. Traps confirmed on real data → design rules
+1. **Never trust unit ids blindly.** Units vary per company (`Kg` NOx at Infosys vs `Kilotonne` at Tata Steel; `tCO2e` vs `MtCO2e`). Normalise to one unit, keep original value + unit, say so on the page.
+2. **A unit label can be wrong, because the company typed a scaled number.** Tata Steel: Scope 1 = `64` under `MtCO2e` (= metric tonnes) but it means 64 *million* tonnes (confirmed by its PDF). *Correction of an earlier note:* Infosys Scope 3 = 180,737 `MtCO2e` is NOT absurd; it is simply 180,737 tonnes (`MtCO2e` and `tCO2e` are the same unit, spelled differently). → **plausibility check by ratio**: total Scope 1+2 (tonnes) ÷ total energy (GJ) should be roughly 0.01-0.5 t/GJ. Reliance (Scope 1 only) 36.35M t ÷ 478M GJ = 0.076 ✓; Infosys 63,031 ÷ 839,448 = 0.075 ✓; HDFC Bank 586,080 ÷ 3.03M = 0.19 ✓; Tata Steel 69 ÷ 623.8M = 1e-7 ✗ (×1e6 gives 0.11 ✓). If the ratio is implausible but a clean ×1,000 / ×1,000,000 scale fixes it, show the value as filed + a **"scale doubtful, probably in millions"** warning (never silently rescale; D23).
+3. **Zero is ambiguous**: caveat on `0` that may mean "not material / not measured" (all of POP/VOC/HAP = 0; intensity = 0 with non-zero totals; Tata Scope 1+2 intensity = 0 in *every* year).
+4. **Intensities are the least reliable** (rounded to 0, wrong unit labels, unexplained scaling: legacy values like 5.35 / 10.79 / 0.08 have no stated denominator). Prefer a clearly-labelled **CALCULATED** intensity (reported total ÷ reported turnover) when the reported one is 0 or unusable, if a turnover figure exists in the filing (to check).
+5. **PPP / physical-output intensities are not in the 2021 template**; keep out of the SEBI view.
+6. **Rounding is real**: Scope 1/2 may be whole million tonnes; say so.
+7. **Boundary matters and changes**: always print `ReportingBoundary`. Tata Steel switched Consolidated → Standalone between FY22-23 and FY23-24, so **multi-year trends can compare unlike things** → flag boundary changes.
+8. **Restatements**: Tata Steel FY23-24 energy was 545,962,401 GJ in its own filing but **569,333,666 GJ** as the previous-year column of the FY24-25 filing (+4.3%); landfill 303,496 t → 359,118 t. → note restatements in trends.
+9. **Legacy numbers stored as text** with Indian digit grouping: `"1,83,595"`. → number-cleaning step.
+10. **Rate units** ("Kg/Month") exist: **never annualise silently**.
+11. **Boolean vocabulary varies**: `Yes`, `true`, `NA` (HDFC Bank ZLD = `NA`). → normalise to Yes / No / Not applicable / unknown, flag unknown strings.
+12. **Illegal control characters** make a file strictly invalid → sanitise in memory, record a warning; if still not well-formed → `UnparseableFiling` naming file + line/column.
+13. **Legacy energy unit is unstated** in the XBRL → show "as filed, unit not stated" and exclude from numeric comparison with modern years (idea: infer only if the next filing's previous-year column matches exactly after a clean scale factor).
+14. **Missing tags** (HDFC Bank has no NOx/SOx/PM tags at all) are legitimate **NOT_REPORTED**.
+15. **Numbering differs** between company PDFs and the 2021 template: map by **meaning**.
+16. **2021-template rows that modern XBRL splits** (e.g. total electricity A = renewable + non-renewable) → **CALCULATED** with the formula visible. (Legacy taxonomy has these rows directly.)
+
+### 4d. Parser strategy that follows from this
+- Detect the **taxonomy family** from the `in-capmkt` namespace date: **before 2024-04-30** (seen: `2021-09-30`, `2023-06-30`) → **legacy mapping**; **2024-04-30 or later** (seen: `2024-04-30`, `2025-05-31`, `2026-02-28`) → **modern mapping** (identical for P6). Then **verify with key tags** (e.g. modern must contain `TotalEnergyConsumedFromRenewableAndNonRenewableSources`; legacy must contain `TotalElectricityConsumption`) and raise a clear "unsupported taxonomy release" error if the shape matches neither. (Found the 2023-06-30 release only when testing a *second* company: a reason to keep testing more companies.)
+- Two mapping tables → one common `Metric` structure; per-metric unit converters; sanity checks run after mapping.
+
+### 4e. Still open (small; do not block Phase 2)
+- [ ] Is there a **turnover** tag in the filings (to compute intensities)? (check in Phase 2/4)
+- [ ] Minimal headers/cookies actually required (test in Phase 3)
+- [ ] List-table encodings (E10 sensitive areas, E11 EIA, L3 water-stress facilities, L6 initiatives) → Phase 4
+
+## 5. Environment
+
+- Windows 11, PowerShell, PyCharm; project folder is **not yet a git repo** and **git is not installed** on the machine (deferred to Phase 11; `winget` v1.29 is available for `winget install Git.Git`).
+- `.venv` (PyCharm project interpreter) uses **Python 3.14.2** with `requests`, `Jinja2`, `pytest` installed (see `requirements.txt`).
+- **Windows 260-char path limit gotcha:** the Claude scratchpad path is ~190 chars, so creating a venv there fails (pip's deepest folder gets dropped). For venv/clean-checkout tests use a short path such as `%TEMP%\brsr_clean` and delete it afterwards.
+- Base Python: `<folder of your Python 3.14 installation>\python.exe`.
+- The Read tool cannot render PDFs here (no poppler). PDFs were read via `pypdf` in a **scratch** folder outside the project (project `.venv` untouched). In-project we'll add `pypdf` only if the PDF-fallback path is ever needed.
+
+## 6. Decisions log
+
+| # | Decision | Status |
+|---|---|---|
+| D1 | Python 3, CLI generating static HTML via Jinja2 | **Proposed**, awaiting confirmation |
+| D2 | Data from XBRL first; PDF is only a human cross-check, never parsed | **Decided (tentative)**: XBRL matched the PDF on Tata Steel FY 2025-26; re-confirm on older years |
+| D3 | Storage = files (raw in `data/raw`, parsed JSON in `data/parsed`), no DB | Proposed |
+| D4 | SEBI view follows the **May 2021** template exactly; newer-format extras in an "additional disclosures" box | Proposed, confirm in Phase 2 |
+| D5 | Every number is a `Metric` with status REPORTED / NOT_REPORTED / CONVERTED / CALCULATED, **plus a list of warnings** (suspicious zero, unit doubt, rounding) | Proposed, refined after Phase 1 |
+| D6 | Filing selection rule: NSE keeps **one row per company per FY and a revision replaces the original**, so use the row whose `fyFrom`/`fyTo` matches; show `submissionDate` and `revisionDate` on the page. If duplicates ever appear, take the latest `revisionDate`, else the latest `submissionDate` | **Decided** (Phase 1) |
+| D7 | "Better" definition per metric (lower energy/water/emissions/waste-to-landfill = better; higher renewable share/recycled share = better; absolute totals judged cautiously, intensity preferred) | Proposed, finalise in Phase 6/9 |
+| D8 | Sample companies: Tata Steel, Infosys, + one bank/NBFC | Proposed |
+| D9 | Flat package `brsr_p6/` at the project root (no `src/` folder) so `python main.py` and `pytest` work with no install step | **Decided** (Phase 0) |
+| D10 | Git setup (`git init`, commit, GitHub push) is **deferred to the end** (Phase 11) at the user's request: "focus on solving the problem first" | **Decided** (Phase 0) |
+| D11 | Direct dependencies pinned with `==` in `requirements.txt` (requests 2.34.2, Jinja2 3.1.6, pytest 9.1.1) | **Decided** (Phase 0) |
+| D12 | Current vs previous FY is decided from each context's **start/end dates**, not from context id names (`DCYMain`, `_PY1` are only hints) | **Decided** (Phase 1) |
+| D13 | Map XBRL tags to the 2021 template by **meaning**, not by question number (company PDFs number P6 differently) | **Decided** (Phase 1) |
+| D14 | 2021-template rows that XBRL splits (e.g. total electricity A = renewable + non-renewable) are shown as **CALCULATED** with the formula | **Proposed** (Phase 1) |
+| D15 | Show the **reporting boundary** (from `ReportingBoundary`) prominently; the filing may hold consolidated figures only in the PDF | **Decided** (Phase 1) |
+| D16 | Unit rules live in `units.py`: **`MtCO2e` and `tCO2e` both mean metric tonnes CO₂e** (corrected 2026-10-08; earlier note said million tonnes); company-typed scale errors (Tata Steel typed millions) are caught by the emissions÷energy ratio check, not by the unit id; PPP and physical-output intensities excluded from the SEBI view (wrong unit label seen) | **Proposed** (Phase 1, corrected) |
+| D17 | A reported `0` is shown as reported but with a caveat when it may mean "not material / not measured" (e.g. POP/VOC/HAP all 0; intensity 0 with non-zero totals) | **Proposed** (Phase 1) |
+| D18 | Malformed XML: strip illegal control characters **in memory** (raw file untouched), record a warning on the report; if still not well-formed → `UnparseableFiling` naming the file and line/column | **Decided** by user 2026-10-08 ("clean what we can, report the error") |
+| D19 | Two mapping tables chosen by the `in-capmkt` namespace date: **before 2024-04-30 = legacy** (seen 2021-09-30, 2023-06-30); **2024-04-30 or later = modern** (seen 2024-04-30, 2025-05-31, 2026-02-28). Always verify with key tags; shape matches neither → clear "unsupported taxonomy release" error | **Decided** (Phase 1, widened after Reliance) |
+| D20 | Fetch recipe: `symbol` + `from_date=01-04-2021` + `to_date=<today>` (DD-MM-YYYY), no `issuer`; pick the FY from `fyFrom`/`fyTo`; cache the per-symbol listing as JSON as well as the files; take file URLs only from the JSON | **Decided** (Phase 1) |
+| D21 | Company search via `/api/smart-search/eqEtf?q=`; keep `segment == "in equity"`, prefer `series == "EQ"`; several plausible matches → ask the user to choose (list them); none → `UnknownCompany` | **Decided** (Phase 1) |
+| D22 | Rate units ("Kg/Month") are never annualised silently; show as filed with a note or leave out of comparisons | **Decided for now** by user 2026-10-08: "just show them as filed, decide later" |
+| D23 | Plausibility checks (e.g. emissions ÷ energy ratio, magnitude vs unit label) can mark a value "unit/scale doubtful" and show it **as filed with a warning** instead of converting it | **Decided** by user 2026-10-08 ("mention the doubtful warning") |
+| D24 | PDF is optional and never parsed (links can be `…/null`); the page may link to it only when the URL is real | **Decided** (Phase 1) |
+| D26 | **The project owns its download script** (`python download_filings.py --company <name|symbol> [--fy 2023-24] [--with-pdf] [--refresh]`), built from small modules (`errors`, `fiscal_year`, `nse_client`, `company_lookup`, `filings`, `downloader`, `download_cli`) so the report pipeline reuses it. Anything on disk is reused (also hand-downloaded files); company searches and filing lists are cached; min 3 s between requests; 403/429 → stop, no retries; 404 on one file → mark missing, continue; HTML block pages are never saved as filings. Folder = `data/raw/<safe SYMBOL>/<FY>/` (`M&M` → `M_M`) | **Decided & built** (user request 2026-10-08) |
+| D25 | Multi-year trends: show the **boundary** and the taxonomy family for each year; flag boundary changes and restatements; legacy energy (no unit) is shown "as filed" and not charted against modern years | **Proposed** (Phase 1, applies to Ext 1) |
+| D27 | The clean data is ONE `Principle6Report` (`brsr_p6/models.py`): a flat dict of `Metric`s keyed by stable row keys such as `E1.electricity`, each with a current and a previous `Cell` (value, unit, status, as_filed, note, warnings), plus list tables, facility blocks, assurance notes and extras. The SEBI view and the dashboard both read it (also saved as `data/parsed/<SYMBOL>/<FY>.json`) | **Decided & built** (Phase 2) |
+| D28 | Sanity checks (`checks.py`) only **add warnings**, never change a number: rounded-away zero intensity, air-pollutant zero caveat, totals that do not add up, emissions÷energy scale check (also applied to Scope 3). Implements the user's "show the doubtful warning" | **Decided & built** (Phase 2) |
+| D29 | XBRL tag names are looked up **ignoring case** (NSE spells `WithOutTreatment` and `WithoutTreatment`) | **Decided & built** (Phase 2) |
+| D30 | Waste recovery/disposal tables show the filing's **totals for all categories** (XBRL has no per-category split); ecologically-sensitive-area, EIA and initiative tables are written out row by row; E12's non-compliance table is a single free-text answer; "Others – please specify" air pollutants and the EIA web link have no XBRL field and are always "not reported" | **Decided & built** (Phase 2) |
+| D32 | The SEBI page is built in two steps: `sebi_view.py` (plain Python: footnote numbers, "Not reported" text, which unit goes where) and Jinja templates in `brsr_p6/templates/` that only PRINT. Rendering reads the same `Principle6Report` the dashboard will read | **Decided & built** (Phase 5) |
+| D33 | Numbers are shown in Indian digit grouping (`2,47,98,900`), at most 2 decimals, tiny numbers as 4.6×10⁻⁶; the saved JSON keeps full precision. The Unit column exists only where SEBI's form has one (E5, E6, L4); elsewhere the unit follows the number | **Decided & built** (Phase 5) |
+| D34 | Marks are words/symbols, never colour alone: `calc.` and `conv.` labels, numbered footnotes, doubtful values get ⚠ + the word "Doubtful" on an amber note; empty cells say "Not reported"; each table ends with SEBI's assurance note and its answer | **Decided & built** (Phase 5) |
+| D35 | One self-contained HTML file: CSS inline, **CSS-only tabs (no JavaScript)**, no internet needed; all filing text is auto-escaped (cannot inject HTML); phones get fixed-width compact tables | **Decided & built** (Phase 5) |
+| D36 | `main.py --company X --fy Y [--open]` now generates `output/<SYMBOL>_<FY>.html` (git-ignored); committed sample pages will live in `samples/` (Phase 7) | **Decided & built** (Phase 5) |
+| D31 | Assurance notes (E1,E3,E5,E6,E8,L1-L4): found by keyword in the tag name; for energy, the Essential-style tag is preferred and the "UnderLeadershipIndicators"-named tag is used as fallback (some editions have only that one) | **Decided & built** (Phase 2) |
+| D37 | **Dashboard reader and page order.** Reader = non-expert. The page answers four questions: how big is the footprint, better or worse than last year, is it under control, can I trust the numbers. Order: At a glance → Energy → Climate → Water → Air → Waste → Nature & safeguards → "Can I trust these numbers?" → glossary. Mockup: `design/dashboard_mockup.html` (real Reliance FY23-24 numbers) | **Decided & built** (Phase 6) |
+| D38 | **"Better / worse" only compares the company with ITSELF last year.** No rating, no score, no benchmark (the filing has none; inventing one would break "never invent numbers"). "About the same" band: within ±1% for amounts, within ±0.5 percentage points for shares. The scoreboard only counts how many headline figures improved / stayed / worsened. The page says this in a box | **Decided & built** (Phase 6) |
+| D39 | **Intensity shown per ₹ 1 crore of turnover** (filed figure × 10⁷) because the filed per-₹ number (e.g. 0.0000807) is unreadable. Only the unit changes; the as-filed number is in the "Fine print" and the badge says so (⇄) | **Decided & built** (Phase 6) |
+| D40 | **Big numbers in lakh / crore** (matches the Indian digit grouping of the SEBI tab); the full number is in the Fine print. Numbers whose unit is not stated are shown in plain Indian grouping, with no "crore GJ" | **Decided & built** (Phase 6) |
+| D41 | **Four trust levels per card.** *ok* (reported) · *check* (unit not stated / monthly / unit label unreliable / a 0 that may mean "not measured": shown, verdict allowed but with a ⚠ note, e.g. "valid only if both years use the same unit") · *doubtful* (value probably wrong: scale error, parts don't add up: still shown exactly as filed with an amber alert, **no verdict, left out of headline sentences and the scoreboard**) · *not reported* (never 0, never an arrow). A small `warning_kinds.py` table classifies the known warning texts, guarded by a test that every real warning is classified | **Decided & built** (Phase 6) |
+| D42 | **Derived dashboard figures** (Scope 1+2, renewable share, recovered share) are marked *calculated*, inherit the warnings of their inputs, and say how they were calculated in the Fine print. Recovered share = recovered ÷ (recovered + disposed), which cannot exceed 100% (Tata Steel files recovered > generated) | **Decided & built** (Phase 6) |
+| D43 | **Dashboard is the first and default tab**; the SEBI-format tab is second (same single HTML file, CSS-only tabs) | **Decided & built** (Phase 6) |
+| D44 | **Visuals kept simple:** plain CSS bars that start at zero (no truncated axes), stacked "where does it go" bars with a text legend, a handful of inline-SVG icons, `<details>` for fine print. No JavaScript, no chart library. Colour is never the only signal (words + ✔ ✖ ≈ ? symbols + ▲▼) | **Decided & built** (Phase 6) |
+| D45 | **Optional (Leadership) items** are labelled as optional; "Not reported" there is normal and the wording never implies wrongdoing | **Decided & built** (Phase 6) |
+| D46 | **No outside analogies** ("enough to power N homes") because they need numbers that are not in the filing. The glossary uses only exact conversions (1 GJ = 277.8 kWh, 1 kL = 1,000 litres) | **Decided & built** (Phase 6) |
+| D47 | **Safeguards tiles** quote the company's own words (excerpt in "What the company says"), count only Yes / No answers, and show "Not applicable" exactly as filed. Lists (EIA projects, sensitive-area locations) are summarised by count + names | **Decided & built** (Phase 6) |
+| D49 | **A zero last year gives "can't compare"**, never a percentage and never "Got worse" (HDFC Bank: 0 water last year, 21 lakh kL now; the 0 probably means "not measured"). Zero in BOTH years = "no change" but is not counted in the scoreboard; a change that rounds to 0.00 is "No change"; falling to zero is compared normally | **Decided & built** (Phase 6) |
+| D50 | **A figure with no stated unit is never quoted in a sentence** ("used 19,75,098 unit not stated of energy" is gibberish); the sentence says "the energy figure does not state its unit, so we do not quote it". Its card and its year-on-year change are still shown, with an asterisk. A doubtful figure is treated the same way ("looks doubtful") | **Decided & built** (Phase 6) |
+| D51 | **Shared warnings are shown once.** A warning appearing on two or more cards of a topic is lifted out and printed once under the cards (HDFC's six air pollutants carry the same two warnings). Charts that would mislead are not drawn: doubtful parts, parts in different units, or only an "Other sources" catch-all | **Decided & built** (Phase 6) |
+| D52 | **Safeguard answers:** "Yes" is a green chip, "No" and "Not applicable" and lists are neutral (a "No" to PAT is not a failing, and listing sensitive-area locations is honesty, not a fault). Missing answers say "Not reported", never "No" | **Decided & built** (Phase 6) |
+| D53 | **Every failure writes an error PAGE**, not only a console message: `output/error_<company>_<year>.html` (the `error_` start means it never overwrites a report page). `error_view.py` decides the words (the specific message verbatim, what was typed, "what you can try", ready-to-run commands), `templates/error.html` prints them. Unexpected exceptions (bugs) get a page too; `--debug` re-raises for the traceback. Exit code stays 1 | **Decided & built** (Phase 7) |
+| D54 | **Errors carry data, not just text:** `NoFilingFound(message, symbol, available)` and `AmbiguousCompany(message, candidates)`, so the page can list the years NSE has and one command per matching company. Suggested commands always use a real year (the typed one if valid, else 2023-24) | **Decided & built** (Phase 7) |
+| D55 | **Filing-list fallback:** if the saved list is older than 24 h and NSE cannot be reached, the older list is used and the console says so ("... may be out of date"). Not used with `--refresh`, and not when no saved list exists (then it is the NSE-unreachable error page). The old NSE-blocked message that promised hand-placed files would be used was corrected (it was only half true) | **Decided & built** (Phase 7) |
+| D56 | **Samples are made by ONE command** `python make_samples.py` from one list (`brsr_p6/samples.py`): 5 companies (Tata Steel, Reliance, Wipro, Infosys, HDFC Bank) + 4 error pages triggered for real with offline inputs; `samples/README.md` is generated from the same list. Pages are rebuilt from filings on disk (`pipeline.load_saved_report`, no internet) and a missing filing is downloaded politely. A test fails if a committed sample is out of date | **Decided & built** (Phase 7) |
+| D57 | **README v1** states what is done and what is NOT (extensions 1-3 not built), the revised / consolidated rule (latest revision wins, boundary shown, never chosen by us), limitations, AI tools used and the design note; two screenshots live in `docs/` | **Decided & built** (Phase 7) |
+| D58 | **"Runs from a clean checkout" is proven** in a fresh copy (no `.venv`, `data/`, `output/`) with a new venv: `pip install -r requirements.txt`, `pytest` (324 passed, 16 data-dependent skipped), then one command for ITC FY 2024-25 downloaded and wrote the page in 11 s. Which raw filings to commit (about 1.4 MB per XML, 32 MB for the 19 on disk) is decided in Phase 11 | **Decided & built** (Phase 7) |
+| D48 | **Exact SI energy and mass multiples are converted** to GJ / tCO₂e (Megajoule ×0.001, Terajoule ×1000, Petajoule, Kilojoule, ktCO2e ×1000): real filings (ITC, Wipro) use them and the dashboard needs one unit per topic. They are marked `conv.` and the filed figure stays in `as_filed` | **Decided & built** (Phase 6.0) |
+
+## 7. Glossary (for the dashboard and the interview)
+
+- **BRSR:** Business Responsibility and Sustainability Report, SEBI's mandatory ESG disclosure for the top 1,000 listed companies.
+- **Principle 6:** the environment chapter of BRSR (energy, water, air, GHG, waste, compliance).
+- **SEBI / NSE:** the market regulator / the stock exchange where filings are published.
+- **FY 2023-24:** financial year 1 Apr 2023 to 31 Mar 2024.
+- **XBRL:** structured XML format for reports. Each number is a tagged "fact" with a period (context) and a unit.
+- **GJ / MWh / TJ:** energy units (1 MWh = 3.6 GJ; 1 TJ = 1,000 GJ).
+- **kL / m³ / ML:** water volume units (1 kL = 1 m³; 1 ML = 1,000 kL).
+- **tCO₂e:** tonnes of CO₂ equivalent, a common unit for greenhouse gases.
+- **Scope 1 / 2 / 3:** direct emissions / purchased-energy emissions / value-chain emissions.
+- **Intensity:** a metric divided by company size (e.g. energy per ₹ of turnover), so firms and years compare fairly.
+- **PAT:** Perform, Achieve and Trade (India's energy-efficiency trading scheme).
+- **ZLD:** Zero Liquid Discharge.
+- **EIA:** Environmental Impact Assessment.
+
+## 8. Progress log
+
+| Date | Phase | What happened |
+|---|---|---|
+| 2026-10-07 | Planning | Read assignment PDF; verified SEBI 2021 P6 template from the official Annexure I; wrote `plan.md` + `context.md`. |
+| 2026-10-07 | **Phase 0 ✅** | Plan confirmed (defaults accepted). Created `requirements.txt`, `.gitignore`, `pytest.ini`, `README.md` skeleton, `learnings.md`, `main.py` (replaced PyCharm sample), `brsr_p6/{__init__,cli}.py`, `tests/test_cli.py`, `data/raw`, `data/parsed`, `samples` (with `.gitkeep`). Tested: `--help`, valid run (exit 0), missing arg (exit 2), `pytest` 3 passed, and a clean-checkout test in a fresh venv (same 13 packages, 3 passed). **Git deferred to Phase 11 by user choice.** Next: Phase 1 (discovery spike on NSE). |
+| 2026-10-07 | **Phase 1 started** | Web research found no public docs for NSE's BRSR endpoint or XBRL tag names (so they must be discovered by hand). Added data-quality findings from an xbrl.org paper (§4), the Phase 1 findings worksheet (§4a), a Phase 1 explainer + hands-on steps in `learnings.md`, sanity-check task in plan Phase 4, and empty `data/raw/<SYMBOL>/<FY>/` folders for TATASTEEL (3 yrs), INFY, HDFCBANK. **Waiting for the user to do DevTools discovery + download filings.** |
+| 2026-10-07 | **Phase 1 in progress** | User supplied the API URL + JSON (Tata Steel). Claude made 4 polite requests (home → API → XML → PDF, ≥3 s apart; all HTTP 200) and saved Tata Steel FY 2025-26 XML + PDF to `data/raw/TATASTEEL/2025-26/`. Explored the XBRL with throwaway scripts (kept outside the project in the scratchpad) and cross-checked against the PDF: energy/water/air/waste match; **traps found** (unit `MtCO2e` = million tonnes, intensity `0`, wrong PPP unit label, "not material" stored as `0`). Worksheet §4a/4b/4c filled; decisions D12-D17 added. **Open:** how to list older FYs; inspect older filings (taxonomy differences), a revised filing, Infosys/HDFC. |
+| 2026-10-08 | **Phase 1 ✅ (pending user sign-off)** | User re-sent the API URL. Claude found the cause in NSE's own page scripts: the page defaults to the **last 365 days**; older years need `from_date`/`to_date` (DD-MM-YYYY). Wide-range queries returned Tata Steel 4 filings, Infosys 5, HDFC Bank 5 (no `issuer` needed). Downloaded 7 more XBRL files (Tata FY22-23/23-24/24-25, Infosys FY21-22/23-24, HDFC FY23-24) and compared four taxonomy releases; found the company-search endpoint; confirmed revised filings replace originals (22 of 1,215); found a malformed file (Infosys FY21-22) and many data traps. Worksheet §4a-4e rewritten; decisions D6, D18-D25 added. ~25 polite requests in total. **Next: Phase 2.** |
+| 2026-10-08 | **Phase 3a ✅ (download script, pulled forward at the user's request)** | User objected that the files had come from Claude's throwaway scratchpad probes, not from a script in the project (an interviewer will ask to download another company). Built the project download script + 7 modules + 4 new test files (72 tests pass, offline fakes). **Live proof:** `--company Reliance` → resolved to Reliance Industries Limited (RELIANCE), downloaded 4 XMLs (FY22-23…25-26) in 20 s, flagged FY21-22 as not filed; re-run = 0 requests / 0.4 s; HDFC Bank FY22-23 with PDF (9.6 MB) OK; `M&M` → `data/raw/M_M/`; Sakuma Exports → clear "no BRSR filings" message; unknown / ambiguous ("Tata" lists 10) / FY 2019-20 / "banana" / FY not on NSE / 1-char input all give specific messages (exit code 1). **Findings from the new data:** (1) a fifth taxonomy release `2023-06-30` (Reliance FY22-23, legacy shape) → D19 widened; (2) **correction**: `MtCO2e` means metric tonnes, not million tonnes; Tata Steel typed millions under it → emissions÷energy ratio check (D16/D23 revised). |
+| 2026-10-08 | **Phase 2 ✅ (done together with the core of Phase 4, at the user's request)** | User signed off Phase 1 and asked for the data to be cleaned into the SEBI template, consumable by the SEBI view and the dashboard, with simple code. Built `models`, `values`, `units`, `xbrl_reader`, `sebi_template` (21 questions, official wording), `p6_mapping` (legacy + modern tags per row), `extractor`, `checks`, `report_text`, `report_io`, `extract_cli` + `extract_report.py`. Verified by reading Tata Steel FY25-26 output against its PDF (matches) and by running all 18 downloaded filings (5 companies, both editions): 0 crashes, 59-68 of 70 numeric rows filled. **Bugs found by reading real output and fixed:** (a) tag-spelling inconsistency hid "Others - No treatment" (now case-insensitive lookup); (b) the reader dropped every tag containing "link", hiding `WebLink…` answers such as L7 (now only the linkbase namespace is skipped); (c) E1 assurance not found in editions with a single "…UnderLeadershipIndicators" energy tag (fallback added); (d) Scope 3 now inherits the Scope 1+2 scale warning. 160 tests pass (incl. regression checks against Tata's PDF numbers). New command: `python extract_report.py --company Reliance --fy 2023-24 [--questions E1,E6]`. **Next: Phase 5 (SEBI-format HTML view).** |
+| 2026-10-08 | **Phase 5 ✅ SEBI-format HTML view** | Built `formatting.py`, `sebi_view.py`, `render.py`, `pipeline.py`, templates (`base.html`, `sebi.html`, `style.css`) and wired `main.py` (+ `--open`); `extract_report.py` reuses `pipeline.load_report`. Verified visually with headless-Edge screenshots (desktop; phone width via a 375 px iframe) on Reliance, Tata Steel, Infosys (legacy + cleaned XML). **Real bugs found by looking at the output:** (a) "other sources" energy was **double counted** (a filing gives a plain total AND breakdown rows; the new sum check exposed it) → use the plain total, add rows only when no total exists; (b) a dataclass field named `list` shadowed Python's `list` → renamed `listing`; (c) CSS specificity made numbers left-aligned; (d) tables overflowed on phones → fixed-width compact layout; (e) duplicated remark under empty list tables. After the fix **0 "rows don't add up" warnings in all 18 filings × 2 years**. 200 tests pass, including "every official question text and row label appears in SEBI's order" and "all 18 downloaded filings render to well-formed HTML". Oddity noted: Tata Steel FY25-26 stores its renewable energy breakdown (in PJ) under the "other sources" tag labelled GJ, so its (C) row shows 1.51 GJ; shown as filed. **Next: Phase 6 (dashboard).** |
+| 2026-10-08 | **`commands.md` added (demo cheat-sheet)** | At the user's request: one file with every command (download / clean / page / tests), copy-paste examples with placeholders for company and FY, a 5-minute demo flow, what is on disk, error-handling demos, where results are saved, start-fresh commands, troubleshooting and one-line answers. All commands were run and verified (also a brand-new company, ITC: 10.7 s first run, 0.4 s second). **Keep `commands.md` in sync after each phase** (e.g. when the dashboard tab and error pages land). |
+| 2026-10-08 | **Phase 6 design ✅ (awaiting user's OK, no code yet)** | User asked for a friendly, understandable dashboard and suggested designing one template / one company first. Read the real clean data for Tata Steel, Reliance, HDFC Bank and grouped **every warning text across all parsed filings** to learn which awkward cases the dashboard must handle (unit not stated ×72, physical-output / PPP labels, zero may mean "not measured", scale error, monthly figure, unconvertible unit). Built `design/dashboard_mockup.html`: Reliance FY23-24 with real numbers (every percentage computed by script, not typed), plus a gallery of awkward cases (Tata Steel doubtful Scope 1, HDFC unit-less energy, zero intensity). Checked in headless Edge on desktop and a 375 px phone frame and fixed alignment, legend and wrapping problems. Wrote the Phase 6 plan (6.0-6.8) and decisions D37-D48. **Side findings:** (1) `data/parsed/RELIANCE/2024-25.json` was stale (written before the double-count fix) → regenerated; (2) ITC and Wipro file energy in Terajoule/Megajoule and ITC emissions in ktCO2e, which `units.py` does not convert (D48, step 6.0); (3) Reliance files water consumption = withdrawal although it also reports 3.46 crore kL discharge: possible water-balance check, to verify against SEBI's guidance note first. |
+| 2026-10-08 | **Phase 6 ✅ Dashboard** | Built in the planned order. **6.0** `units.py` now converts Terajoule / Megajoule / Petajoule / Kilojoule, `ktCO2e` and per-₹ intensity units (floating-point noise cleaned); this switched on the emissions-vs-energy scale check for ITC and Wipro, which it had silently skipped. `warning_kinds.py` (doubtful / check; unknown = doubtful) with a guard test over every real warning. **Then** `friendly.py` (lakh / crore), `comparison.py` (verdict rules), `metric_info.py` (all wording as data), `dashboard_cards.py` (one figure -> one card), `dashboard_view.py` (topics, charts, headline sentences, scoreboard, safeguards, trust panel), `templates/dashboard.html` + `dashboard.css` (every rule under `.dash`), Dashboard = first/default tab, SEBI legend moved into the SEBI tab. **Real-data problems found by reading output and fixed:** "Up from 0 -> Got worse" (HDFC), gibberish sentence for unit-less energy, zero-vs-zero inflating the scoreboard, a 100% "Other sources" chart, "100.0%", share decimals, a `KEY_FIGURES` constant defined twice (the later silently won), stale `output/` pages mistaken for current ones. Visually checked (headless Edge, desktop + 375 px frame) on Reliance, Tata Steel, HDFC Bank, Infosys; sentences text-checked on Wipro, ITC, M&M. Mockup slips corrected (0.05 not 0.06 points; 19,75,098). **298 tests pass** (was 200). Real Reliance numbers equal the mockup's; trust counts 80 / 69 / 3 / 1 / 7 / 10 match too. **Not done here:** 6.7 (show the page to a non-technical person for two minutes), which only the user can do. Decisions D37-D52. **Next: Phase 7** (error pages, `samples/`, README, design note). |
+| 2026-10-08 | **Phase 7 ✅ Error pages, samples, README** | `error_view.py` + `templates/error.html|css` + `render.write_error_page`; `cli.py` now catches `BrsrError` and unexpected exceptions, writes `output/error_<company>_<year>.html`, prints the message and the page path, supports `--output-dir` and `--debug`; `NoFilingFound` carries `symbol` and `available` years. **NSE-unreachable:** `list_filings` falls back to an older saved filing list (with a notice) instead of failing; a wrong promise in the 403/429 message was corrected. **Samples:** `brsr_p6/samples.py` + `make_samples.py` (5 company pages, 4 error pages, generated `samples/README.md`); `pipeline.load_saved_report` builds a page from files on disk; `tests/test_samples.py` includes "committed samples are up to date". **README v1** written in full (+ `docs/` screenshots). **Clean-checkout proof** in a brand-new venv (D58). Bug found while demonstrating an error: my fake "damaged" XML hit the wrong branch (no SEBI namespace) until fixed. **340 tests pass** (was 298). **Next:** user decision on the optional extensions (Phase 8-10), then Phase 11 (git install, `git init`, GitHub push, which raw data to commit, regenerate samples, optional screen recording). |
+
+## 9. AI-usage log (needed for the README)
+
+| Tool | Used for |
+|---|---|
+| Claude Code (Claude Sonnet 5.5) | Reading the assignment, creating the project plan, Phase 0 project setup (requirements, CLI skeleton, tests, README skeleton), writing `learnings.md`; Phase 1: throwaway probe/explore scripts to fetch (politely) and inspect an NSE XBRL filing and its PDF, and cross-check the numbers. [Extend as we build: parsing, templates, dashboard, code review, etc.] |
