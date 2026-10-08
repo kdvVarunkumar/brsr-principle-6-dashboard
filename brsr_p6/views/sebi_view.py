@@ -16,6 +16,7 @@ from dataclasses import dataclass, field
 from brsr_p6.core.formatting import format_number_html
 from brsr_p6.core.models import Status
 from brsr_p6.core.sebi_template import QUESTIONS
+from brsr_p6.views.trace_view import tooltip
 
 NOT_REPORTED = "Not reported"
 NOTHING_TO_SAY = {"Not found in the filing."}   # a note that would only repeat "Not reported" on every empty row
@@ -30,6 +31,7 @@ class CellView:
     tags: list = field(default_factory=list)    # "calculated" / "converted": shown as small labels
     notes: list = field(default_factory=list)   # footnote numbers of harmless notes
     warns: list = field(default_factory=list)   # footnote numbers of warnings
+    trace: str = ""               # hover text: the filing's element(s) this value was read from ("" when there is nothing to trace)
 
 
 @dataclass
@@ -114,6 +116,7 @@ def cell_view(cell, footnotes):
         view.missing = False
         view.unit = cell.unit
         view.text = cell.value if isinstance(cell.value, str) else format_number_html(cell.value)
+        view.trace = tooltip(cell)
         if cell.status in (Status.CALCULATED, Status.CONVERTED):
             view.tags.append(cell.status.value)
     if cell.note and cell.note not in NOTHING_TO_SAY:

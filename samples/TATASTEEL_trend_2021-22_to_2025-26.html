@@ -124,7 +124,22 @@ footer { padding: 4px 16px 40px; color: var(--muted); font-size: 0.85rem; }
   .panel { display: block !important; border: none; padding: 0; }
   .panel-dashboard { display: none !important; }
   .table-wrap { overflow: visible; }
-}/* The Dashboard tab.  Every rule starts with .dash so it can never change how the SEBI tab looks. */
+}
+
+/* ---- the trace from every number to the filing (templates/trace.html) ---- */
+.trace-steps { margin: 6px 0 12px 20px; padding: 0; color: var(--muted); font-size: 0.92rem; }
+.trace-source { background: var(--paper); border: 1px solid var(--line); border-radius: 8px; padding: 12px 16px; margin: 0 0 12px; }
+details.trace-q { background: var(--paper); border: 1px solid var(--line); border-radius: 6px; margin: 8px 0; padding: 0 12px; }
+details.trace-q > summary { cursor: pointer; padding: 9px 0; font-size: 0.95rem; }
+details.trace-q[open] > summary { border-bottom: 1px solid var(--line); margin-bottom: 8px; }
+details.trace-q .table-wrap { margin-bottom: 12px; }
+table.trace-table { width: 100%; min-width: 620px; table-layout: fixed; }
+table.trace-table th[scope="row"] { width: 30%; font-weight: 400; }
+table.trace-table th:not([scope]) { width: 35%; }
+.t-shown { display: block; font-weight: 600; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.t-status { display: block; font-size: 0.78rem; color: var(--accent); }
+.t-line { display: block; margin-top: 3px; font-family: ui-monospace, Consolas, monospace; font-size: 0.76rem; color: var(--muted); overflow-wrap: anywhere; }
+.t-note { display: block; margin-top: 3px; font-size: 0.78rem; font-style: italic; color: var(--muted); }details.trace-q .remark { overflow-wrap: anywhere; }/* The Dashboard tab.  Every rule starts with .dash so it can never change how the SEBI tab looks. */
 .dash {
   --good-ink: #0b6b4f; --good-bg: #e0f3ec; --good-line: #86c9b3;
   --bad-ink: #9a3608;  --bad-bg: #fde9dc;  --bad-line: #eba67d;
@@ -247,7 +262,11 @@ footer { padding: 4px 16px 40px; color: var(--muted); font-size: 0.85rem; }
   .dash .big .v { font-size: 1.8rem; }
   .dash .glance { padding: 16px 14px; }
   .dash .bar-row { grid-template-columns: 70px 1fr 58px; }
-}/* The multi-year trend page.  It reuses the dashboard's chips, topic headings and notes; only the tables are new. */
+}
+
+/* ---- trace lines in a card's Fine print ---- */
+.dash .trace-head { margin: 8px 0 2px; }
+.dash .trace { margin: 2px 0; font-family: ui-monospace, Consolas, monospace; font-size: 0.76rem; color: var(--muted); overflow-wrap: anywhere; }/* The multi-year trend page.  It reuses the dashboard's chips, topic headings and notes; only the tables are new. */
 .trend-main { max-width: 1280px; margin: 0 auto; padding: 0 16px 32px; }
 .trend-main .dash { margin-top: 4px; }
 .table-wrap { overflow-x: auto; background: var(--paper); border: 1px solid var(--line); border-radius: 10px; margin-top: 10px; }

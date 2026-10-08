@@ -122,3 +122,7 @@
   .dash .glance { padding: 16px 14px; }
   .dash .bar-row { grid-template-columns: 70px 1fr 58px; }
 }
+
+/* ---- trace lines in a card's Fine print ---- */
+.dash .trace-head { margin: 8px 0 2px; }
+.dash .trace { margin: 2px 0; font-family: ui-monospace, Consolas, monospace; font-size: 0.76rem; color: var(--muted); overflow-wrap: anywhere; }

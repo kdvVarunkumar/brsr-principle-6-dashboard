@@ -124,7 +124,22 @@ footer { padding: 4px 16px 40px; color: var(--muted); font-size: 0.85rem; }
   .panel { display: block !important; border: none; padding: 0; }
   .panel-dashboard { display: none !important; }
   .table-wrap { overflow: visible; }
-}/* The Dashboard tab.  Every rule starts with .dash so it can never change how the SEBI tab looks. */
+}
+
+/* ---- the trace from every number to the filing (templates/trace.html) ---- */
+.trace-steps { margin: 6px 0 12px 20px; padding: 0; color: var(--muted); font-size: 0.92rem; }
+.trace-source { background: var(--paper); border: 1px solid var(--line); border-radius: 8px; padding: 12px 16px; margin: 0 0 12px; }
+details.trace-q { background: var(--paper); border: 1px solid var(--line); border-radius: 6px; margin: 8px 0; padding: 0 12px; }
+details.trace-q > summary { cursor: pointer; padding: 9px 0; font-size: 0.95rem; }
+details.trace-q[open] > summary { border-bottom: 1px solid var(--line); margin-bottom: 8px; }
+details.trace-q .table-wrap { margin-bottom: 12px; }
+table.trace-table { width: 100%; min-width: 620px; table-layout: fixed; }
+table.trace-table th[scope="row"] { width: 30%; font-weight: 400; }
+table.trace-table th:not([scope]) { width: 35%; }
+.t-shown { display: block; font-weight: 600; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.t-status { display: block; font-size: 0.78rem; color: var(--accent); }
+.t-line { display: block; margin-top: 3px; font-family: ui-monospace, Consolas, monospace; font-size: 0.76rem; color: var(--muted); overflow-wrap: anywhere; }
+.t-note { display: block; margin-top: 3px; font-size: 0.78rem; font-style: italic; color: var(--muted); }details.trace-q .remark { overflow-wrap: anywhere; }/* The Dashboard tab.  Every rule starts with .dash so it can never change how the SEBI tab looks. */
 .dash {
   --good-ink: #0b6b4f; --good-bg: #e0f3ec; --good-line: #86c9b3;
   --bad-ink: #9a3608;  --bad-bg: #fde9dc;  --bad-line: #eba67d;
@@ -247,7 +262,11 @@ footer { padding: 4px 16px 40px; color: var(--muted); font-size: 0.85rem; }
   .dash .big .v { font-size: 1.8rem; }
   .dash .glance { padding: 16px 14px; }
   .dash .bar-row { grid-template-columns: 70px 1fr 58px; }
-}/* The year-on-year summary page.  It reuses the dashboard's cards, chips and notes; only the numbered entries and the table are new. */
+}
+
+/* ---- trace lines in a card's Fine print ---- */
+.dash .trace-head { margin: 8px 0 2px; }
+.dash .trace { margin: 2px 0; font-family: ui-monospace, Consolas, monospace; font-size: 0.76rem; color: var(--muted); overflow-wrap: anywhere; }/* The year-on-year summary page.  It reuses the dashboard's cards, chips and notes; only the numbered entries and the table are new. */
 .trend-main { max-width: 1280px; margin: 0 auto; padding: 0 16px 32px; }
 .trend-main .dash { margin-top: 4px; }
 .dash .notes-list { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 8px; }
@@ -313,7 +332,7 @@ footer code { background: #eef1f4; border-radius: 4px; padding: 1px 6px; font-si
   <p class="big"><span class="v num">0.65</span><span class="u">tonnes</span></p>
   <p class="trend"><span class="chip chip-good">✔ Improved</span><span>▼ 79.5% lower than last year</span></p>
   <p class="what">Tiny dust and soot particles that reach deep into lungs.</p>
-  <p class="badge">Last year: 3.17 tonnes · ✔ Reported by the company</p>
+  <p class="badge" title="From the filing: FY 2025-26: ParticulateMatter = 0.65 Tonne | FY 2024-25: ParticulateMatter = 3.17 Tonne">Last year: 3.17 tonnes · ✔ Reported by the company</p>
 </article>
 
 </div>
@@ -330,7 +349,7 @@ footer code { background: #eef1f4; border-radius: 4px; padding: 1px 6px; font-si
     <div class="bar-row prev"><span>2024-25</span><span class="bar"><i style="width:36.94%"></i></span><span class="bv">36.9%</span></div>
   </div>
   <p class="what"><b>What it is:</b> The share of waste that was recycled, reused or otherwise recovered instead of burned or buried.</p>
-<p class="why"><b>Why it matters:</b> Recovered waste does not end up in landfills or chimneys, so this is the best single sign of good waste handling.</p>  <details class="fine"><summary>Fine print</summary><p>Calculated by us: waste recovered ÷ (recovered + disposed). This year: 7,007 ÷ (7,007 + 748) (last year 5,110 ÷ (5,110 + 8,725)).</p><p>Source in the SEBI tab: Essential 8.</p></details>
+<p class="why"><b>Why it matters:</b> Recovered waste does not end up in landfills or chimneys, so this is the best single sign of good waste handling.</p>  <details class="fine"><summary>Fine print</summary><p>Calculated by us: waste recovered ÷ (recovered + disposed). This year: 7,007 ÷ (7,007 + 748) (last year 5,110 ÷ (5,110 + 8,725)).</p><p>Source in the SEBI tab: Essential 8.</p><p class="trace-head"><b>Where it is in the filing:</b></p><p class="trace">FY 2025-26: TotalWasteRecovered = 7007 Tonne; TotalWasteDisposed = 748 Tonne</p><p class="trace">FY 2024-25: TotalWasteRecovered = 5110 Tonne; TotalWasteDisposed = 8725 Tonne</p></details>
   <p class="badge">∑ Calculated by us from reported figures</p>
 </article>
 
@@ -348,7 +367,7 @@ footer code { background: #eef1f4; border-radius: 4px; padding: 1px 6px; font-si
     <div class="bar-row prev"><span>2024-25</span><span class="bar"><i style="width:100.00%"></i></span><span class="bv">0.35</span></div>
   </div>
   <p class="what"><b>What it is:</b> Scope 1 + 2 emissions divided by sales (“emission intensity”).</p>
-<p class="why"><b>Why it matters:</b> Shows whether the company is getting cleaner per unit of business, even while it grows.</p>  <details class="fine"><summary>Fine print</summary><p>Filed as 0.000000017 tCO2ePerINR (last year 0.0000000353 tCO2ePerINR). We show it per ₹ crore (× 10,000,000); only the unit changed.</p><p>Source in the SEBI tab: Essential 6, “Total Scope 1 and Scope 2 emissions per rupee of turnover”.</p></details>
+<p class="why"><b>Why it matters:</b> Shows whether the company is getting cleaner per unit of business, even while it grows.</p>  <details class="fine"><summary>Fine print</summary><p>Filed as 0.000000017 tCO2ePerINR (last year 0.0000000353 tCO2ePerINR). We show it per ₹ crore (× 10,000,000); only the unit changed.</p><p>Source in the SEBI tab: Essential 6, “Total Scope 1 and Scope 2 emissions per rupee of turnover”.</p><p class="trace-head"><b>Where it is in the filing:</b></p><p class="trace">FY 2025-26: TotalScope1AndScope2EmissionsIntensityPerRupeeOfTurnover = 0.000000017 tCO2ePerINR</p><p class="trace">FY 2024-25: TotalScope1AndScope2EmissionsIntensityPerRupeeOfTurnover = 0.0000000353 tCO2ePerINR</p></details>
   <p class="badge">⇄ Reported by the company · shown per ₹ crore</p>
 </article>
 

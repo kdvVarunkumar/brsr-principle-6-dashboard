@@ -240,6 +240,15 @@ Time estimates are rough hours for you working with my help. Core (Phases 0-7) i
 - [x] Notes brought up to date with the new layout and Phase 9: README, `commands.md` (with a "where is the code?" table), `context.md` D69-D77, `learnings.md` Phases 9 and 12
 - [x] Fresh `git clone` in a short path: 472 passed, 0 skipped, `make_samples.py` changed nothing, `main.py` ran
 
+### Phase 13: Trace every number back to the filing (the brief's own rule)  ✅ DONE
+*The brief: "Never invent numbers. Every figure shown must trace back to a filing." Before this phase the page named the source file and flagged converted / calculated values, but an ordinary reported number did not say which XBRL element it came from, and the NSE link was not kept.*
+- [x] `Origin` (element in the filing's own spelling, text as written, unit as written, year, number of rows added) on every `Cell`; a calculated figure lists every ingredient; a missing value remembers the elements looked for (`looked_for`)
+- [x] The report keeps NSE's link to the XBRL file and the PDF (`source_url`, `pdf_url`; only `https` links are made clickable)
+- [x] Where it shows: dashboard card Fine print ("Where it is in the filing"), a hover on every SEBI-tab number, a last section of the SEBI tab ("Where every number comes from": every row, both years, status, element and text as filed), the page header link, and `extract_report.py --trace`
+- [x] **Proof:** `tests/extraction/test_origin.py` checks every value of every real filing on disk (21 on the author's PC: 4,605 values; the 11 committed ones: 2,178) against the raw XML with a regular expression independent of our reader
+- [x] Samples regenerated; 529 tests; phone width checked
+- [ ] *Not done (extensions kept aside):* the multi-year trend page shows each column's source filing but not an element per cell
+
 ---
 
 ## 6. Milestones

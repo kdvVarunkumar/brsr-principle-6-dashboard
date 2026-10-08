@@ -1,0 +1,61 @@
+{# =======================================================================================================
+   "Where every number comes from": the trace from each number to the filing.
+   This template only PRINTS; every sentence was decided in views/trace_view.py.
+   ======================================================================================================= #}
+
+{% macro trace_cell(c) %}
+{% if c.not_asked %}<span class="missing">asked for the current year only</span>{% else %}
+<span class="t-shown{% if c.missing %} missing{% endif %}">{{ c.shown }}</span>
+<span class="t-status">{{ c.status }}</span>
+{% for line in c.lines %}<span class="t-line">{{ line }}</span>{% endfor %}
+{% if c.note %}<span class="t-note">{{ c.note }}</span>{% endif %}
+{% endif %}
+{% endmacro %}
+
+{% macro trace_question(q) %}
+<details class="trace-q" id="trace-{{ q.id }}">
+  <summary><strong>{{ q.title }}</strong> · {{ q.text }}</summary>
+  {% for remark in q.remarks %}<p class="remark">{{ remark }}</p>{% endfor %}
+  {% if q.rows %}
+  <div class="table-wrap">
+    <table class="sebi trace-table">
+      <thead><tr><th>Row</th><th>FY {{ trace.current_year }}</th><th>FY {{ trace.previous_year }}</th></tr></thead>
+      <tbody>
+        {% for row in q.rows %}
+        <tr><th scope="row">{{ row.label }}</th><td>{{ trace_cell(row.current) }}</td><td>{{ trace_cell(row.previous) }}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+</details>
+{% endmacro %}
+
+<h2 class="section" id="trace">Where every number comes from</h2>
+<p class="principle-sub">This section is not part of SEBI's form. It is how you can check any number on this page against the company's own filing.</p>
+
+<ol class="trace-steps">
+  <li>On the Dashboard, open a card's <em>Fine print</em>: it names the SEBI question and the filing's element(s) behind the figure.</li>
+  <li>In the tables above, hover over a number to see the same; below, find its row. It shows the value on the page, how we got it, the element and the text exactly as filed.</li>
+  <li>Open the filing (link below) and search for that element name. The value you find there is the one quoted here.</li>
+</ol>
+
+<dl class="facts trace-source">
+  <div><dt>The filing (XBRL, on NSE)</dt><dd>{% if trace.source_url.startswith("https://") %}<a href="{{ trace.source_url }}" rel="noopener noreferrer" target="_blank">{{ trace.source_file }}</a>{% else %}{{ trace.source_file }} <span class="missing">(no link available)</span>{% endif %}</dd></div>
+  {% if trace.pdf_url.startswith("https://") %}<div><dt>The same filing as a PDF</dt><dd><a href="{{ trace.pdf_url }}" rel="noopener noreferrer" target="_blank">open</a></dd></div>{% endif %}
+  <div><dt>Filed on NSE</dt><dd>{{ trace.filed }}</dd></div>
+  <div><dt>Edition of SEBI's XBRL form</dt><dd>{{ trace.edition }}</dd></div>
+  <div><dt>Reporting boundary</dt><dd>{{ trace.boundary }}</dd></div>
+</dl>
+
+<p class="legend"><strong>How to read a row.</strong> The first line is the value as shown above. <em>Reported by the company</em> means the number is the filing's own;
+  <em>Calculated by us</em> means we added reported numbers (every one is listed); <em>Unit changed by us</em> means the element holds the figure in another unit (the line shows it as filed).
+  <span class="missing">Not reported</span> says which elements were looked for, or that the structured filing has no field for the item: nothing is ever filled in.
+  Each element line reads <em>ElementName = the text as written in the filing</em>, followed by the unit as written.</p>
+
+{% for q in trace.questions %}
+{{ trace_question(q) }}
+{% endfor %}
+{% if trace.extras %}
+{{ trace_question(trace.extras) }}
+{% endif %}

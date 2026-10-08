@@ -51,13 +51,17 @@ Reads the downloaded XML, fills SEBI's 21 Principle 6 questions, prints them as 
 python extract_report.py --company "Reliance" --fy 2023-24                    # whole report as text
 python extract_report.py --company "TATASTEEL" --fy 2025-26 --questions E1,E6  # only some questions
 python extract_report.py --company "Infosys" --fy 2021-22 --quiet              # only save the JSON
+python extract_report.py --company "TATASTEEL" --fy 2025-26 --questions E6 --trace   # + the filing's element behind every value
 ```
 | Option | Meaning |
 |---|---|
 | `--questions E1,E6,L4` | print only those questions (`E1`-`E12` = Essential, `L1`-`L9` = Leadership) |
 | `--quiet` | do not print, only save the JSON |
+| `--trace` | under every value print `↳ FY 2025-26: TotalScope1Emissions = 64 MtCO2e`: the filing's own element, and the text exactly as filed |
 
 Marks in the printout: `c` = calculated by us · `k` = converted by us · `!` = doubtful (note below the table).
+
+**Talking point for `--trace`:** *"Every figure traces back to the filing."* Tata Steel's Scope 1 shows `= 64 MtCO2e`: that is exactly what the company typed (64, where it means 64 million), which is why it is flagged as doubtful and never compared.
 
 ### 2.3 Make the page: `main.py`  ← the main one
 ```powershell
@@ -125,7 +129,7 @@ Errors give a page too, with suggested commands that use `summary.py`: an unknow
 
 | Step | Command | What to say |
 |---|---|---|
-| 1 | `pytest -q` | "About 470 automatic tests pass, with no internet needed." |
+| 1 | `pytest -q` | "About 530 automatic tests pass, with no internet needed." |
 | 2 | `python download_filings.py --company "<NEW COMPANY>"` | "It finds the company on NSE, downloads each year politely (3 s apart), and flags years NSE does not have." |
 | 3 | *(run step 2 again)* | "Second run: 0 requests. Everything is cached." |
 | 4 | `python extract_report.py --company "<NEW COMPANY>" --fy 2024-25 --questions E1,E6` | "XML → clean SEBI rows. Calculated, converted and doubtful values are marked, and nothing is invented: missing = Not reported." |
@@ -134,6 +138,18 @@ Errors give a page too, with suggested commands that use `summary.py`: an unknow
 | 6b | `python trends.py --company "<COMPANY>" --open` | "Extension 1: the same company over every year NSE has. Missing years flagged, basis changes and restatements marked." |
 | 6c | `python summary.py --company "<COMPANY>" --open` | "Extension 2: the 3 biggest improvements and setbacks against last year, with the definition of 'better' stated on the page, and everything it could not rank listed with the reason." |
 | 7 | the error commands in section 6 | "Specific messages instead of crashes." |
+
+### 3b. "Prove that this number is not invented" (about 90 seconds, no extra command)
+
+Open `python main.py --company "Tata Steel" --fy 2025-26 --open`, then:
+1. **Dashboard → "Total energy used" → Fine print.** It says *Source in the SEBI tab: Essential 1* and **Where it is in the filing:** `FY 2025-26: TotalEnergyConsumedFromRenewableAndNonRenewableSources = 623812739.43 Gigajoule` (and last year's).
+2. **SEBI-format report tab → hover the number** in Essential 1: the same element appears as a tooltip.
+3. **Scroll to the last section, "Where every number comes from".** Open *Essential 1*: each row shows the value on the page, *Reported by the company / Calculated by us / Unit changed by us*, and the element(s) with the text exactly as filed. A calculated row (electricity = renewable + non-renewable) lists **both** elements.
+4. **Click the file name** (also in the page header): it opens the XBRL file on NSE. Search for the element name: the same value is there.
+5. **A row the company did not report:** at the bottom of *Essential 1*, "Energy intensity (optional)" says *Not found in the filing. Elements looked for: EnergyIntensityTheRelevantMetricMayBeSelectedByTheEntity*; in *Essential 5*, "Others – please specify" says *The structured filing has no field for this item*. Neither is ever shown as 0.
+6. **A converted row** (open *Essential 5*, NOx): *Unit changed by us*, `NOx = 27 Kilotonne`, and *Converted from Kilotonne to tonnes (x 1000)*: the filed figure is quoted next to ours.
+
+The proof that this holds for every number: `pytest tests/extraction/test_origin.py -v`. It checks every value of every downloaded filing against the raw XML (4,605 values in the 21 filings on the author's PC, 2,178 in the 11 committed ones).
 
 ### 3a. What to point at on the Dashboard (about 2 minutes)
 
@@ -255,7 +271,7 @@ How to read a page: *Not reported* = the filing has nothing (never shown as 0) �
 ## 8. Tests
 
 ```powershell
-pytest -q                              # everything (about 470 tests, a few seconds, no internet)
+pytest -q                              # everything (about 530 tests, a few seconds, no internet)
 pytest tests/views -q                  # one layer: the test folders mirror brsr_p6/ (core, download, parsing, extraction, analysis, views, ...)
 pytest tests/extraction/test_extractor.py -v      # one file, one line per test
 pytest tests/test_architecture.py -q   # only the "layers import downwards" rule
@@ -308,6 +324,9 @@ Then run `python download_filings.py --company "ITC"` again to show a real downl
 - **What does the trend page do with a missing year?** It flags it ("No filing", never 0). If the next filing exists, that filing's previous-year column holds the company's own figures for the missing year, so they are shown and marked.
 - **How do you handle a change from consolidated to standalone?** Every column shows its basis; trend verdicts only compare years on the same basis and unit, and the page says which years were left out.
 - **What is a restatement?** The next filing gives a different figure for the same year (more than 0.5% apart). We keep the figure as filed in its own year and mark it ⟲ with the later figure.
+- **How do you show that a number is not invented?** Every value remembers the filing's own XBRL element, the year, and the text and unit exactly as written. The dashboard's Fine print, a hover in the SEBI tab, the last section of the SEBI tab and `extract_report.py --trace` all show it, and the page links to NSE's file. A test checks every value of every downloaded filing against the raw XML.
+- **What if a number was converted or calculated?** It is labelled (*Unit changed by us* / *Calculated by us*), the filed text is quoted, and a calculated number lists every element it was built from.
+- **What does a missing value look like in the trace?** "Not reported", plus the elements we looked for (or "the structured filing has no field for this item"). It is never shown as 0.
 - **How do you define "better" in the summary?** Against the company's own last year only, with a direction per figure (lower is better for energy, gases, water, waste per ₹ of sales and every pollutant; higher for the renewable and recycled shares). Under 1% (a share: under half a point) is "about the same". The page states all of this.
 - **Why rank shares in percentage points?** A renewable share rising from 0.07% to 0.24% is +269% in percent but only 0.18 of a point; ranked in percent it would beat a real improvement.
 - **Why is a total missing from the best / worst lists?** A total grows when a company grows, so the figure per ₹ of sales is ranked instead and the total is quoted as context. Nothing is hidden: the "not ranked" list says why.
@@ -329,6 +348,7 @@ The code is in `brsr_p6/`, one folder per step. Open the file in the right-hand 
 | how it **parses** the XBRL file | `brsr_p6/parsing/` | `xbrl_reader.py`, and `p6_mapping.py` (tag → SEBI row) |
 | how it **cleans** the data (units, warnings, nothing invented) | `brsr_p6/extraction/` and `brsr_p6/core/units.py` | `extractor.py`, `checks.py` |
 | the **SEBI template** as data | `brsr_p6/core/sebi_template.py` | the whole file |
+| how every number **traces back to the filing** | `brsr_p6/extraction/extractor.py` (records it), `brsr_p6/views/trace_view.py` (words), `brsr_p6/rendering/templates/trace.html` | `Origin` in `core/models.py`; the proof is `tests/extraction/test_origin.py` |
 | how "better / worse" is decided | `brsr_p6/analysis/` | `comparison.py` |
 | the year-by-year logic (basis change, restatement) | `brsr_p6/analysis/` | `trend_model.py` |
 | what the **dashboard** says, and its wording | `brsr_p6/views/` | `dashboard_cards.py`, `metric_info.py` |

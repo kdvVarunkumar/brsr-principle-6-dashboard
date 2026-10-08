@@ -9,7 +9,7 @@ A card is built in four small steps:
 Nothing here knows about HTML.  The template only prints what a CardView says.
 """
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from brsr_p6.analysis.comparison import CONTEXT, CONTEXT_ONLY, HIGHER, IMPROVED, LOWER, SAME, UNSURE, WORSE, compare, has_number
 from brsr_p6.analysis.warning_kinds import CHECK, DOUBTFUL, OK
@@ -17,6 +17,7 @@ from brsr_p6.core import friendly
 from brsr_p6.core.formatting import format_number
 from brsr_p6.core.models import Cell, Metric, Status
 from brsr_p6.core.units import tidy_number
+from brsr_p6.views.trace_view import figure_trace
 
 # verdict -> (css class of the chip, words in the chip).  Words and symbols, never colour alone.
 CHIPS = {
@@ -70,6 +71,7 @@ class CardView:
     shared_alert: bool = False    # its warning is shown once under the topic instead of on this card
     change: float | None = None   # how much it changed: percent for amounts, percentage points for shares (None: not comparable)
     css: str = ""             # "doubtful" or "empty"
+    trace: list = field(default_factory=list)   # "FY 2023-24: TotalEnergyConsumed = 375373200 Gigajoule", one line per year
 
 
 # ------------------------------------------------------------------------------------------------ step 1: the figure
@@ -93,10 +95,11 @@ def _derive(report, name):
             values = [c.value for c in cells]
             value = calculate(values)
             if value is not None:
-                warnings = []
+                warnings, origin = [], []
                 for cell in cells:
                     warnings += [w for w in cell.warnings if w not in warnings]
-                setattr(metric, year, Cell(value, unit or cells[0].unit, Status.CALCULATED, describe(values), how, warnings))
+                    origin += cell.origin                                  # a calculated figure keeps the trace of every ingredient
+                setattr(metric, year, Cell(value, unit or cells[0].unit, Status.CALCULATED, describe(values), how, warnings, origin))
     return metric
 
 
@@ -132,7 +135,7 @@ def per_crore(cell):
     """A per-rupee intensity written per Rs 1 crore (x 10,000,000).  Only the unit changes; anything else is returned as it is."""
     if not has_number(cell) or not cell.unit.endswith(" per ₹"):
         return cell
-    return Cell(tidy_number(cell.value * friendly.CRORE), cell.unit + " crore", cell.status, cell.as_filed, cell.note, cell.warnings)
+    return Cell(tidy_number(cell.value * friendly.CRORE), cell.unit + " crore", cell.status, cell.as_filed, cell.note, cell.warnings, cell.origin)
 
 
 def _is_per_crore(cell):
@@ -186,7 +189,15 @@ def build_card(report, info):
         delta_words=_delta_words(comparison),
         change=comparison.amount,
         css="doubtful" if comparison.trust == DOUBTFUL else ("empty" if not has_number(now) else ""),
+        trace=figure_trace(report, _rows_behind(report, info, metric)),
     )
+
+
+def _rows_behind(report, info, metric):
+    """The SEBI row(s) a card's figure is read or calculated from (for its trace to the filing)."""
+    if info.source.startswith("derived:"):
+        return [report.metrics[key] for key in DERIVED[info.source.partition(":")[2]][0]]
+    return [metric]
 
 
 def figure_getter(info):

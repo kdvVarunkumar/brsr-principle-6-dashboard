@@ -4,11 +4,17 @@ For every row of the template (sebi_template.py) we look up its XBRL tag(s) (p6_
 current and the previous year, clean it (values.py), put it in a standard unit (units.py), and store it as a `Cell`
 with its status and warnings (models.py).  Finally checks.py looks for numbers that do not make sense.
 
+Every value also remembers where it came from (`Cell.origin`: the filing's own element, the year and the text exactly as written),
+so a number on a page can always be traced back to the filing.  When the filing has nothing, the cell remembers which elements
+were looked for (`Cell.looked_for`).
+
 Nothing here knows about HTML.  The SEBI view and the dashboard both read the Principle6Report built here.
 """
 
+from typing import NamedTuple
+
 from brsr_p6.core.fiscal_year import previous_fiscal_year
-from brsr_p6.core.models import Assurance, Cell, Facility, ListTable, Metric, Principle6Report, Status
+from brsr_p6.core.models import Assurance, Cell, Facility, ListTable, Metric, Origin, Principle6Report, Status
 from brsr_p6.core.sebi_template import QUESTIONS
 from brsr_p6.core.units import convert
 from brsr_p6.extraction.checks import run_checks
@@ -18,6 +24,21 @@ from brsr_p6.parsing.xbrl_reader import natural_order
 
 NO_FIELD = "The structured filing has no field for this item."
 NOT_FOUND = "Not found in the filing."
+
+
+class _Part(NamedTuple):
+    """One element of the filing that contributed a number to a cell."""
+
+    tag: str
+    total: float       # the number (several row-labelled facts of the tag are added up)
+    unit_id: str       # the unit id as written in the file
+    raw: str           # the value as written in the file
+    origin: Origin
+
+
+def _https(url):
+    """NSE's file link, only if it really is an https link (it is shown on the page as a clickable link)."""
+    return url.strip() if isinstance(url, str) and url.strip().startswith("https://") else ""
 
 
 def build_report(filing, company_name, symbol, fy, record=None):
@@ -33,6 +54,8 @@ def build_report(filing, company_name, symbol, fy, record=None):
         submission_date=getattr(record, "submission_date", "") or "",
         revision_date=getattr(record, "revision_date", "") or "",
         source_file=filing.path.name,
+        source_url=_https(getattr(record, "xbrl_url", "")),
+        pdf_url=_https(getattr(record, "pdf_url", "")),
         warnings=list(filing.warnings),
     )
     _check_year_matches(report, filing)
@@ -98,7 +121,7 @@ def read_cell(filing, source, year, dims=()):
 
 
 def _read_number(filing, source, tags, year, dims):
-    parts = []        # one entry for every tag that has a usable number
+    parts = []        # one _Part for every tag that has a usable number
     said = ""         # e.g. "NA": the filing has the tag but no number in it
     for tag in tags:
         facts = filing.facts_named(tag, year, dims=dims)           # the plain fact (the total), if the filing has one
@@ -113,35 +136,46 @@ def _read_number(filing, source, tags, year, dims):
                 said = facts[0].text
             continue
         total = sum(n for n, _ in numbers)
-        raw = numbers[0][1].text if len(numbers) == 1 else f"{total:g}"
-        parts.append((tag, total, numbers[0][1].unit, raw))
+        fact = numbers[0][1]
+        raw = fact.text if len(numbers) == 1 else f"{total:g}"
+        parts.append(_Part(tag, total, fact.unit, raw, Origin(fact.name, raw, fact.unit, fact.end.isoformat(), len(numbers))))
 
     if not parts:
-        return Cell(note=f"The filing says '{said}'." if said else NOT_FOUND)
+        return Cell(note=f"The filing says '{said}'." if said else NOT_FOUND, looked_for=list(tags))
 
-    legacy_text = ""
+    legacy_text, origins = "", [part.origin for part in parts]
     if source.unit_text_tag:  # older filings: unit written as text in a separate tag (look in the current year too)
-        legacy_text = clean_text(filing.text_of(source.unit_text_tag, year) or filing.text_of(source.unit_text_tag, "current")) or ""
+        unit_fact = _first_fact(filing, source.unit_text_tag, year)
+        if unit_fact is None or not unit_fact.text:       # nothing (or an empty text) for this year: use the current year's
+            unit_fact = _first_fact(filing, source.unit_text_tag, "current") or unit_fact
+        legacy_text = clean_text(unit_fact.text if unit_fact else None) or ""
+        if legacy_text:   # the unit comes from this element, so it is part of the trace too
+            origins.append(Origin(unit_fact.name, unit_fact.text, "", unit_fact.end.isoformat()))
 
-    converted = [convert(source.kind, number, unit_id, legacy_text) for _, number, unit_id, _ in parts]
+    converted = [convert(source.kind, part.total, part.unit_id, legacy_text) for part in parts]
     value = sum(c[0] for c in converted)
     unit = converted[0][1]
     notes = [c[3] for c in converted if c[3]]
     warnings = []
     for c in converted:
         warnings += [w for w in c[4] if w not in warnings]
-    as_filed = " + ".join(f"{raw} {unit_id or legacy_text or '(no unit)'}" for _, _, unit_id, raw in parts)
+    as_filed = " + ".join(f"{part.raw} {part.unit_id or legacy_text or '(no unit)'}" for part in parts)
 
     if len(tags) > 1:  # we added several reported numbers together
         status = Status.CALCULATED
-        notes.insert(0, source.how or "Sum of " + ", ".join(t for t, _, _, _ in parts))
+        notes.insert(0, source.how or "Sum of " + ", ".join(part.tag for part in parts))
         if len(parts) < len(tags):
             notes.append(f"Built from {len(parts)} of {len(tags)} parts (the filing has no figure for the others).")
     else:
         status = converted[0][2]
     if source.fixed_warning:
         warnings.append(source.fixed_warning)
-    return Cell(value, unit, status, as_filed, " ".join(notes), warnings)
+    return Cell(value, unit, status, as_filed, " ".join(notes), warnings, origins)
+
+
+def _first_fact(filing, tag, year):
+    facts = filing.facts_named(tag, year)
+    return facts[0] if facts else None
 
 
 def _numbers(facts):
@@ -156,24 +190,27 @@ def _read_text(filing, source, tag, year, dims):
     facts = filing.facts_named(tag, "current", dims)
     text = clean_text(facts[0].text) if facts else None
     if text is None:
-        return Cell(note=NOT_FOUND)
+        return Cell(note=NOT_FOUND, looked_for=[tag])
+    origin = [Origin(facts[0].name, facts[0].text, facts[0].unit, facts[0].end.isoformat())]
     if source.kind == "yes_no":
         answer, understood = clean_yes_no(text)
-        cell = Cell(answer, "", Status.REPORTED, text)
+        cell = Cell(answer, "", Status.REPORTED, text, origin=origin)
         if not understood:
             cell.warnings.append(f"Unexpected answer '{text}' (expected Yes or No).")
         return cell
-    return Cell(text, "", Status.REPORTED, text)
+    return Cell(text, "", Status.REPORTED, text, origin=origin)
 
 
 def _read_percent(filing, tag, year):
     facts = filing.facts_named(tag, year)
     number = clean_number(facts[0].text) if facts else None
     if number is None:
-        return Cell(note=NOT_FOUND)
+        return Cell(note=NOT_FOUND, looked_for=[tag])
+    origin = [Origin(facts[0].name, facts[0].text, facts[0].unit, facts[0].end.isoformat())]
     if 0 <= number <= 1:  # XBRL stores percentages as fractions: 0.11 means 11 %
-        return Cell(number * 100, "%", Status.CONVERTED, f"{facts[0].text} (as a fraction)", f"Filed as the fraction {facts[0].text}; shown as a percentage.")
-    return Cell(number, "%", Status.REPORTED, facts[0].text)
+        return Cell(number * 100, "%", Status.CONVERTED, f"{facts[0].text} (as a fraction)", f"Filed as the fraction {facts[0].text}; shown as a percentage.",
+                    origin=origin)
+    return Cell(number, "%", Status.REPORTED, facts[0].text, origin=origin)
 
 
 # ------------------------------------------------------------------------------------------------ list tables
@@ -184,7 +221,7 @@ def _list_table(filing, question):
     for tag in tags:
         row_labels |= set(filing.row_labels(tag, "current"))
 
-    rows = []
+    rows, used = [], set()      # `used`: the elements that really gave text to a row
     for number, dims in enumerate(sorted(row_labels, key=natural_order), start=1):
         row = []
         for column in columns:
@@ -198,13 +235,15 @@ def _list_table(filing, question):
                     facts = filing.facts_named(tag, "current", dims)
                     if facts and clean_text(facts[0].text):
                         pieces.append(_tidy(facts[0].text))
+                        used.add(tag)
                 row.append("; ".join(pieces) if pieces else "Not reported")
         rows.append(row)
 
     note = ""
     if not rows:
         note = "The structured filing lists no rows for this table (this can mean none apply, or nothing was reported)."
-    return ListTable(question.id, list(question.columns), rows, note)   # (the question's own remark is shown separately)
+    # (the question's own remark is shown separately)
+    return ListTable(question.id, list(question.columns), rows, note, elements=sorted(used) if rows else sorted(tags))
 
 
 def _tidy(text):
@@ -265,10 +304,12 @@ def _assurance(filing, question_id):
         text = clean_text(filing.text_of(tag))
         if text:
             result.carried_out = clean_yes_no(text)[0]
+            result.elements.append(tag)
             break
     for tag in agency_tags:
         text = clean_text(filing.text_of(tag))
         if text:
             result.agency = text
+            result.elements.append(tag)
             break
     return result

@@ -5,7 +5,7 @@
 
 {# One value cell: the number (or "Not reported"), its unit, small labels, and footnote marks. #}
 {% macro cell(c, qid) %}
-{% if c.missing %}<span class="missing">Not reported</span>{% else %}<span class="num">{{ c.text }}</span>{% if c.unit %}<span class="unit{% if c.unit.startswith('(') %} unit-unknown{% endif %}">{{ c.unit }}</span>{% endif %}{% endif %}
+{% if c.missing %}<span class="missing">Not reported</span>{% else %}<span class="num"{% if c.trace %} title="{{ c.trace }}"{% endif %}>{{ c.text }}</span>{% if c.unit %}<span class="unit{% if c.unit.startswith('(') %} unit-unknown{% endif %}">{{ c.unit }}</span>{% endif %}{% endif %}
 {% for tag in c.tags %}<span class="tag tag-{{ tag }}" title="{{ 'Built by adding reported numbers together' if tag == 'calculated' else 'The unit was converted; the figure as filed is kept in the saved data' }}">{{ 'calc.' if tag == 'calculated' else 'conv.' }}</span>{% endfor %}
 {% for n in c.notes %}<sup class="fn"><a href="#fn-{{ qid }}-{{ n }}">{{ n }}</a></sup>{% endfor %}
 {% for n in c.warns %}<sup class="fn fn-warn"><a href="#fn-{{ qid }}-{{ n }}" title="Doubtful value: see the note">⚠{{ n }}</a></sup>{% endfor %}
@@ -81,6 +81,7 @@
   <span class="tag tag-converted">conv.</span> = we changed the unit.
   <sup class="fn fn-warn"><a href="#">⚠1</a></sup> = a doubtful value, explained in the note under the table. Numbers are always shown exactly as filed unless marked.
   Units shown: energy in gigajoules (GJ), water in kilolitres (kL), waste and air pollutants in tonnes, greenhouse gases in tonnes of CO₂ equivalent (tCO₂e).
+  <strong>Tracing a number:</strong> hover over it to see the filing's element it was read from; the last section of this tab lists every number with its element and the text exactly as filed.
 </p>
 
 {% for section in sebi.sections %}
@@ -140,3 +141,5 @@
 <p class="principle-sub">These items are not part of the May 2021 SEBI form. Newer filings include them, so they are shown here separately, exactly as filed.</p>
 {{ value_table(sebi.extras, "X") }}
 {% endif %}
+
+{% include "trace.html" %}

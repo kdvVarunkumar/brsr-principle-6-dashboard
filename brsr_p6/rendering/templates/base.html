@@ -39,7 +39,10 @@
     </div>
     <div>
       <dt>Source file (NSE)</dt>
-      <dd>{{ report.source_file }}</dd>
+      <dd>{% if report.source_url.startswith("https://") %}<a href="{{ report.source_url }}" rel="noopener noreferrer" target="_blank">{{ report.source_file }}</a>{% else %}{{ report.source_file }}{% endif %}
+        {% if report.pdf_url.startswith("https://") %}<span class="boundary-help">The same filing as a PDF: <a href="{{ report.pdf_url }}" rel="noopener noreferrer" target="_blank">open</a></span>{% endif %}
+        <span class="boundary-help">Every number on this page was read from this file. The last section of the SEBI tab shows where.</span>
+      </dd>
     </div>
   </dl>
   {% for warning in report.warnings %}

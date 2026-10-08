@@ -1449,3 +1449,84 @@ One judgment call worth knowing: `friendly.py` ("4.7% less than last year") sits
 6. Why did `friendly.py` go into `core` and not `views`?
 7. What would you do if a new feature needed `core` to call something in `workflows`?
 8. Why do the test folders mirror the code folders?
+
+---
+
+# Phase 13: Every number traces back to the filing
+
+## 13.1 The rule in the brief, and an honest audit
+
+The brief says: **"Never invent numbers. Every figure shown must trace back to a filing. If a value is missing or you had to estimate or convert it, say so on the page."** There are two halves:
+
+| Half | Where we stood before this phase |
+|---|---|
+| "Say so if it is missing, estimated or converted" | Done early: every number has a status (reported / calculated / converted / not reported), a note and warnings. |
+| "Every figure must **trace back to a filing**" | **Only partly.** The page named the source *file*, and a converted number said "Filed as …". But an ordinary reported number did not say *which* part of the file it came from, and the link to the file on NSE was not even kept. |
+
+Lesson: a promise like "never invent numbers" is only as good as what a **stranger can check**. "Trust me, it is from the filing" is not a trace.
+
+## 13.2 What "trace" means here: a chain you can follow
+
+```
+number on a dashboard card
+  -> its Fine print says: SEBI question "Essential 1", and the filing's element
+number in the SEBI table  (hover it)
+  -> "From the filing: TotalEnergyConsumed... = 623812739.43 Gigajoule"
+the last section of the SEBI tab, "Where every number comes from"
+  -> the row: value shown, how we got it, the element(s), the text exactly as filed
+the XBRL file on NSE (a link in the page header)
+  -> search for the element name: the same text is there
+```
+An **XBRL element** is the name the company's filing gives a number (like a column name in a spreadsheet). Because XBRL is structured, every number has one. That is why the XML file was the right choice (Phase 1): a PDF table gives you no such name to trace to.
+
+## 13.3 How it is built (three small ideas)
+
+1. **A value remembers its origin.** `Cell` got an `origin` list. Each `Origin` holds: the element name, the text as written, the unit as written, the year it covers, and (for rows that were added up) how many rows. It is filled in at the one place the number is read (`extractor.py`), so it cannot be forgotten later.
+2. **Quote the file, not our own list.** NSE spells some element names inconsistently (`WithOutTreatment` and `WithoutTreatment`), and we look them up ignoring capitals. The trace quotes **the spelling in the file**, otherwise a reader searching the XML would not find it.
+3. **A cell never loses its trace.** A *calculated* number (electricity = renewable + non-renewable; the renewable share) lists **every** ingredient. The "per ₹ crore" view copies the origin. A value the filing does not have has no origin; instead it remembers which elements were *looked for* (or that the edition has no field at all). Nothing is made up to fill the gap.
+
+The words ("TotalScope1Emissions = 64 MtCO2e", "Calculated by us from reported figures") are decided in `views/trace_view.py`; the template `trace.html` only prints them, like every other page.
+
+## 13.4 How we KNOW the trace is true (the part worth explaining in an interview)
+
+Writing the trace is easy; **proving it is honest** is the point. The test `tests/extraction/test_origin.py` does this for all 21 real filings on disk:
+
+1. Build the report with our normal code.
+2. Separately, read the **raw XML text** with a plain regular expression (not our reader), collecting every `(element, text)` pair.
+3. For every value shown (4,605 of them on the author's PC, 2,178 in the 11 filings committed to the repository), assert that its `(element, text as filed)` is in that set, and that its year is the filing's current or previous year.
+4. A value shown with **no** origin fails the test.
+
+A test that checks a program with the program's own parser would only prove it agrees with itself. Using a second, simpler way to read the same file is what makes it evidence.
+It first failed on one thing worth remembering: the reader turns line breaks inside a long text into single spaces, so the test applies the same rule to the raw text (written openly in the test, not hidden).
+
+## 13.5 Small things that matter
+
+- **Only `https://` links are clickable.** The file link comes from NSE's answer, and it becomes a link on the page. A value like `javascript:...` must never become one, so the extractor keeps only `https://` links **and** the template checks again (two guards; a test tries `javascript:` and `http:`).
+- **Filing text can never inject HTML.** Element names, texts and notes are escaped; a test puts `<script>` into all of them.
+- **Long element names break phone layouts.** Names such as `TotalElectricityConsumptionFromNonRenewableSources` have no spaces. They needed `overflow-wrap`; we found it by looking at a 375 px screenshot.
+- **The section is at the END of the SEBI tab, not a third tab.** The brief asks for two views, and SEBI's own Principle 6 stays untouched above it.
+- **`extract_report.py --trace`** prints the same lines in the terminal (`↳ FY 2025-26: TotalScope1Emissions = 64 MtCO2e`).
+
+## 13.6 What it shows about Tata Steel (a nice interview story)
+
+Tata Steel's Scope 1 is flagged "doubtful" because it looks about a million times too small. The trace now lets anyone **see why**: the file says `TotalScope1Emissions = 64 MtCO2e`. The company typed 64 where it means 64 million. We show exactly what was filed, say it looks wrong, and never compare it. The warning is no longer our word against the company's: the evidence is in the line.
+
+## 13.7 Try it yourself
+
+1. `python extract_report.py --company "Tata Steel" --fy 2025-26 --questions E6 --trace` and read the `↳` lines under Scope 1.
+2. Open the dashboard for Tata Steel, open the Fine print of "Energy from renewable sources". Which two elements is it built from, and why are there two lines per year?
+3. In the SEBI tab, scroll to "Where every number comes from" and open *Essential 5*. Find a row that says "Unit changed by us". What does the line show next to it?
+4. Open the link in the page header. In the XML, search for `TotalScope1Emissions`. Is the value the same as on the page?
+5. In `tests/extraction/test_origin.py`, change one `raw` in a test's expected value and watch it fail. Then, in `extractor.py`, make `_read_text` return its `Cell` without `origin=origin` and run `pytest tests/extraction/test_origin.py`: which test catches it?
+6. Why does `Origin.element` use `fact.name` and not the `tag` from `p6_mapping.py`? (Hint: look at the test `test_the_element_is_quoted_in_the_filings_own_spelling`.)
+
+## 13.8 Interview self-check
+
+1. The brief says "every figure must trace back to a filing". What did the page already do, and what was missing? How did you find that out?
+2. What is an XBRL element, and why can a PDF not give you this trace?
+3. Describe the chain a reader follows from a dashboard card to the company's own file.
+4. How does a calculated number (the renewable share) keep its trace? What does the page say for a number the filing does not have?
+5. How do you know the trace is true? Why does the test read the raw XML instead of using your reader?
+6. Why quote the element in the filing's own spelling?
+7. The file link comes from NSE. What could go wrong if you made it clickable without checking, and what did you do?
+8. Where did you put the section on the page, and why not a third tab?

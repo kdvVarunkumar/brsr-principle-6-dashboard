@@ -3,6 +3,7 @@ prints.  The page layout is not decided here (that is the templates' job), so ev
 
     metric_info, dashboard_cards, dashboard_view   the plain-English dashboard
     sebi_view, report_text                         the SEBI-format report (as a page, and as plain text)
+    trace_view                                     the trace from every number back to the filing (element, text as filed)
     trend_view                                     the multi-year trend page
     summary_view                                   the year-on-year summary
     error_view                                     the explanation page for each kind of error

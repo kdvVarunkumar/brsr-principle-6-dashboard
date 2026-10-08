@@ -12,6 +12,7 @@ from brsr_p6.core.paths import DEFAULT_OUTPUT_DIR, safe_name
 from brsr_p6.views.dashboard_view import build_dashboard_view
 from brsr_p6.views.sebi_view import build_sebi_view
 from brsr_p6.views.summary_view import build_summary_view
+from brsr_p6.views.trace_view import build_trace_view
 from brsr_p6.views.trend_view import build_trend_view
 
 TEMPLATE_DIR = Path(__file__).resolve().parent / "templates"      # brsr_p6/rendering/templates/, next to this file
@@ -30,7 +31,8 @@ def render_page(report) -> str:
     """The complete HTML page (as text) for one report."""
     sebi = build_sebi_view(report)
     dash = build_dashboard_view(report)
-    return _environment().get_template("base.html").render(report=report, sebi=sebi, dash=dash)
+    trace = build_trace_view(report)
+    return _environment().get_template("base.html").render(report=report, sebi=sebi, dash=dash, trace=trace)
 
 
 def write_page(report, output_dir: Path = DEFAULT_OUTPUT_DIR) -> Path:

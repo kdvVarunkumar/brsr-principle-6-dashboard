@@ -124,7 +124,22 @@ footer { padding: 4px 16px 40px; color: var(--muted); font-size: 0.85rem; }
   .panel { display: block !important; border: none; padding: 0; }
   .panel-dashboard { display: none !important; }
   .table-wrap { overflow: visible; }
-}/* The Dashboard tab.  Every rule starts with .dash so it can never change how the SEBI tab looks. */
+}
+
+/* ---- the trace from every number to the filing (templates/trace.html) ---- */
+.trace-steps { margin: 6px 0 12px 20px; padding: 0; color: var(--muted); font-size: 0.92rem; }
+.trace-source { background: var(--paper); border: 1px solid var(--line); border-radius: 8px; padding: 12px 16px; margin: 0 0 12px; }
+details.trace-q { background: var(--paper); border: 1px solid var(--line); border-radius: 6px; margin: 8px 0; padding: 0 12px; }
+details.trace-q > summary { cursor: pointer; padding: 9px 0; font-size: 0.95rem; }
+details.trace-q[open] > summary { border-bottom: 1px solid var(--line); margin-bottom: 8px; }
+details.trace-q .table-wrap { margin-bottom: 12px; }
+table.trace-table { width: 100%; min-width: 620px; table-layout: fixed; }
+table.trace-table th[scope="row"] { width: 30%; font-weight: 400; }
+table.trace-table th:not([scope]) { width: 35%; }
+.t-shown { display: block; font-weight: 600; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.t-status { display: block; font-size: 0.78rem; color: var(--accent); }
+.t-line { display: block; margin-top: 3px; font-family: ui-monospace, Consolas, monospace; font-size: 0.76rem; color: var(--muted); overflow-wrap: anywhere; }
+.t-note { display: block; margin-top: 3px; font-size: 0.78rem; font-style: italic; color: var(--muted); }details.trace-q .remark { overflow-wrap: anywhere; }/* The Dashboard tab.  Every rule starts with .dash so it can never change how the SEBI tab looks. */
 .dash {
   --good-ink: #0b6b4f; --good-bg: #e0f3ec; --good-line: #86c9b3;
   --bad-ink: #9a3608;  --bad-bg: #fde9dc;  --bad-line: #eba67d;
@@ -247,7 +262,11 @@ footer { padding: 4px 16px 40px; color: var(--muted); font-size: 0.85rem; }
   .dash .big .v { font-size: 1.8rem; }
   .dash .glance { padding: 16px 14px; }
   .dash .bar-row { grid-template-columns: 70px 1fr 58px; }
-}/* The year-on-year summary page.  It reuses the dashboard's cards, chips and notes; only the numbered entries and the table are new. */
+}
+
+/* ---- trace lines in a card's Fine print ---- */
+.dash .trace-head { margin: 8px 0 2px; }
+.dash .trace { margin: 2px 0; font-family: ui-monospace, Consolas, monospace; font-size: 0.76rem; color: var(--muted); overflow-wrap: anywhere; }/* The year-on-year summary page.  It reuses the dashboard's cards, chips and notes; only the numbered entries and the table are new. */
 .trend-main { max-width: 1280px; margin: 0 auto; padding: 0 16px 32px; }
 .trend-main .dash { margin-top: 4px; }
 .dash .notes-list { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 8px; }
@@ -317,7 +336,7 @@ footer code { background: #eef1f4; border-radius: 4px; padding: 1px 6px; font-si
     <div class="bar-row prev"><span>2021-22</span><span class="bar"><i style="width:100.00%"></i></span><span class="bv">8.77</span></div>
   </div>
   <p class="what"><b>What it is:</b> All waste produced, of every kind.</p>
-<p class="why"><b>Why it matters:</b> Less waste means fewer resources thrown away and less to clean up. A growing company may produce more, so read it with the share recovered.</p>  <details class="fine"><summary>Fine print</summary><p>Filed as 6,00,609.46 tonnes (last year 8,76,983.79).</p><p>Also in the filing: Other hazardous waste (waste that can harm people or nature if not handled carefully): 88,604.9 tonnes (last year 72,721.19).</p><p>Source in the SEBI tab: Essential 8, “Total (A + B + C + D + E + F + G + H)”.</p></details>
+<p class="why"><b>Why it matters:</b> Less waste means fewer resources thrown away and less to clean up. A growing company may produce more, so read it with the share recovered.</p>  <details class="fine"><summary>Fine print</summary><p>Filed as 6,00,609.46 tonnes (last year 8,76,983.79).</p><p>Also in the filing: Other hazardous waste (waste that can harm people or nature if not handled carefully): 88,604.9 tonnes (last year 72,721.19).</p><p>Source in the SEBI tab: Essential 8, “Total (A + B + C + D + E + F + G + H)”.</p><p class="trace-head"><b>Where it is in the filing:</b></p><p class="trace">FY 2022-23: TotalWasteGenerated = 600609.46 pure</p><p class="trace">FY 2021-22: TotalWasteGenerated = 876983.79 pure</p></details>
   <p class="badge">✔ Reported by the company</p>
 </article>
 
@@ -331,7 +350,7 @@ footer code { background: #eef1f4; border-radius: 4px; padding: 1px 6px; font-si
   <p class="big"><span class="v num">17,438</span><span class="u">tonnes</span></p>
   <p class="trend"><span class="chip chip-good">✔ Improved</span><span>▼ 9.1% lower than last year</span></p>
   <p class="what">From burning coal and oil; cause acid rain.</p>
-  <p class="badge">Last year: 19,193 tonnes · ✔ Reported by the company</p>
+  <p class="badge" title="From the filing: FY 2022-23: Sox = 17438; UnitOfSox = Tonnes | FY 2021-22: Sox = 19193; UnitOfSox = Tonnes">Last year: 19,193 tonnes · ✔ Reported by the company</p>
 </article>
 
 </div>
@@ -344,7 +363,7 @@ footer code { background: #eef1f4; border-radius: 4px; padding: 1px 6px; font-si
   <p class="big"><span class="v num">34,337</span><span class="u">tonnes</span></p>
   <p class="trend"><span class="chip chip-good">✔ Improved</span><span>▼ 7.2% lower than last year</span></p>
   <p class="what">From burning fuel; cause smog and breathing problems.</p>
-  <p class="badge">Last year: 36,991 tonnes · ✔ Reported by the company</p>
+  <p class="badge" title="From the filing: FY 2022-23: Nox = 34337; UnitOfNox = Tonnes | FY 2021-22: Nox = 36991; UnitOfNox = Tonnes">Last year: 36,991 tonnes · ✔ Reported by the company</p>
 </article>
 
 </div>
@@ -365,7 +384,7 @@ footer code { background: #eef1f4; border-radius: 4px; padding: 1px 6px; font-si
     <div class="bar-row prev"><span>2021-22</span><span class="bar"><i style="width:99.15%"></i></span><span class="bv">99.2%</span></div>
   </div>
   <p class="what"><b>What it is:</b> The share of waste that was recycled, reused or otherwise recovered instead of burned or buried.</p>
-<p class="why"><b>Why it matters:</b> Recovered waste does not end up in landfills or chimneys, so this is the best single sign of good waste handling.</p>  <details class="fine"><summary>Fine print</summary><p>Calculated by us: waste recovered ÷ (recovered + disposed). This year: 5,83,839.42 ÷ (5,83,839.42 + 16,770.04) (last year 16,69,357.62 ÷ (16,69,357.62 + 14,292.29)).</p><p>Source in the SEBI tab: Essential 8.</p></details>
+<p class="why"><b>Why it matters:</b> Recovered waste does not end up in landfills or chimneys, so this is the best single sign of good waste handling.</p>  <details class="fine"><summary>Fine print</summary><p>Calculated by us: waste recovered ÷ (recovered + disposed). This year: 5,83,839.42 ÷ (5,83,839.42 + 16,770.04) (last year 16,69,357.62 ÷ (16,69,357.62 + 14,292.29)).</p><p>Source in the SEBI tab: Essential 8.</p><p class="trace-head"><b>Where it is in the filing:</b></p><p class="trace">FY 2022-23: TotalWasteRecovered = 583839.42 pure; TotalWasteDisposed = 16770.04 pure</p><p class="trace">FY 2021-22: TotalWasteRecovered = 1669357.62 pure; TotalWasteDisposed = 14292.29 pure</p></details>
   <p class="badge">∑ Calculated by us from reported figures</p>
 </article>
 

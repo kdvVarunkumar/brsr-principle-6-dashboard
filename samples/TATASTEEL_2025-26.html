@@ -124,7 +124,22 @@ footer { padding: 4px 16px 40px; color: var(--muted); font-size: 0.85rem; }
   .panel { display: block !important; border: none; padding: 0; }
   .panel-dashboard { display: none !important; }
   .table-wrap { overflow: visible; }
-}/* The Dashboard tab.  Every rule starts with .dash so it can never change how the SEBI tab looks. */
+}
+
+/* ---- the trace from every number to the filing (templates/trace.html) ---- */
+.trace-steps { margin: 6px 0 12px 20px; padding: 0; color: var(--muted); font-size: 0.92rem; }
+.trace-source { background: var(--paper); border: 1px solid var(--line); border-radius: 8px; padding: 12px 16px; margin: 0 0 12px; }
+details.trace-q { background: var(--paper); border: 1px solid var(--line); border-radius: 6px; margin: 8px 0; padding: 0 12px; }
+details.trace-q > summary { cursor: pointer; padding: 9px 0; font-size: 0.95rem; }
+details.trace-q[open] > summary { border-bottom: 1px solid var(--line); margin-bottom: 8px; }
+details.trace-q .table-wrap { margin-bottom: 12px; }
+table.trace-table { width: 100%; min-width: 620px; table-layout: fixed; }
+table.trace-table th[scope="row"] { width: 30%; font-weight: 400; }
+table.trace-table th:not([scope]) { width: 35%; }
+.t-shown { display: block; font-weight: 600; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.t-status { display: block; font-size: 0.78rem; color: var(--accent); }
+.t-line { display: block; margin-top: 3px; font-family: ui-monospace, Consolas, monospace; font-size: 0.76rem; color: var(--muted); overflow-wrap: anywhere; }
+.t-note { display: block; margin-top: 3px; font-size: 0.78rem; font-style: italic; color: var(--muted); }details.trace-q .remark { overflow-wrap: anywhere; }/* The Dashboard tab.  Every rule starts with .dash so it can never change how the SEBI tab looks. */
 .dash {
   --good-ink: #0b6b4f; --good-bg: #e0f3ec; --good-line: #86c9b3;
   --bad-ink: #9a3608;  --bad-bg: #fde9dc;  --bad-line: #eba67d;
@@ -247,7 +262,11 @@ footer { padding: 4px 16px 40px; color: var(--muted); font-size: 0.85rem; }
   .dash .big .v { font-size: 1.8rem; }
   .dash .glance { padding: 16px 14px; }
   .dash .bar-row { grid-template-columns: 70px 1fr 58px; }
-}</style>
+}
+
+/* ---- trace lines in a card's Fine print ---- */
+.dash .trace-head { margin: 8px 0 2px; }
+.dash .trace { margin: 2px 0; font-family: ui-monospace, Consolas, monospace; font-size: 0.76rem; color: var(--muted); overflow-wrap: anywhere; }</style>
 </head>
 <body>
 
@@ -277,7 +296,8 @@ footer { padding: 4px 16px 40px; color: var(--muted); font-size: 0.85rem; }
     </div>
     <div>
       <dt>Source file (NSE)</dt>
-      <dd>BRSR_500470_36202620558_BRSR_WebXMLFile_20260603_200625233.xml</dd>
+      <dd><a href="https://nsearchives.nseindia.com/corporate/xbrl/BRSR_500470_36202620558_BRSR_WebXMLFile_20260603_200625233.xml" rel="noopener noreferrer" target="_blank">BRSR_500470_36202620558_BRSR_WebXMLFile_20260603_200625233.xml</a><span class="boundary-help">The same filing as a PDF: <a href="https://nsearchives.nseindia.com/corporate/BRSR_500470_03062026200558.pdf" rel="noopener noreferrer" target="_blank">open</a></span>        <span class="boundary-help">Every number on this page was read from this file. The last section of the SEBI tab shows where.</span>
+      </dd>
     </div>
   </dl>
 </div>
@@ -343,7 +363,7 @@ footer { padding: 4px 16px 40px; color: var(--muted); font-size: 0.85rem; }
     <div class="bar-row prev"><span>2024-25</span><span class="bar"><i style="width:94.19%"></i></span><span class="bv">58.76</span></div>
   </div>
   <p class="what"><b>What it is:</b> All the electricity, fuel and other energy the company used.</p>
-<p class="why"><b>Why it matters:</b> Energy use drives both costs and greenhouse-gas emissions. Bigger companies use more, so also check the figure per ₹ of sales.</p>  <details class="fine"><summary>Fine print</summary><p>Filed as 62,38,12,739.43 GJ (last year 58,75,67,890.63).</p><p>Source in the SEBI tab: Essential 1, “Total energy consumption (A+B+C)”.</p></details>
+<p class="why"><b>Why it matters:</b> Energy use drives both costs and greenhouse-gas emissions. Bigger companies use more, so also check the figure per ₹ of sales.</p>  <details class="fine"><summary>Fine print</summary><p>Filed as 62,38,12,739.43 GJ (last year 58,75,67,890.63).</p><p>Source in the SEBI tab: Essential 1, “Total energy consumption (A+B+C)”.</p><p class="trace-head"><b>Where it is in the filing:</b></p><p class="trace">FY 2025-26: TotalEnergyConsumedFromRenewableAndNonRenewableSources = 623812739.43 Gigajoule</p><p class="trace">FY 2024-25: TotalEnergyConsumedFromRenewableAndNonRenewableSources = 587567890.63 Gigajoule</p></details>
   <p class="badge">✔ Reported by the company</p>
 </article>
 <article class="card">
@@ -357,7 +377,7 @@ footer { padding: 4px 16px 40px; color: var(--muted); font-size: 0.85rem; }
     <div class="bar-row prev"><span>2024-25</span><span class="bar"><i style="width:99.31%"></i></span><span class="bv">4,434</span></div>
   </div>
   <p class="what"><b>What it is:</b> Energy used divided by sales (called “energy intensity”).</p>
-<p class="why"><b>Why it matters:</b> The fairest way to judge efficiency, because it still works when the company grows.</p>  <details class="fine"><summary>Fine print</summary><p>Filed as 0.0004464728 GigajoulePerINR (last year 0.0004433917 GigajoulePerINR). We show it per ₹ crore (× 10,000,000); only the unit changed.</p><p>Source in the SEBI tab: Essential 1, “Energy intensity per rupee of turnover (Total energy consumption/ turnover in rupees)”.</p></details>
+<p class="why"><b>Why it matters:</b> The fairest way to judge efficiency, because it still works when the company grows.</p>  <details class="fine"><summary>Fine print</summary><p>Filed as 0.0004464728 GigajoulePerINR (last year 0.0004433917 GigajoulePerINR). We show it per ₹ crore (× 10,000,000); only the unit changed.</p><p>Source in the SEBI tab: Essential 1, “Energy intensity per rupee of turnover (Total energy consumption/ turnover in rupees)”.</p><p class="trace-head"><b>Where it is in the filing:</b></p><p class="trace">FY 2025-26: EnergyIntensityPerRupeeOfTurnover = 0.0004464728 GigajoulePerINR</p><p class="trace">FY 2024-25: EnergyIntensityPerRupeeOfTurnover = 0.0004433917 GigajoulePerINR</p></details>
   <p class="badge">⇄ Reported by the company · shown per ₹ crore</p>
 </article>
 <article class="card">
@@ -371,7 +391,7 @@ footer { padding: 4px 16px 40px; color: var(--muted); font-size: 0.85rem; }
     <div class="bar-row prev"><span>2024-25</span><span class="bar"><i style="width:0.07%"></i></span><span class="bv">0.07%</span></div>
   </div>
   <p class="what"><b>What it is:</b> The part of all energy that came from renewables such as solar and wind.</p>
-<p class="why"><b>Why it matters:</b> The more energy comes from renewables, the fewer greenhouse gases the same work causes.</p>  <details class="fine"><summary>Fine print</summary><p>Calculated by us: renewable energy ÷ (renewable + non-renewable energy). This year: 15,06,640.93 ÷ (15,06,640.93 + 62,23,06,098.5) (last year 3,84,862.35 ÷ (3,84,862.35 + 58,71,83,028.28)).</p><p>Source in the SEBI tab: Leadership 1.</p></details>
+<p class="why"><b>Why it matters:</b> The more energy comes from renewables, the fewer greenhouse gases the same work causes.</p>  <details class="fine"><summary>Fine print</summary><p>Calculated by us: renewable energy ÷ (renewable + non-renewable energy). This year: 15,06,640.93 ÷ (15,06,640.93 + 62,23,06,098.5) (last year 3,84,862.35 ÷ (3,84,862.35 + 58,71,83,028.28)).</p><p>Source in the SEBI tab: Leadership 1.</p><p class="trace-head"><b>Where it is in the filing:</b></p><p class="trace">FY 2025-26: TotalEnergyConsumedFromRenewableSources = 1506640.93 Gigajoule; TotalEnergyConsumedFromNonRenewableSources = 622306098.5 Gigajoule</p><p class="trace">FY 2024-25: TotalEnergyConsumedFromRenewableSources = 384862.35 Gigajoule; TotalEnergyConsumedFromNonRenewableSources = 587183028.28 Gigajoule</p></details>
   <p class="badge">∑ Calculated by us from reported figures</p>
 </article>
 </div><figure class="stack">
@@ -397,7 +417,7 @@ footer { padding: 4px 16px 40px; color: var(--muted); font-size: 0.85rem; }
   <p class="trend"><span class="chip chip-unsure">? Can’t compare</span><span>The figure looks doubtful, so we do not compare it.</span></p>
   <p class="what"><b>What it is:</b> Gases from the company&#39;s own operations (Scope 1) plus from the electricity it buys (Scope 2).</p>
 <p class="why"><b>Why it matters:</b> These gases trap heat in the atmosphere. This is the main number used to judge a company&#39;s climate impact.</p>  <p class="alert"><b>⚠ Doubtful figure.</b> Scope 1+2 emissions look about 1,000,000 times too small for this company&#39;s energy use (1.1e-07 tonnes per GJ; normal is roughly 0.01 to 0.5). The figure may have been typed in millions of tonnes. Shown exactly as filed; not corrected.</p>
-  <details class="fine"><summary>Fine print</summary><p>Calculated by us: Scope 1 + Scope 2. This year: 64 + 5 (last year 61 + 5).</p><p>Source in the SEBI tab: Essential 6.</p></details>
+  <details class="fine"><summary>Fine print</summary><p>Calculated by us: Scope 1 + Scope 2. This year: 64 + 5 (last year 61 + 5).</p><p>Source in the SEBI tab: Essential 6.</p><p class="trace-head"><b>Where it is in the filing:</b></p><p class="trace">FY 2025-26: TotalScope1Emissions = 64 MtCO2e; TotalScope2Emissions = 5 MtCO2e</p><p class="trace">FY 2024-25: TotalScope1Emissions = 61 MtCO2e; TotalScope2Emissions = 5 MtCO2e</p></details>
   <p class="badge">⚠ Check this figure · ∑ Calculated by us from reported figures</p>
 </article>
 <article class="card doubtful">
@@ -408,7 +428,7 @@ footer { padding: 4px 16px 40px; color: var(--muted); font-size: 0.85rem; }
   <p class="trend"><span class="chip chip-unsure">? Can’t compare</span><span>The figure looks doubtful, so we do not compare it.</span></p>
   <p class="what"><b>What it is:</b> Scope 1 + 2 emissions divided by sales (“emission intensity”).</p>
 <p class="why"><b>Why it matters:</b> Shows whether the company is getting cleaner per unit of business, even while it grows.</p>  <p class="alert"><b>⚠ Doubtful figure.</b> Reported as 0, but the total it relates to is not zero. A real intensity is never exactly 0, so this 0 means &#39;rounded away or left blank&#39;; it is not a real zero.</p>
-  <details class="fine"><summary>Fine print</summary><p>Filed as 0 MtCO2ePerINR (last year 0 MtCO2ePerINR). We show it per ₹ crore (× 10,000,000); only the unit changed.</p><p>Source in the SEBI tab: Essential 6, “Total Scope 1 and Scope 2 emissions per rupee of turnover”.</p></details>
+  <details class="fine"><summary>Fine print</summary><p>Filed as 0 MtCO2ePerINR (last year 0 MtCO2ePerINR). We show it per ₹ crore (× 10,000,000); only the unit changed.</p><p>Source in the SEBI tab: Essential 6, “Total Scope 1 and Scope 2 emissions per rupee of turnover”.</p><p class="trace-head"><b>Where it is in the filing:</b></p><p class="trace">FY 2025-26: TotalScope1AndScope2EmissionsIntensityPerRupeeOfTurnover = 0 MtCO2ePerINR</p><p class="trace">FY 2024-25: TotalScope1AndScope2EmissionsIntensityPerRupeeOfTurnover = 0 MtCO2ePerINR</p></details>
   <p class="badge">⚠ Check this figure · filed as 0</p>
 </article>
 <article class="card doubtful">
@@ -419,7 +439,7 @@ footer { padding: 4px 16px 40px; color: var(--muted); font-size: 0.85rem; }
   <p class="trend"><span class="chip chip-unsure">? Can’t compare</span><span>The figure looks doubtful, so we do not compare it.</span></p>
   <p class="what"><b>What it is:</b> Emissions from suppliers, transport and customers, which the company does not control directly.</p>
 <p class="why"><b>Why it matters:</b> For many companies this is the biggest part of their footprint, so a missing figure leaves a gap.</p>  <p class="alert"><b>⚠ Doubtful figure.</b> Scope 1+2 look mis-scaled (see the warning on Scope 1) and Scope 3 was probably typed the same way. Shown exactly as filed; not corrected.</p>
-  <details class="fine"><summary>Fine print</summary><p>Filed as 28 tCO2e (last year 23).</p><p>Source in the SEBI tab: Leadership 4, “Total Scope 3 emissions (Break-up of the GHG into CO2, CH4, N2O, HFCs, PFCs, SF6, NF3, if available)”.</p></details>
+  <details class="fine"><summary>Fine print</summary><p>Filed as 28 tCO2e (last year 23).</p><p>Source in the SEBI tab: Leadership 4, “Total Scope 3 emissions (Break-up of the GHG into CO2, CH4, N2O, HFCs, PFCs, SF6, NF3, if available)”.</p><p class="trace-head"><b>Where it is in the filing:</b></p><p class="trace">FY 2025-26: TotalScope3Emissions = 28 MtCO2e</p><p class="trace">FY 2024-25: TotalScope3Emissions = 23 MtCO2e</p></details>
   <p class="badge">⚠ Check this figure · ✔ Reported by the company</p>
 </article>
 </div></section>
@@ -438,7 +458,7 @@ footer { padding: 4px 16px 40px; color: var(--muted); font-size: 0.85rem; }
     <div class="bar-row prev"><span>2024-25</span><span class="bar"><i style="width:100.00%"></i></span><span class="bv">11.08</span></div>
   </div>
   <p class="what"><b>What it is:</b> All water drawn from rivers, groundwater, the sea or suppliers (1 kL = 1,000 litres).</p>
-<p class="why"><b>Why it matters:</b> Fresh water is scarce in many parts of India. Taking less leaves more for people and farms.</p>  <details class="fine"><summary>Fine print</summary><p>Filed as 11,06,22,895.53 kL (last year 11,08,29,245.15).</p><p>Also in the filing: Water consumed: 9,90,54,737.06 kL (last year 9,86,09,097.13).</p><p>Source in the SEBI tab: Essential 3, “Total volume of water withdrawal (in kilolitres) (i + ii + iii + iv + v)”.</p></details>
+<p class="why"><b>Why it matters:</b> Fresh water is scarce in many parts of India. Taking less leaves more for people and farms.</p>  <details class="fine"><summary>Fine print</summary><p>Filed as 11,06,22,895.53 kL (last year 11,08,29,245.15).</p><p>Also in the filing: Water consumed: 9,90,54,737.06 kL (last year 9,86,09,097.13).</p><p>Source in the SEBI tab: Essential 3, “Total volume of water withdrawal (in kilolitres) (i + ii + iii + iv + v)”.</p><p class="trace-head"><b>Where it is in the filing:</b></p><p class="trace">FY 2025-26: TotalVolumeOfWaterWithdrawal = 110622895.53 Kiloliters</p><p class="trace">FY 2024-25: TotalVolumeOfWaterWithdrawal = 110829245.15 Kiloliters</p></details>
   <p class="badge">✔ Reported by the company</p>
 </article>
 <article class="card">
@@ -452,7 +472,7 @@ footer { padding: 4px 16px 40px; color: var(--muted); font-size: 0.85rem; }
     <div class="bar-row prev"><span>2024-25</span><span class="bar"><i style="width:100.00%"></i></span><span class="bv">744</span></div>
   </div>
   <p class="what"><b>What it is:</b> Water consumed divided by sales (“water intensity”).</p>
-<p class="why"><b>Why it matters:</b> Shows whether each ₹ of business needs more or less water than before.</p>  <details class="fine"><summary>Fine print</summary><p>Filed as 0.0000708951 KilolitersPerINR (last year 0.0000744126 KilolitersPerINR). We show it per ₹ crore (× 10,000,000); only the unit changed.</p><p>Source in the SEBI tab: Essential 3, “Water intensity per rupee of turnover (Water consumed / turnover)”.</p></details>
+<p class="why"><b>Why it matters:</b> Shows whether each ₹ of business needs more or less water than before.</p>  <details class="fine"><summary>Fine print</summary><p>Filed as 0.0000708951 KilolitersPerINR (last year 0.0000744126 KilolitersPerINR). We show it per ₹ crore (× 10,000,000); only the unit changed.</p><p>Source in the SEBI tab: Essential 3, “Water intensity per rupee of turnover (Water consumed / turnover)”.</p><p class="trace-head"><b>Where it is in the filing:</b></p><p class="trace">FY 2025-26: WaterIntensityPerRupeeOfTurnover = 0.0000708951 KilolitersPerINR</p><p class="trace">FY 2024-25: WaterIntensityPerRupeeOfTurnover = 0.0000744126 KilolitersPerINR</p></details>
   <p class="badge">⇄ Reported by the company · shown per ₹ crore</p>
 </article>
 <article class="card">
@@ -466,7 +486,7 @@ footer { padding: 4px 16px 40px; color: var(--muted); font-size: 0.85rem; }
     <div class="bar-row prev"><span>2024-25</span><span class="bar"><i style="width:100.00%"></i></span><span class="bv">1.22</span></div>
   </div>
   <p class="what"><b>What it is:</b> Treated or untreated water the company released back to rivers, the sea or other receivers.</p>
-<p class="why"><b>Why it matters:</b> Discharged water can carry pollutants. Whether it was treated first is the key question.</p>  <details class="fine"><summary>Fine print</summary><p>Filed as 1,15,68,158.47 kL (last year 1,22,20,148.02).</p><p>Source in the SEBI tab: Leadership 2, “Total water discharged (in kilolitres)”.</p></details>
+<p class="why"><b>Why it matters:</b> Discharged water can carry pollutants. Whether it was treated first is the key question.</p>  <details class="fine"><summary>Fine print</summary><p>Filed as 1,15,68,158.47 kL (last year 1,22,20,148.02).</p><p>Source in the SEBI tab: Leadership 2, “Total water discharged (in kilolitres)”.</p><p class="trace-head"><b>Where it is in the filing:</b></p><p class="trace">FY 2025-26: TotalWaterDischargedInKilolitres = 11568158.474 Kiloliters</p><p class="trace">FY 2024-25: TotalWaterDischargedInKilolitres = 12220148.02 Kiloliters</p></details>
   <p class="badge">✔ Reported by the company</p>
 </article>
 </div><figure class="stack">
@@ -492,7 +512,7 @@ footer { padding: 4px 16px 40px; color: var(--muted); font-size: 0.85rem; }
   <p class="big"><span class="v num">27,000</span><span class="u">tonnes</span></p>
   <p class="trend"><span class="chip chip-bad">✖ Got worse</span><span>▲ 12.5% higher than last year</span></p>
   <p class="what">From burning fuel; cause smog and breathing problems.</p>
-  <p class="badge">Last year: 24,000 tonnes · ⇄ Reported by the company · unit changed by us</p>
+  <p class="badge" title="From the filing: FY 2025-26: NOx = 27 Kilotonne | FY 2024-25: NOx = 24 Kilotonne">Last year: 24,000 tonnes · ⇄ Reported by the company · unit changed by us</p>
 </article>
 <article class="mini">
   <div class="card-top">
@@ -501,7 +521,7 @@ footer { padding: 4px 16px 40px; color: var(--muted); font-size: 0.85rem; }
   <p class="big"><span class="v num">67,000</span><span class="u">tonnes</span></p>
   <p class="trend"><span class="chip chip-bad">✖ Got worse</span><span>▲ 45.7% higher than last year</span></p>
   <p class="what">From burning coal and oil; cause acid rain.</p>
-  <p class="badge">Last year: 46,000 tonnes · ⇄ Reported by the company · unit changed by us</p>
+  <p class="badge" title="From the filing: FY 2025-26: SOx = 67 Kilotonne | FY 2024-25: SOx = 46 Kilotonne">Last year: 46,000 tonnes · ⇄ Reported by the company · unit changed by us</p>
 </article>
 <article class="mini">
   <div class="card-top">
@@ -510,7 +530,7 @@ footer { padding: 4px 16px 40px; color: var(--muted); font-size: 0.85rem; }
   <p class="big"><span class="v num">9,000</span><span class="u">tonnes</span></p>
   <p class="trend"><span class="chip chip-bad">✖ Got worse</span><span>▲ 12.5% higher than last year</span></p>
   <p class="what">Tiny dust and soot particles that reach deep into lungs.</p>
-  <p class="badge">Last year: 8,000 tonnes · ⇄ Reported by the company · unit changed by us</p>
+  <p class="badge" title="From the filing: FY 2025-26: ParticulateMatter = 9 Kilotonne | FY 2024-25: ParticulateMatter = 8 Kilotonne">Last year: 8,000 tonnes · ⇄ Reported by the company · unit changed by us</p>
 </article>
 <article class="mini">
   <div class="card-top">
@@ -520,7 +540,7 @@ footer { padding: 4px 16px 40px; color: var(--muted); font-size: 0.85rem; }
   <p class="trend"><span class="chip chip-same">≈ About the same</span><span>No change: 0 in both years</span></p>
   <p class="what">Vapours from fuels and solvents that help form smog.</p>
   <p class="alert">⚠ See the note below the figures.</p>
-  <p class="badge">Last year: 0 tonnes · ⚠ Check this figure · ⇄ Reported by the company · unit changed by us</p>
+  <p class="badge" title="From the filing: FY 2025-26: VolatileOrganicCompounds = 0 Kilotonne | FY 2024-25: VolatileOrganicCompounds = 0 Kilotonne">Last year: 0 tonnes · ⚠ Check this figure · ⇄ Reported by the company · unit changed by us</p>
 </article>
 <article class="mini">
   <div class="card-top">
@@ -530,7 +550,7 @@ footer { padding: 4px 16px 40px; color: var(--muted); font-size: 0.85rem; }
   <p class="trend"><span class="chip chip-same">≈ About the same</span><span>No change: 0 in both years</span></p>
   <p class="what">Long-lasting toxic chemicals.</p>
   <p class="alert">⚠ See the note below the figures.</p>
-  <p class="badge">Last year: 0 tonnes · ⚠ Check this figure · ⇄ Reported by the company · unit changed by us</p>
+  <p class="badge" title="From the filing: FY 2025-26: PersistentOrganicPollutants = 0 Kilotonne | FY 2024-25: PersistentOrganicPollutants = 0 Kilotonne">Last year: 0 tonnes · ⚠ Check this figure · ⇄ Reported by the company · unit changed by us</p>
 </article>
 <article class="mini">
   <div class="card-top">
@@ -540,7 +560,7 @@ footer { padding: 4px 16px 40px; color: var(--muted); font-size: 0.85rem; }
   <p class="trend"><span class="chip chip-same">≈ About the same</span><span>No change: 0 in both years</span></p>
   <p class="what">Toxic gases linked to cancer and other illness.</p>
   <p class="alert">⚠ See the note below the figures.</p>
-  <p class="badge">Last year: 0 tonnes · ⚠ Check this figure · ⇄ Reported by the company · unit changed by us</p>
+  <p class="badge" title="From the filing: FY 2025-26: HazardousAirPollutants = 0 Kilotonne | FY 2024-25: HazardousAirPollutants = 0 Kilotonne">Last year: 0 tonnes · ⚠ Check this figure · ⇄ Reported by the company · unit changed by us</p>
 </article>
 </div>  <p class="alert shared"><b>⚠ Note for VOC, POP, HAP:</b> A reported 0 can mean &#39;none&#39;, or &#39;not measured / not material&#39;. The filing does not say which.</p>
 </section>
@@ -559,7 +579,7 @@ footer { padding: 4px 16px 40px; color: var(--muted); font-size: 0.85rem; }
     <div class="bar-row prev"><span>2024-25</span><span class="bar"><i style="width:92.39%"></i></span><span class="bv">1.74</span></div>
   </div>
   <p class="what"><b>What it is:</b> All waste produced, of every kind.</p>
-<p class="why"><b>Why it matters:</b> Less waste means fewer resources thrown away and less to clean up. A growing company may produce more, so read it with the share recovered.</p>  <details class="fine"><summary>Fine print</summary><p>Filed as 1,87,82,249 tonnes (last year 1,73,52,473).</p><p>Also in the filing: Other hazardous waste (waste that can harm people or nature if not handled carefully): 15,95,294 tonnes (last year 12,27,314).</p><p>Source in the SEBI tab: Essential 8, “Total (A + B + C + D + E + F + G + H)”.</p></details>
+<p class="why"><b>Why it matters:</b> Less waste means fewer resources thrown away and less to clean up. A growing company may produce more, so read it with the share recovered.</p>  <details class="fine"><summary>Fine print</summary><p>Filed as 1,87,82,249 tonnes (last year 1,73,52,473).</p><p>Also in the filing: Other hazardous waste (waste that can harm people or nature if not handled carefully): 15,95,294 tonnes (last year 12,27,314).</p><p>Source in the SEBI tab: Essential 8, “Total (A + B + C + D + E + F + G + H)”.</p><p class="trace-head"><b>Where it is in the filing:</b></p><p class="trace">FY 2025-26: TotalWasteGenerated = 18782249 Tonne</p><p class="trace">FY 2024-25: TotalWasteGenerated = 17352473 Tonne</p></details>
   <p class="badge">✔ Reported by the company</p>
 </article>
 <article class="card">
@@ -573,7 +593,7 @@ footer { padding: 4px 16px 40px; color: var(--muted); font-size: 0.85rem; }
     <div class="bar-row prev"><span>2024-25</span><span class="bar"><i style="width:97.41%"></i></span><span class="bv">131</span></div>
   </div>
   <p class="what"><b>What it is:</b> Waste produced divided by sales.</p>
-<p class="why"><b>Why it matters:</b> Shows whether each ₹ of business creates more or less waste than before.</p>  <details class="fine"><summary>Fine print</summary><p>Filed as 0.0000134428 TonnePerINR (last year 0.0000130946 TonnePerINR). We show it per ₹ crore (× 10,000,000); only the unit changed.</p><p>Source in the SEBI tab: an extra item in newer filings, “Waste intensity per rupee of turnover”.</p></details>
+<p class="why"><b>Why it matters:</b> Shows whether each ₹ of business creates more or less waste than before.</p>  <details class="fine"><summary>Fine print</summary><p>Filed as 0.0000134428 TonnePerINR (last year 0.0000130946 TonnePerINR). We show it per ₹ crore (× 10,000,000); only the unit changed.</p><p>Source in the SEBI tab: an extra item in newer filings, “Waste intensity per rupee of turnover”.</p><p class="trace-head"><b>Where it is in the filing:</b></p><p class="trace">FY 2025-26: WasteIntensityPerRupeeOfTurnover = 0.0000134428 TonnePerINR</p><p class="trace">FY 2024-25: WasteIntensityPerRupeeOfTurnover = 0.0000130946 TonnePerINR</p></details>
   <p class="badge">⇄ Reported by the company · shown per ₹ crore</p>
 </article>
 <article class="card">
@@ -587,7 +607,7 @@ footer { padding: 4px 16px 40px; color: var(--muted); font-size: 0.85rem; }
     <div class="bar-row prev"><span>2024-25</span><span class="bar"><i style="width:99.90%"></i></span><span class="bv">99.9%</span></div>
   </div>
   <p class="what"><b>What it is:</b> The share of waste that was recycled, reused or otherwise recovered instead of burned or buried.</p>
-<p class="why"><b>Why it matters:</b> Recovered waste does not end up in landfills or chimneys, so this is the best single sign of good waste handling.</p>  <details class="fine"><summary>Fine print</summary><p>Calculated by us: waste recovered ÷ (recovered + disposed). This year: 1,88,42,244 ÷ (1,88,42,244 + 21,909) (last year 1,94,38,386 ÷ (1,94,38,386 + 20,100)).</p><p>Source in the SEBI tab: Essential 8.</p></details>
+<p class="why"><b>Why it matters:</b> Recovered waste does not end up in landfills or chimneys, so this is the best single sign of good waste handling.</p>  <details class="fine"><summary>Fine print</summary><p>Calculated by us: waste recovered ÷ (recovered + disposed). This year: 1,88,42,244 ÷ (1,88,42,244 + 21,909) (last year 1,94,38,386 ÷ (1,94,38,386 + 20,100)).</p><p>Source in the SEBI tab: Essential 8.</p><p class="trace-head"><b>Where it is in the filing:</b></p><p class="trace">FY 2025-26: TotalWasteRecovered = 18842244 Tonne; TotalWasteDisposed = 21909 Tonne</p><p class="trace">FY 2024-25: TotalWasteRecovered = 19438386 Tonne; TotalWasteDisposed = 20100 Tonne</p></details>
   <p class="badge">∑ Calculated by us from reported figures</p>
 </article>
 </div><figure class="stack">
@@ -716,6 +736,7 @@ footer { padding: 4px 16px 40px; color: var(--muted); font-size: 0.85rem; }
   <span class="tag tag-converted">conv.</span> = we changed the unit.
   <sup class="fn fn-warn"><a href="#">⚠1</a></sup> = a doubtful value, explained in the note under the table. Numbers are always shown exactly as filed unless marked.
   Units shown: energy in gigajoules (GJ), water in kilolitres (kL), waste and air pollutants in tonnes, greenhouse gases in tonnes of CO₂ equivalent (tCO₂e).
+  <strong>Tracing a number:</strong> hover over it to see the filing's element it was read from; the last section of this tab lists every number with its element and the text exactly as filed.
 </p>
 
 <h2 class="section">Essential Indicators</h2>
@@ -735,28 +756,28 @@ footer { padding: 4px 16px 40px; color: var(--muted); font-size: 0.85rem; }
     <tbody>
       <tr>
         <th scope="row">Total electricity consumption (A)</th>
-        <td class="val"><span class="num">2,47,98,900.25</span><span class="unit">GJ</span><span class="tag tag-calculated" title="Built by adding reported numbers together">calc.</span><sup class="fn"><a href="#fn-E1-1">1</a></sup></td>
-        <td class="val"><span class="num">2,32,44,231.77</span><span class="unit">GJ</span><span class="tag tag-calculated" title="Built by adding reported numbers together">calc.</span><sup class="fn"><a href="#fn-E1-1">1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: TotalElectricityConsumptionFromRenewableSources = 1147519.68 Gigajoule; TotalElectricityConsumptionFromNonRenewableSources = 23651380.57 Gigajoule">2,47,98,900.25</span><span class="unit">GJ</span><span class="tag tag-calculated" title="Built by adding reported numbers together">calc.</span><sup class="fn"><a href="#fn-E1-1">1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: TotalElectricityConsumptionFromRenewableSources = 384861.97 Gigajoule; TotalElectricityConsumptionFromNonRenewableSources = 22859369.8 Gigajoule">2,32,44,231.77</span><span class="unit">GJ</span><span class="tag tag-calculated" title="Built by adding reported numbers together">calc.</span><sup class="fn"><a href="#fn-E1-1">1</a></sup></td>
       </tr>
       <tr>
         <th scope="row">Total fuel consumption (B)</th>
-        <td class="val"><span class="num">59,90,13,837.67</span><span class="unit">GJ</span><span class="tag tag-calculated" title="Built by adding reported numbers together">calc.</span><sup class="fn"><a href="#fn-E1-2">2</a></sup></td>
-        <td class="val"><span class="num">56,43,23,658.48</span><span class="unit">GJ</span><span class="tag tag-calculated" title="Built by adding reported numbers together">calc.</span><sup class="fn"><a href="#fn-E1-2">2</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: TotalFuelConsumptionFromRenewableSources = 359119.74 Gigajoule; TotalFuelConsumptionFromNonRenewableSources = 598654717.93 Gigajoule">59,90,13,837.67</span><span class="unit">GJ</span><span class="tag tag-calculated" title="Built by adding reported numbers together">calc.</span><sup class="fn"><a href="#fn-E1-2">2</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: TotalFuelConsumptionFromRenewableSources = 0 Gigajoule; TotalFuelConsumptionFromNonRenewableSources = 564323658.48 Gigajoule">56,43,23,658.48</span><span class="unit">GJ</span><span class="tag tag-calculated" title="Built by adding reported numbers together">calc.</span><sup class="fn"><a href="#fn-E1-2">2</a></sup></td>
       </tr>
       <tr>
         <th scope="row">Energy consumption through other sources (C)</th>
-        <td class="val"><span class="num">1.51</span><span class="unit">GJ</span><span class="tag tag-calculated" title="Built by adding reported numbers together">calc.</span><sup class="fn"><a href="#fn-E1-3">3</a></sup></td>
-        <td class="val"><span class="num">0.38</span><span class="unit">GJ</span><span class="tag tag-calculated" title="Built by adding reported numbers together">calc.</span><sup class="fn"><a href="#fn-E1-3">3</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: EnergyConsumptionThroughOtherSourcesFromRenewableSources = 1.51 Gigajoule; EnergyConsumptionThroughOtherSourcesFromNonRenewableSources = 0 Gigajoule">1.51</span><span class="unit">GJ</span><span class="tag tag-calculated" title="Built by adding reported numbers together">calc.</span><sup class="fn"><a href="#fn-E1-3">3</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: EnergyConsumptionThroughOtherSourcesFromRenewableSources = 0.38 Gigajoule; EnergyConsumptionThroughOtherSourcesFromNonRenewableSources = 0 Gigajoule">0.38</span><span class="unit">GJ</span><span class="tag tag-calculated" title="Built by adding reported numbers together">calc.</span><sup class="fn"><a href="#fn-E1-3">3</a></sup></td>
       </tr>
       <tr>
         <th scope="row">Total energy consumption (A+B+C)</th>
-        <td class="val"><span class="num">62,38,12,739.43</span><span class="unit">GJ</span></td>
-        <td class="val"><span class="num">58,75,67,890.63</span><span class="unit">GJ</span></td>
+        <td class="val"><span class="num" title="From the filing: TotalEnergyConsumedFromRenewableAndNonRenewableSources = 623812739.43 Gigajoule">62,38,12,739.43</span><span class="unit">GJ</span></td>
+        <td class="val"><span class="num" title="From the filing: TotalEnergyConsumedFromRenewableAndNonRenewableSources = 587567890.63 Gigajoule">58,75,67,890.63</span><span class="unit">GJ</span></td>
       </tr>
       <tr>
         <th scope="row">Energy intensity per rupee of turnover (Total energy consumption/ turnover in rupees)</th>
-        <td class="val"><span class="num">0.000446</span><span class="unit">GJ per ₹</span></td>
-        <td class="val"><span class="num">0.000443</span><span class="unit">GJ per ₹</span></td>
+        <td class="val"><span class="num" title="From the filing: EnergyIntensityPerRupeeOfTurnover = 0.0004464728 GigajoulePerINR">0.000446</span><span class="unit">GJ per ₹</span></td>
+        <td class="val"><span class="num" title="From the filing: EnergyIntensityPerRupeeOfTurnover = 0.0004433917 GigajoulePerINR">0.000443</span><span class="unit">GJ per ₹</span></td>
       </tr>
       <tr>
         <th scope="row">Energy intensity (optional) – the relevant metric may be selected by the entity</th>
@@ -783,7 +804,7 @@ footer { padding: 4px 16px 40px; color: var(--muted); font-size: 0.85rem; }
   <h3><span class="qnum">2.</span>Does the entity have any sites / facilities identified as designated consumers (DCs) under the Performance, Achieve and Trade (PAT) Scheme of the Government of India? (Y/N) If yes, disclose whether targets set under the PAT scheme have been achieved. In case targets have not been achieved, provide the remedial action taken, if any.</h3>
 
   <div class="answer-box">
-    <p><strong>Answer:</strong> <span class="num">Yes</span></p>
+    <p><strong>Answer:</strong> <span class="num" title="From the filing: DoesTheEntityHaveAnySitesOrFacilitiesIdentifiedAsDesignatedConsumersUnderThePerformanceAchieveAndTradeSchemeOfTheGovernmentOfIndia = true">Yes</span></p>
     <p><strong>Details:</strong></p>
     <p class="details">Yes, Tata Steel has 10 sites/facilities identified as DC under the PAT Scheme of the Government of India. All the sites were able to achieve the targets set under the PAT Scheme.</p>
   </div>
@@ -808,43 +829,43 @@ footer { padding: 4px 16px 40px; color: var(--muted); font-size: 0.85rem; }
       <tr class="subhead"><th colspan="3" scope="colgroup">Water withdrawal by source (in kilolitres)</th></tr>
       <tr>
         <th scope="row">(i) Surface water</th>
-        <td class="val"><span class="num">6,62,96,419.4</span><span class="unit">kL</span></td>
-        <td class="val"><span class="num">6,93,46,215.69</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterWithdrawalBySurfaceWater = 66296419.4 Kiloliters">6,62,96,419.4</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterWithdrawalBySurfaceWater = 69346215.69 Kiloliters">6,93,46,215.69</span><span class="unit">kL</span></td>
       </tr>
       <tr>
         <th scope="row">(ii) Groundwater</th>
-        <td class="val"><span class="num">1,02,49,684.65</span><span class="unit">kL</span></td>
-        <td class="val"><span class="num">1,23,77,399.46</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterWithdrawalByGroundwater = 10249684.65 Kiloliters">1,02,49,684.65</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterWithdrawalByGroundwater = 12377399.46 Kiloliters">1,23,77,399.46</span><span class="unit">kL</span></td>
       </tr>
       <tr>
         <th scope="row">(iii) Third party water</th>
-        <td class="val"><span class="num">1,85,38,991.2</span><span class="unit">kL</span></td>
-        <td class="val"><span class="num">1,03,03,512</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterWithdrawalByThirdPartyWater = 18538991.2 Kiloliters">1,85,38,991.2</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterWithdrawalByThirdPartyWater = 10303512 Kiloliters">1,03,03,512</span><span class="unit">kL</span></td>
       </tr>
       <tr>
         <th scope="row">(iv) Seawater / desalinated water</th>
-        <td class="val"><span class="num">0</span><span class="unit">kL</span></td>
-        <td class="val"><span class="num">0</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterWithdrawalBySeawaterOrDesalinatedWater = 0 Kiloliters">0</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterWithdrawalBySeawaterOrDesalinatedWater = 0 Kiloliters">0</span><span class="unit">kL</span></td>
       </tr>
       <tr>
         <th scope="row">(v) Others</th>
-        <td class="val"><span class="num">1,55,37,800.28</span><span class="unit">kL</span></td>
-        <td class="val"><span class="num">1,88,02,118</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterWithdrawalByOthers = 15537800.28 Kiloliters">1,55,37,800.28</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterWithdrawalByOthers = 18802118 Kiloliters">1,88,02,118</span><span class="unit">kL</span></td>
       </tr>
       <tr>
         <th scope="row">Total volume of water withdrawal (in kilolitres) (i + ii + iii + iv + v)</th>
-        <td class="val"><span class="num">11,06,22,895.53</span><span class="unit">kL</span></td>
-        <td class="val"><span class="num">11,08,29,245.15</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: TotalVolumeOfWaterWithdrawal = 110622895.53 Kiloliters">11,06,22,895.53</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: TotalVolumeOfWaterWithdrawal = 110829245.15 Kiloliters">11,08,29,245.15</span><span class="unit">kL</span></td>
       </tr>
       <tr>
         <th scope="row">Total volume of water consumption (in kilolitres)</th>
-        <td class="val"><span class="num">9,90,54,737.06</span><span class="unit">kL</span></td>
-        <td class="val"><span class="num">9,86,09,097.13</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: TotalVolumeOfWaterConsumption = 99054737.06 Kiloliters">9,90,54,737.06</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: TotalVolumeOfWaterConsumption = 98609097.13 Kiloliters">9,86,09,097.13</span><span class="unit">kL</span></td>
       </tr>
       <tr>
         <th scope="row">Water intensity per rupee of turnover (Water consumed / turnover)</th>
-        <td class="val"><span class="num">7.09×10<sup>−5</sup></span><span class="unit">kL per ₹</span></td>
-        <td class="val"><span class="num">7.44×10<sup>−5</sup></span><span class="unit">kL per ₹</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterIntensityPerRupeeOfTurnover = 0.0000708951 KilolitersPerINR">7.09×10<sup>−5</sup></span><span class="unit">kL per ₹</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterIntensityPerRupeeOfTurnover = 0.0000744126 KilolitersPerINR">7.44×10<sup>−5</sup></span><span class="unit">kL per ₹</span></td>
       </tr>
       <tr>
         <th scope="row">Water intensity (optional) – the relevant metric may be selected by the entity</th>
@@ -866,7 +887,7 @@ footer { padding: 4px 16px 40px; color: var(--muted); font-size: 0.85rem; }
   <h3><span class="qnum">4.</span>Has the entity implemented a mechanism for Zero Liquid Discharge? If yes, provide details of its coverage and implementation.</h3>
 
   <div class="answer-box">
-    <p><strong>Answer:</strong> <span class="num">Yes</span></p>
+    <p><strong>Answer:</strong> <span class="num" title="From the filing: HasTheEntityImplementedAMechanismForZeroLiquidDischarge = Yes">Yes</span></p>
     <p><strong>Details:</strong></p>
     <p class="details">Tata Steel has implemented advanced wastewater treatment technologies to recycle, recover, and reuse treated wastewater, with the objective of ensuring that there is no discharge of wastewater to the environment. Tata Steel has already implemented Zero Effluent Discharge (‘ZED’) projects at several sites, including Kalinganagar, Gamharia, and Thailand plants, and is progressing implementation at Meramandali and Jamshedpur. Through ZED, 100% wastewater recycling is achieved, significantly reducing freshwater consumption. Municipal sewage is converted into industrial-grade water, strengthening community water resilience. Rainwater harvesting and aquifer recharge programmes further replenish local water tables, reinforcing Tata Steel&#39;s commitment to responsible and circular water stewardship. In the Netherlands and the UK, facilities such as IJmuiden and Port Talbot operate near coastal areas and use once-through cooling systems that return water to the environment without any deterioration in water quality Loss</p>
   </div>
@@ -890,33 +911,33 @@ footer { padding: 4px 16px 40px; color: var(--muted); font-size: 0.85rem; }
     <tbody>
       <tr>
         <th scope="row">NOx</th>
-<td class="unit-col">tonnes</td>        <td class="val"><span class="num">27,000</span><span class="tag tag-converted" title="The unit was converted; the figure as filed is kept in the saved data">conv.</span><sup class="fn"><a href="#fn-E5-1">1</a></sup></td>
-        <td class="val"><span class="num">24,000</span><span class="tag tag-converted" title="The unit was converted; the figure as filed is kept in the saved data">conv.</span><sup class="fn"><a href="#fn-E5-1">1</a></sup></td>
+<td class="unit-col">tonnes</td>        <td class="val"><span class="num" title="From the filing: NOx = 27 Kilotonne">27,000</span><span class="tag tag-converted" title="The unit was converted; the figure as filed is kept in the saved data">conv.</span><sup class="fn"><a href="#fn-E5-1">1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: NOx = 24 Kilotonne">24,000</span><span class="tag tag-converted" title="The unit was converted; the figure as filed is kept in the saved data">conv.</span><sup class="fn"><a href="#fn-E5-1">1</a></sup></td>
       </tr>
       <tr>
         <th scope="row">SOx</th>
-<td class="unit-col">tonnes</td>        <td class="val"><span class="num">67,000</span><span class="tag tag-converted" title="The unit was converted; the figure as filed is kept in the saved data">conv.</span><sup class="fn"><a href="#fn-E5-1">1</a></sup></td>
-        <td class="val"><span class="num">46,000</span><span class="tag tag-converted" title="The unit was converted; the figure as filed is kept in the saved data">conv.</span><sup class="fn"><a href="#fn-E5-1">1</a></sup></td>
+<td class="unit-col">tonnes</td>        <td class="val"><span class="num" title="From the filing: SOx = 67 Kilotonne">67,000</span><span class="tag tag-converted" title="The unit was converted; the figure as filed is kept in the saved data">conv.</span><sup class="fn"><a href="#fn-E5-1">1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: SOx = 46 Kilotonne">46,000</span><span class="tag tag-converted" title="The unit was converted; the figure as filed is kept in the saved data">conv.</span><sup class="fn"><a href="#fn-E5-1">1</a></sup></td>
       </tr>
       <tr>
         <th scope="row">Particulate matter (PM)</th>
-<td class="unit-col">tonnes</td>        <td class="val"><span class="num">9,000</span><span class="tag tag-converted" title="The unit was converted; the figure as filed is kept in the saved data">conv.</span><sup class="fn"><a href="#fn-E5-1">1</a></sup></td>
-        <td class="val"><span class="num">8,000</span><span class="tag tag-converted" title="The unit was converted; the figure as filed is kept in the saved data">conv.</span><sup class="fn"><a href="#fn-E5-1">1</a></sup></td>
+<td class="unit-col">tonnes</td>        <td class="val"><span class="num" title="From the filing: ParticulateMatter = 9 Kilotonne">9,000</span><span class="tag tag-converted" title="The unit was converted; the figure as filed is kept in the saved data">conv.</span><sup class="fn"><a href="#fn-E5-1">1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: ParticulateMatter = 8 Kilotonne">8,000</span><span class="tag tag-converted" title="The unit was converted; the figure as filed is kept in the saved data">conv.</span><sup class="fn"><a href="#fn-E5-1">1</a></sup></td>
       </tr>
       <tr>
         <th scope="row">Persistent organic pollutants (POP)</th>
-<td class="unit-col">tonnes</td>        <td class="val"><span class="num">0</span><span class="tag tag-converted" title="The unit was converted; the figure as filed is kept in the saved data">conv.</span><sup class="fn"><a href="#fn-E5-1">1</a></sup><sup class="fn fn-warn"><a href="#fn-E5-2" title="Doubtful value: see the note">⚠2</a></sup></td>
-        <td class="val"><span class="num">0</span><span class="tag tag-converted" title="The unit was converted; the figure as filed is kept in the saved data">conv.</span><sup class="fn"><a href="#fn-E5-1">1</a></sup><sup class="fn fn-warn"><a href="#fn-E5-2" title="Doubtful value: see the note">⚠2</a></sup></td>
+<td class="unit-col">tonnes</td>        <td class="val"><span class="num" title="From the filing: PersistentOrganicPollutants = 0 Kilotonne">0</span><span class="tag tag-converted" title="The unit was converted; the figure as filed is kept in the saved data">conv.</span><sup class="fn"><a href="#fn-E5-1">1</a></sup><sup class="fn fn-warn"><a href="#fn-E5-2" title="Doubtful value: see the note">⚠2</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: PersistentOrganicPollutants = 0 Kilotonne">0</span><span class="tag tag-converted" title="The unit was converted; the figure as filed is kept in the saved data">conv.</span><sup class="fn"><a href="#fn-E5-1">1</a></sup><sup class="fn fn-warn"><a href="#fn-E5-2" title="Doubtful value: see the note">⚠2</a></sup></td>
       </tr>
       <tr>
         <th scope="row">Volatile organic compounds (VOC)</th>
-<td class="unit-col">tonnes</td>        <td class="val"><span class="num">0</span><span class="tag tag-converted" title="The unit was converted; the figure as filed is kept in the saved data">conv.</span><sup class="fn"><a href="#fn-E5-1">1</a></sup><sup class="fn fn-warn"><a href="#fn-E5-2" title="Doubtful value: see the note">⚠2</a></sup></td>
-        <td class="val"><span class="num">0</span><span class="tag tag-converted" title="The unit was converted; the figure as filed is kept in the saved data">conv.</span><sup class="fn"><a href="#fn-E5-1">1</a></sup><sup class="fn fn-warn"><a href="#fn-E5-2" title="Doubtful value: see the note">⚠2</a></sup></td>
+<td class="unit-col">tonnes</td>        <td class="val"><span class="num" title="From the filing: VolatileOrganicCompounds = 0 Kilotonne">0</span><span class="tag tag-converted" title="The unit was converted; the figure as filed is kept in the saved data">conv.</span><sup class="fn"><a href="#fn-E5-1">1</a></sup><sup class="fn fn-warn"><a href="#fn-E5-2" title="Doubtful value: see the note">⚠2</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: VolatileOrganicCompounds = 0 Kilotonne">0</span><span class="tag tag-converted" title="The unit was converted; the figure as filed is kept in the saved data">conv.</span><sup class="fn"><a href="#fn-E5-1">1</a></sup><sup class="fn fn-warn"><a href="#fn-E5-2" title="Doubtful value: see the note">⚠2</a></sup></td>
       </tr>
       <tr>
         <th scope="row">Hazardous air pollutants (HAP)</th>
-<td class="unit-col">tonnes</td>        <td class="val"><span class="num">0</span><span class="tag tag-converted" title="The unit was converted; the figure as filed is kept in the saved data">conv.</span><sup class="fn"><a href="#fn-E5-1">1</a></sup><sup class="fn fn-warn"><a href="#fn-E5-2" title="Doubtful value: see the note">⚠2</a></sup></td>
-        <td class="val"><span class="num">0</span><span class="tag tag-converted" title="The unit was converted; the figure as filed is kept in the saved data">conv.</span><sup class="fn"><a href="#fn-E5-1">1</a></sup><sup class="fn fn-warn"><a href="#fn-E5-2" title="Doubtful value: see the note">⚠2</a></sup></td>
+<td class="unit-col">tonnes</td>        <td class="val"><span class="num" title="From the filing: HazardousAirPollutants = 0 Kilotonne">0</span><span class="tag tag-converted" title="The unit was converted; the figure as filed is kept in the saved data">conv.</span><sup class="fn"><a href="#fn-E5-1">1</a></sup><sup class="fn fn-warn"><a href="#fn-E5-2" title="Doubtful value: see the note">⚠2</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: HazardousAirPollutants = 0 Kilotonne">0</span><span class="tag tag-converted" title="The unit was converted; the figure as filed is kept in the saved data">conv.</span><sup class="fn"><a href="#fn-E5-1">1</a></sup><sup class="fn fn-warn"><a href="#fn-E5-2" title="Doubtful value: see the note">⚠2</a></sup></td>
       </tr>
       <tr>
         <th scope="row">Others – please specify</th>
@@ -954,23 +975,23 @@ footer { padding: 4px 16px 40px; color: var(--muted); font-size: 0.85rem; }
     <tbody>
       <tr>
         <th scope="row">Total Scope 1 emissions (Break-up of the GHG into CO2, CH4, N2O, HFCs, PFCs, SF6, NF3, if available)</th>
-<td class="unit-col">tCO2e</td>        <td class="val"><span class="num">64</span><sup class="fn fn-warn"><a href="#fn-E6-1" title="Doubtful value: see the note">⚠1</a></sup></td>
-        <td class="val"><span class="num">61</span><sup class="fn fn-warn"><a href="#fn-E6-1" title="Doubtful value: see the note">⚠1</a></sup></td>
+<td class="unit-col">tCO2e</td>        <td class="val"><span class="num" title="From the filing: TotalScope1Emissions = 64 MtCO2e">64</span><sup class="fn fn-warn"><a href="#fn-E6-1" title="Doubtful value: see the note">⚠1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: TotalScope1Emissions = 61 MtCO2e">61</span><sup class="fn fn-warn"><a href="#fn-E6-1" title="Doubtful value: see the note">⚠1</a></sup></td>
       </tr>
       <tr>
         <th scope="row">Total Scope 2 emissions (Break-up of the GHG into CO2, CH4, N2O, HFCs, PFCs, SF6, NF3, if available)</th>
-<td class="unit-col">tCO2e</td>        <td class="val"><span class="num">5</span><sup class="fn fn-warn"><a href="#fn-E6-1" title="Doubtful value: see the note">⚠1</a></sup></td>
-        <td class="val"><span class="num">5</span><sup class="fn fn-warn"><a href="#fn-E6-1" title="Doubtful value: see the note">⚠1</a></sup></td>
+<td class="unit-col">tCO2e</td>        <td class="val"><span class="num" title="From the filing: TotalScope2Emissions = 5 MtCO2e">5</span><sup class="fn fn-warn"><a href="#fn-E6-1" title="Doubtful value: see the note">⚠1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: TotalScope2Emissions = 5 MtCO2e">5</span><sup class="fn fn-warn"><a href="#fn-E6-1" title="Doubtful value: see the note">⚠1</a></sup></td>
       </tr>
       <tr>
         <th scope="row">Total Scope 1 and Scope 2 emissions per rupee of turnover</th>
-<td class="unit-col">tCO2e per ₹</td>        <td class="val"><span class="num">0</span><sup class="fn fn-warn"><a href="#fn-E6-2" title="Doubtful value: see the note">⚠2</a></sup></td>
-        <td class="val"><span class="num">0</span><sup class="fn fn-warn"><a href="#fn-E6-2" title="Doubtful value: see the note">⚠2</a></sup></td>
+<td class="unit-col">tCO2e per ₹</td>        <td class="val"><span class="num" title="From the filing: TotalScope1AndScope2EmissionsIntensityPerRupeeOfTurnover = 0 MtCO2ePerINR">0</span><sup class="fn fn-warn"><a href="#fn-E6-2" title="Doubtful value: see the note">⚠2</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: TotalScope1AndScope2EmissionsIntensityPerRupeeOfTurnover = 0 MtCO2ePerINR">0</span><sup class="fn fn-warn"><a href="#fn-E6-2" title="Doubtful value: see the note">⚠2</a></sup></td>
       </tr>
       <tr>
         <th scope="row">Total Scope 1 and Scope 2 emission intensity (optional) – the relevant metric may be selected by the entity</th>
-<td class="unit-col">MtCO2e</td>        <td class="val"><span class="num">0</span><sup class="fn fn-warn"><a href="#fn-E6-2" title="Doubtful value: see the note">⚠2</a></sup></td>
-        <td class="val"><span class="num">0</span><sup class="fn fn-warn"><a href="#fn-E6-2" title="Doubtful value: see the note">⚠2</a></sup></td>
+<td class="unit-col">MtCO2e</td>        <td class="val"><span class="num" title="From the filing: TotalScope1AndScope2EmissionsIntensityTheRelevantMetricMayBeSelectedByTheEntity = 0 MtCO2e">0</span><sup class="fn fn-warn"><a href="#fn-E6-2" title="Doubtful value: see the note">⚠2</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: TotalScope1AndScope2EmissionsIntensityTheRelevantMetricMayBeSelectedByTheEntity = 0 MtCO2e">0</span><sup class="fn fn-warn"><a href="#fn-E6-2" title="Doubtful value: see the note">⚠2</a></sup></td>
       </tr>
     </tbody>
   </table>
@@ -992,7 +1013,7 @@ footer { padding: 4px 16px 40px; color: var(--muted); font-size: 0.85rem; }
   <h3><span class="qnum">7.</span>Does the entity have any project related to reducing Green House Gas emission? If Yes, then provide details.</h3>
 
   <div class="answer-box">
-    <p><strong>Answer:</strong> <span class="num">Yes</span></p>
+    <p><strong>Answer:</strong> <span class="num" title="From the filing: DoesTheEntityHaveAnyProjectRelatedToReducingGreenHouseGasEmission = Yes">Yes</span></p>
     <p><strong>Details:</strong></p>
     <p class="details">Yes, details are provided in the Climate Change Report, which is part of Tata Steel’s Integrated Report for FY2025-26</p>
   </div>
@@ -1017,90 +1038,90 @@ footer { padding: 4px 16px 40px; color: var(--muted); font-size: 0.85rem; }
       <tr class="subhead"><th colspan="3" scope="colgroup">Total Waste generated (in metric tonnes)</th></tr>
       <tr>
         <th scope="row">Plastic waste (A)</th>
-        <td class="val"><span class="num">3,201</span><span class="unit">tonnes</span></td>
-        <td class="val"><span class="num">2,359</span><span class="unit">tonnes</span></td>
+        <td class="val"><span class="num" title="From the filing: PlasticWaste = 3201 Tonne">3,201</span><span class="unit">tonnes</span></td>
+        <td class="val"><span class="num" title="From the filing: PlasticWaste = 2359 Tonne">2,359</span><span class="unit">tonnes</span></td>
       </tr>
       <tr>
         <th scope="row">E-waste (B)</th>
-        <td class="val"><span class="num">239</span><span class="unit">tonnes</span></td>
-        <td class="val"><span class="num">201</span><span class="unit">tonnes</span></td>
+        <td class="val"><span class="num" title="From the filing: EWaste = 239 Tonne">239</span><span class="unit">tonnes</span></td>
+        <td class="val"><span class="num" title="From the filing: EWaste = 201 Tonne">201</span><span class="unit">tonnes</span></td>
       </tr>
       <tr>
         <th scope="row">Bio-medical waste (C)</th>
-        <td class="val"><span class="num">206</span><span class="unit">tonnes</span></td>
-        <td class="val"><span class="num">256</span><span class="unit">tonnes</span></td>
+        <td class="val"><span class="num" title="From the filing: BioMedicalWaste = 206 Tonne">206</span><span class="unit">tonnes</span></td>
+        <td class="val"><span class="num" title="From the filing: BioMedicalWaste = 256 Tonne">256</span><span class="unit">tonnes</span></td>
       </tr>
       <tr>
         <th scope="row">Construction and demolition waste (D)</th>
-        <td class="val"><span class="num">760</span><span class="unit">tonnes</span></td>
-        <td class="val"><span class="num">1,714</span><span class="unit">tonnes</span></td>
+        <td class="val"><span class="num" title="From the filing: ConstructionAndDemolitionWaste = 760 Tonne">760</span><span class="unit">tonnes</span></td>
+        <td class="val"><span class="num" title="From the filing: ConstructionAndDemolitionWaste = 1714 Tonne">1,714</span><span class="unit">tonnes</span></td>
       </tr>
       <tr>
         <th scope="row">Battery waste (E)</th>
-        <td class="val"><span class="num">228</span><span class="unit">tonnes</span></td>
-        <td class="val"><span class="num">687</span><span class="unit">tonnes</span></td>
+        <td class="val"><span class="num" title="From the filing: BatteryWaste = 228 Tonne">228</span><span class="unit">tonnes</span></td>
+        <td class="val"><span class="num" title="From the filing: BatteryWaste = 687 Tonne">687</span><span class="unit">tonnes</span></td>
       </tr>
       <tr>
         <th scope="row">Radioactive waste (F)</th>
-        <td class="val"><span class="num">0</span><span class="unit">tonnes</span></td>
-        <td class="val"><span class="num">0</span><span class="unit">tonnes</span></td>
+        <td class="val"><span class="num" title="From the filing: RadioactiveWaste = 0 Tonne">0</span><span class="unit">tonnes</span></td>
+        <td class="val"><span class="num" title="From the filing: RadioactiveWaste = 0 Tonne">0</span><span class="unit">tonnes</span></td>
       </tr>
       <tr>
         <th scope="row">Other Hazardous waste. Please specify, if any. (G)</th>
-        <td class="val"><span class="num">15,95,294</span><span class="unit">tonnes</span></td>
-        <td class="val"><span class="num">12,27,314</span><span class="unit">tonnes</span></td>
+        <td class="val"><span class="num" title="From the filing: OtherHazardousWaste = 1595294 Tonne">15,95,294</span><span class="unit">tonnes</span></td>
+        <td class="val"><span class="num" title="From the filing: OtherHazardousWaste = 1227314 Tonne">12,27,314</span><span class="unit">tonnes</span></td>
       </tr>
       <tr>
         <th scope="row">Other Non-hazardous waste generated (H). Please specify, if any. (Break-up by composition i.e. by materials relevant to the sector)</th>
-        <td class="val"><span class="num">1,71,82,321</span><span class="unit">tonnes</span></td>
-        <td class="val"><span class="num">1,61,19,942</span><span class="unit">tonnes</span></td>
+        <td class="val"><span class="num" title="From the filing: OtherNonHazardousWasteGenerated = 17182321 Tonne">1,71,82,321</span><span class="unit">tonnes</span></td>
+        <td class="val"><span class="num" title="From the filing: OtherNonHazardousWasteGenerated = 16119942 Tonne">1,61,19,942</span><span class="unit">tonnes</span></td>
       </tr>
       <tr>
         <th scope="row">Total (A + B + C + D + E + F + G + H)</th>
-        <td class="val"><span class="num">1,87,82,249</span><span class="unit">tonnes</span></td>
-        <td class="val"><span class="num">1,73,52,473</span><span class="unit">tonnes</span></td>
+        <td class="val"><span class="num" title="From the filing: TotalWasteGenerated = 18782249 Tonne">1,87,82,249</span><span class="unit">tonnes</span></td>
+        <td class="val"><span class="num" title="From the filing: TotalWasteGenerated = 17352473 Tonne">1,73,52,473</span><span class="unit">tonnes</span></td>
       </tr>
       <tr class="subhead"><th colspan="3" scope="colgroup">For each category of waste generated, total waste recovered through recycling, re-using or other recovery operations (in metric tonnes)</th></tr>
       <tr>
         <th scope="row">(i) Recycled</th>
-        <td class="val"><span class="num">1,59,39,834</span><span class="unit">tonnes</span></td>
-        <td class="val"><span class="num">1,64,79,338</span><span class="unit">tonnes</span></td>
+        <td class="val"><span class="num" title="From the filing: WasteRecoveredThroughRecycled = 15939834 Tonne">1,59,39,834</span><span class="unit">tonnes</span></td>
+        <td class="val"><span class="num" title="From the filing: WasteRecoveredThroughRecycled = 16479338 Tonne">1,64,79,338</span><span class="unit">tonnes</span></td>
       </tr>
       <tr>
         <th scope="row">(ii) Re-used</th>
-        <td class="val"><span class="num">29,02,409</span><span class="unit">tonnes</span></td>
-        <td class="val"><span class="num">29,59,048</span><span class="unit">tonnes</span></td>
+        <td class="val"><span class="num" title="From the filing: WasteRecoveredThroughReUsed = 2902409 Tonne">29,02,409</span><span class="unit">tonnes</span></td>
+        <td class="val"><span class="num" title="From the filing: WasteRecoveredThroughReUsed = 2959048 Tonne">29,59,048</span><span class="unit">tonnes</span></td>
       </tr>
       <tr>
         <th scope="row">(iii) Other recovery operations</th>
-        <td class="val"><span class="num">1</span><span class="unit">tonnes</span></td>
-        <td class="val"><span class="num">0</span><span class="unit">tonnes</span></td>
+        <td class="val"><span class="num" title="From the filing: WasteRecoveredThroughOtherRecoveryOperations = 1 Tonne">1</span><span class="unit">tonnes</span></td>
+        <td class="val"><span class="num" title="From the filing: WasteRecoveredThroughOtherRecoveryOperations = 0 Tonne">0</span><span class="unit">tonnes</span></td>
       </tr>
       <tr>
         <th scope="row">Total</th>
-        <td class="val"><span class="num">1,88,42,244</span><span class="unit">tonnes</span></td>
-        <td class="val"><span class="num">1,94,38,386</span><span class="unit">tonnes</span></td>
+        <td class="val"><span class="num" title="From the filing: TotalWasteRecovered = 18842244 Tonne">1,88,42,244</span><span class="unit">tonnes</span></td>
+        <td class="val"><span class="num" title="From the filing: TotalWasteRecovered = 19438386 Tonne">1,94,38,386</span><span class="unit">tonnes</span></td>
       </tr>
       <tr class="subhead"><th colspan="3" scope="colgroup">For each category of waste generated, total waste disposed by nature of disposal method (in metric tonnes)</th></tr>
       <tr>
         <th scope="row">(i) Incineration</th>
-        <td class="val"><span class="num">4,236</span><span class="unit">tonnes</span></td>
-        <td class="val"><span class="num">4,113</span><span class="unit">tonnes</span></td>
+        <td class="val"><span class="num" title="From the filing: WasteDisposedByIncineration = 4236 Tonne">4,236</span><span class="unit">tonnes</span></td>
+        <td class="val"><span class="num" title="From the filing: WasteDisposedByIncineration = 4113 Tonne">4,113</span><span class="unit">tonnes</span></td>
       </tr>
       <tr>
         <th scope="row">(ii) Landfilling</th>
-        <td class="val"><span class="num">17,513</span><span class="unit">tonnes</span></td>
-        <td class="val"><span class="num">15,987</span><span class="unit">tonnes</span></td>
+        <td class="val"><span class="num" title="From the filing: WasteDisposedByLandfilling = 17513 Tonne">17,513</span><span class="unit">tonnes</span></td>
+        <td class="val"><span class="num" title="From the filing: WasteDisposedByLandfilling = 15987 Tonne">15,987</span><span class="unit">tonnes</span></td>
       </tr>
       <tr>
         <th scope="row">(iii) Other disposal operations</th>
-        <td class="val"><span class="num">160</span><span class="unit">tonnes</span></td>
-        <td class="val"><span class="num">0</span><span class="unit">tonnes</span></td>
+        <td class="val"><span class="num" title="From the filing: WasteDisposedByOtherDisposalOperations = 160 Tonne">160</span><span class="unit">tonnes</span></td>
+        <td class="val"><span class="num" title="From the filing: WasteDisposedByOtherDisposalOperations = 0 Tonne">0</span><span class="unit">tonnes</span></td>
       </tr>
       <tr>
         <th scope="row">Total</th>
-        <td class="val"><span class="num">21,909</span><span class="unit">tonnes</span></td>
-        <td class="val"><span class="num">20,100</span><span class="unit">tonnes</span></td>
+        <td class="val"><span class="num" title="From the filing: TotalWasteDisposed = 21909 Tonne">21,909</span><span class="unit">tonnes</span></td>
+        <td class="val"><span class="num" title="From the filing: TotalWasteDisposed = 20100 Tonne">20,100</span><span class="unit">tonnes</span></td>
       </tr>
     </tbody>
   </table>
@@ -1188,7 +1209,7 @@ footer { padding: 4px 16px 40px; color: var(--muted); font-size: 0.85rem; }
   <h3><span class="qnum">12.</span>Is the entity compliant with the applicable environmental law/ regulations/ guidelines in India; such as the Water (Prevention and Control of Pollution) Act, Air (Prevention and Control of Pollution) Act, Environment protection act and rules thereunder (Y/N). If not, provide details of all such non-compliances, in the following format:</h3>
 
   <div class="answer-box">
-    <p><strong>Answer:</strong> <span class="num">Yes</span></p>
+    <p><strong>Answer:</strong> <span class="num" title="From the filing: IsTheEntityCompliantWithTheApplicableEnvironmentalLaw = Yes">Yes</span></p>
     <p><strong>Details:</strong> <span class="missing">Not reported</span></p>
   </div>
   
@@ -1215,44 +1236,44 @@ footer { padding: 4px 16px 40px; color: var(--muted); font-size: 0.85rem; }
       <tr class="subhead"><th colspan="3" scope="colgroup">From renewable sources</th></tr>
       <tr>
         <th scope="row">Total electricity consumption (A)</th>
-        <td class="val"><span class="num">11,47,519.68</span><span class="unit">GJ</span></td>
-        <td class="val"><span class="num">3,84,861.97</span><span class="unit">GJ</span></td>
+        <td class="val"><span class="num" title="From the filing: TotalElectricityConsumptionFromRenewableSources = 1147519.68 Gigajoule">11,47,519.68</span><span class="unit">GJ</span></td>
+        <td class="val"><span class="num" title="From the filing: TotalElectricityConsumptionFromRenewableSources = 384861.97 Gigajoule">3,84,861.97</span><span class="unit">GJ</span></td>
       </tr>
       <tr>
         <th scope="row">Total fuel consumption (B)</th>
-        <td class="val"><span class="num">3,59,119.74</span><span class="unit">GJ</span></td>
-        <td class="val"><span class="num">0</span><span class="unit">GJ</span></td>
+        <td class="val"><span class="num" title="From the filing: TotalFuelConsumptionFromRenewableSources = 359119.74 Gigajoule">3,59,119.74</span><span class="unit">GJ</span></td>
+        <td class="val"><span class="num" title="From the filing: TotalFuelConsumptionFromRenewableSources = 0 Gigajoule">0</span><span class="unit">GJ</span></td>
       </tr>
       <tr>
         <th scope="row">Energy consumption through other sources (C)</th>
-        <td class="val"><span class="num">1.51</span><span class="unit">GJ</span></td>
-        <td class="val"><span class="num">0.38</span><span class="unit">GJ</span></td>
+        <td class="val"><span class="num" title="From the filing: EnergyConsumptionThroughOtherSourcesFromRenewableSources = 1.51 Gigajoule">1.51</span><span class="unit">GJ</span></td>
+        <td class="val"><span class="num" title="From the filing: EnergyConsumptionThroughOtherSourcesFromRenewableSources = 0.38 Gigajoule">0.38</span><span class="unit">GJ</span></td>
       </tr>
       <tr>
         <th scope="row">Total energy consumed from renewable sources (A+B+C)</th>
-        <td class="val"><span class="num">15,06,640.93</span><span class="unit">GJ</span></td>
-        <td class="val"><span class="num">3,84,862.35</span><span class="unit">GJ</span></td>
+        <td class="val"><span class="num" title="From the filing: TotalEnergyConsumedFromRenewableSources = 1506640.93 Gigajoule">15,06,640.93</span><span class="unit">GJ</span></td>
+        <td class="val"><span class="num" title="From the filing: TotalEnergyConsumedFromRenewableSources = 384862.35 Gigajoule">3,84,862.35</span><span class="unit">GJ</span></td>
       </tr>
       <tr class="subhead"><th colspan="3" scope="colgroup">From non-renewable sources</th></tr>
       <tr>
         <th scope="row">Total electricity consumption (D)</th>
-        <td class="val"><span class="num">2,36,51,380.57</span><span class="unit">GJ</span></td>
-        <td class="val"><span class="num">2,28,59,369.8</span><span class="unit">GJ</span></td>
+        <td class="val"><span class="num" title="From the filing: TotalElectricityConsumptionFromNonRenewableSources = 23651380.57 Gigajoule">2,36,51,380.57</span><span class="unit">GJ</span></td>
+        <td class="val"><span class="num" title="From the filing: TotalElectricityConsumptionFromNonRenewableSources = 22859369.8 Gigajoule">2,28,59,369.8</span><span class="unit">GJ</span></td>
       </tr>
       <tr>
         <th scope="row">Total fuel consumption (E)</th>
-        <td class="val"><span class="num">59,86,54,717.93</span><span class="unit">GJ</span></td>
-        <td class="val"><span class="num">56,43,23,658.48</span><span class="unit">GJ</span></td>
+        <td class="val"><span class="num" title="From the filing: TotalFuelConsumptionFromNonRenewableSources = 598654717.93 Gigajoule">59,86,54,717.93</span><span class="unit">GJ</span></td>
+        <td class="val"><span class="num" title="From the filing: TotalFuelConsumptionFromNonRenewableSources = 564323658.48 Gigajoule">56,43,23,658.48</span><span class="unit">GJ</span></td>
       </tr>
       <tr>
         <th scope="row">Energy consumption through other sources (F)</th>
-        <td class="val"><span class="num">0</span><span class="unit">GJ</span></td>
-        <td class="val"><span class="num">0</span><span class="unit">GJ</span></td>
+        <td class="val"><span class="num" title="From the filing: EnergyConsumptionThroughOtherSourcesFromNonRenewableSources = 0 Gigajoule">0</span><span class="unit">GJ</span></td>
+        <td class="val"><span class="num" title="From the filing: EnergyConsumptionThroughOtherSourcesFromNonRenewableSources = 0 Gigajoule">0</span><span class="unit">GJ</span></td>
       </tr>
       <tr>
         <th scope="row">Total energy consumed from non-renewable sources (D+E+F)</th>
-        <td class="val"><span class="num">62,23,06,098.5</span><span class="unit">GJ</span></td>
-        <td class="val"><span class="num">58,71,83,028.28</span><span class="unit">GJ</span></td>
+        <td class="val"><span class="num" title="From the filing: TotalEnergyConsumedFromNonRenewableSources = 622306098.5 Gigajoule">62,23,06,098.5</span><span class="unit">GJ</span></td>
+        <td class="val"><span class="num" title="From the filing: TotalEnergyConsumedFromNonRenewableSources = 587183028.28 Gigajoule">58,71,83,028.28</span><span class="unit">GJ</span></td>
       </tr>
     </tbody>
   </table>
@@ -1281,83 +1302,83 @@ footer { padding: 4px 16px 40px; color: var(--muted); font-size: 0.85rem; }
       <tr class="subhead"><th colspan="3" scope="colgroup">Water discharge by destination and level of treatment (in kilolitres)</th></tr>
       <tr>
         <th scope="row">(i) To Surface water</th>
-        <td class="val"><span class="num">1,13,37,181.07</span><span class="unit">kL</span></td>
-        <td class="val"><span class="num">1,20,00,019.12</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToSurfaceWater = 11337181.074 Kiloliters">1,13,37,181.07</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToSurfaceWater = 12000019.12 Kiloliters">1,20,00,019.12</span><span class="unit">kL</span></td>
       </tr>
       <tr>
         <th scope="row">- No treatment</th>
-        <td class="val"><span class="num">0</span><span class="unit">kL</span></td>
-        <td class="val"><span class="num">0</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToSurfaceWaterWithOutTreatment = 0 Kiloliters">0</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToSurfaceWaterWithOutTreatment = 0 Kiloliters">0</span><span class="unit">kL</span></td>
       </tr>
       <tr>
         <th scope="row">- With treatment – please specify level of treatment</th>
-        <td class="val"><span class="num">1,13,37,181.07</span><span class="unit">kL</span></td>
-        <td class="val"><span class="num">1,20,00,019.12</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToSurfaceWaterWithTreatment = 11337181.074 Kiloliters">1,13,37,181.07</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToSurfaceWaterWithTreatment = 12000019.12 Kiloliters">1,20,00,019.12</span><span class="unit">kL</span></td>
       </tr>
       <tr>
         <th scope="row">(ii) To Groundwater</th>
-        <td class="val"><span class="num">0</span><span class="unit">kL</span></td>
-        <td class="val"><span class="num">0</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToGroundwater = 0 Kiloliters">0</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToGroundwater = 0 Kiloliters">0</span><span class="unit">kL</span></td>
       </tr>
       <tr>
         <th scope="row">- No treatment</th>
-        <td class="val"><span class="num">0</span><span class="unit">kL</span></td>
-        <td class="val"><span class="num">0</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToGroundwaterWithOutTreatment = 0 Kiloliters">0</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToGroundwaterWithOutTreatment = 0 Kiloliters">0</span><span class="unit">kL</span></td>
       </tr>
       <tr>
         <th scope="row">- With treatment – please specify level of treatment</th>
-        <td class="val"><span class="num">0</span><span class="unit">kL</span></td>
-        <td class="val"><span class="num">0</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToGroundwaterWithTreatment = 0 Kiloliters">0</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToGroundwaterWithTreatment = 0 Kiloliters">0</span><span class="unit">kL</span></td>
       </tr>
       <tr>
         <th scope="row">(iii) To Seawater</th>
-        <td class="val"><span class="num">0</span><span class="unit">kL</span></td>
-        <td class="val"><span class="num">0</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToSeawater = 0 Kiloliters">0</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToSeawater = 0 Kiloliters">0</span><span class="unit">kL</span></td>
       </tr>
       <tr>
         <th scope="row">- No treatment</th>
-        <td class="val"><span class="num">0</span><span class="unit">kL</span></td>
-        <td class="val"><span class="num">0</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToSeawaterWithOutTreatment = 0 Kiloliters">0</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToSeawaterWithOutTreatment = 0 Kiloliters">0</span><span class="unit">kL</span></td>
       </tr>
       <tr>
         <th scope="row">- With treatment – please specify level of treatment</th>
-        <td class="val"><span class="num">0</span><span class="unit">kL</span></td>
-        <td class="val"><span class="num">0</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToSeawaterWithTreatment = 0 Kiloliters">0</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToSeawaterWithTreatment = 0 Kiloliters">0</span><span class="unit">kL</span></td>
       </tr>
       <tr>
         <th scope="row">(iv) Sent to third-parties</th>
-        <td class="val"><span class="num">2,30,977.4</span><span class="unit">kL</span></td>
-        <td class="val"><span class="num">2,20,128.9</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeBySentToThirdParties = 230977.4 Kiloliters">2,30,977.4</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeBySentToThirdParties = 220128.9 Kiloliters">2,20,128.9</span><span class="unit">kL</span></td>
       </tr>
       <tr>
         <th scope="row">- No treatment</th>
-        <td class="val"><span class="num">0</span><span class="unit">kL</span></td>
-        <td class="val"><span class="num">0</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeBySentToThirdPartiesWithoutTreatment = 0 Kiloliters">0</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeBySentToThirdPartiesWithoutTreatment = 0 Kiloliters">0</span><span class="unit">kL</span></td>
       </tr>
       <tr>
         <th scope="row">- With treatment – please specify level of treatment</th>
-        <td class="val"><span class="num">2,30,977.4</span><span class="unit">kL</span></td>
-        <td class="val"><span class="num">2,20,128.9</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeBySentToThirdPartiesWithTreatment = 230977.4 Kiloliters">2,30,977.4</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeBySentToThirdPartiesWithTreatment = 220128.9 Kiloliters">2,20,128.9</span><span class="unit">kL</span></td>
       </tr>
       <tr>
         <th scope="row">(v) Others</th>
-        <td class="val"><span class="num">0</span><span class="unit">kL</span></td>
-        <td class="val"><span class="num">0</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToOthers = 0 Kiloliters">0</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToOthers = 0 Kiloliters">0</span><span class="unit">kL</span></td>
       </tr>
       <tr>
         <th scope="row">- No treatment</th>
-        <td class="val"><span class="num">0</span><span class="unit">kL</span></td>
-        <td class="val"><span class="num">0</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToOthersWithoutTreatment = 0 Kiloliters">0</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToOthersWithoutTreatment = 0 Kiloliters">0</span><span class="unit">kL</span></td>
       </tr>
       <tr>
         <th scope="row">- With treatment – please specify level of treatment</th>
-        <td class="val"><span class="num">0</span><span class="unit">kL</span></td>
-        <td class="val"><span class="num">0</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToOthersWithTreatment = 0 Kiloliters">0</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToOthersWithTreatment = 0 Kiloliters">0</span><span class="unit">kL</span></td>
       </tr>
       <tr>
         <th scope="row">Total water discharged (in kilolitres)</th>
-        <td class="val"><span class="num">1,15,68,158.47</span><span class="unit">kL</span></td>
-        <td class="val"><span class="num">1,22,20,148.02</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: TotalWaterDischargedInKilolitres = 11568158.474 Kiloliters">1,15,68,158.47</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: TotalWaterDischargedInKilolitres = 12220148.02 Kiloliters">1,22,20,148.02</span><span class="unit">kL</span></td>
       </tr>
     </tbody>
   </table>
@@ -1389,43 +1410,43 @@ footer { padding: 4px 16px 40px; color: var(--muted); font-size: 0.85rem; }
       <tr class="subhead"><th colspan="3" scope="colgroup">Water withdrawal by source (in kilolitres)</th></tr>
       <tr>
         <th scope="row">(i) Surface water</th>
-        <td class="val"><span class="num">2,34,37,892.44</span><span class="unit">kL</span></td>
-        <td class="val"><span class="num">2,16,28,646.48</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterWithdrawalBySurfaceWaterPerArea = 23437892.44 Kiloliters">2,34,37,892.44</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterWithdrawalBySurfaceWaterPerArea = 21628646.48 Kiloliters">2,16,28,646.48</span><span class="unit">kL</span></td>
       </tr>
       <tr>
         <th scope="row">(ii) Groundwater</th>
-        <td class="val"><span class="num">31,54,717.32</span><span class="unit">kL</span></td>
-        <td class="val"><span class="num">33,56,461.78</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterWithdrawalByGroundwaterPerArea = 3154717.32 Kiloliters">31,54,717.32</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterWithdrawalByGroundwaterPerArea = 3356461.78 Kiloliters">33,56,461.78</span><span class="unit">kL</span></td>
       </tr>
       <tr>
         <th scope="row">(iii) Third party water</th>
-        <td class="val"><span class="num">40,74,518.12</span><span class="unit">kL</span></td>
-        <td class="val"><span class="num">48,68,422</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterWithdrawalByThirdPartyWaterPerArea = 4074518.12 Kiloliters">40,74,518.12</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterWithdrawalByThirdPartyWaterPerArea = 4868422 Kiloliters">48,68,422</span><span class="unit">kL</span></td>
       </tr>
       <tr>
         <th scope="row">(iv) Seawater / desalinated water</th>
-        <td class="val"><span class="num">0</span><span class="unit">kL</span></td>
-        <td class="val"><span class="num">0</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterWithdrawalBySeawaterOrDesalinatedWaterPerArea = 0 Kiloliters">0</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterWithdrawalBySeawaterOrDesalinatedWaterPerArea = 0 Kiloliters">0</span><span class="unit">kL</span></td>
       </tr>
       <tr>
         <th scope="row">(v) Others</th>
-        <td class="val"><span class="num">1,47,33,891</span><span class="unit">kL</span></td>
-        <td class="val"><span class="num">1,77,34,728</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterWithdrawalByOthersPerArea = 14733891 Kiloliters">1,47,33,891</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterWithdrawalByOthersPerArea = 17734728 Kiloliters">1,77,34,728</span><span class="unit">kL</span></td>
       </tr>
       <tr>
         <th scope="row">Total volume of water withdrawal (in kilolitres) (i + ii + iii + iv + v)</th>
-        <td class="val"><span class="num">4,54,01,018.88</span><span class="unit">kL</span></td>
-        <td class="val"><span class="num">4,75,88,258.26</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: TotalVolumeOfWaterWithdrawalPerArea = 45401018.88 Kiloliters">4,54,01,018.88</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: TotalVolumeOfWaterWithdrawalPerArea = 47588258.26 Kiloliters">4,75,88,258.26</span><span class="unit">kL</span></td>
       </tr>
       <tr>
         <th scope="row">Total volume of water consumption (in kilolitres)</th>
-        <td class="val"><span class="num">3,69,08,765.81</span><span class="unit">kL</span></td>
-        <td class="val"><span class="num">4,00,75,135.65</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: TotalVolumeOfWaterConsumptionPerArea = 36908765.81 Kiloliters">3,69,08,765.81</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: TotalVolumeOfWaterConsumptionPerArea = 40075135.65 Kiloliters">4,00,75,135.65</span><span class="unit">kL</span></td>
       </tr>
       <tr>
         <th scope="row">Water intensity per rupee of turnover (Water consumed / turnover)</th>
-        <td class="val"><span class="num">2.00×10<sup>−5</sup></span><span class="unit">kL per ₹</span></td>
-        <td class="val"><span class="num">3.00×10<sup>−5</sup></span><span class="unit">kL per ₹</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterIntensityPerRupeeOfTurnoverPerArea = 0.00002 KilolitersPerINR">2.00×10<sup>−5</sup></span><span class="unit">kL per ₹</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterIntensityPerRupeeOfTurnoverPerArea = 0.00003 KilolitersPerINR">3.00×10<sup>−5</sup></span><span class="unit">kL per ₹</span></td>
       </tr>
       <tr>
         <th scope="row">Water intensity (optional) – the relevant metric may be selected by the entity</th>
@@ -1435,83 +1456,83 @@ footer { padding: 4px 16px 40px; color: var(--muted); font-size: 0.85rem; }
       <tr class="subhead"><th colspan="3" scope="colgroup">Water discharge by destination and level of treatment (in kilolitres)</th></tr>
       <tr>
         <th scope="row">(i) Into Surface water</th>
-        <td class="val"><span class="num">83,25,634.47</span><span class="unit">kL</span></td>
-        <td class="val"><span class="num">73,29,774.51</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToSurfaceWaterPerArea = 8325634.47 Kiloliters">83,25,634.47</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToSurfaceWaterPerArea = 7329774.51 Kiloliters">73,29,774.51</span><span class="unit">kL</span></td>
       </tr>
       <tr>
         <th scope="row">- No treatment</th>
-        <td class="val"><span class="num">0</span><span class="unit">kL</span></td>
-        <td class="val"><span class="num">0</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToSurfaceWaterWithOutTreatmentPerArea = 0 Kiloliters">0</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToSurfaceWaterWithOutTreatmentPerArea = 0 Kiloliters">0</span><span class="unit">kL</span></td>
       </tr>
       <tr>
         <th scope="row">- With treatment – please specify level of treatment</th>
-        <td class="val"><span class="num">83,25,634.47</span><span class="unit">kL</span></td>
-        <td class="val"><span class="num">73,29,774.51</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToSurfaceWaterWithTreatmentPerArea = 8325634.47 Kiloliters">83,25,634.47</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToSurfaceWaterWithTreatmentPerArea = 7329774.51 Kiloliters">73,29,774.51</span><span class="unit">kL</span></td>
       </tr>
       <tr>
         <th scope="row">(ii) Into Groundwater</th>
-        <td class="val"><span class="num">0</span><span class="unit">kL</span></td>
-        <td class="val"><span class="num">0</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToGroundwaterPerArea = 0 Kiloliters">0</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToGroundwaterPerArea = 0 Kiloliters">0</span><span class="unit">kL</span></td>
       </tr>
       <tr>
         <th scope="row">- No treatment</th>
-        <td class="val"><span class="num">0</span><span class="unit">kL</span></td>
-        <td class="val"><span class="num">0</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToGroundwaterWithOutTreatmentPerArea = 0 Kiloliters">0</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToGroundwaterWithOutTreatmentPerArea = 0 Kiloliters">0</span><span class="unit">kL</span></td>
       </tr>
       <tr>
         <th scope="row">- With treatment – please specify level of treatment</th>
-        <td class="val"><span class="num">0</span><span class="unit">kL</span></td>
-        <td class="val"><span class="num">0</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToGroundwaterWithTreatmentPerArea = 0 Kiloliters">0</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToGroundwaterWithTreatmentPerArea = 0 Kiloliters">0</span><span class="unit">kL</span></td>
       </tr>
       <tr>
         <th scope="row">(iii) Into Seawater</th>
-        <td class="val"><span class="num">0</span><span class="unit">kL</span></td>
-        <td class="val"><span class="num">0</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToSeawaterPerArea = 0 Kiloliters">0</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToSeawaterPerArea = 0 Kiloliters">0</span><span class="unit">kL</span></td>
       </tr>
       <tr>
         <th scope="row">- No treatment</th>
-        <td class="val"><span class="num">0</span><span class="unit">kL</span></td>
-        <td class="val"><span class="num">0</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToSeawaterWithOutTreatmentPerArea = 0 Kiloliters">0</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToSeawaterWithOutTreatmentPerArea = 0 Kiloliters">0</span><span class="unit">kL</span></td>
       </tr>
       <tr>
         <th scope="row">- With treatment – please specify level of treatment</th>
-        <td class="val"><span class="num">0</span><span class="unit">kL</span></td>
-        <td class="val"><span class="num">0</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToSeawaterWithTreatmentPerArea = 0 Kiloliters">0</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToSeawaterWithTreatmentPerArea = 0 Kiloliters">0</span><span class="unit">kL</span></td>
       </tr>
       <tr>
         <th scope="row">(iv) Sent to third-parties</th>
-        <td class="val"><span class="num">1,66,618.6</span><span class="unit">kL</span></td>
-        <td class="val"><span class="num">1,72,559</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeBySentToThirdPartiesPerArea = 166618.6 Kiloliters">1,66,618.6</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeBySentToThirdPartiesPerArea = 172559 Kiloliters">1,72,559</span><span class="unit">kL</span></td>
       </tr>
       <tr>
         <th scope="row">- No treatment</th>
-        <td class="val"><span class="num">0</span><span class="unit">kL</span></td>
-        <td class="val"><span class="num">0</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeBySentToThirdPartiesWithoutTreatmentPerArea = 0 Kiloliters">0</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeBySentToThirdPartiesWithoutTreatmentPerArea = 0 Kiloliters">0</span><span class="unit">kL</span></td>
       </tr>
       <tr>
         <th scope="row">- With treatment – please specify level of treatment</th>
-        <td class="val"><span class="num">1,66,618.6</span><span class="unit">kL</span></td>
-        <td class="val"><span class="num">1,72,559</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeBySentToThirdPartiesWithTreatmentPerArea = 166618.6 Kiloliters">1,66,618.6</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeBySentToThirdPartiesWithTreatmentPerArea = 172559 Kiloliters">1,72,559</span><span class="unit">kL</span></td>
       </tr>
       <tr>
         <th scope="row">(v) Others</th>
-        <td class="val"><span class="num">0</span><span class="unit">kL</span></td>
-        <td class="val"><span class="num">0</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToOthersPerArea = 0 Kiloliters">0</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToOthersPerArea = 0 Kiloliters">0</span><span class="unit">kL</span></td>
       </tr>
       <tr>
         <th scope="row">- No treatment</th>
-        <td class="val"><span class="num">0</span><span class="unit">kL</span></td>
-        <td class="val"><span class="num">0</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToOthersWithoutTreatmentPerArea = 0 Kiloliters">0</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToOthersWithoutTreatmentPerArea = 0 Kiloliters">0</span><span class="unit">kL</span></td>
       </tr>
       <tr>
         <th scope="row">- With treatment – please specify level of treatment</th>
-        <td class="val"><span class="num">0</span><span class="unit">kL</span></td>
-        <td class="val"><span class="num">0</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToOthersWithTreatmentPerArea = 0 Kiloliters">0</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToOthersWithTreatmentPerArea = 0 Kiloliters">0</span><span class="unit">kL</span></td>
       </tr>
       <tr>
         <th scope="row">Total water discharged (in kilolitres)</th>
-        <td class="val"><span class="num">84,92,253.07</span><span class="unit">kL</span></td>
-        <td class="val"><span class="num">75,02,333.51</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: TotalWaterDischargedInKilolitresPerArea = 8492253.07 Kiloliters">84,92,253.07</span><span class="unit">kL</span></td>
+        <td class="val"><span class="num" title="From the filing: TotalWaterDischargedInKilolitresPerArea = 7502333.51 Kiloliters">75,02,333.51</span><span class="unit">kL</span></td>
       </tr>
     </tbody>
   </table>
@@ -1542,18 +1563,18 @@ footer { padding: 4px 16px 40px; color: var(--muted); font-size: 0.85rem; }
     <tbody>
       <tr>
         <th scope="row">Total Scope 3 emissions (Break-up of the GHG into CO2, CH4, N2O, HFCs, PFCs, SF6, NF3, if available)</th>
-<td class="unit-col">tCO2e</td>        <td class="val"><span class="num">28</span><sup class="fn fn-warn"><a href="#fn-L4-1" title="Doubtful value: see the note">⚠1</a></sup></td>
-        <td class="val"><span class="num">23</span><sup class="fn fn-warn"><a href="#fn-L4-1" title="Doubtful value: see the note">⚠1</a></sup></td>
+<td class="unit-col">tCO2e</td>        <td class="val"><span class="num" title="From the filing: TotalScope3Emissions = 28 MtCO2e">28</span><sup class="fn fn-warn"><a href="#fn-L4-1" title="Doubtful value: see the note">⚠1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: TotalScope3Emissions = 23 MtCO2e">23</span><sup class="fn fn-warn"><a href="#fn-L4-1" title="Doubtful value: see the note">⚠1</a></sup></td>
       </tr>
       <tr>
         <th scope="row">Total Scope 3 emissions per rupee of turnover</th>
-<td class="unit-col">tCO2e per ₹</td>        <td class="val"><span class="num">0.0002</span></td>
-        <td class="val"><span class="num">0.0002</span></td>
+<td class="unit-col">tCO2e per ₹</td>        <td class="val"><span class="num" title="From the filing: TotalScope3EmissionsPerRupeeOfTurnover = 0.0002 MtCO2ePerINR">0.0002</span></td>
+        <td class="val"><span class="num" title="From the filing: TotalScope3EmissionsPerRupeeOfTurnover = 0.0002 MtCO2ePerINR">0.0002</span></td>
       </tr>
       <tr>
         <th scope="row">Total Scope 3 emission intensity (optional) – the relevant metric may be selected by the entity</th>
-<td class="unit-col">MtCO2e</td>        <td class="val"><span class="num">0</span><sup class="fn fn-warn"><a href="#fn-L4-2" title="Doubtful value: see the note">⚠2</a></sup></td>
-        <td class="val"><span class="num">0</span><sup class="fn fn-warn"><a href="#fn-L4-2" title="Doubtful value: see the note">⚠2</a></sup></td>
+<td class="unit-col">MtCO2e</td>        <td class="val"><span class="num" title="From the filing: TotalScope3EmissionIntensityTheRelevantMetricMayBeSelectedByTheEntity = 0 MtCO2e">0</span><sup class="fn fn-warn"><a href="#fn-L4-2" title="Doubtful value: see the note">⚠2</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: TotalScope3EmissionIntensityTheRelevantMetricMayBeSelectedByTheEntity = 0 MtCO2e">0</span><sup class="fn fn-warn"><a href="#fn-L4-2" title="Doubtful value: see the note">⚠2</a></sup></td>
       </tr>
     </tbody>
   </table>
@@ -1603,7 +1624,7 @@ footer { padding: 4px 16px 40px; color: var(--muted); font-size: 0.85rem; }
   <h3><span class="qnum">7.</span>Does the entity have a business continuity and disaster management plan? Give details in 100 words/ web link.</h3>
 
   <div class="answer-box">
-    <p><strong>Answer:</strong> <span class="num">Yes</span></p>
+    <p><strong>Answer:</strong> <span class="num" title="From the filing: DoesTheEntityHaveABusinessContinuityAndDisasterManagementPlan = Yes">Yes</span></p>
     <p><strong>Details:</strong></p>
     <p class="details">Tata Steel has a robust Onsite Emergency and Disaster Control Plan aligned with ISO 22301:2019 standards, ensuring business continuity during crises like fires, cyber-attacks, or terrorism. Defined roles, Tactical Centres, and periodic drills support preparedness. IT systems have backup and recovery plans based on Business Impact Assessments. The enterprise operates on a secure, scalable hybrid multi-cloud platform with Zero Trust architecture, enabling seamless remote access. Regular reviews, disaster scenario matrices, and secure infrastructure reinforce Tata Steel’s commitment to operational continuity and information security across global operations.</p>
   </div>
@@ -1628,7 +1649,7 @@ footer { padding: 4px 16px 40px; color: var(--muted); font-size: 0.85rem; }
   <h3><span class="qnum">9.</span>Percentage of value chain partners (by value of business done with such partners) that were assessed for environmental impacts.</h3>
 
   <div class="answer-box">
-    <p><strong>Answer:</strong> <span class="num">82</span><span class="unit">%</span><span class="tag tag-converted" title="The unit was converted; the figure as filed is kept in the saved data">conv.</span><sup class="fn"><a href="#fn-L9-1">1</a></sup></p>
+    <p><strong>Answer:</strong> <span class="num" title="From the filing: PercentageOfValueChainPartnersByValueOfBusinessDoneWithSuchPartnersThatWereAssessedForEnvironmentalImpacts = 0.82 pure">82</span><span class="unit">%</span><span class="tag tag-converted" title="The unit was converted; the figure as filed is kept in the saved data">conv.</span><sup class="fn"><a href="#fn-L9-1">1</a></sup></p>
   </div>
   <ul class="footnotes">
   <li id="fn-L9-1" class="note"><span class="fn-num">1</span>Filed as the fraction 0.82; shown as a percentage.</li>
@@ -1653,48 +1674,48 @@ footer { padding: 4px 16px 40px; color: var(--muted); font-size: 0.85rem; }
     <tbody>
       <tr>
         <th scope="row">Energy intensity in terms of physical output</th>
-        <td class="val"><span class="num">27.75</span><span class="unit">Gigajoule</span><sup class="fn fn-warn"><a href="#fn-X-1" title="Doubtful value: see the note">⚠1</a></sup></td>
-        <td class="val"><span class="num">28.35</span><span class="unit">Gigajoule</span><sup class="fn fn-warn"><a href="#fn-X-1" title="Doubtful value: see the note">⚠1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: EnergyIntensityInTermOfPhysicalOutput = 27.75 Gigajoule">27.75</span><span class="unit">Gigajoule</span><sup class="fn fn-warn"><a href="#fn-X-1" title="Doubtful value: see the note">⚠1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: EnergyIntensityInTermOfPhysicalOutput = 28.35 Gigajoule">28.35</span><span class="unit">Gigajoule</span><sup class="fn fn-warn"><a href="#fn-X-1" title="Doubtful value: see the note">⚠1</a></sup></td>
       </tr>
       <tr>
         <th scope="row">Energy intensity adjusted for Purchasing Power Parity (PPP)</th>
-        <td class="val"><span class="num">9,081.18</span><span class="unit">GJ per ₹</span><sup class="fn fn-warn"><a href="#fn-X-2" title="Doubtful value: see the note">⚠2</a></sup></td>
-        <td class="val"><span class="num">9,160.39</span><span class="unit">GJ per ₹</span><sup class="fn fn-warn"><a href="#fn-X-2" title="Doubtful value: see the note">⚠2</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: EnergyIntensityPerRupeeOfTurnoverAdjustingForPurchasingPowerParity = 9081.18 GigajoulePerINR">9,081.18</span><span class="unit">GJ per ₹</span><sup class="fn fn-warn"><a href="#fn-X-2" title="Doubtful value: see the note">⚠2</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: EnergyIntensityPerRupeeOfTurnoverAdjustingForPurchasingPowerParity = 9160.39 GigajoulePerINR">9,160.39</span><span class="unit">GJ per ₹</span><sup class="fn fn-warn"><a href="#fn-X-2" title="Doubtful value: see the note">⚠2</a></sup></td>
       </tr>
       <tr>
         <th scope="row">Water intensity in terms of physical output</th>
-        <td class="val"><span class="num">4.4</span><span class="unit">Kiloliters</span><sup class="fn fn-warn"><a href="#fn-X-1" title="Doubtful value: see the note">⚠1</a></sup></td>
-        <td class="val"><span class="num">4.76</span><span class="unit">Kiloliters</span><sup class="fn fn-warn"><a href="#fn-X-1" title="Doubtful value: see the note">⚠1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: WaterIntensityInTermOfPhysicalOutput = 4.4 Kiloliters">4.4</span><span class="unit">Kiloliters</span><sup class="fn fn-warn"><a href="#fn-X-1" title="Doubtful value: see the note">⚠1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: WaterIntensityInTermOfPhysicalOutput = 4.76 Kiloliters">4.76</span><span class="unit">Kiloliters</span><sup class="fn fn-warn"><a href="#fn-X-1" title="Doubtful value: see the note">⚠1</a></sup></td>
       </tr>
       <tr>
         <th scope="row">Water intensity adjusted for Purchasing Power Parity (PPP)</th>
-        <td class="val"><span class="num">0.00144</span><span class="unit">kL per ₹</span><sup class="fn fn-warn"><a href="#fn-X-2" title="Doubtful value: see the note">⚠2</a></sup></td>
-        <td class="val"><span class="num">0.00154</span><span class="unit">kL per ₹</span><sup class="fn fn-warn"><a href="#fn-X-2" title="Doubtful value: see the note">⚠2</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: WaterIntensityPerRupeeOfTurnoverAdjustingForPurchasingPowerParity = 0.00144 KilolitersPerINR">0.00144</span><span class="unit">kL per ₹</span><sup class="fn fn-warn"><a href="#fn-X-2" title="Doubtful value: see the note">⚠2</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: WaterIntensityPerRupeeOfTurnoverAdjustingForPurchasingPowerParity = 0.001537 KilolitersPerINR">0.00154</span><span class="unit">kL per ₹</span><sup class="fn fn-warn"><a href="#fn-X-2" title="Doubtful value: see the note">⚠2</a></sup></td>
       </tr>
       <tr>
         <th scope="row">Scope 1 + 2 emission intensity in terms of physical output</th>
-        <td class="val"><span class="num">3.1</span><span class="unit">MtCO2e</span><sup class="fn fn-warn"><a href="#fn-X-1" title="Doubtful value: see the note">⚠1</a></sup></td>
-        <td class="val"><span class="num">3.2</span><span class="unit">MtCO2e</span><sup class="fn fn-warn"><a href="#fn-X-1" title="Doubtful value: see the note">⚠1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: TotalScope1AndScope2EmissionsIntensityInTermOfPhysicalOutput = 3.1 MtCO2e">3.1</span><span class="unit">MtCO2e</span><sup class="fn fn-warn"><a href="#fn-X-1" title="Doubtful value: see the note">⚠1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: TotalScope1AndScope2EmissionsIntensityInTermOfPhysicalOutput = 3.2 MtCO2e">3.2</span><span class="unit">MtCO2e</span><sup class="fn fn-warn"><a href="#fn-X-1" title="Doubtful value: see the note">⚠1</a></sup></td>
       </tr>
       <tr>
         <th scope="row">Scope 1 + 2 emission intensity adjusted for Purchasing Power Parity (PPP)</th>
-        <td class="val"><span class="num">0.001</span><span class="unit">tCO2e per ₹</span><sup class="fn fn-warn"><a href="#fn-X-2" title="Doubtful value: see the note">⚠2</a></sup></td>
-        <td class="val"><span class="num">0.001</span><span class="unit">tCO2e per ₹</span><sup class="fn fn-warn"><a href="#fn-X-2" title="Doubtful value: see the note">⚠2</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: TotalScope1AndScope2EmissionsIntensityPerRupeeOfTurnoverAdjustedForPurchasingPowerParity = 0.001 MtCO2ePerINR">0.001</span><span class="unit">tCO2e per ₹</span><sup class="fn fn-warn"><a href="#fn-X-2" title="Doubtful value: see the note">⚠2</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: TotalScope1AndScope2EmissionsIntensityPerRupeeOfTurnoverAdjustedForPurchasingPowerParity = 0.001 MtCO2ePerINR">0.001</span><span class="unit">tCO2e per ₹</span><sup class="fn fn-warn"><a href="#fn-X-2" title="Doubtful value: see the note">⚠2</a></sup></td>
       </tr>
       <tr>
         <th scope="row">Waste intensity per rupee of turnover</th>
-        <td class="val"><span class="num">1.34×10<sup>−5</sup></span><span class="unit">tonnes per ₹</span></td>
-        <td class="val"><span class="num">1.31×10<sup>−5</sup></span><span class="unit">tonnes per ₹</span></td>
+        <td class="val"><span class="num" title="From the filing: WasteIntensityPerRupeeOfTurnover = 0.0000134428 TonnePerINR">1.34×10<sup>−5</sup></span><span class="unit">tonnes per ₹</span></td>
+        <td class="val"><span class="num" title="From the filing: WasteIntensityPerRupeeOfTurnover = 0.0000130946 TonnePerINR">1.31×10<sup>−5</sup></span><span class="unit">tonnes per ₹</span></td>
       </tr>
       <tr>
         <th scope="row">Waste intensity adjusted for Purchasing Power Parity (PPP)</th>
-        <td class="val"><span class="num">0.000273</span><span class="unit">tonnes per ₹</span><sup class="fn fn-warn"><a href="#fn-X-2" title="Doubtful value: see the note">⚠2</a></sup></td>
-        <td class="val"><span class="num">0.000271</span><span class="unit">tonnes per ₹</span><sup class="fn fn-warn"><a href="#fn-X-2" title="Doubtful value: see the note">⚠2</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: WasteIntensityPerRupeeOfTurnoverAdjustingForPurchasingPowerParity = 0.000273 TonnePerINR">0.000273</span><span class="unit">tonnes per ₹</span><sup class="fn fn-warn"><a href="#fn-X-2" title="Doubtful value: see the note">⚠2</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: WasteIntensityPerRupeeOfTurnoverAdjustingForPurchasingPowerParity = 0.000271 TonnePerINR">0.000271</span><span class="unit">tonnes per ₹</span><sup class="fn fn-warn"><a href="#fn-X-2" title="Doubtful value: see the note">⚠2</a></sup></td>
       </tr>
       <tr>
         <th scope="row">Waste intensity in terms of physical output</th>
-        <td class="val"><span class="num">0.84</span><span class="unit">Tonne</span><sup class="fn fn-warn"><a href="#fn-X-1" title="Doubtful value: see the note">⚠1</a></sup></td>
-        <td class="val"><span class="num">0.84</span><span class="unit">Tonne</span><sup class="fn fn-warn"><a href="#fn-X-1" title="Doubtful value: see the note">⚠1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: WasteIntensityInTermOfPhysicalOutput = 0.84 Tonne">0.84</span><span class="unit">Tonne</span><sup class="fn fn-warn"><a href="#fn-X-1" title="Doubtful value: see the note">⚠1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: WasteIntensityInTermOfPhysicalOutput = 0.84 Tonne">0.84</span><span class="unit">Tonne</span><sup class="fn fn-warn"><a href="#fn-X-1" title="Doubtful value: see the note">⚠1</a></sup></td>
       </tr>
     </tbody>
   </table>
@@ -1704,6 +1725,814 @@ footer { padding: 4px 16px 40px; color: var(--muted); font-size: 0.85rem; }
   <li id="fn-X-2" class="warning"><span class="fn-num">2</span><strong>⚠ Doubtful:</strong> PPP-adjusted figures are per million US dollars, but filings label their unit &#39;per rupee&#39;. The unit label here is unreliable; shown as filed.</li>
 </ul>
 
+
+
+
+
+
+<h2 class="section" id="trace">Where every number comes from</h2>
+<p class="principle-sub">This section is not part of SEBI's form. It is how you can check any number on this page against the company's own filing.</p>
+
+<ol class="trace-steps">
+  <li>On the Dashboard, open a card's <em>Fine print</em>: it names the SEBI question and the filing's element(s) behind the figure.</li>
+  <li>In the tables above, hover over a number to see the same; below, find its row. It shows the value on the page, how we got it, the element and the text exactly as filed.</li>
+  <li>Open the filing (link below) and search for that element name. The value you find there is the one quoted here.</li>
+</ol>
+
+<dl class="facts trace-source">
+  <div><dt>The filing (XBRL, on NSE)</dt><dd><a href="https://nsearchives.nseindia.com/corporate/xbrl/BRSR_500470_36202620558_BRSR_WebXMLFile_20260603_200625233.xml" rel="noopener noreferrer" target="_blank">BRSR_500470_36202620558_BRSR_WebXMLFile_20260603_200625233.xml</a></dd></div>
+<div><dt>The same filing as a PDF</dt><dd><a href="https://nsearchives.nseindia.com/corporate/BRSR_500470_03062026200558.pdf" rel="noopener noreferrer" target="_blank">open</a></dd></div>  <div><dt>Filed on NSE</dt><dd>03-Jun-2026</dd></div>
+  <div><dt>Edition of SEBI's XBRL form</dt><dd>2026-02-28 (modern layout)</dd></div>
+  <div><dt>Reporting boundary</dt><dd>Standalone basis</dd></div>
+</dl>
+
+<p class="legend"><strong>How to read a row.</strong> The first line is the value as shown above. <em>Reported by the company</em> means the number is the filing's own;
+  <em>Calculated by us</em> means we added reported numbers (every one is listed); <em>Unit changed by us</em> means the element holds the figure in another unit (the line shows it as filed).
+  <span class="missing">Not reported</span> says which elements were looked for, or that the structured filing has no field for the item: nothing is ever filled in.
+  Each element line reads <em>ElementName = the text as written in the filing</em>, followed by the unit as written.</p>
+
+<details class="trace-q" id="trace-E1">
+  <summary><strong>Essential 1</strong> · Details of total energy consumption (in Joules or multiples) and energy intensity, in the following format:</summary>
+<p class="remark">The assurance answer was read from: AnyIndependentAssessmentOrEvaluationOrAssuranceHasBeenCarriedOutByAnExternalAgencyForEnergyConsumption, NameOfTheExternalAgencyIfAnyIndependentAssessmentOrEvaluationOrAssuranceHasBeenCarriedOutByAnExternalAgencyForEnergyConsumptionExplanatoryTextBlock.</p>  <div class="table-wrap">
+    <table class="sebi trace-table">
+      <thead><tr><th>Row</th><th>FY 2025-26</th><th>FY 2024-25</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Total electricity consumption (A)</th><td><span class="t-shown">2,47,98,900.25 GJ</span>
+<span class="t-status">Calculated by us from reported figures</span>
+<span class="t-line">TotalElectricityConsumptionFromRenewableSources = 1147519.68 Gigajoule</span><span class="t-line">TotalElectricityConsumptionFromNonRenewableSources = 23651380.57 Gigajoule</span><span class="t-note">Renewable + non-renewable electricity (this filing reports them separately)</span></td><td><span class="t-shown">2,32,44,231.77 GJ</span>
+<span class="t-status">Calculated by us from reported figures</span>
+<span class="t-line">TotalElectricityConsumptionFromRenewableSources = 384861.97 Gigajoule</span><span class="t-line">TotalElectricityConsumptionFromNonRenewableSources = 22859369.8 Gigajoule</span><span class="t-note">Renewable + non-renewable electricity (this filing reports them separately)</span></td></tr>
+        <tr><th scope="row">Total fuel consumption (B)</th><td><span class="t-shown">59,90,13,837.67 GJ</span>
+<span class="t-status">Calculated by us from reported figures</span>
+<span class="t-line">TotalFuelConsumptionFromRenewableSources = 359119.74 Gigajoule</span><span class="t-line">TotalFuelConsumptionFromNonRenewableSources = 598654717.93 Gigajoule</span><span class="t-note">Renewable + non-renewable fuel (this filing reports them separately)</span></td><td><span class="t-shown">56,43,23,658.48 GJ</span>
+<span class="t-status">Calculated by us from reported figures</span>
+<span class="t-line">TotalFuelConsumptionFromRenewableSources = 0 Gigajoule</span><span class="t-line">TotalFuelConsumptionFromNonRenewableSources = 564323658.48 Gigajoule</span><span class="t-note">Renewable + non-renewable fuel (this filing reports them separately)</span></td></tr>
+        <tr><th scope="row">Energy consumption through other sources (C)</th><td><span class="t-shown">1.51 GJ</span>
+<span class="t-status">Calculated by us from reported figures</span>
+<span class="t-line">EnergyConsumptionThroughOtherSourcesFromRenewableSources = 1.51 Gigajoule</span><span class="t-line">EnergyConsumptionThroughOtherSourcesFromNonRenewableSources = 0 Gigajoule</span><span class="t-note">Renewable + non-renewable &#39;other sources&#39; (this filing reports them separately)</span></td><td><span class="t-shown">0.38 GJ</span>
+<span class="t-status">Calculated by us from reported figures</span>
+<span class="t-line">EnergyConsumptionThroughOtherSourcesFromRenewableSources = 0.38 Gigajoule</span><span class="t-line">EnergyConsumptionThroughOtherSourcesFromNonRenewableSources = 0 Gigajoule</span><span class="t-note">Renewable + non-renewable &#39;other sources&#39; (this filing reports them separately)</span></td></tr>
+        <tr><th scope="row">Total energy consumption (A+B+C)</th><td><span class="t-shown">62,38,12,739.43 GJ</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalEnergyConsumedFromRenewableAndNonRenewableSources = 623812739.43 Gigajoule</span></td><td><span class="t-shown">58,75,67,890.63 GJ</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalEnergyConsumedFromRenewableAndNonRenewableSources = 587567890.63 Gigajoule</span></td></tr>
+        <tr><th scope="row">Energy intensity per rupee of turnover (Total energy consumption/ turnover in rupees)</th><td><span class="t-shown">0.000446 GJ per ₹</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">EnergyIntensityPerRupeeOfTurnover = 0.0004464728 GigajoulePerINR</span></td><td><span class="t-shown">0.000443 GJ per ₹</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">EnergyIntensityPerRupeeOfTurnover = 0.0004433917 GigajoulePerINR</span></td></tr>
+        <tr><th scope="row">Energy intensity (optional) – the relevant metric may be selected by the entity</th><td><span class="t-shown missing">Not reported</span>
+<span class="t-status">Not reported</span>
+<span class="t-line">Not found in the filing. Elements looked for: EnergyIntensityTheRelevantMetricMayBeSelectedByTheEntity.</span></td><td><span class="t-shown missing">Not reported</span>
+<span class="t-status">Not reported</span>
+<span class="t-line">Not found in the filing. Elements looked for: EnergyIntensityTheRelevantMetricMayBeSelectedByTheEntity.</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</details>
+
+<details class="trace-q" id="trace-E2">
+  <summary><strong>Essential 2</strong> · Does the entity have any sites / facilities identified as designated consumers (DCs) under the Performance, A…</summary>
+  <div class="table-wrap">
+    <table class="sebi trace-table">
+      <thead><tr><th>Row</th><th>FY 2025-26</th><th>FY 2024-25</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Answer</th><td><span class="t-shown">Yes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">DoesTheEntityHaveAnySitesOrFacilitiesIdentifiedAsDesignatedConsumersUnderThePerformanceAchieveAndTradeSchemeOfTheGovernmentOfIndia = true</span></td><td><span class="missing">asked for the current year only</span></td></tr>
+        <tr><th scope="row">Details</th><td><span class="t-shown">Yes, Tata Steel has 10 sites/facilities identified as DC under the PAT Scheme of the Gove…</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">DiscloseWhetherTargetsSetUnderThePatSchemeHaveBeenAchievedInCaseTargetsHaveNotBeenAchievedThenProvideTheRemedialActionTakenExplanatoryTextBlock = Yes, Tata Steel has 10 sites/facilities identified as DC under the PAT Scheme of the Gove…</span></td><td><span class="missing">asked for the current year only</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</details>
+
+<details class="trace-q" id="trace-E3">
+  <summary><strong>Essential 3</strong> · Provide details of the following disclosures related to water, in the following format:</summary>
+<p class="remark">The assurance answer was read from: AnyIndependentAssessmentOrEvaluationOrAssuranceHasBeenCarriedOutByAnExternalAgencyForWaterWithdrawal, NameOfTheExternalAgencyInCaseAnyIndependentAssessmentOrEvaluationOrAssuranceHasBeenCarriedOutByAnExternalAgencyForWaterWithdrawalExplanatoryTextBlock.</p>  <div class="table-wrap">
+    <table class="sebi trace-table">
+      <thead><tr><th>Row</th><th>FY 2025-26</th><th>FY 2024-25</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">(i) Surface water</th><td><span class="t-shown">6,62,96,419.4 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterWithdrawalBySurfaceWater = 66296419.4 Kiloliters</span></td><td><span class="t-shown">6,93,46,215.69 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterWithdrawalBySurfaceWater = 69346215.69 Kiloliters</span></td></tr>
+        <tr><th scope="row">(ii) Groundwater</th><td><span class="t-shown">1,02,49,684.65 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterWithdrawalByGroundwater = 10249684.65 Kiloliters</span></td><td><span class="t-shown">1,23,77,399.46 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterWithdrawalByGroundwater = 12377399.46 Kiloliters</span></td></tr>
+        <tr><th scope="row">(iii) Third party water</th><td><span class="t-shown">1,85,38,991.2 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterWithdrawalByThirdPartyWater = 18538991.2 Kiloliters</span></td><td><span class="t-shown">1,03,03,512 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterWithdrawalByThirdPartyWater = 10303512 Kiloliters</span></td></tr>
+        <tr><th scope="row">(iv) Seawater / desalinated water</th><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterWithdrawalBySeawaterOrDesalinatedWater = 0 Kiloliters</span></td><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterWithdrawalBySeawaterOrDesalinatedWater = 0 Kiloliters</span></td></tr>
+        <tr><th scope="row">(v) Others</th><td><span class="t-shown">1,55,37,800.28 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterWithdrawalByOthers = 15537800.28 Kiloliters</span></td><td><span class="t-shown">1,88,02,118 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterWithdrawalByOthers = 18802118 Kiloliters</span></td></tr>
+        <tr><th scope="row">Total volume of water withdrawal (in kilolitres) (i + ii + iii + iv + v)</th><td><span class="t-shown">11,06,22,895.53 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalVolumeOfWaterWithdrawal = 110622895.53 Kiloliters</span></td><td><span class="t-shown">11,08,29,245.15 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalVolumeOfWaterWithdrawal = 110829245.15 Kiloliters</span></td></tr>
+        <tr><th scope="row">Total volume of water consumption (in kilolitres)</th><td><span class="t-shown">9,90,54,737.06 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalVolumeOfWaterConsumption = 99054737.06 Kiloliters</span></td><td><span class="t-shown">9,86,09,097.13 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalVolumeOfWaterConsumption = 98609097.13 Kiloliters</span></td></tr>
+        <tr><th scope="row">Water intensity per rupee of turnover (Water consumed / turnover)</th><td><span class="t-shown">7.09e-05 kL per ₹</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterIntensityPerRupeeOfTurnover = 0.0000708951 KilolitersPerINR</span></td><td><span class="t-shown">7.44e-05 kL per ₹</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterIntensityPerRupeeOfTurnover = 0.0000744126 KilolitersPerINR</span></td></tr>
+        <tr><th scope="row">Water intensity (optional) – the relevant metric may be selected by the entity</th><td><span class="t-shown missing">Not reported</span>
+<span class="t-status">Not reported</span>
+<span class="t-line">Not found in the filing. Elements looked for: WaterIntensityTheRelevantMetricMayBeSelectedByTheEntity.</span></td><td><span class="t-shown missing">Not reported</span>
+<span class="t-status">Not reported</span>
+<span class="t-line">Not found in the filing. Elements looked for: WaterIntensityTheRelevantMetricMayBeSelectedByTheEntity.</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</details>
+
+<details class="trace-q" id="trace-E4">
+  <summary><strong>Essential 4</strong> · Has the entity implemented a mechanism for Zero Liquid Discharge? If yes, provide details of its coverage and…</summary>
+  <div class="table-wrap">
+    <table class="sebi trace-table">
+      <thead><tr><th>Row</th><th>FY 2025-26</th><th>FY 2024-25</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Answer</th><td><span class="t-shown">Yes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">HasTheEntityImplementedAMechanismForZeroLiquidDischarge = Yes</span></td><td><span class="missing">asked for the current year only</span></td></tr>
+        <tr><th scope="row">Details</th><td><span class="t-shown">Tata Steel has implemented advanced wastewater treatment technologies to recycle, recover…</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">DetailsOfCoverageAndImplementationIfForZeroLiquidDischargeExplanatoryTextBlock = Tata Steel has implemented advanced wastewater treatment technologies to recycle, recover…</span></td><td><span class="missing">asked for the current year only</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</details>
+
+<details class="trace-q" id="trace-E5">
+  <summary><strong>Essential 5</strong> · Please provide details of air emissions (other than GHG emissions) by the entity, in the following format:</summary>
+<p class="remark">The assurance answer was read from: IndicateIfAnyIndependentAssessmentOrEvaluationOrAssuranceHasBeenCarriedOutByAnExternalAgencyForAirEmissionsOtherThanGHGEmissions.</p>  <div class="table-wrap">
+    <table class="sebi trace-table">
+      <thead><tr><th>Row</th><th>FY 2025-26</th><th>FY 2024-25</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">NOx</th><td><span class="t-shown">27,000 tonnes</span>
+<span class="t-status">Unit changed by us</span>
+<span class="t-line">NOx = 27 Kilotonne</span><span class="t-note">Converted from Kilotonne to tonnes (x 1000); the filed figure is kept in the saved data.</span></td><td><span class="t-shown">24,000 tonnes</span>
+<span class="t-status">Unit changed by us</span>
+<span class="t-line">NOx = 24 Kilotonne</span><span class="t-note">Converted from Kilotonne to tonnes (x 1000); the filed figure is kept in the saved data.</span></td></tr>
+        <tr><th scope="row">SOx</th><td><span class="t-shown">67,000 tonnes</span>
+<span class="t-status">Unit changed by us</span>
+<span class="t-line">SOx = 67 Kilotonne</span><span class="t-note">Converted from Kilotonne to tonnes (x 1000); the filed figure is kept in the saved data.</span></td><td><span class="t-shown">46,000 tonnes</span>
+<span class="t-status">Unit changed by us</span>
+<span class="t-line">SOx = 46 Kilotonne</span><span class="t-note">Converted from Kilotonne to tonnes (x 1000); the filed figure is kept in the saved data.</span></td></tr>
+        <tr><th scope="row">Particulate matter (PM)</th><td><span class="t-shown">9,000 tonnes</span>
+<span class="t-status">Unit changed by us</span>
+<span class="t-line">ParticulateMatter = 9 Kilotonne</span><span class="t-note">Converted from Kilotonne to tonnes (x 1000); the filed figure is kept in the saved data.</span></td><td><span class="t-shown">8,000 tonnes</span>
+<span class="t-status">Unit changed by us</span>
+<span class="t-line">ParticulateMatter = 8 Kilotonne</span><span class="t-note">Converted from Kilotonne to tonnes (x 1000); the filed figure is kept in the saved data.</span></td></tr>
+        <tr><th scope="row">Persistent organic pollutants (POP)</th><td><span class="t-shown">0 tonnes</span>
+<span class="t-status">Unit changed by us</span>
+<span class="t-line">PersistentOrganicPollutants = 0 Kilotonne</span><span class="t-note">Converted from Kilotonne to tonnes (x 1000); the filed figure is kept in the saved data.</span></td><td><span class="t-shown">0 tonnes</span>
+<span class="t-status">Unit changed by us</span>
+<span class="t-line">PersistentOrganicPollutants = 0 Kilotonne</span><span class="t-note">Converted from Kilotonne to tonnes (x 1000); the filed figure is kept in the saved data.</span></td></tr>
+        <tr><th scope="row">Volatile organic compounds (VOC)</th><td><span class="t-shown">0 tonnes</span>
+<span class="t-status">Unit changed by us</span>
+<span class="t-line">VolatileOrganicCompounds = 0 Kilotonne</span><span class="t-note">Converted from Kilotonne to tonnes (x 1000); the filed figure is kept in the saved data.</span></td><td><span class="t-shown">0 tonnes</span>
+<span class="t-status">Unit changed by us</span>
+<span class="t-line">VolatileOrganicCompounds = 0 Kilotonne</span><span class="t-note">Converted from Kilotonne to tonnes (x 1000); the filed figure is kept in the saved data.</span></td></tr>
+        <tr><th scope="row">Hazardous air pollutants (HAP)</th><td><span class="t-shown">0 tonnes</span>
+<span class="t-status">Unit changed by us</span>
+<span class="t-line">HazardousAirPollutants = 0 Kilotonne</span><span class="t-note">Converted from Kilotonne to tonnes (x 1000); the filed figure is kept in the saved data.</span></td><td><span class="t-shown">0 tonnes</span>
+<span class="t-status">Unit changed by us</span>
+<span class="t-line">HazardousAirPollutants = 0 Kilotonne</span><span class="t-note">Converted from Kilotonne to tonnes (x 1000); the filed figure is kept in the saved data.</span></td></tr>
+        <tr><th scope="row">Others – please specify</th><td><span class="t-shown missing">Not reported</span>
+<span class="t-status">Not reported</span>
+<span class="t-line">The structured filing has no field for this item.</span></td><td><span class="t-shown missing">Not reported</span>
+<span class="t-status">Not reported</span>
+<span class="t-line">The structured filing has no field for this item.</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</details>
+
+<details class="trace-q" id="trace-E6">
+  <summary><strong>Essential 6</strong> · Provide details of greenhouse gas emissions (Scope 1 and Scope 2 emissions) &amp; its intensity, in the following…</summary>
+<p class="remark">The assurance answer was read from: WhetherAnyIndicateIfAnyIndependentAssessmentOrEvaluationOrAssuranceHasBeenCarriedOutByAnExternalAgencyForGreenHouseGasEmissions, NameOfTheExternalAgencyThatUndertookIndependentAssessmentOrEvaluationOrAssuranceForGreenHouseGasEmissionsExplanatoryTextBlock.</p>  <div class="table-wrap">
+    <table class="sebi trace-table">
+      <thead><tr><th>Row</th><th>FY 2025-26</th><th>FY 2024-25</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Total Scope 1 emissions (Break-up of the GHG into CO2, CH4, N2O, HFCs, PFCs, SF6, NF3, if available)</th><td><span class="t-shown">64 tCO2e</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalScope1Emissions = 64 MtCO2e</span></td><td><span class="t-shown">61 tCO2e</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalScope1Emissions = 61 MtCO2e</span></td></tr>
+        <tr><th scope="row">Total Scope 2 emissions (Break-up of the GHG into CO2, CH4, N2O, HFCs, PFCs, SF6, NF3, if available)</th><td><span class="t-shown">5 tCO2e</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalScope2Emissions = 5 MtCO2e</span></td><td><span class="t-shown">5 tCO2e</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalScope2Emissions = 5 MtCO2e</span></td></tr>
+        <tr><th scope="row">Total Scope 1 and Scope 2 emissions per rupee of turnover</th><td><span class="t-shown">0 tCO2e per ₹</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalScope1AndScope2EmissionsIntensityPerRupeeOfTurnover = 0 MtCO2ePerINR</span></td><td><span class="t-shown">0 tCO2e per ₹</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalScope1AndScope2EmissionsIntensityPerRupeeOfTurnover = 0 MtCO2ePerINR</span></td></tr>
+        <tr><th scope="row">Total Scope 1 and Scope 2 emission intensity (optional) – the relevant metric may be selected by the entity</th><td><span class="t-shown">0 MtCO2e</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalScope1AndScope2EmissionsIntensityTheRelevantMetricMayBeSelectedByTheEntity = 0 MtCO2e</span></td><td><span class="t-shown">0 MtCO2e</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalScope1AndScope2EmissionsIntensityTheRelevantMetricMayBeSelectedByTheEntity = 0 MtCO2e</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</details>
+
+<details class="trace-q" id="trace-E7">
+  <summary><strong>Essential 7</strong> · Does the entity have any project related to reducing Green House Gas emission? If Yes, then provide details.</summary>
+  <div class="table-wrap">
+    <table class="sebi trace-table">
+      <thead><tr><th>Row</th><th>FY 2025-26</th><th>FY 2024-25</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Answer</th><td><span class="t-shown">Yes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">DoesTheEntityHaveAnyProjectRelatedToReducingGreenHouseGasEmission = Yes</span></td><td><span class="missing">asked for the current year only</span></td></tr>
+        <tr><th scope="row">Details</th><td><span class="t-shown">Yes, details are provided in the Climate Change Report, which is part of Tata Steel’s Int…</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">DetailsOfProjectRelatedToReducingGreenHouseGasEmissionExplanatoryTextBlock = Yes, details are provided in the Climate Change Report, which is part of Tata Steel’s Int…</span></td><td><span class="missing">asked for the current year only</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</details>
+
+<details class="trace-q" id="trace-E8">
+  <summary><strong>Essential 8</strong> · Provide details related to waste management by the entity, in the following format:</summary>
+<p class="remark">The assurance answer was read from: WhetherAnyIndependentAssessmentOrEvaluationOrAssuranceHasBeenCarriedOutByAnExternalAgencyForWasteManagement, NameOfTheExternalAgencyThatUndertookIndependentAssessmentOrEvaluationOrAssuranceRelatedToWasteManagementExplanatoryTextBlock.</p>  <div class="table-wrap">
+    <table class="sebi trace-table">
+      <thead><tr><th>Row</th><th>FY 2025-26</th><th>FY 2024-25</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Plastic waste (A)</th><td><span class="t-shown">3,201 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">PlasticWaste = 3201 Tonne</span></td><td><span class="t-shown">2,359 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">PlasticWaste = 2359 Tonne</span></td></tr>
+        <tr><th scope="row">E-waste (B)</th><td><span class="t-shown">239 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">EWaste = 239 Tonne</span></td><td><span class="t-shown">201 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">EWaste = 201 Tonne</span></td></tr>
+        <tr><th scope="row">Bio-medical waste (C)</th><td><span class="t-shown">206 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">BioMedicalWaste = 206 Tonne</span></td><td><span class="t-shown">256 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">BioMedicalWaste = 256 Tonne</span></td></tr>
+        <tr><th scope="row">Construction and demolition waste (D)</th><td><span class="t-shown">760 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">ConstructionAndDemolitionWaste = 760 Tonne</span></td><td><span class="t-shown">1,714 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">ConstructionAndDemolitionWaste = 1714 Tonne</span></td></tr>
+        <tr><th scope="row">Battery waste (E)</th><td><span class="t-shown">228 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">BatteryWaste = 228 Tonne</span></td><td><span class="t-shown">687 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">BatteryWaste = 687 Tonne</span></td></tr>
+        <tr><th scope="row">Radioactive waste (F)</th><td><span class="t-shown">0 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">RadioactiveWaste = 0 Tonne</span></td><td><span class="t-shown">0 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">RadioactiveWaste = 0 Tonne</span></td></tr>
+        <tr><th scope="row">Other Hazardous waste. Please specify, if any. (G)</th><td><span class="t-shown">15,95,294 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">OtherHazardousWaste = 1595294 Tonne</span></td><td><span class="t-shown">12,27,314 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">OtherHazardousWaste = 1227314 Tonne</span></td></tr>
+        <tr><th scope="row">Other Non-hazardous waste generated (H). Please specify, if any. (Break-up by composition i.e. by materials relevant to the sector)</th><td><span class="t-shown">1,71,82,321 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">OtherNonHazardousWasteGenerated = 17182321 Tonne</span></td><td><span class="t-shown">1,61,19,942 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">OtherNonHazardousWasteGenerated = 16119942 Tonne</span></td></tr>
+        <tr><th scope="row">Total (A + B + C + D + E + F + G + H)</th><td><span class="t-shown">1,87,82,249 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalWasteGenerated = 18782249 Tonne</span></td><td><span class="t-shown">1,73,52,473 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalWasteGenerated = 17352473 Tonne</span></td></tr>
+        <tr><th scope="row">(i) Recycled</th><td><span class="t-shown">1,59,39,834 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WasteRecoveredThroughRecycled = 15939834 Tonne</span></td><td><span class="t-shown">1,64,79,338 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WasteRecoveredThroughRecycled = 16479338 Tonne</span></td></tr>
+        <tr><th scope="row">(ii) Re-used</th><td><span class="t-shown">29,02,409 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WasteRecoveredThroughReUsed = 2902409 Tonne</span></td><td><span class="t-shown">29,59,048 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WasteRecoveredThroughReUsed = 2959048 Tonne</span></td></tr>
+        <tr><th scope="row">(iii) Other recovery operations</th><td><span class="t-shown">1 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WasteRecoveredThroughOtherRecoveryOperations = 1 Tonne</span></td><td><span class="t-shown">0 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WasteRecoveredThroughOtherRecoveryOperations = 0 Tonne</span></td></tr>
+        <tr><th scope="row">Total</th><td><span class="t-shown">1,88,42,244 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalWasteRecovered = 18842244 Tonne</span></td><td><span class="t-shown">1,94,38,386 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalWasteRecovered = 19438386 Tonne</span></td></tr>
+        <tr><th scope="row">(i) Incineration</th><td><span class="t-shown">4,236 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WasteDisposedByIncineration = 4236 Tonne</span></td><td><span class="t-shown">4,113 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WasteDisposedByIncineration = 4113 Tonne</span></td></tr>
+        <tr><th scope="row">(ii) Landfilling</th><td><span class="t-shown">17,513 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WasteDisposedByLandfilling = 17513 Tonne</span></td><td><span class="t-shown">15,987 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WasteDisposedByLandfilling = 15987 Tonne</span></td></tr>
+        <tr><th scope="row">(iii) Other disposal operations</th><td><span class="t-shown">160 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WasteDisposedByOtherDisposalOperations = 160 Tonne</span></td><td><span class="t-shown">0 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WasteDisposedByOtherDisposalOperations = 0 Tonne</span></td></tr>
+        <tr><th scope="row">Total</th><td><span class="t-shown">21,909 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalWasteDisposed = 21909 Tonne</span></td><td><span class="t-shown">20,100 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalWasteDisposed = 20100 Tonne</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</details>
+
+<details class="trace-q" id="trace-E9">
+  <summary><strong>Essential 9</strong> · Briefly describe the waste management practices adopted in your establishments. Describe the strategy adopted…</summary>
+  <div class="table-wrap">
+    <table class="sebi trace-table">
+      <thead><tr><th>Row</th><th>FY 2025-26</th><th>FY 2024-25</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Details</th><td><span class="t-shown">Waste Management Practices: Tata Steel follows a “Zero Waste” philosophy based on Reduce,…</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">DetailsOfWasteManagementPracticesAdoptedInYourEstablishmentsAndTheStrategyAdoptedByCompanyToReduceUsageOfHazardousAndToxicChemicalsExplanatoryTextBlock = Waste Management Practices: Tata Steel follows a “Zero Waste” philosophy based on Reduce,…</span></td><td><span class="missing">asked for the current year only</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</details>
+
+<details class="trace-q" id="trace-E10">
+  <summary><strong>Essential 10</strong> · If the entity has operations/offices in/around ecologically sensitive areas (such as national parks, wildlife…</summary>
+<p class="remark">The 25 row(s) of this table were read from: LocationOfOperationsOrOffices, TypeOfOperations, WhetherTheConditionsOfEnvironmentalApprovalOrClearanceAreBeingCompliedWith.</p></details>
+
+<details class="trace-q" id="trace-E11">
+  <summary><strong>Essential 11</strong> · Details of environmental impact assessments of projects undertaken by the entity based on applicable laws, in…</summary>
+<p class="remark">The 3 row(s) of this table were read from: DateOfEnvironmentalImpactAssessments, EIANotificationNumber, NameAndBriefDetailsOfProject, ResultsCommunicatedInPublicDomainP6, WhetherConductedByIndependentExternalAgencyP6.</p></details>
+
+<details class="trace-q" id="trace-E12">
+  <summary><strong>Essential 12</strong> · Is the entity compliant with the applicable environmental law/ regulations/ guidelines in India; such as the…</summary>
+  <div class="table-wrap">
+    <table class="sebi trace-table">
+      <thead><tr><th>Row</th><th>FY 2025-26</th><th>FY 2024-25</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Answer</th><td><span class="t-shown">Yes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">IsTheEntityCompliantWithTheApplicableEnvironmentalLaw = Yes</span></td><td><span class="missing">asked for the current year only</span></td></tr>
+        <tr><th scope="row">Details</th><td><span class="t-shown missing">Not reported</span>
+<span class="t-status">Not reported</span>
+<span class="t-line">Not found in the filing. Elements looked for: TheEntityHasNotApplicableEnvironmentalLawExplanatoryTextBlock.</span></td><td><span class="missing">asked for the current year only</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</details>
+
+<details class="trace-q" id="trace-L1">
+  <summary><strong>Leadership 1</strong> · Provide break-up of the total energy consumed (in Joules or multiples) from renewable and non-renewable sourc…</summary>
+<p class="remark">Assurance: not reported (no element in the filing).</p>  <div class="table-wrap">
+    <table class="sebi trace-table">
+      <thead><tr><th>Row</th><th>FY 2025-26</th><th>FY 2024-25</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Total electricity consumption (A)</th><td><span class="t-shown">11,47,519.68 GJ</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalElectricityConsumptionFromRenewableSources = 1147519.68 Gigajoule</span></td><td><span class="t-shown">3,84,861.97 GJ</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalElectricityConsumptionFromRenewableSources = 384861.97 Gigajoule</span></td></tr>
+        <tr><th scope="row">Total fuel consumption (B)</th><td><span class="t-shown">3,59,119.74 GJ</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalFuelConsumptionFromRenewableSources = 359119.74 Gigajoule</span></td><td><span class="t-shown">0 GJ</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalFuelConsumptionFromRenewableSources = 0 Gigajoule</span></td></tr>
+        <tr><th scope="row">Energy consumption through other sources (C)</th><td><span class="t-shown">1.51 GJ</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">EnergyConsumptionThroughOtherSourcesFromRenewableSources = 1.51 Gigajoule</span></td><td><span class="t-shown">0.38 GJ</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">EnergyConsumptionThroughOtherSourcesFromRenewableSources = 0.38 Gigajoule</span></td></tr>
+        <tr><th scope="row">Total energy consumed from renewable sources (A+B+C)</th><td><span class="t-shown">15,06,640.93 GJ</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalEnergyConsumedFromRenewableSources = 1506640.93 Gigajoule</span></td><td><span class="t-shown">3,84,862.35 GJ</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalEnergyConsumedFromRenewableSources = 384862.35 Gigajoule</span></td></tr>
+        <tr><th scope="row">Total electricity consumption (D)</th><td><span class="t-shown">2,36,51,380.57 GJ</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalElectricityConsumptionFromNonRenewableSources = 23651380.57 Gigajoule</span></td><td><span class="t-shown">2,28,59,369.8 GJ</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalElectricityConsumptionFromNonRenewableSources = 22859369.8 Gigajoule</span></td></tr>
+        <tr><th scope="row">Total fuel consumption (E)</th><td><span class="t-shown">59,86,54,717.93 GJ</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalFuelConsumptionFromNonRenewableSources = 598654717.93 Gigajoule</span></td><td><span class="t-shown">56,43,23,658.48 GJ</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalFuelConsumptionFromNonRenewableSources = 564323658.48 Gigajoule</span></td></tr>
+        <tr><th scope="row">Energy consumption through other sources (F)</th><td><span class="t-shown">0 GJ</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">EnergyConsumptionThroughOtherSourcesFromNonRenewableSources = 0 Gigajoule</span></td><td><span class="t-shown">0 GJ</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">EnergyConsumptionThroughOtherSourcesFromNonRenewableSources = 0 Gigajoule</span></td></tr>
+        <tr><th scope="row">Total energy consumed from non-renewable sources (D+E+F)</th><td><span class="t-shown">62,23,06,098.5 GJ</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalEnergyConsumedFromNonRenewableSources = 622306098.5 Gigajoule</span></td><td><span class="t-shown">58,71,83,028.28 GJ</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalEnergyConsumedFromNonRenewableSources = 587183028.28 Gigajoule</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</details>
+
+<details class="trace-q" id="trace-L2">
+  <summary><strong>Leadership 2</strong> · Provide the following details related to water discharged:</summary>
+<p class="remark">The assurance answer was read from: WhetherAnyIndependentAssessmentOrEvaluationOrAssuranceHasBeenCarriedOutByAnExternalAgencyForWaterDischarged, NameOfTheExternalAgencyThatUndertookIndependentAssessmentOrEvaluationOrAssuranceForWaterDischargedExplanatoryTextBlock.</p>  <div class="table-wrap">
+    <table class="sebi trace-table">
+      <thead><tr><th>Row</th><th>FY 2025-26</th><th>FY 2024-25</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">(i) To Surface water</th><td><span class="t-shown">1,13,37,181.07 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToSurfaceWater = 11337181.074 Kiloliters</span></td><td><span class="t-shown">1,20,00,019.12 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToSurfaceWater = 12000019.12 Kiloliters</span></td></tr>
+        <tr><th scope="row">- No treatment</th><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToSurfaceWaterWithOutTreatment = 0 Kiloliters</span></td><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToSurfaceWaterWithOutTreatment = 0 Kiloliters</span></td></tr>
+        <tr><th scope="row">- With treatment – please specify level of treatment</th><td><span class="t-shown">1,13,37,181.07 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToSurfaceWaterWithTreatment = 11337181.074 Kiloliters</span></td><td><span class="t-shown">1,20,00,019.12 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToSurfaceWaterWithTreatment = 12000019.12 Kiloliters</span></td></tr>
+        <tr><th scope="row">(ii) To Groundwater</th><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToGroundwater = 0 Kiloliters</span></td><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToGroundwater = 0 Kiloliters</span></td></tr>
+        <tr><th scope="row">- No treatment</th><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToGroundwaterWithOutTreatment = 0 Kiloliters</span></td><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToGroundwaterWithOutTreatment = 0 Kiloliters</span></td></tr>
+        <tr><th scope="row">- With treatment – please specify level of treatment</th><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToGroundwaterWithTreatment = 0 Kiloliters</span></td><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToGroundwaterWithTreatment = 0 Kiloliters</span></td></tr>
+        <tr><th scope="row">(iii) To Seawater</th><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToSeawater = 0 Kiloliters</span></td><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToSeawater = 0 Kiloliters</span></td></tr>
+        <tr><th scope="row">- No treatment</th><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToSeawaterWithOutTreatment = 0 Kiloliters</span></td><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToSeawaterWithOutTreatment = 0 Kiloliters</span></td></tr>
+        <tr><th scope="row">- With treatment – please specify level of treatment</th><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToSeawaterWithTreatment = 0 Kiloliters</span></td><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToSeawaterWithTreatment = 0 Kiloliters</span></td></tr>
+        <tr><th scope="row">(iv) Sent to third-parties</th><td><span class="t-shown">2,30,977.4 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeBySentToThirdParties = 230977.4 Kiloliters</span></td><td><span class="t-shown">2,20,128.9 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeBySentToThirdParties = 220128.9 Kiloliters</span></td></tr>
+        <tr><th scope="row">- No treatment</th><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeBySentToThirdPartiesWithoutTreatment = 0 Kiloliters</span></td><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeBySentToThirdPartiesWithoutTreatment = 0 Kiloliters</span></td></tr>
+        <tr><th scope="row">- With treatment – please specify level of treatment</th><td><span class="t-shown">2,30,977.4 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeBySentToThirdPartiesWithTreatment = 230977.4 Kiloliters</span></td><td><span class="t-shown">2,20,128.9 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeBySentToThirdPartiesWithTreatment = 220128.9 Kiloliters</span></td></tr>
+        <tr><th scope="row">(v) Others</th><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToOthers = 0 Kiloliters</span></td><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToOthers = 0 Kiloliters</span></td></tr>
+        <tr><th scope="row">- No treatment</th><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToOthersWithoutTreatment = 0 Kiloliters</span></td><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToOthersWithoutTreatment = 0 Kiloliters</span></td></tr>
+        <tr><th scope="row">- With treatment – please specify level of treatment</th><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToOthersWithTreatment = 0 Kiloliters</span></td><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToOthersWithTreatment = 0 Kiloliters</span></td></tr>
+        <tr><th scope="row">Total water discharged (in kilolitres)</th><td><span class="t-shown">1,15,68,158.47 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalWaterDischargedInKilolitres = 11568158.474 Kiloliters</span></td><td><span class="t-shown">1,22,20,148.02 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalWaterDischargedInKilolitres = 12220148.02 Kiloliters</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</details>
+
+<details class="trace-q" id="trace-L3">
+  <summary><strong>Leadership 3</strong> · Water withdrawal, consumption and discharge in areas of water stress (in kilolitres): For each facility / pla…</summary>
+<p class="remark">The assurance answer was read from: IndicateIfAnyIndependentAssessmentOrEvaluationOrAssuranceHasBeenCarriedOutByAnExternalAgencyForAreasOfWaterStress.</p>  <div class="table-wrap">
+    <table class="sebi trace-table">
+      <thead><tr><th>Row</th><th>FY 2025-26</th><th>FY 2024-25</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Tata Steel’s facilities at Jamshedpur, Kalinganagar, Meramandali, Gamharia, West Bokaro, Jharia, Noamundi, Katamati, Joda, Thailand, Canada: (i) Surface water</th><td><span class="t-shown">2,34,37,892.44 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterWithdrawalBySurfaceWaterPerArea = 23437892.44 Kiloliters</span></td><td><span class="t-shown">2,16,28,646.48 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterWithdrawalBySurfaceWaterPerArea = 21628646.48 Kiloliters</span></td></tr>
+        <tr><th scope="row">Tata Steel’s facilities at Jamshedpur, Kalinganagar, Meramandali, Gamharia, West Bokaro, Jharia, Noamundi, Katamati, Joda, Thailand, Canada: (ii) Groundwater</th><td><span class="t-shown">31,54,717.32 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterWithdrawalByGroundwaterPerArea = 3154717.32 Kiloliters</span></td><td><span class="t-shown">33,56,461.78 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterWithdrawalByGroundwaterPerArea = 3356461.78 Kiloliters</span></td></tr>
+        <tr><th scope="row">Tata Steel’s facilities at Jamshedpur, Kalinganagar, Meramandali, Gamharia, West Bokaro, Jharia, Noamundi, Katamati, Joda, Thailand, Canada: (iii) Third party water</th><td><span class="t-shown">40,74,518.12 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterWithdrawalByThirdPartyWaterPerArea = 4074518.12 Kiloliters</span></td><td><span class="t-shown">48,68,422 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterWithdrawalByThirdPartyWaterPerArea = 4868422 Kiloliters</span></td></tr>
+        <tr><th scope="row">Tata Steel’s facilities at Jamshedpur, Kalinganagar, Meramandali, Gamharia, West Bokaro, Jharia, Noamundi, Katamati, Joda, Thailand, Canada: (iv) Seawater / desalinated water</th><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterWithdrawalBySeawaterOrDesalinatedWaterPerArea = 0 Kiloliters</span></td><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterWithdrawalBySeawaterOrDesalinatedWaterPerArea = 0 Kiloliters</span></td></tr>
+        <tr><th scope="row">Tata Steel’s facilities at Jamshedpur, Kalinganagar, Meramandali, Gamharia, West Bokaro, Jharia, Noamundi, Katamati, Joda, Thailand, Canada: (v) Others</th><td><span class="t-shown">1,47,33,891 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterWithdrawalByOthersPerArea = 14733891 Kiloliters</span></td><td><span class="t-shown">1,77,34,728 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterWithdrawalByOthersPerArea = 17734728 Kiloliters</span></td></tr>
+        <tr><th scope="row">Tata Steel’s facilities at Jamshedpur, Kalinganagar, Meramandali, Gamharia, West Bokaro, Jharia, Noamundi, Katamati, Joda, Thailand, Canada: Total volume of water withdrawal (in kilolitres) (i + ii + iii + iv + v)</th><td><span class="t-shown">4,54,01,018.88 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalVolumeOfWaterWithdrawalPerArea = 45401018.88 Kiloliters</span></td><td><span class="t-shown">4,75,88,258.26 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalVolumeOfWaterWithdrawalPerArea = 47588258.26 Kiloliters</span></td></tr>
+        <tr><th scope="row">Tata Steel’s facilities at Jamshedpur, Kalinganagar, Meramandali, Gamharia, West Bokaro, Jharia, Noamundi, Katamati, Joda, Thailand, Canada: Total volume of water consumption (in kilolitres)</th><td><span class="t-shown">3,69,08,765.81 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalVolumeOfWaterConsumptionPerArea = 36908765.81 Kiloliters</span></td><td><span class="t-shown">4,00,75,135.65 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalVolumeOfWaterConsumptionPerArea = 40075135.65 Kiloliters</span></td></tr>
+        <tr><th scope="row">Tata Steel’s facilities at Jamshedpur, Kalinganagar, Meramandali, Gamharia, West Bokaro, Jharia, Noamundi, Katamati, Joda, Thailand, Canada: Water intensity per rupee of turnover (Water consumed / turnover)</th><td><span class="t-shown">2.00e-05 kL per ₹</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterIntensityPerRupeeOfTurnoverPerArea = 0.00002 KilolitersPerINR</span></td><td><span class="t-shown">3.00e-05 kL per ₹</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterIntensityPerRupeeOfTurnoverPerArea = 0.00003 KilolitersPerINR</span></td></tr>
+        <tr><th scope="row">Tata Steel’s facilities at Jamshedpur, Kalinganagar, Meramandali, Gamharia, West Bokaro, Jharia, Noamundi, Katamati, Joda, Thailand, Canada: Water intensity (optional) – the relevant metric may be selected by the entity</th><td><span class="t-shown missing">Not reported</span>
+<span class="t-status">Not reported</span>
+<span class="t-line">The structured filing has no field for this item.</span></td><td><span class="t-shown missing">Not reported</span>
+<span class="t-status">Not reported</span>
+<span class="t-line">Not found in the filing.</span></td></tr>
+        <tr><th scope="row">Tata Steel’s facilities at Jamshedpur, Kalinganagar, Meramandali, Gamharia, West Bokaro, Jharia, Noamundi, Katamati, Joda, Thailand, Canada: (i) Into Surface water</th><td><span class="t-shown">83,25,634.47 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToSurfaceWaterPerArea = 8325634.47 Kiloliters</span></td><td><span class="t-shown">73,29,774.51 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToSurfaceWaterPerArea = 7329774.51 Kiloliters</span></td></tr>
+        <tr><th scope="row">Tata Steel’s facilities at Jamshedpur, Kalinganagar, Meramandali, Gamharia, West Bokaro, Jharia, Noamundi, Katamati, Joda, Thailand, Canada: - No treatment</th><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToSurfaceWaterWithOutTreatmentPerArea = 0 Kiloliters</span></td><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToSurfaceWaterWithOutTreatmentPerArea = 0 Kiloliters</span></td></tr>
+        <tr><th scope="row">Tata Steel’s facilities at Jamshedpur, Kalinganagar, Meramandali, Gamharia, West Bokaro, Jharia, Noamundi, Katamati, Joda, Thailand, Canada: - With treatment – please specify level of treatment</th><td><span class="t-shown">83,25,634.47 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToSurfaceWaterWithTreatmentPerArea = 8325634.47 Kiloliters</span></td><td><span class="t-shown">73,29,774.51 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToSurfaceWaterWithTreatmentPerArea = 7329774.51 Kiloliters</span></td></tr>
+        <tr><th scope="row">Tata Steel’s facilities at Jamshedpur, Kalinganagar, Meramandali, Gamharia, West Bokaro, Jharia, Noamundi, Katamati, Joda, Thailand, Canada: (ii) Into Groundwater</th><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToGroundwaterPerArea = 0 Kiloliters</span></td><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToGroundwaterPerArea = 0 Kiloliters</span></td></tr>
+        <tr><th scope="row">Tata Steel’s facilities at Jamshedpur, Kalinganagar, Meramandali, Gamharia, West Bokaro, Jharia, Noamundi, Katamati, Joda, Thailand, Canada: - No treatment</th><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToGroundwaterWithOutTreatmentPerArea = 0 Kiloliters</span></td><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToGroundwaterWithOutTreatmentPerArea = 0 Kiloliters</span></td></tr>
+        <tr><th scope="row">Tata Steel’s facilities at Jamshedpur, Kalinganagar, Meramandali, Gamharia, West Bokaro, Jharia, Noamundi, Katamati, Joda, Thailand, Canada: - With treatment – please specify level of treatment</th><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToGroundwaterWithTreatmentPerArea = 0 Kiloliters</span></td><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToGroundwaterWithTreatmentPerArea = 0 Kiloliters</span></td></tr>
+        <tr><th scope="row">Tata Steel’s facilities at Jamshedpur, Kalinganagar, Meramandali, Gamharia, West Bokaro, Jharia, Noamundi, Katamati, Joda, Thailand, Canada: (iii) Into Seawater</th><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToSeawaterPerArea = 0 Kiloliters</span></td><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToSeawaterPerArea = 0 Kiloliters</span></td></tr>
+        <tr><th scope="row">Tata Steel’s facilities at Jamshedpur, Kalinganagar, Meramandali, Gamharia, West Bokaro, Jharia, Noamundi, Katamati, Joda, Thailand, Canada: - No treatment</th><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToSeawaterWithOutTreatmentPerArea = 0 Kiloliters</span></td><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToSeawaterWithOutTreatmentPerArea = 0 Kiloliters</span></td></tr>
+        <tr><th scope="row">Tata Steel’s facilities at Jamshedpur, Kalinganagar, Meramandali, Gamharia, West Bokaro, Jharia, Noamundi, Katamati, Joda, Thailand, Canada: - With treatment – please specify level of treatment</th><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToSeawaterWithTreatmentPerArea = 0 Kiloliters</span></td><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToSeawaterWithTreatmentPerArea = 0 Kiloliters</span></td></tr>
+        <tr><th scope="row">Tata Steel’s facilities at Jamshedpur, Kalinganagar, Meramandali, Gamharia, West Bokaro, Jharia, Noamundi, Katamati, Joda, Thailand, Canada: (iv) Sent to third-parties</th><td><span class="t-shown">1,66,618.6 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeBySentToThirdPartiesPerArea = 166618.6 Kiloliters</span></td><td><span class="t-shown">1,72,559 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeBySentToThirdPartiesPerArea = 172559 Kiloliters</span></td></tr>
+        <tr><th scope="row">Tata Steel’s facilities at Jamshedpur, Kalinganagar, Meramandali, Gamharia, West Bokaro, Jharia, Noamundi, Katamati, Joda, Thailand, Canada: - No treatment</th><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeBySentToThirdPartiesWithoutTreatmentPerArea = 0 Kiloliters</span></td><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeBySentToThirdPartiesWithoutTreatmentPerArea = 0 Kiloliters</span></td></tr>
+        <tr><th scope="row">Tata Steel’s facilities at Jamshedpur, Kalinganagar, Meramandali, Gamharia, West Bokaro, Jharia, Noamundi, Katamati, Joda, Thailand, Canada: - With treatment – please specify level of treatment</th><td><span class="t-shown">1,66,618.6 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeBySentToThirdPartiesWithTreatmentPerArea = 166618.6 Kiloliters</span></td><td><span class="t-shown">1,72,559 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeBySentToThirdPartiesWithTreatmentPerArea = 172559 Kiloliters</span></td></tr>
+        <tr><th scope="row">Tata Steel’s facilities at Jamshedpur, Kalinganagar, Meramandali, Gamharia, West Bokaro, Jharia, Noamundi, Katamati, Joda, Thailand, Canada: (v) Others</th><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToOthersPerArea = 0 Kiloliters</span></td><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToOthersPerArea = 0 Kiloliters</span></td></tr>
+        <tr><th scope="row">Tata Steel’s facilities at Jamshedpur, Kalinganagar, Meramandali, Gamharia, West Bokaro, Jharia, Noamundi, Katamati, Joda, Thailand, Canada: - No treatment</th><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToOthersWithoutTreatmentPerArea = 0 Kiloliters</span></td><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToOthersWithoutTreatmentPerArea = 0 Kiloliters</span></td></tr>
+        <tr><th scope="row">Tata Steel’s facilities at Jamshedpur, Kalinganagar, Meramandali, Gamharia, West Bokaro, Jharia, Noamundi, Katamati, Joda, Thailand, Canada: - With treatment – please specify level of treatment</th><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToOthersWithTreatmentPerArea = 0 Kiloliters</span></td><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToOthersWithTreatmentPerArea = 0 Kiloliters</span></td></tr>
+        <tr><th scope="row">Tata Steel’s facilities at Jamshedpur, Kalinganagar, Meramandali, Gamharia, West Bokaro, Jharia, Noamundi, Katamati, Joda, Thailand, Canada: Total water discharged (in kilolitres)</th><td><span class="t-shown">84,92,253.07 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalWaterDischargedInKilolitresPerArea = 8492253.07 Kiloliters</span></td><td><span class="t-shown">75,02,333.51 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalWaterDischargedInKilolitresPerArea = 7502333.51 Kiloliters</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</details>
+
+<details class="trace-q" id="trace-L4">
+  <summary><strong>Leadership 4</strong> · Please provide details of total Scope 3 emissions &amp; its intensity, in the following format:</summary>
+<p class="remark">The assurance answer was read from: WhetherAnyIndependentAssessmentOrEvaluationOrAssuranceHasBeenCarriedOutByAnExternalAgencyForTotalScope3Emissions.</p>  <div class="table-wrap">
+    <table class="sebi trace-table">
+      <thead><tr><th>Row</th><th>FY 2025-26</th><th>FY 2024-25</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Total Scope 3 emissions (Break-up of the GHG into CO2, CH4, N2O, HFCs, PFCs, SF6, NF3, if available)</th><td><span class="t-shown">28 tCO2e</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalScope3Emissions = 28 MtCO2e</span></td><td><span class="t-shown">23 tCO2e</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalScope3Emissions = 23 MtCO2e</span></td></tr>
+        <tr><th scope="row">Total Scope 3 emissions per rupee of turnover</th><td><span class="t-shown">0.0002 tCO2e per ₹</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalScope3EmissionsPerRupeeOfTurnover = 0.0002 MtCO2ePerINR</span></td><td><span class="t-shown">0.0002 tCO2e per ₹</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalScope3EmissionsPerRupeeOfTurnover = 0.0002 MtCO2ePerINR</span></td></tr>
+        <tr><th scope="row">Total Scope 3 emission intensity (optional) – the relevant metric may be selected by the entity</th><td><span class="t-shown">0 MtCO2e</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalScope3EmissionIntensityTheRelevantMetricMayBeSelectedByTheEntity = 0 MtCO2e</span></td><td><span class="t-shown">0 MtCO2e</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalScope3EmissionIntensityTheRelevantMetricMayBeSelectedByTheEntity = 0 MtCO2e</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</details>
+
+<details class="trace-q" id="trace-L5">
+  <summary><strong>Leadership 5</strong> · With respect to the ecologically sensitive areas reported at Question 10 of Essential Indicators above, provi…</summary>
+  <div class="table-wrap">
+    <table class="sebi trace-table">
+      <thead><tr><th>Row</th><th>FY 2025-26</th><th>FY 2024-25</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Details</th><td><span class="t-shown">No, for Tata Steel’s Indian operations, we do not have any operations/offices in Ecologic…</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">DetailsOfSignificantDirectAndIndirectImpactOfTheEntityOnBiodiversityInSuchAreasAlongWithPreventionAndRemediationActivitiesExplanatoryTextBlock = No, for Tata Steel’s Indian operations, we do not have any operations/offices in Ecologic…</span></td><td><span class="missing">asked for the current year only</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</details>
+
+<details class="trace-q" id="trace-L6">
+  <summary><strong>Leadership 6</strong> · If the entity has undertaken any specific initiatives or used innovative technology or solutions to improve r…</summary>
+<p class="remark">The filing lists no rows. Elements looked for: InitiativeUndertaken, OutcomeOfTheInitiative.</p></details>
+
+<details class="trace-q" id="trace-L7">
+  <summary><strong>Leadership 7</strong> · Does the entity have a business continuity and disaster management plan? Give details in 100 words/ web link.</summary>
+  <div class="table-wrap">
+    <table class="sebi trace-table">
+      <thead><tr><th>Row</th><th>FY 2025-26</th><th>FY 2024-25</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Answer</th><td><span class="t-shown">Yes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">DoesTheEntityHaveABusinessContinuityAndDisasterManagementPlan = Yes</span></td><td><span class="missing">asked for the current year only</span></td></tr>
+        <tr><th scope="row">Details</th><td><span class="t-shown">Tata Steel has a robust Onsite Emergency and Disaster Control Plan aligned with ISO 22301…</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">DisclosureWebLinkOfEntityAtWhichBusinessContinuityAndDisasterManagementPlanIsPlaced = Tata Steel has a robust Onsite Emergency and Disaster Control Plan aligned with ISO 22301…</span></td><td><span class="missing">asked for the current year only</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</details>
+
+<details class="trace-q" id="trace-L8">
+  <summary><strong>Leadership 8</strong> · Disclose any significant adverse impact to the environment, arising from the value chain of the entity. What…</summary>
+  <div class="table-wrap">
+    <table class="sebi trace-table">
+      <thead><tr><th>Row</th><th>FY 2025-26</th><th>FY 2024-25</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Details</th><td><span class="t-shown">While no significant adverse environmental impacts were identified in FY2025-26, Tata Ste…</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">DiscloseAnySignificantAdverseImpactToTheEnvironmentArisingFromTheValueChainOfTheEntityWhatMitigationOrAdaptationMeasuresHaveBeenTakenByTheEntityInThisRegardExplanatoryTextBlock = While no significant adverse environmental impacts were identified in FY2025-26, Tata Ste…</span></td><td><span class="missing">asked for the current year only</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</details>
+
+<details class="trace-q" id="trace-L9">
+  <summary><strong>Leadership 9</strong> · Percentage of value chain partners (by value of business done with such partners) that were assessed for envi…</summary>
+  <div class="table-wrap">
+    <table class="sebi trace-table">
+      <thead><tr><th>Row</th><th>FY 2025-26</th><th>FY 2024-25</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Percentage</th><td><span class="t-shown">82 %</span>
+<span class="t-status">Unit changed by us</span>
+<span class="t-line">PercentageOfValueChainPartnersByValueOfBusinessDoneWithSuchPartnersThatWereAssessedForEnvironmentalImpacts = 0.82 pure</span><span class="t-note">Filed as the fraction 0.82; shown as a percentage.</span></td><td><span class="missing">asked for the current year only</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</details>
+
+<details class="trace-q" id="trace-X">
+  <summary><strong>Additional items</strong> · Items newer filings have that the 2021 form does not</summary>
+  <div class="table-wrap">
+    <table class="sebi trace-table">
+      <thead><tr><th>Row</th><th>FY 2025-26</th><th>FY 2024-25</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Energy intensity in terms of physical output</th><td><span class="t-shown">27.75 Gigajoule</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">EnergyIntensityInTermOfPhysicalOutput = 27.75 Gigajoule</span></td><td><span class="t-shown">28.35 Gigajoule</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">EnergyIntensityInTermOfPhysicalOutput = 28.35 Gigajoule</span></td></tr>
+        <tr><th scope="row">Energy intensity adjusted for Purchasing Power Parity (PPP)</th><td><span class="t-shown">9,081.18 GJ per ₹</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">EnergyIntensityPerRupeeOfTurnoverAdjustingForPurchasingPowerParity = 9081.18 GigajoulePerINR</span></td><td><span class="t-shown">9,160.39 GJ per ₹</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">EnergyIntensityPerRupeeOfTurnoverAdjustingForPurchasingPowerParity = 9160.39 GigajoulePerINR</span></td></tr>
+        <tr><th scope="row">Water intensity in terms of physical output</th><td><span class="t-shown">4.4 Kiloliters</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterIntensityInTermOfPhysicalOutput = 4.4 Kiloliters</span></td><td><span class="t-shown">4.76 Kiloliters</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterIntensityInTermOfPhysicalOutput = 4.76 Kiloliters</span></td></tr>
+        <tr><th scope="row">Water intensity adjusted for Purchasing Power Parity (PPP)</th><td><span class="t-shown">0.00144 kL per ₹</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterIntensityPerRupeeOfTurnoverAdjustingForPurchasingPowerParity = 0.00144 KilolitersPerINR</span></td><td><span class="t-shown">0.00154 kL per ₹</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterIntensityPerRupeeOfTurnoverAdjustingForPurchasingPowerParity = 0.001537 KilolitersPerINR</span></td></tr>
+        <tr><th scope="row">Scope 1 + 2 emission intensity in terms of physical output</th><td><span class="t-shown">3.1 MtCO2e</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalScope1AndScope2EmissionsIntensityInTermOfPhysicalOutput = 3.1 MtCO2e</span></td><td><span class="t-shown">3.2 MtCO2e</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalScope1AndScope2EmissionsIntensityInTermOfPhysicalOutput = 3.2 MtCO2e</span></td></tr>
+        <tr><th scope="row">Scope 1 + 2 emission intensity adjusted for Purchasing Power Parity (PPP)</th><td><span class="t-shown">0.001 tCO2e per ₹</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalScope1AndScope2EmissionsIntensityPerRupeeOfTurnoverAdjustedForPurchasingPowerParity = 0.001 MtCO2ePerINR</span></td><td><span class="t-shown">0.001 tCO2e per ₹</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalScope1AndScope2EmissionsIntensityPerRupeeOfTurnoverAdjustedForPurchasingPowerParity = 0.001 MtCO2ePerINR</span></td></tr>
+        <tr><th scope="row">Waste intensity per rupee of turnover</th><td><span class="t-shown">1.34e-05 tonnes per ₹</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WasteIntensityPerRupeeOfTurnover = 0.0000134428 TonnePerINR</span></td><td><span class="t-shown">1.31e-05 tonnes per ₹</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WasteIntensityPerRupeeOfTurnover = 0.0000130946 TonnePerINR</span></td></tr>
+        <tr><th scope="row">Waste intensity adjusted for Purchasing Power Parity (PPP)</th><td><span class="t-shown">0.000273 tonnes per ₹</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WasteIntensityPerRupeeOfTurnoverAdjustingForPurchasingPowerParity = 0.000273 TonnePerINR</span></td><td><span class="t-shown">0.000271 tonnes per ₹</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WasteIntensityPerRupeeOfTurnoverAdjustingForPurchasingPowerParity = 0.000271 TonnePerINR</span></td></tr>
+        <tr><th scope="row">Waste intensity in terms of physical output</th><td><span class="t-shown">0.84 Tonne</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WasteIntensityInTermOfPhysicalOutput = 0.84 Tonne</span></td><td><span class="t-shown">0.84 Tonne</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WasteIntensityInTermOfPhysicalOutput = 0.84 Tonne</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</details>
 
   </section>
 </main>

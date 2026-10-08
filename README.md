@@ -52,6 +52,7 @@ python summary.py --company "Tata Steel" --open                              # 3
 
 python download_filings.py --company Reliance                 # only download: every year NSE has for the company
 python extract_report.py --company Reliance --fy 2023-24      # only clean: print the SEBI rows as text, save the JSON
+python extract_report.py --company Reliance --fy 2023-24 --questions E1 --trace   # ... with the filing's element behind every value
 python make_samples.py                                        # rebuild the pages in samples/
 pytest                                                        # the automatic tests (no internet needed)
 ```
@@ -93,6 +94,7 @@ pytest                                                        # the automatic te
 | SEBI-format view: all 21 Principle 6 questions (12 Essential, 9 Leadership) in SEBI's order, current and previous year, units, "Not reported" shown explicitly | ✅ |
 | Dashboard: six topics, headline sentences, metric cards (what / better or worse / why), charts, safeguards, trust panel, glossary | ✅ |
 | Never invent numbers: missing, converted, calculated and doubtful values are all labelled | ✅ |
+| **Every figure traces back to the filing:** each number names the XBRL element and the text it was read from, with a link to NSE's file (see "Every number traces back to the filing") | ✅ |
 | Polite to NSE: 3 s between requests, cache everywhere, retries only for temporary problems, stops on 403 / 429 | ✅ |
 | Error pages for every failure, not only console messages | ✅ |
 | Sample pages in `samples/`: 5 company reports, 3 trend pages, 3 summaries and 6 error cases | ✅ |
@@ -124,6 +126,29 @@ company text ─► NSE symbol ─► filing list ─► XBRL file (cached) ─�
   boundary. A company can switch basis between years (Wipro does), so figures should not be compared across such years.
 - **Verification:** key numbers for Tata Steel FY 2025-26 were compared by hand with the company's own PDF report and are pinned in
   tests (`tests/extraction/test_real_filings.py`); other companies are covered by the consistency checks above.
+
+## Every number traces back to the filing
+
+The brief says *"every figure shown must trace back to a filing"*. Each value the tool keeps remembers where it came from (`Cell.origin`): the
+**XBRL element** of the filing, the **year** it covers, the **text exactly as written** and the **unit as written**. A reader can follow the chain one
+link at a time:
+
+1. **Dashboard card → Fine print → "Where it is in the filing":** for each year, `TotalEnergyConsumedFromRenewableAndNonRenewableSources = 623812739.43 Gigajoule`.
+   A figure we calculated (for example the renewable share) lists every element it was built from. The line above it names the SEBI question.
+2. **SEBI tab → hover a number:** the same element line.
+3. **SEBI tab → last section, "Where every number comes from":** every row of every question with the value shown, how we got it (*Reported by the company*,
+   *Calculated by us*, *Unit changed by us*), the element(s) and the text as filed, for both years. A row the filing does not have says which elements were
+   looked for, or that the structured filing has no field for it: nothing is ever filled in.
+4. **The filing itself:** the page header and that section link to the XBRL file on NSE (and to its PDF). Search the file for the element name and the value is there.
+5. **In the terminal:** `python extract_report.py --company "Tata Steel" --fy 2025-26 --questions E6 --trace` prints the same lines under each row.
+   (On this page you can see that Tata Steel's Scope 1 is filed as `TotalScope1Emissions = 64 MtCO2e`: the value that is flagged as doubtful.) The saved JSON in `data/parsed/` carries the same `origin`.
+
+**How we know the trace is true.** A test (`tests/extraction/test_origin.py`) opens every real filing on disk (21 on the author's machine, 5 companies, both editions; the 11 committed in the repository give 2,178 values)
+and, for every value shown (4,605 of them on the author's machine, with 4,839 element references), checks with a plain regular expression on the raw XML, independently of our own reader,
+that the element exists with exactly that text, and that the year is the filing's current or previous year. A value without a trace fails the test.
+
+Limits: a long text answer is shortened to 90 characters in the trace (the full text is in the JSON and in the filing); where a filing gives a figure as several
+row-labelled facts, the trace names the element and says how many rows were added; trend pages show each column's source filing, not an element per cell.
 
 ## Multi-year trends (Extension 1)
 
@@ -237,9 +262,9 @@ The design was prototyped first with real numbers: [`design/dashboard_mockup.htm
 pytest
 ```
 
-About 470 tests, a few seconds, no internet. They cover unit conversion, the XBRL reader, every SEBI row, the verdict and sentence rules, HTML
-well-formedness, escaping of filing text, the error pages, and (when the filings are on disk) real-filing spot checks and "the committed
-sample pages are up to date". The test folders mirror the code folders (`tests/views` tests `brsr_p6/views`, and so on), so
+About 530 tests, a few seconds, no internet. They cover unit conversion, the XBRL reader, every SEBI row, the verdict and sentence rules, HTML
+well-formedness, escaping of filing text, the error pages, and (when the filings are on disk) real-filing spot checks, the trace of every value to
+the raw XML, and "the committed sample pages are up to date". The test folders mirror the code folders (`tests/views` tests `brsr_p6/views`, and so on), so
 `pytest tests/views` runs one layer. `tests/test_architecture.py` checks the layer rule below on every run.
 
 ## Project structure
@@ -259,7 +284,7 @@ brsr_p6/             the code, one package per step of the journey from NSE to t
   extraction/          3. clean it into one Principle6Report: extractor, checks, values, report_io
   analysis/            4. compare years (pure logic): comparison, warning_kinds, trend_model
   views/               5. decide what each page says (the layout stays in the templates): metric_info, dashboard_cards,
-                       dashboard_view, sebi_view, trend_view, summary_view, error_view, report_text
+                       dashboard_view, sebi_view, trace_view, trend_view, summary_view, error_view, report_text
   rendering/           6. fill the HTML templates: render, templates/ (HTML + CSS)
   workflows/           whole jobs end to end: pipeline, trend_loader, summary_loader, samples
   cli/                 the commands behind the entry points: main_cli, trend_cli, summary_cli, download_cli, extract_cli, common

@@ -3,7 +3,7 @@
 from dashboard_samples import NO_UNIT, SCALE_SLIP, ZERO_MEANING, blank_report, put
 
 from brsr_p6.analysis.comparison import IMPROVED, SAME, UNSURE, WORSE
-from brsr_p6.core.models import Cell, Status
+from brsr_p6.core.models import Cell, Origin, Status
 from brsr_p6.views.dashboard_cards import build_card, figure_getter, per_crore
 from brsr_p6.views.metric_info import METRICS
 
@@ -134,6 +134,57 @@ def test_renewable_share_is_calculated_marked_so_and_inherits_warnings():
     assert (c.big, c.unit, c.verdict) == ("1.47", "% of all energy", SAME)
     assert c.badge.endswith("∑ Calculated by us from reported figures") and c.alerts == [NO_UNIT]
     assert any("renewable energy ÷ (renewable + non-renewable energy)" in line for line in c.fine)
+
+
+# ------------------------------------------------------------------------------------------------ the trace to the filing
+def with_origin(report, key, side, element, raw, unit="Gigajoule"):
+    getattr(report.metrics[key], side).origin = [Origin(element, raw, unit, "2024-03-31" if side == "current" else "2023-03-31")]
+
+
+def test_a_card_names_the_filing_element_it_was_read_from_for_both_years():
+    report = blank_report()
+    put(report, "E1.total", 5000, 4000)
+    with_origin(report, "E1.total", "current", "TotalEnergy", "5000")
+    with_origin(report, "E1.total", "previous", "TotalEnergy", "4000")
+    assert card(report, "energy_total").trace == ["FY 2023-24: TotalEnergy = 5000 Gigajoule", "FY 2022-23: TotalEnergy = 4000 Gigajoule"]
+
+
+def test_a_calculated_card_lists_the_elements_of_every_row_it_is_built_from():
+    report = blank_report()
+    put(report, "L1.re_total", 25, 10)
+    put(report, "L1.nre_total", 75, 90)
+    for key, element, now, before in (("L1.re_total", "RenewableTotal", "25", "10"), ("L1.nre_total", "NonRenewableTotal", "75", "90")):
+        with_origin(report, key, "current", element, now)
+        with_origin(report, key, "previous", element, before)
+    assert card(report, "renewable_share").trace == [
+        "FY 2023-24: RenewableTotal = 25 Gigajoule; NonRenewableTotal = 75 Gigajoule",
+        "FY 2022-23: RenewableTotal = 10 Gigajoule; NonRenewableTotal = 90 Gigajoule",
+    ]
+
+
+def test_an_intensity_shown_per_rupee_crore_still_traces_to_the_filed_per_rupee_element():
+    report = blank_report()
+    put(report, "E1.intensity", 8.07367e-05, 8.19236e-05, unit="GJ per ₹")
+    with_origin(report, "E1.intensity", "current", "EnergyIntensityPerRupeeOfTurnover", "0.0000807367", "GigajoulePerINR")
+    with_origin(report, "E1.intensity", "previous", "EnergyIntensityPerRupeeOfTurnover", "0.0000819236", "GigajoulePerINR")
+    shown = per_crore(report.metrics["E1.intensity"].current)
+    assert shown.unit == "GJ per ₹ crore" and shown.origin == report.metrics["E1.intensity"].current.origin       # the conversion keeps the trace
+    assert card(report, "energy_intensity").trace[0] == "FY 2023-24: EnergyIntensityPerRupeeOfTurnover = 0.0000807367 GigajoulePerINR"
+
+
+def test_a_figure_not_in_the_filing_says_so_in_its_trace():
+    assert card(blank_report(), "air_sox").trace == ["FY 2023-24: not in the filing", "FY 2022-23: not in the filing"]
+
+
+def test_a_calculated_figure_never_loses_the_trace_of_its_ingredients():
+    from brsr_p6.views.dashboard_cards import reading
+    report = blank_report()
+    put(report, "E6.scope1", 64, 61, unit="tCO2e")
+    put(report, "E6.scope2", 5, 5, unit="tCO2e")
+    with_origin(report, "E6.scope1", "current", "TotalScope1Emissions", "64", "MtCO2e")
+    with_origin(report, "E6.scope2", "current", "TotalScope2Emissions", "5", "MtCO2e")
+    derived = reading(report, INFO["ghg_total"])
+    assert [o.element for o in derived.current.origin] == ["TotalScope1Emissions", "TotalScope2Emissions"] and derived.previous.origin == []
 
 
 def test_a_calculated_figure_needs_all_its_ingredients():
