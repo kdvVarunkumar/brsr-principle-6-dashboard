@@ -1,7 +1,7 @@
-"""The sample pages in samples/ (a deliverable of the assignment), made by ONE command:  python make_samples.py
+"""The sample pages in samples/ (a deliverable of the assignment), made by ONE command:  python flow.py samples
 
 A handful of companies chosen to show the dashboard in different situations, plus a few error pages.  Everything is made
-by the same code that `main.py` uses.  Report pages are rebuilt from the filings already on disk when possible (no internet);
+by the same code that `flow.py` uses.  Report pages are rebuilt from the filings already on disk when possible (no internet);
 a filing that is not on disk is downloaded first (politely, and cached).  The error pages are made by really triggering the
 errors with offline inputs, so they show exactly what a user would see.
 """
@@ -168,8 +168,8 @@ SAMPLE_ERRORS = (
     SampleError("Tata Steel", "2021-22", "A real company and a valid year, but NSE has no filing for it: lists the years it does have.",
                 _year_not_on_nse),
     SampleError("Infosys", "2021-22", "A filing file on NSE that is damaged (here a deliberately broken file).", _damaged_filing),
-    SampleError("Reliance", "2025-26 to 2021-22", "A trend request with the years the wrong way round (trends.py).", _years_the_wrong_way_round, tool="trends"),
-    SampleError("Reliance", "2021-22", "A summary request (summary.py) for a year NSE has no filing for: the suggested commands use summary.py.",
+    SampleError("Reliance", "2025-26 to 2021-22", "A trend request with the years the wrong way round (flow.py trends).", _years_the_wrong_way_round, tool="trends"),
+    SampleError("Reliance", "2021-22", "A summary request (flow.py summary) for a year NSE has no filing for: the suggested commands use flow.py summary.",
                 _summary_year_not_on_nse, tool="summary"),
 )
 
@@ -182,7 +182,7 @@ def make_samples(output_dir: Path = SAMPLES_DIR, progress=print) -> list:
 
     for sample in SAMPLE_COMPANIES:
         report = load_saved_report(sample.symbol, sample.fy)
-        if report is None:                               # not on disk yet: do what main.py does (download politely, then read)
+        if report is None:                               # not on disk yet: do what flow.py does (download politely, then read)
             progress(f"{sample.company} {sample.fy}: not on disk, downloading ...")
             page, report = generate_page(sample.company, sample.fy, output_dir=output_dir)
         else:
@@ -240,7 +240,7 @@ def _summary_reports(sample):
 
 
 def _write_comparison(sample, output_dir, progress):
-    """A comparison page built from the filings on disk; if one is not on disk, do what compare.py does (download politely, then read)."""
+    """A comparison page built from the filings on disk; if one is not on disk, do what flow.py compare does (download politely, then read)."""
     report_a, report_b = load_saved_report(sample.symbol_a, sample.fy), load_saved_report(sample.symbol_b, sample.fy)
     if report_a is None or report_b is None:
         progress(f"{sample.company_a} / {sample.company_b} FY {sample.fy}: not on disk, downloading ...")
@@ -250,7 +250,7 @@ def _write_comparison(sample, output_dir, progress):
 
 
 def _write_summary(sample, output_dir, progress):
-    """A summary page built from the filings on disk; if one is not on disk, do what summary.py does (download politely, then read)."""
+    """A summary page built from the filings on disk; if one is not on disk, do what flow.py summary does (download politely, then read)."""
     found = _summary_reports(sample)
     if found is None:
         progress(f"{sample.company} FY {sample.fy}: not on disk, downloading ...")
@@ -277,7 +277,7 @@ def _readme(report_pages, trend_pages, summary_pages, comparison_pages, error_pa
     lines = [
         "# Sample pages",
         "",
-        "Open any file in a web browser. They are made by `python make_samples.py` (do not edit them by hand).",
+        "Open any file in a web browser. They are made by `python flow.py samples` (do not edit them by hand).",
         "",
         "**Easiest: open [index.html](index.html).** Choose a company and a year and its report appears; the *Compare two companies* button opens "
         "[compare_companies.html](compare_companies.html), where you choose a year and two companies (both open the files in this folder).",
@@ -288,13 +288,13 @@ def _readme(report_pages, trend_pages, summary_pages, comparison_pages, error_pa
         "|---|---|---|",
     ]
     lines += [f"| [{page.name}]({page.name}) | {s.company}, FY {s.fy} | {s.shows} |" for s, page in report_pages]
-    lines += ["", "## Trend pages (one company over several years: `python trends.py ...`)", "",
+    lines += ["", "## Trend pages (one company over several years: `python flow.py trends ...`)", "",
               "| File | Company and years | What it shows |", "|---|---|---|"]
     lines += [f"| [{page.name}]({page.name}) | {s.company}, FY {s.fy_from} to FY {s.fy_to} | {s.shows} |" for s, page in trend_pages]
-    lines += ["", "## Year-on-year summaries (the 3 biggest improvements and setbacks: `python summary.py ...`)", "",
+    lines += ["", "## Year-on-year summaries (the 3 biggest improvements and setbacks: `python flow.py summary ...`)", "",
               "| File | Company and year | What it shows |", "|---|---|---|"]
     lines += [f"| [{page.name}]({page.name}) | {s.company}, FY {s.fy} | {s.shows} |" for s, page in summary_pages]
-    lines += ["", "## Company comparisons (two companies, one year: `python compare.py ...`)", "",
+    lines += ["", "## Company comparisons (two companies, one year: `python flow.py compare ...`)", "",
               "| File | Companies and year | What it shows |", "|---|---|---|"]
     lines += [f"| [{page.name}]({page.name}) | {s.company_a} vs {s.company_b}, FY {s.fy} | {s.shows} |" for s, page in comparison_pages]
     lines += ["", "## Error pages (what you see instead of a report when something goes wrong)", "",

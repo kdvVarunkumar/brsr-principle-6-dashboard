@@ -1,6 +1,6 @@
-"""Command-line interface of compare.py: two companies, one financial year, side by side, as one HTML page.
+"""Command-line interface of `python flow.py compare`: two companies, one financial year, side by side, as one HTML page.
 
-Like main.py, a failure still writes a page (output/error_<companies>_<year>.html) so the reason appears where the comparison would have been.
+Like the flow, a failure still writes a page (output/error_<companies>_<year>.html) so the reason appears where the comparison would have been.
 """
 
 import argparse
@@ -16,14 +16,14 @@ from brsr_p6.workflows.compare import generate_comparison_page
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="compare.py",
+        prog="flow.py compare",
         description=(
             "Compare two listed Indian companies' BRSR Principle 6 (environment) figures for ONE financial year, side by side. "
             "Totals are shown but not ranked (a bigger company uses more); the verdicts are on the fair measures: the figure per "
             "rupee of sales and the shares. Units are made the same, and anything a company did not report is said so. "
             "Filings are downloaded from NSE if needed."
         ),
-        epilog='Example: python compare.py --company-a "Tata Steel" --company-b "Wipro" --fy 2025-26 --open',
+        epilog='Example: python flow.py compare --company-a "Tata Steel" --company-b "Wipro" --fy 2025-26 --open',
     )
     parser.add_argument("--company-a", required=True, help='First company: name or NSE symbol, e.g. "Tata Steel" or TATASTEEL')
     parser.add_argument("--company-b", required=True, help='Second company, e.g. "Wipro" or WIPRO')

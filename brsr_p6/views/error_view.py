@@ -1,6 +1,6 @@
 """What an ERROR PAGE says.
 
-When something goes wrong, `python main.py ...` still writes an HTML page (output/error_<company>_<year>.html) so the reason is
+When something goes wrong, `python flow.py ...` still writes an HTML page (output/error_<company>_<year>.html) so the reason is
 shown where the report would have been.  This module decides the words; templates/error.html only prints them
 (the same "Python decides, the template prints" idea as sebi_view.py and dashboard_view.py).
 
@@ -47,7 +47,7 @@ ERROR_INFO = {
     SameCompany: ErrorInfo(
         "Two different companies needed", "A comparison needs two different companies",
         ("Give one company to --company-a and a different one to --company-b, for example Tata Steel and Wipro.",
-         "To see ONE company over several years, use trends.py instead.")),
+         "To see ONE company over several years, use `python flow.py trends` instead.")),
     InvalidFiscalYear: ErrorInfo(
         "Financial year not understood", "We could not read that financial year",
         ("Write the year like 2023-24, meaning 1 April 2023 to 31 March 2024. 2023-2024, FY2023-24 and 2023/24 also work.",
@@ -93,10 +93,10 @@ UNEXPECTED = ErrorInfo(
 )
 
 
-def build_error_view(error, company_text="", fy_text="", tool="main"):
+def build_error_view(error, company_text="", fy_text="", tool="flow"):
     """The ErrorView for an exception.  `company_text` and `fy_text` are what the user typed.
 
-    `tool` is the command that failed ("main", "trends" or "summary"): the suggested commands then use that command."""
+    `tool` is the command that failed ("flow", "trends", "summary" or "compare"): the suggested commands then use that command."""
     if isinstance(error, BrsrError):
         info = next(ERROR_INFO[cls] for cls in type(error).__mro__ if cls in ERROR_INFO)
         message, unexpected = str(error), False
@@ -135,26 +135,29 @@ def _usable_year(fy_text):
         return EXAMPLE_YEAR
 
 
+FLOW, SUMMARY, TRENDS, COMPARE = "python flow.py", "python flow.py summary", "python flow.py trends", "python flow.py compare"     # the commands we suggest
+
+
 def _script(tool):
-    return "summary.py" if tool == "summary" else "main.py"
+    return SUMMARY if tool == "summary" else FLOW
 
 
 def _compare_command(symbol, fy):
     """A comparison needs two companies; we know only one, so the other is a placeholder to replace."""
-    return f'python compare.py --company-a "{symbol}" --company-b "<the other company>" --fy {fy}'
+    return f'{COMPARE} --company-a "{symbol}" --company-b "<the other company>" --fy {fy}'
 
 
 def _command_in_style(tool, symbol, fy):
     return _compare_command(symbol, fy) if tool == "compare" else _command(symbol, fy, _script(tool))
 
 
-def _command(symbol, fy, script="main.py"):
-    return f'python {script} --company "{symbol}" --fy {fy}'
+def _command(symbol, fy, command=FLOW):
+    return f'{command} --company "{symbol}" --fy {fy}'
 
 
 def _trend_command(symbol, first=None, last=None):
     years = f" --from {first} --to {last}" if first else ""
-    return f'python trends.py --company "{symbol}"{years}'
+    return f'{TRENDS} --company "{symbol}"{years}'
 
 
 def _command_for(tool, symbol, fy_text):
@@ -165,7 +168,7 @@ def _command_for(tool, symbol, fy_text):
         return _compare_command(symbol, _usable_year(fy_text))
     if tool == "summary":                                   # the summary picks the latest year by itself unless a real year was typed
         try:
-            return _command(symbol, parse_fiscal_year(fy_text), "summary.py")
+            return _command(symbol, parse_fiscal_year(fy_text), SUMMARY)
         except BrsrError:
-            return f'python summary.py --company "{symbol}"'
+            return f'{SUMMARY} --company "{symbol}"'
     return _command(symbol, _usable_year(fy_text))

@@ -2,7 +2,7 @@
 (for example in a fresh clone), so the normal test run never needs the internet or the data folder.
 
 Expected numbers come from the companies' own PDF reports, compared by hand (see context.md section 4b).
-Fill the data folder first with:  python download_filings.py --company TATASTEEL
+Fill the data folder first with:  python flow.py download --company TATASTEEL
 """
 
 import pytest

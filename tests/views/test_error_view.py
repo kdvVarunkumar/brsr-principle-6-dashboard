@@ -44,20 +44,20 @@ def test_an_ambiguous_company_lists_each_candidate_with_a_command_ready_to_run()
     error = AmbiguousCompany("'Tata' matches several companies.", [Company("TATASTEEL", "Tata Steel Limited"), Company("TCS", "Tata Consultancy Services Limited")])
     view = build_error_view(error, "Tata", "2024-25")
     assert [o.label for o in view.options] == ["Tata Steel Limited (TATASTEEL)", "Tata Consultancy Services Limited (TCS)"]
-    assert view.options[0].command == 'python main.py --company "TATASTEEL" --fy 2024-25'
+    assert view.options[0].command == 'python flow.py --company "TATASTEEL" --fy 2024-25'
     assert view.options_title.startswith("Companies that match")
 
 
 def test_suggested_commands_always_use_a_real_year_even_when_the_typed_one_was_garbage():
     error = AmbiguousCompany("Several.", [Company("TCS", "TCS")])
-    assert build_error_view(error, "Tata", "banana").options[0].command == 'python main.py --company "TCS" --fy 2023-24'
+    assert build_error_view(error, "Tata", "banana").options[0].command == 'python flow.py --company "TCS" --fy 2023-24'
 
 
 def test_a_missing_year_offers_the_years_nse_does_have():
     error = NoFilingFound("NSE has no BRSR filing for Tata Steel Limited for FY 2021-22.", symbol="TATASTEEL", available=["2022-23", "2023-24"])
     view = build_error_view(error, "Tata Steel", "2021-22")
     assert [(o.label, o.command) for o in view.options] == [
-        ("FY 2022-23", 'python main.py --company "TATASTEEL" --fy 2022-23'), ("FY 2023-24", 'python main.py --company "TATASTEEL" --fy 2023-24')]
+        ("FY 2022-23", 'python flow.py --company "TATASTEEL" --fy 2022-23'), ("FY 2023-24", 'python flow.py --company "TATASTEEL" --fy 2023-24')]
 
 
 def test_a_company_with_no_filings_at_all_gets_hints_but_no_year_list():
@@ -116,39 +116,39 @@ def test_write_error_page_creates_the_folder_and_the_file(tmp_path):
     assert path.exists() and path.read_text(encoding="utf-8").startswith("<!doctype html>")
 
 
-# ------------------------------------------------------------------------------------------------ trend commands (trends.py)
+# ------------------------------------------------------------------------------------------------ trend commands (flow.py trends)
 def test_an_invalid_year_range_has_its_own_page():
     from brsr_p6.core.errors import InvalidYearRange
     view = build_error_view(InvalidYearRange("The start year FY 2024-25 is after the end year FY 2022-23."), "Reliance", "2024-25 to 2022-23", tool="trends")
     assert view.title == "That range of years cannot be used" and any("--from 2021-22 --to 2025-26" in h for h in view.hints)
 
 
-def test_suggested_commands_use_trends_py_when_a_trend_request_failed():
+def test_suggested_commands_use_the_trends_command_when_a_trend_request_failed():
     ambiguous = AmbiguousCompany("Several.", [Company("TCS", "Tata Consultancy Services Limited")])
-    assert build_error_view(ambiguous, "Tata", "2021-22 to 2025-26", tool="trends").options[0].command == 'python trends.py --company "TCS"'
+    assert build_error_view(ambiguous, "Tata", "2021-22 to 2025-26", tool="trends").options[0].command == 'python flow.py trends --company "TCS"'
     none_in_range = NoFilingFound("No filing in range.", symbol="TATASTEEL", available=["2022-23", "2023-24", "2025-26"])
     option = build_error_view(none_in_range, "Tata Steel", "2018-19 to 2019-20", tool="trends").options[0]
     assert option.label == "FY 2022-23 to FY 2025-26"
-    assert option.command == 'python trends.py --company "TATASTEEL" --from 2022-23 --to 2025-26'
-    # ... and main.py as before for a one-year request
-    assert build_error_view(none_in_range, "Tata Steel", "2021-22").options[0].command == 'python main.py --company "TATASTEEL" --fy 2022-23'
+    assert option.command == 'python flow.py trends --company "TATASTEEL" --from 2022-23 --to 2025-26'
+    # ... and the plain flow for a one-year request
+    assert build_error_view(none_in_range, "Tata Steel", "2021-22").options[0].command == 'python flow.py --company "TATASTEEL" --fy 2022-23'
 
 
-# ------------------------------------------------------------------------------------------------ comparison commands (compare.py)
+# ------------------------------------------------------------------------------------------------ comparison commands (flow.py compare)
 def test_asking_for_the_same_company_twice_has_its_own_explanation():
     view = build_error_view(SameCompany("'Wipro' and 'Wipro' are the same company."), "Wipro vs Wipro", "2025-26", tool="compare")
     assert view.title == "A comparison needs two different companies" and view.kind == "Two different companies needed"
-    assert view.message == "'Wipro' and 'Wipro' are the same company." and any("trends.py" in hint for hint in view.hints)
+    assert view.message == "'Wipro' and 'Wipro' are the same company." and any("flow.py trends" in hint for hint in view.hints)
 
 
-def test_suggested_commands_use_compare_py_with_a_placeholder_for_the_other_company():
+def test_suggested_commands_use_the_compare_command_with_a_placeholder_for_the_other_company():
     ambiguous = AmbiguousCompany("Several.", [Company("TCS", "Tata Consultancy Services Limited")])
     assert build_error_view(ambiguous, "Tata vs Wipro", "2025-26", tool="compare").options[0].command == (
-        'python compare.py --company-a "TCS" --company-b "<the other company>" --fy 2025-26')
+        'python flow.py compare --company-a "TCS" --company-b "<the other company>" --fy 2025-26')
     missing = NoFilingFound("No filing for that year.", symbol="TATASTEEL", available=["2022-23", "2025-26"])
     commands = [o.command for o in build_error_view(missing, "Tata Steel vs Wipro", "2019-20", tool="compare").options]
-    assert commands == ['python compare.py --company-a "TATASTEEL" --company-b "<the other company>" --fy 2022-23',
-                        'python compare.py --company-a "TATASTEEL" --company-b "<the other company>" --fy 2025-26']
+    assert commands == ['python flow.py compare --company-a "TATASTEEL" --company-b "<the other company>" --fy 2022-23',
+                        'python flow.py compare --company-a "TATASTEEL" --company-b "<the other company>" --fy 2025-26']
 
 
 def test_a_garbage_year_never_ends_up_in_a_suggested_compare_command():
@@ -156,22 +156,25 @@ def test_a_garbage_year_never_ends_up_in_a_suggested_compare_command():
     assert build_error_view(ambiguous, "Tata vs Wipro", "banana", tool="compare").options[0].command.endswith("--fy 2023-24")
 
 
-def test_the_footer_of_an_error_page_points_to_every_commands_help():
+def test_the_footer_of_an_error_page_points_to_the_one_commands_help_and_names_the_others():
     html = render_error_page(build_error_view(UnknownCompany("No match."), "Xyzzy", "2023-24"))
-    for script in ("main.py", "trends.py", "summary.py", "compare.py"):
-        assert f"python {script} --help" in html, script
+    assert "python flow.py --help" in html
+    for name in ("trends", "summary", "compare", "hub"):
+        assert f"<code>{name}</code>" in html, name
+    for old in ("main.py", "trends.py", "summary.py", "compare.py"):                       # the old one-file-per-command names are gone
+        assert old not in html, old
 
 
-# ------------------------------------------------------------------------------------------------ summary commands (summary.py)
-def test_suggested_commands_use_summary_py_when_a_summary_request_failed():
+# ------------------------------------------------------------------------------------------------ summary commands (flow.py summary)
+def test_suggested_commands_use_the_summary_command_when_a_summary_request_failed():
     ambiguous = AmbiguousCompany("Several.", [Company("TCS", "Tata Consultancy Services Limited")])
-    assert build_error_view(ambiguous, "Tata", "latest", tool="summary").options[0].command == 'python summary.py --company "TCS"'
-    assert build_error_view(ambiguous, "Tata", "2024-25", tool="summary").options[0].command == 'python summary.py --company "TCS" --fy 2024-25'
+    assert build_error_view(ambiguous, "Tata", "latest", tool="summary").options[0].command == 'python flow.py summary --company "TCS"'
+    assert build_error_view(ambiguous, "Tata", "2024-25", tool="summary").options[0].command == 'python flow.py summary --company "TCS" --fy 2024-25'
     missing = NoFilingFound("No filing for that year.", symbol="TATASTEEL", available=["2022-23", "2025-26"])
     commands = [o.command for o in build_error_view(missing, "Tata Steel", "2019-20", tool="summary").options]
-    assert commands == ['python summary.py --company "TATASTEEL" --fy 2022-23', 'python summary.py --company "TATASTEEL" --fy 2025-26']
+    assert commands == ['python flow.py summary --company "TATASTEEL" --fy 2022-23', 'python flow.py summary --company "TATASTEEL" --fy 2025-26']
 
 
 def test_a_garbage_year_never_ends_up_in_a_suggested_summary_command():
     ambiguous = AmbiguousCompany("Several.", [Company("TCS", "Tata Consultancy Services Limited")])
-    assert build_error_view(ambiguous, "Tata", "banana", tool="summary").options[0].command == 'python summary.py --company "TCS"'
+    assert build_error_view(ambiguous, "Tata", "banana", tool="summary").options[0].command == 'python flow.py summary --company "TCS"'

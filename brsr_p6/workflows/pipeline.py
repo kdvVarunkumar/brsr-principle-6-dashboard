@@ -1,6 +1,6 @@
 """The whole job in one place:  company + financial year  ->  clean report  ->  HTML page.
 
-Both command-line tools (main.py and extract_report.py) call these functions, so the steps live in only one place.
+The commands `flow.py` and `flow.py extract` call these functions, so the steps live in only one place.
 """
 
 import json

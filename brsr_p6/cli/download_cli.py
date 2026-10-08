@@ -1,4 +1,4 @@
-"""Command-line interface of the download script (`python download_filings.py ...`)."""
+"""Command-line interface of `python flow.py download ...`: only the download step of the flow."""
 
 import argparse
 from pathlib import Path
@@ -10,14 +10,14 @@ from brsr_p6.download.downloader import download_filings
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="download_filings.py",
+        prog="flow.py download",
         description=(
             "Download a company's BRSR filings (XBRL, optionally PDF) from NSE into data/raw/<SYMBOL>/<FY>/. "
             "Files already on disk are reused; requests to NSE are paced politely."
         ),
         epilog=(
-            'Examples:  python download_filings.py --company Reliance\n'
-            '           python download_filings.py --company "Tata Steel" --fy 2023-24 --with-pdf'
+            'Examples:  python flow.py download --company Reliance\n'
+            '           python flow.py download --company "Tata Steel" --fy 2023-24 --with-pdf'
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )

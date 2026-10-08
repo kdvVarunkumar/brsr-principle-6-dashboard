@@ -41,10 +41,10 @@ So the demo order is: **dashboard -> accuracy -> SEBI tab -> errors -> code -> e
 ## 3. The whole flow in one picture
 
 ```
- python main.py --company "Tata Steel" --fy 2025-26
+ python flow.py --company "Tata Steel" --fy 2025-26
         |
         v
- [cli]        main.py -> cli/main_cli          read what was typed; on failure write an error page
+ [cli]        flow.py -> cli/flow_cli          read what was typed; on failure write an error page
         |
         v
  [workflows]  workflows/pipeline               the order of the steps (the "manager")
@@ -72,24 +72,22 @@ The layers are ordered `core -> download -> parsing -> extraction -> analysis ->
 
 ---
 
-## 4. "Why are there so many .py files in the root folder?"
+## 4. "Why is there only one .py file in the root folder?"
 
-They are **launchers, not modules.** Each one is about 10 lines: it imports `main` from the package and runs it. All the real code is inside `brsr_p6/`, in nine packages.
+There used to be eight tiny launcher files (`main.py`, `trends.py`, `summary.py`, ...). They were redundant, so they are gone. There is **one command, `flow.py`** (10 lines): with a company and a year it runs the whole flow; the first word after it picks a single step or an extra. All the real code is inside `brsr_p6/`, in nine packages.
 
-| Root file | What it is for | Calls |
+| You type | What happens | Code behind it |
 |---|---|---|
-| `main.py` | **the core command**: one company, one year -> the report page | `cli/main_cli` |
-| `download_filings.py` | only download filings (no page) | `cli/download_cli` |
-| `extract_report.py` | read one filing, print it as text, save the clean JSON (`--trace` shows where each number came from) | `cli/extract_cli` |
-| `trends.py` | Extension 1: several years of one company | `cli/trend_cli` |
-| `summary.py` | Extension 2: year-on-year best and worst | `cli/summary_cli` |
-| `compare.py` | Extension 3: two companies, one year | `cli/compare_cli` |
-| `hub.py` | the two viewer pages (home page, compare page) | `cli/hub_cli` |
-| `make_samples.py` | rebuild the committed `samples/` | `workflows/samples` |
+| `python flow.py --company "Tata Steel" --fy 2025-26` | **the whole flow**: download -> read -> clean and check -> write the page | `cli/flow_cli` -> `workflows/pipeline` |
+| `python flow.py download --company ...` | only the download step | `cli/download_cli` |
+| `python flow.py extract --company ... --fy ...` | download if needed, read and clean, print as text, save JSON (`--trace` shows where each number came from) | `cli/extract_cli` |
+| `python flow.py trends ...` | Extension 1: several years of one company | `cli/trend_cli` |
+| `python flow.py summary ...` | Extension 2: year-on-year best and worst | `cli/summary_cli` |
+| `python flow.py compare ...` | Extension 3: two companies, one year | `cli/compare_cli` |
+| `python flow.py hub` | the two viewer pages (home page, compare page) | `cli/hub_cli` |
+| `python flow.py samples` | rebuild the committed `samples/` | `cli/samples_cli` -> `workflows/samples` |
 
-Why keep them in the root: the README, the assignment's "run commands" and the error pages all tell the reader to type `python main.py ...`. A reviewer cloning the repo should be able to do that without learning a package path. If someone asks "why not put them in a folder?": *"They are the user-facing commands. Moving them would change every documented command for no gain; the logic is already in packages, and a test enforces the layering."*
-
-Honest alternative if pushed: they could live in a `scripts/` folder or be replaced by `python -m brsr_p6 main ...`. It is a taste choice, not a correctness one.
+Say it like this: *"One entry point, like `git` or `pip`: `flow.py` is the whole flow, and each step or extra is a sub-command with its own `--help`. The root has no logic at all; it only starts `brsr_p6.cli.flow_cli`."* A bare `python flow.py` prints the help with the list of commands.
 
 ---
 
@@ -98,13 +96,13 @@ Honest alternative if pushed: they could live in a `scripts/` folder or be repla
 | Min | Do | Say |
 |---|---|---|
 | 0-1 | Show the folder; open `README.md` top | The 60-second opening in section 1 |
-| 1-2 | `python main.py --company "Tata Steel" --fy 2025-26 --open` | "One command, one page. It took about ten seconds; the second run is instant because filings are cached." |
+| 1-2 | `python flow.py --company "Tata Steel" --fy 2025-26 --open` | "One command, one page. It took about ten seconds; the second run is instant because filings are cached." |
 | 2-6 | **Dashboard** (30%): the one-sentence summary and scoreboard -> a topic tile -> one card -> "Can I trust this?" -> glossary | See section 6, stage 7. Point out: *which direction is better*, *why it matters*, units, "better than its own last year" only |
 | 6-7 | Show the doubtful figure (Tata Steel's Scope 1) and a "Not reported" row | "Shown exactly as filed, amber, with no verdict. I never silently fix a number." |
 | 7-8 | **SEBI tab** next to the SEBI template; last section "Where every number comes from" | "Same numbering E1..E12 and L1..L9, same row labels, current and previous year. Every row traces to an XBRL element." |
-| 8-9 | Errors: `python main.py --company "Xyzzy Quux" --fy 2023-24 --open`, then `--fy 2019-20` | "Specific message, what to try next, no stack trace." |
+| 8-9 | Errors: `python flow.py --company "Xyzzy Quux" --fy 2023-24 --open`, then `--fy 2019-20` | "Specific message, what to try next, no stack trace." |
 | 9-10 | `pytest -q`; show `brsr_p6/` tree and `tests/test_architecture.py` | "Extraction is separate from presentation; a test enforces it." |
-| if asked | `python hub.py --open` | Home page (choose a company), Compare button. Extensions |
+| if asked | `python flow.py hub --open` | Home page (choose a company), Compare button. Extensions |
 
 Have these ready in a terminal: `commands.md` has every command and the one-line answers.
 
@@ -114,14 +112,14 @@ Have these ready in a terminal: `commands.md` has every command and the one-line
 
 ### Stage 1: Setup and structure
 
-**Say:** Python, three libraries (Requests for HTTP, lxml for XML, Jinja2 for HTML). `pip install -r requirements.txt`, then run. Nine layered packages; root files are launchers. Notes: `plan.md`, `context.md` (every decision, D1...), `learnings.md`.
+**Say:** Python, three libraries (Requests for HTTP, lxml for XML, Jinja2 for HTML). `pip install -r requirements.txt`, then run. Nine layered packages; one root file, `flow.py`, starts everything. Notes: `plan.md`, `context.md` (every decision, D1...), `learnings.md`.
 **Open:** `README.md` (setup, inputs to try, what is complete, limitations, AI tools), the folder tree.
 
 | Likely question | Answer |
 |---|---|
 | Why Python? | Good HTTP/XML/HTML libraries, readable, and the assignment allows any stack. |
 | Why only three dependencies? | "Keep dependencies reasonable." Each does one thing I would not write myself. The rest is the standard library. |
-| How do I run it from a clean checkout? | Clone, create a venv, `pip install -r requirements.txt`, `python main.py --company "Tata Steel" --fy 2025-26 --open`. I tested exactly that in a fresh clone with a new venv. |
+| How do I run it from a clean checkout? | Clone, create a venv, `pip install -r requirements.txt`, `python flow.py --company "Tata Steel" --fy 2025-26 --open`. I tested exactly that in a fresh clone with a new venv. |
 | How is the project organised? | Nine packages in a strict order (section 3); a test fails if a package imports from a later one. |
 | Why a database-free design? | Files are enough: raw filings, a cache of NSE's lists, and a clean JSON per report. Nothing needs querying. |
 
@@ -224,7 +222,7 @@ What makes it clear (point at these live):
 | Why Jinja2 and not building strings? | Templates keep layout out of the logic; autoescape protects against malicious text; designers can change the page without touching Python. |
 | How does the SEBI tab match the template? | The question numbers, table shapes, row labels and units come from `core/sebi_template.py`, the same data the extractor fills. Same source, so they cannot drift apart. |
 | How are the two views kept consistent? | Both are built from the same cleaned report object, so they always start from the same numbers. |
-| Can I see where a number comes from? | Yes: hover on a SEBI number; the last section of the SEBI tab lists every number with its element and the text as filed; the header links to the filing on NSE; `extract_report.py --trace` prints it in the terminal. |
+| Can I see where a number comes from? | Yes: hover on a SEBI number; the last section of the SEBI tab lists every number with its element and the text as filed; the header links to the filing on NSE; `flow.py extract --trace` prints it in the terminal. |
 
 ### Stage 9: Error handling (10%)
 
@@ -243,7 +241,7 @@ What makes it clear (point at these live):
 
 | Likely question | Answer |
 |---|---|
-| Show me an error. | `python main.py --company "Xyzzy Quux" --fy 2023-24 --open`, then `--fy 2019-20`. |
+| Show me an error. | `python flow.py --company "Xyzzy Quux" --fy 2023-24 --open`, then `--fy 2019-20`. |
 | Why a page, not just a terminal message? | The brief says errors should produce a clear message *on the page*, and a page is what a non-technical user sees. The terminal also prints the path. |
 | What happens to one bad year in a trend? | It becomes a flagged column with its specific reason; the other years still show. Only a problem with the whole request gives an error page. |
 | How do you test errors? | Every error class has a test, and the sample error pages in `samples/` are rebuilt and compared by a test, so they cannot go stale. |
@@ -272,10 +270,10 @@ What makes it clear (point at these live):
 ### Stage 12: Extensions (only if asked)
 
 One line each, then stop:
-- **Trends** (`trends.py`): every metric, every year side by side; missing years flagged, never skipped or zero-filled; a change of reporting basis (standalone vs consolidated) never looks like an improvement.
-- **Year-on-year** (`summary.py`): the three biggest improvements and setbacks, with the definition of "better"; a missing previous-year filing is handled (the previous-year column of the newer filing is used, and the page says why).
-- **Comparison** (`compare.py`): totals shown but **never ranked** (a bigger company uses more); verdicts only on per-rupee figures and shares; one unit per row; "Not reported" says who; standalone vs consolidated warned.
-- **Home and compare pages** (`hub.py`): pick a company and year, or press *Compare two companies*.
+- **Trends** (`flow.py trends`): every metric, every year side by side; missing years flagged, never skipped or zero-filled; a change of reporting basis (standalone vs consolidated) never looks like an improvement.
+- **Year-on-year** (`flow.py summary`): the three biggest improvements and setbacks, with the definition of "better"; a missing previous-year filing is handled (the previous-year column of the newer filing is used, and the page says why).
+- **Comparison** (`flow.py compare`): totals shown but **never ranked** (a bigger company uses more); verdicts only on per-rupee figures and shares; one unit per row; "Not reported" says who; standalone vs consolidated warned.
+- **Home and compare pages** (`flow.py hub`): pick a company and year, or press *Compare two companies*.
 
 ---
 

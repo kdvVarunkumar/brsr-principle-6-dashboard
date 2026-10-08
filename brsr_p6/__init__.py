@@ -11,7 +11,7 @@ this list, never from below (tests/test_architecture.py checks this), which keep
     views       decide what each page says (dashboard, SEBI form, trends, summary, errors): plain objects, the layout stays in templates
     rendering   fill the HTML templates and write the page
     workflows   whole jobs from start to finish (company + year -> page), and the sample pages
-    cli         the command-line front ends behind main.py, trends.py, summary.py, download_filings.py and extract_report.py
+    cli         the command-line front ends behind the one command, `python flow.py` (and its sub-commands)
 
-Having this file is what tells Python "this folder is a package", so code elsewhere can write `from brsr_p6.cli.main_cli import main`.
+Having this file is what tells Python "this folder is a package", so code elsewhere can write `from brsr_p6.cli.flow_cli import main`.
 """

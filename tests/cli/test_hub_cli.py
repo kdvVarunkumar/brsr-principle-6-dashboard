@@ -1,4 +1,4 @@
-"""Tests for the hub.py command (brsr_p6/cli/hub_cli.py)."""
+"""Tests for the `flow.py hub` command (brsr_p6/cli/hub_cli.py)."""
 
 from pathlib import Path
 
@@ -67,7 +67,7 @@ def test_link_mode_is_named_in_the_message_and_makes_a_much_smaller_file(tmp_pat
 def test_an_empty_folder_says_what_to_do_first_and_returns_1(tmp_path, capsys):
     assert main(["--dir", str(tmp_path)]) == 1
     out = capsys.readouterr().out
-    assert "There is no HTML page in" in out and "python main.py" in out
+    assert "There is no HTML page in" in out and "python flow.py" in out
     assert not (tmp_path / "index.html").exists()
 
 

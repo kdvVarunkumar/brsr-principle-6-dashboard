@@ -1,6 +1,6 @@
-"""Command-line interface of trends.py: one company over several financial years, as one HTML page.
+"""Command-line interface of `python flow.py trends`: one company over several financial years, as one HTML page.
 
-Like main.py, a failure still writes a page (output/error_<company>_<years>.html) so the reason appears where the report would have been.
+Like the flow, a failure still writes a page (output/error_<company>_<years>.html) so the reason appears where the report would have been.
 """
 
 import argparse
@@ -16,13 +16,13 @@ from brsr_p6.workflows.pipeline import generate_trend_page
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="trends.py",
+        prog="flow.py trends",
         description=(
             "Show how a listed Indian company's BRSR Principle 6 (environment) figures changed over several financial years, "
             "side by side. Missing years are flagged (never skipped or filled with zero), changes of reporting basis and "
             "restated figures are marked. Filings are downloaded from NSE if needed."
         ),
-        epilog='Example: python trends.py --company "Tata Steel" --from 2021-22 --to 2025-26 --open',
+        epilog='Example: python flow.py trends --company "Tata Steel" --from 2021-22 --to 2025-26 --open',
     )
     parser.add_argument("--company", required=True, help='Company name or NSE symbol, e.g. "Tata Steel" or TATASTEEL')
     parser.add_argument("--from", dest="fy_from", help="First financial year, e.g. 2021-22 (default: FY 2021-22, the first BRSR year)")

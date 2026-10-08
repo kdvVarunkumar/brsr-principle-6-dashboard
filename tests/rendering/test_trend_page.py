@@ -1,4 +1,4 @@
-"""Tests for the multi-year trend page: rendering (templates/trends.html), the trends.py command, and real filings."""
+"""Tests for the multi-year trend page: rendering (templates/trends.html), the low.py trends command, and real filings."""
 
 from pathlib import Path
 
@@ -110,7 +110,7 @@ def test_a_failed_trend_request_writes_an_error_page_with_trends_commands(monkey
     assert main(["--company", "Tata Steel", "--from", "2021-22", "--to", "2025-26", "--output-dir", str(tmp_path)]) == 1
     assert "explanation page was written" in capsys.readouterr().out
     page = (tmp_path / "error_Tata_Steel_2021-22_to_2025-26.html").read_text(encoding="utf-8")
-    assert "python trends.py --company" in page and "--from 2022-23 --to 2025-26" in page and "main.py --company" not in page
+    assert "python flow.py trends --company" in page and "--from 2022-23 --to 2025-26" in page and "flow.py --company" not in page.replace("flow.py trends --company", "")
 
 
 def test_an_unknown_company_in_a_trend_request_gets_the_unknown_company_page(monkeypatch, tmp_path):

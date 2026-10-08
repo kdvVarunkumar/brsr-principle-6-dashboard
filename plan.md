@@ -1,5 +1,8 @@
 # Plan: BRSR Principle 6 Report Generator & Dashboard
 
+> **Command names changed in Phase 18.** There is now ONE command, `python flow.py` (the whole flow), and every other command is a sub-command of it: `flow.py download`, `extract`, `trends`, `summary`, `compare`, `hub`, `samples`. The commands written in these notes were updated. Older text that names a file such as `main.py`, `trends.py` or `make_samples.py` is history: read it as `flow.py`, `flow.py trends` or `flow.py samples`. `cli/main_cli.py` became `cli/flow_cli.py`.
+
+
 > Read `context.md` first for the assignment summary, verified facts and decisions.
 > This file is the **to-do list in priority order**. We go **one phase at a time**, and no phase starts until the previous one is "Done when ..." true.
 > Status: **PLANNING ONLY. No code is written until you confirm this plan.**
@@ -57,7 +60,7 @@ You asked: *how to fetch, how to store, how to show.* This is the whole pipeline
 BRSR Principle 6 .../
 ├── plan.md  context.md  learnings.md  commands.md  README.md  requirements.txt  .gitignore  pytest.ini
 ├── main.py  trends.py  summary.py  download_filings.py  extract_report.py  make_samples.py   # thin entry points: read args, call a command
-├── brsr_p6/                 # (no src/ folder: keeps `python main.py` and `pytest` working with zero extra setup)
+├── brsr_p6/                 # (no src/ folder: keeps `python flow.py` and `pytest` working with zero extra setup)
 │   ├── core/                # data model + small helpers: models, errors, fiscal_year, units, formatting, friendly, sebi_template, paths
 │   ├── download/            # 1. NSE -> files on disk: nse_client, company_lookup, filings, downloader
 │   ├── parsing/             # 2. XBRL file -> raw facts: xbrl_reader, p6_mapping
@@ -89,7 +92,7 @@ Time estimates are rough hours for you working with my help. Core (Phases 0-7) i
 - [x] Create `README.md` skeleton and start an **AI-usage log** (the assignment requires telling them which AI tools were used and for what)
 - [x] Write `learnings.md` (concepts explained in plain English)
 - **You'll learn:** virtual environments, pip, modules/imports, `if __name__ == "__main__":`
-- **Done when:** `python main.py --help` prints usage and `pytest` runs one dummy test. ✅ Verified, including a clean-checkout test in a brand-new venv.
+- **Done when:** `python flow.py --help` prints usage and `pytest` runs one dummy test. ✅ Verified, including a clean-checkout test in a brand-new venv.
 
 ### Phase 1: Discovery spike: "look before you build" (~3 h)  ✅ DONE (signed off by you)
 **Why:** Everything depends on what NSE actually gives us. Spending 3 hours looking now saves 10 hours of rework.
@@ -114,11 +117,11 @@ Time estimates are rough hours for you working with my help. Core (Phases 0-7) i
 - [x] Newer-format filings vs the 2021 template (D4/D13/D14/D19): the 2021 layout is rendered; rows that modern XBRL splits are CALCULATED; extras live in `report.extras`
 - [x] Check whether the filings contain a **turnover** figure (needed to compute a fallback intensity) → **answered (Phase 12 audit): yes**, a `Turnover` tag is in all 21 downloaded filings (newer ones also `RevenueFromOperations` / `TotalRevenueOfTheCompany`). It is **not used yet**: a calculated fallback intensity for the doubtful filed ones is an optional improvement, see `context.md` §4e
 - **You'll learn:** `dataclass`, `Enum`, type hints, custom exceptions, "data instead of code" (the template).
-- **Done when:** a Principle6Report can be built from any downloaded filing and printed. ✅ `python extract_report.py --company Reliance --fy 2023-24`
+- **Done when:** a Principle6Report can be built from any downloaded filing and printed. ✅ `python flow.py extract --company Reliance --fy 2023-24`
 
 ### Phase 3: Fetch and cache (~3 h)  ✅ DONE (built early, at your request: "one script in the project that downloads any company")
 **Why:** Getting the file reliably *and politely* is the foundation for all later phases. You asked for a real project script (not my throwaway probes) so that any company can be downloaded on demand, e.g. in the interview.
-- [x] `python download_filings.py --company <name or symbol> [--fy 2023-24] [--with-pdf] [--refresh]` (one command, all years by default)
+- [x] `python flow.py download --company <name or symbol> [--fy 2023-24] [--with-pdf] [--refresh]` (one command, all years by default)
 - [x] `fiscal_year.py`: accepts `2023-24`, `2023-2024`, `FY2023-24`, `2023/24`; **rejects earlier than FY 2021-22 with a clear message** before any network call
 - [x] `company_lookup.py`: text → NSE symbol via `/api/smart-search/eqEtf?q=` (equities only, exact symbol wins, prefer `EQ` series; several companies → `AmbiguousCompany` lists up to 10; none → `UnknownCompany`); results cached in `data/cache/company_search.json`
 - [x] `nse_client.py`: one polite HTTP layer (session + cookie warm-up, **≥ 3 s between requests**, timeouts, retries only for timeouts/5xx with growing pauses, **403/429 → stop**, 404 → only that file missing, HTML block pages never saved)
@@ -130,7 +133,7 @@ Time estimates are rough hours for you working with my help. Core (Phases 0-7) i
 - [x] The main report command calls this same code (`pipeline.load_report`, Phase 5)
 - [ ] *(left open on purpose)* Minimal headers/cookies are not stripped down: only worth doing if NSE changes its requirements
 - **You'll learn:** `requests`, `pathlib`, exceptions, `dataclass`, `time.sleep`, caching, dependency injection for tests.
-- **Done when:** `python download_filings.py --company Reliance` downloads the first time and a second run sends no request to NSE. ✅
+- **Done when:** `python flow.py download --company Reliance` downloads the first time and a second run sends no request to NSE. ✅
 
 ### Phase 4: Parse → map → normalise (~5 h)  ✅ DONE (core built together with Phase 2)
 **Why:** This decides the 25% "data accuracy" score. We went table by table, checking against real filings.
@@ -195,7 +198,7 @@ Time estimates are rough hours for you working with my help. Core (Phases 0-7) i
 - [x] `main.py --company "Tata Steel" --fy 2023-24` → one HTML file with two tabs (CSS-only): **done in Phase 5**; the Dashboard tab gets its content in Phase 6
 - [x] The same command must also write a **page** (not just a console message) for errors (unknown company, FY not on NSE, bad file...) so the message is shown on a page
 - [x] Specific on-page messages for: unknown company, year before 2021-22, no filing for that year, unparseable filing, NSE unreachable
-- [x] Generate **≥ 2 sample outputs** (plan: one heavy-industry, one IT/services, ideally one with sparse data) into `samples/` and commit them (generated with `python make_samples.py`: 5 companies + 4 error pages; committed in Phase 11)
+- [x] Generate **≥ 2 sample outputs** (plan: one heavy-industry, one IT/services, ideally one with sparse data) into `samples/` and commit them (generated with `python flow.py samples`: 5 companies + 4 error pages; committed in Phase 11)
 - [x] README v1: setup, run commands, inputs to try, approach, limitations; **design note** (half a page)
 - **Done when:** a fresh clone + `pip install -r requirements.txt` + one command produces the page. ✅ proven in a fresh venv (context.md D58)
 
@@ -251,13 +254,13 @@ Time estimates are rough hours for you working with my help. Core (Phases 0-7) i
 
 ### Phase 14: All pages in one place (`hub.py`)  ✅ DONE
 *Asked for by the user: "in outputs there are separate html pages; I need them all in one page such that I can use a dropdown or search to get the page".*
-- [x] `python hub.py [--dir output] [--link] [--open]` writes `index.html` for a folder: a search box, a dropdown grouped as Reports / Year-on-year summaries / Multi-year trends / Error pages, Previous / Next, "Open in a new tab"
+- [x] `python flow.py hub [--dir output] [--link] [--open]` writes `index.html` for a folder: a search box, a dropdown grouped as Reports / Year-on-year summaries / Multi-year trends / Error pages, Previous / Next, "Open in a new tab"
 - [x] Self-contained by default (every page embedded, so one file can be moved or sent); `--link` makes a small index that opens the files next to it. `make_samples.py` builds `samples/index.html` in link mode
 - [x] Layers kept: `views/hub_view.py` (names, groups, safe data), `workflows/hub.py` (reads the folder), `rendering/templates/hub.html`, `cli/hub_cli.py`
 - [x] Safe: the data sits in a JSON block with every `<` escaped; the frame is sandboxed (no scripts, no same-origin); labels are inserted as text; without JavaScript a list of links shows
 - [x] Checked in a real browser (desktop and a 375 px frame): grouping, search, Enter, Esc, Previous / Next across three matches and at both ends, "no match", addresses `#id` and `?q=`
 - [x] 35 new tests; 564 in all; samples regenerated
-- [ ] *Not done:* the viewer is not refreshed automatically after `main.py` / `trends.py` / `summary.py`; run `python hub.py` again. Full-text search inside the pages is not offered (the search looks at the page's company, year and type)
+- [ ] *Not done:* the viewer is not refreshed automatically after `main.py` / `trends.py` / `summary.py`; run `python flow.py hub` again. Full-text search inside the pages is not offered (the search looks at the page's company, year and type)
 
 ### Phase 15: Evaluator audit before submission  ✅ DONE
 *Asked for by the user: "check as an evaluator whether everything is as per the requirement".*
@@ -271,7 +274,7 @@ Time estimates are rough hours for you working with my help. Core (Phases 0-7) i
 
 ### Phase 16: Extension 3, two companies compared for one financial year  ✅ DONE
 *Asked for by the user: "add comparison of 2 companies from the assignment in the index page, where they are compared for one FY".*
-- [x] `python compare.py --company-a A --company-b B --fy YYYY-YY [--open]` writes `<SYMBOL A>_vs_<SYMBOL B>_<FY>.html`; downloads what is missing (polite, cached)
+- [x] `python flow.py compare --company-a A --company-b B --fy YYYY-YY [--open]` writes `<SYMBOL A>_vs_<SYMBOL B>_<FY>.html`; downloads what is missing (polite, cached)
 - [x] **Fairness (the brief's "compare intensity metrics fairly"):** totals are shown but never ranked ("Depends on size" and a plain ratio); verdicts only on the per-₹-crore figures (lower is better) and the shares (higher is better, percentage points); ±1% / ±0.5 point is "about the same"
 - [x] Units made the same (one unit and one lakh / crore scale per row, and a real figure is never shown as "0 crore"); a figure with no stated unit, a doubtful figure and a one-digit intensity are shown as filed and not compared; a figure one company did not report says "Not reported" and who (never 0)
 - [x] Warnings: standalone vs consolidated; different industries; no benchmark in the filings. The rules are printed on the page
@@ -294,6 +297,13 @@ Time estimates are rough hours for you working with my help. Core (Phases 0-7) i
 - [x] **Fix:** the Year-on-year button was greyed out for most companies. `hub.py` now makes the missing summaries (every report page) and trends (every company with 2+ years in a row) from the saved filings, offline, and never overwrites one made by `summary.py` / `trends.py` (`workflows/missing_pages.py`; option `--only-existing`)
 - [x] 692 tests pass; samples regenerated (`samples/index.html` + `samples/compare_companies.html`)
 - [ ] *Not built:* a search box (a dropdown of a few companies is enough); making the year-on-year and trend pages automatically for every company (they are made by `summary.py` and `trends.py`)
+
+### Phase 18: One command, `python flow.py`  ✅ DONE
+*Asked for by the user: the root folder had eight `.py` files that only call a `main()`; they wanted one file that runs the whole flow (download, read, clean, write the report) and the other things as parts of it, maybe named "flow".*
+- [x] `flow.py` is the only `.py` file in the root (10 lines). With `--company` and `--fy` it runs the whole flow; `download`, `extract`, `trends`, `summary`, `compare`, `hub` and `samples` are sub-commands; a bare `python flow.py` prints the help listing them
+- [x] Deleted: `main.py`, `download_filings.py`, `extract_report.py`, `trends.py`, `summary.py`, `compare.py`, `hub.py`, `make_samples.py`. `cli/main_cli.py` is now `cli/flow_cli.py` (the flow + the dispatcher); new `cli/samples_cli.py`
+- [x] Error pages, page footers, viewer tooltips, `--help` texts, README, commands.md, demo guide and samples all use the new commands
+- [x] 711 tests pass; the sample pages were rebuilt with the new command; checked in a fresh clone
 ---
 
 ## 6. Milestones

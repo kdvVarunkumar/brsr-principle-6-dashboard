@@ -1,10 +1,10 @@
 """Make the year-on-year summaries and multi-year trends the home page offers, from the filings already on disk.  No internet.
 
-The home page has a "Year-on-year" and a "Multi-year trend" button for every company.  summary.py and trends.py make those pages (and
+The home page has a "Year-on-year" and a "Multi-year trend" button for every company.  `flow.py summary` and `flow.py trends` make those pages (and
 download what they need); this makes the ones that are still missing for the companies of a folder, from the saved filings only.
 
 Two rules keep it honest:
-  - It never overwrites a page that exists: summary.py and trends.py know more (for example that NSE really has no filing for a year).
+  - It never overwrites a page that exists: `flow.py summary` and `flow.py trends` know more (for example that NSE really has no filing for a year).
   - It never guesses.  A summary whose previous-year filing is not saved here says so on the page (it still compares with the previous-year
     column of the newer filing, as every summary does), and a trend covers only years in a row that are all saved.
 """

@@ -1,5 +1,8 @@
 # Learnings
 
+> **Command names changed in Phase 18.** There is now ONE command, `python flow.py` (the whole flow), and every other command is a sub-command of it: `flow.py download`, `extract`, `trends`, `summary`, `compare`, `hub`, `samples`. The commands written in these notes were updated. Older text that names a file such as `main.py`, `trends.py` or `make_samples.py` is history: read it as `flow.py`, `flow.py trends` or `flow.py samples`. `cli/main_cli.py` became `cli/flow_cli.py`.
+
+
 Plain-English notes on every concept we use, written for someone new to programming.
 One section per phase. Each new term is explained the first time it appears.
 **Tip for the interview:** after reading a section, close the file and try to explain it out loud in your own words.
@@ -34,10 +37,10 @@ Before writing any "real" logic, we built the **empty house**: folders, a list o
 
 A **terminal** is a window where you control the computer by typing **commands** instead of clicking. On Windows ours is **PowerShell**. PyCharm has one built in (bottom tool-window called *Terminal*).
 
-- A **command** is an instruction, e.g. `python main.py --help`.
+- A **command** is an instruction, e.g. `python flow.py --help`.
 - A **folder path** is the address of a folder, e.g. `C:\Users\<your name>\PycharmProjects\...`.
-- The terminal always has a **current folder** ("where you are"). Commands like `python main.py` look for `main.py` in that current folder. In PyCharm's terminal it starts in your project folder.
-- An **argument / option** is extra information after a command: in `python main.py --company "Tata Steel"`, `--company` is an option and `"Tata Steel"` is its value. Quotes are needed when the value has spaces.
+- The terminal always has a **current folder** ("where you are"). Commands like `python flow.py` look for `main.py` in that current folder. In PyCharm's terminal it starts in your project folder.
+- An **argument / option** is extra information after a command: in `python flow.py --company "Tata Steel"`, `--company` is an option and `"Tata Steel"` is its value. Quotes are needed when the value has spaces.
 
 ---
 
@@ -199,7 +202,7 @@ BRSR Principle 6 .../
 └── .idea/             PyCharm settings (not shared)
 ```
 
-**A change from the plan:** `plan.md` originally put the code in `src/brsr_p6/`. We put it directly in `brsr_p6/` instead. Reason: this way `python main.py` and `pytest` just work, with no extra "install your own project" step. Simpler for you and for the reviewer.
+**A change from the plan:** `plan.md` originally put the code in `src/brsr_p6/`. We put it directly in `brsr_p6/` instead. Reason: this way `python flow.py` and `pytest` just work, with no extra "install your own project" step. Simpler for you and for the reviewer.
 
 ### `main.py`
 The file you run. It does one thing: call `main()` from `brsr_p6.cli`. We keep it tiny so the real logic lives in the package, where it can be tested and reused.
@@ -210,7 +213,7 @@ The file you run. It does one thing: call `main()` from `brsr_p6.cli`. We keep i
 - That is why `main.py` can write `from brsr_p6.cli import main`: "from the package `brsr_p6`, module `cli`, bring in the function `main`".
 
 ### `brsr_p6/cli/main_cli.py`: "CLI" = Command-Line Interface
-It reads what the user typed after `python main.py`. It uses `argparse`, a tool that comes with Python (nothing to install). Walk-through:
+It reads what the user typed after `python flow.py`. It uses `argparse`, a tool that comes with Python (nothing to install). Walk-through:
 
 - `build_parser()` describes the options we accept: `--company` and `--fy`, both `required=True`. `argparse` then gives us `--help` and clear error messages for free.
 - `main(argv=None)`:
@@ -260,8 +263,8 @@ Words in the tests:
 | Check | Result |
 |---|---|
 | PyCharm project interpreter is the project's `.venv` (Python 3.14.2) | OK |
-| `python main.py --help` shows usage | OK |
-| `python main.py --company "Tata Steel" --fy 2023-24` | OK: prints inputs, exit code 0 |
+| `python flow.py --help` shows usage | OK |
+| `python flow.py --company "Tata Steel" --fy 2023-24` | OK: prints inputs, exit code 0 |
 | Missing `--fy` | OK: clear error, exit code 2 |
 | `pytest` | OK: 3 passed |
 | **Clean-checkout test:** copy only the project files to a new folder, build a brand-new `.venv`, `pip install -r requirements.txt`, then run `pytest` and `main.py` | OK: same 13 packages and versions, 3 passed, program runs |
@@ -279,8 +282,8 @@ Words in the tests:
 
 ## 15. Try it yourself (10 minutes)
 
-1. In PyCharm's terminal run `python main.py --help`. Read every line and match it to `cli.py`.
-2. Run `python main.py --company "Tata Steel"` (no `--fy`). What does the error say? What is the exit code? (`echo $LASTEXITCODE`)
+1. In PyCharm's terminal run `python flow.py --help`. Read every line and match it to `cli.py`.
+2. Run `python flow.py --company "Tata Steel"` (no `--fy`). What does the error say? What is the exit code? (`echo $LASTEXITCODE`)
 3. Open `tests/cli/test_cli.py`, change `"2023-24"` in the first test to `"2024-25"`, run `pytest`, read the red failure message, then change it back and re-run.
 4. Open `.gitignore` and `requirements.txt` and say each line out loud in plain English.
 
@@ -501,11 +504,11 @@ During Phase 1 *I* fetched files with throwaway scripts that lived outside your 
 ## 3a.2 How to use it
 
 ```powershell
-python download_filings.py --company Reliance                      # every year NSE has
-python download_filings.py --company "Tata Steel" --fy 2023-24      # one year
-python download_filings.py --company TATASTEEL --with-pdf           # also the PDF (optional)
-python download_filings.py --company Reliance --refresh             # ask NSE for a fresh filing list
-python download_filings.py --help
+python flow.py download --company Reliance                      # every year NSE has
+python flow.py download --company "Tata Steel" --fy 2023-24      # one year
+python flow.py download --company TATASTEEL --with-pdf           # also the PDF (optional)
+python flow.py download --company Reliance --refresh             # ask NSE for a fresh filing list
+python flow.py download --help
 ```
 Files land in `data/raw/<SYMBOL>/<FY>/`. A second run reuses what is on disk, so it sends **no** requests (the last line of the summary says how many it sent).
 
@@ -584,7 +587,7 @@ Run all: `pytest` (expect 72 passed).
 
 ## 3a.9 Try it yourself
 
-1. `python download_filings.py --company Infosys` then open `data\raw\INFY` and look at the folders and `filing.json`.
+1. `python flow.py download --company Infosys` then open `data\raw\INFY` and look at the folders and `filing.json`.
 2. Run the same command again and read the last line.
 3. Try a company of your own choice. If it says several companies match, rerun with the symbol it suggests.
 4. Open `brsr_p6/download/nse_client.py` and find where the 3-second wait happens (`_wait_turn`).
@@ -622,9 +625,9 @@ raw XML file ──► read ──► fill SEBI template rows ──► clean + 
 ## 2.2 How to run it
 
 ```powershell
-python extract_report.py --company Reliance --fy 2023-24                     # whole report, printed + saved
-python extract_report.py --company TATASTEEL --fy 2025-26 --questions E1,E6  # only some questions
-python extract_report.py --company Infosys --fy 2021-22 --quiet              # only save the JSON
+python flow.py extract --company Reliance --fy 2023-24                     # whole report, printed + saved
+python flow.py extract --company TATASTEEL --fy 2025-26 --questions E1,E6  # only some questions
+python flow.py extract --company Infosys --fy 2021-22 --quiet              # only save the JSON
 ```
 It downloads the filing first if it is not on disk (using the Phase 3a code), then prints the Principle 6 report in SEBI's order and saves `data/parsed/<SYMBOL>/<FY>.json`.
 
@@ -727,7 +730,7 @@ Your decision from earlier is built in: **clean what we can, report what we cann
 
 ## 2.10 Try it yourself
 
-1. `python extract_report.py --company Reliance --fy 2023-24 --questions E1,E3` and compare with the previous-year numbers printed in the FY 2022-23 run.
+1. `python flow.py extract --company Reliance --fy 2023-24 --questions E1,E3` and compare with the previous-year numbers printed in the FY 2022-23 run.
 2. Open `data\parsed\RELIANCE\2023-24.json` in PyCharm. Find `E1.electricity` and read each field.
 3. Run the same for `--company Infosys --fy 2021-22` and read the top warning and the "(unit not stated)" notes.
 4. Open `brsr_p6/core/sebi_template.py` and find the text of question E6.
@@ -758,7 +761,7 @@ Your decision from earlier is built in: **clean what we can, report what we cann
 One command now produces a real web page:
 
 ```powershell
-python main.py --company "Tata Steel" --fy 2025-26 --open      # writes output\TATASTEEL_2025-26.html and opens it
+python flow.py --company "Tata Steel" --fy 2025-26 --open      # writes output\TATASTEEL_2025-26.html and opens it
 ```
 The page has a header with the key facts (reporting boundary, filing date, form edition), two **tabs** (SEBI-format report / Dashboard; the dashboard is filled in Phase 6), and the Principle 6 report laid out like SEBI's form: same question numbers, same wording, same tables and row labels, current and previous year side by side.
 
@@ -845,9 +848,9 @@ Lesson: the sanity check we wrote to protect readers from *company* mistakes als
 
 ## 5.10 Try it yourself
 
-1. `python main.py --company Reliance --fy 2023-24 --open` and compare Essential 1 with the earlier text printout.
+1. `python flow.py --company Reliance --fy 2023-24 --open` and compare Essential 1 with the earlier text printout.
 2. Click the ⚠ marks and footnote numbers; they jump to the note under the table.
-3. Open the Infosys FY 2021-22 page (`python main.py --company INFY --fy 2021-22 --open`) and find the amber "About this filing" box and the "(unit not stated)" figures.
+3. Open the Infosys FY 2021-22 page (`python flow.py --company INFY --fy 2021-22 --open`) and find the amber "About this filing" box and the "(unit not stated)" figures.
 4. Shrink the browser window to phone width: the tables should stay on screen.
 5. Open `brsr_p6/rendering/templates/sebi.html` and find the macro `value_table`; change a heading word, regenerate, and see it change.
 6. Open `brsr_p6/rendering/templates/style.css` and change `--accent` to another colour; regenerate.
@@ -970,11 +973,11 @@ What it is: ...    Why it matters: ...                          <- always visibl
 
 ## 6.9 Try it yourself
 
-1. `python main.py --company "Reliance" --fy 2023-24 --open`. The Dashboard opens first; click **SEBI-format report** for the form.
+1. `python flow.py --company "Reliance" --fy 2023-24 --open`. The Dashboard opens first; click **SEBI-format report** for the form.
 2. Open `design/dashboard_mockup.html` next to the real page. Which numbers are identical?
-3. `python main.py --company "Tata Steel" --fy 2025-26 --open` and read the **Climate** section: dashed amber cards, "Can't compare", and a headline that refuses to quote a doubtful figure.
-4. `python main.py --company "HDFC Bank" --fy 2022-23 --open`: an older filing. Find "unit not stated", "Last year's figure was 0", and the air pollutants "reported as 0 in both years".
-5. `python main.py --company "Wipro" --fy 2025-26 --open`: its energy is filed in megajoules; the page shows it in GJ marked "unit changed by us". Open **Fine print** to see the original.
+3. `python flow.py --company "Tata Steel" --fy 2025-26 --open` and read the **Climate** section: dashed amber cards, "Can't compare", and a headline that refuses to quote a doubtful figure.
+4. `python flow.py --company "HDFC Bank" --fy 2022-23 --open`: an older filing. Find "unit not stated", "Last year's figure was 0", and the air pollutants "reported as 0 in both years".
+5. `python flow.py --company "Wipro" --fy 2025-26 --open`: its energy is filed in megajoules; the page shows it in GJ marked "unit changed by us". Open **Fine print** to see the original.
 6. Open `brsr_p6/views/metric_info.py`, change the *Why it matters* line of "Water taken in", regenerate, and see it change.
 7. Open `brsr_p6/analysis/comparison.py` and change `SAME_WITHIN_PERCENT` from `1.0` to `5.0`; regenerate Reliance and watch verdicts turn into "About the same". Change it back.
 8. **The two-minute test:** show the page to someone who knows nothing about ESG. Ask them to explain the Water section back to you. Anything they cannot explain is a sentence to rewrite.
@@ -1005,8 +1008,8 @@ What it is: ...    Why it matters: ...                          <- always visibl
 
 | New | What it does |
 |---|---|
-| **Error pages** | When a command fails, `python main.py ...` still writes an HTML page (`output/error_<company>_<year>.html`) that explains what went wrong, what you typed, what to try, and gives commands you can copy |
-| **`samples/`** | 5 report pages (Tata Steel, Reliance, Wipro, Infosys, HDFC Bank) and 4 error pages, all made by one command: `python make_samples.py` |
+| **Error pages** | When a command fails, `python flow.py ...` still writes an HTML page (`output/error_<company>_<year>.html`) that explains what went wrong, what you typed, what to try, and gives commands you can copy |
+| **`samples/`** | 5 report pages (Tata Steel, Reliance, Wipro, Infosys, HDFC Bank) and 4 error pages, all made by one command: `python flow.py samples` |
 | **Offline fallback** | If NSE cannot be reached, a company you downloaded before still works from the saved filing list |
 | **README v1** | Setup, run commands, inputs to try, what is completed (honestly), how the data is extracted, error handling, known limitations, AI tools used, design note |
 | **A clean-checkout test** | A brand-new folder + brand-new virtual environment + `pip install` + one command, to prove the project runs from scratch |
@@ -1056,14 +1059,14 @@ if NSE cannot be reached and *any* saved list exists, we use it and say so ("the
 
 ## 7.5 The samples, and why a test guards them
 
-`python make_samples.py` rebuilds everything in `samples/`, including `samples/README.md`, from one list in `brsr_p6/workflows/samples.py`. The page of a company is built
+`python flow.py samples` rebuilds everything in `samples/`, including `samples/README.md`, from one list in `brsr_p6/workflows/samples.py`. The page of a company is built
 from the filing already on disk (no internet); only a filing that is missing is downloaded.
 
 The error samples are made by **really triggering the errors** with offline inputs (an unknown name, the year 2019-20, a real saved filing list asked for FY 2021-22,
 and a deliberately cut-off XML file). So they show exactly what a user would see.
 
 **The test `committed_report_pages_are_up_to_date`** rebuilds every sample page and compares it, character for character, with the committed file. Twice in this
-project we looked at a stale page by mistake; now a stale sample makes the test fail until someone runs `python make_samples.py`.
+project we looked at a stale page by mistake; now a stale sample makes the test fail until someone runs `python flow.py samples`.
 
 ## 7.6 The README is part of the product
 
@@ -1076,7 +1079,7 @@ Honest limits build more trust than a long list of features.
 1. Copied the project to a new folder **without** `.venv`, `data/`, `output/` and caches (what a fresh clone would contain).
 2. `python -m venv .venv` and `pip install -r requirements.txt` in it.
 3. `pytest`: **324 passed, 16 skipped** (the skipped ones need downloaded filings, so they skip politely).
-4. `python main.py --company "ITC" --fy 2024-25`: downloaded from NSE and wrote the page in about **11 seconds**.
+4. `python flow.py --company "ITC" --fy 2024-25`: downloaded from NSE and wrote the page in about **11 seconds**.
 
 ## 7.8 New Python and tooling ideas
 
@@ -1098,11 +1101,11 @@ Honest limits build more trust than a long list of features.
 
 ## 7.10 Try it yourself
 
-1. `python main.py --company "Tata Steel" --fy 2021-22 --open`: read the page, copy one of the commands, run it.
-2. `python main.py --company "Xyzzy Quux" --fy 2023-24 --open` and `... --fy banana --open`: compare the two pages.
-3. `python main.py --company "Tata" --fy 2024-25 --open` (needs the internet): an ambiguous name, one command per matching company.
+1. `python flow.py --company "Tata Steel" --fy 2021-22 --open`: read the page, copy one of the commands, run it.
+2. `python flow.py --company "Xyzzy Quux" --fy 2023-24 --open` and `... --fy banana --open`: compare the two pages.
+3. `python flow.py --company "Tata" --fy 2024-25 --open` (needs the internet): an ambiguous name, one command per matching company.
 4. Open `samples/README.md`, then open two sample pages. Which sample would you show first to an interviewer, and why?
-5. Open `brsr_p6/views/error_view.py`, change a hint sentence, run `python make_samples.py`, and look at the sample page. Then run `pytest -q`: which test would
+5. Open `brsr_p6/views/error_view.py`, change a hint sentence, run `python flow.py samples`, and look at the sample page. Then run `pytest -q`: which test would
    fail if you had *not* re-run `make_samples.py`? (Hint: `test_committed_error_pages_are_up_to_date`.)
 6. Switch your internet off and run a company you downloaded before. Read the console line about the saved filing list.
 7. Add `--debug` to a command that you know fails on purpose. Does it behave differently for a *known* error and for a bug? (Try it with a test that raises `KeyError`.)
@@ -1177,7 +1180,7 @@ Common problems: *"git is not recognized"* (close and reopen PyCharm so it sees 
 1. `git log --oneline` (the story of the project in 4 lines) and `git log --stat -1` (what the last commit changed).
 2. `git status`: it should say "nothing to commit, working tree clean". Edit one word in `README.md`, run `git status` again, then `git diff` to see the change; undo it with `git restore README.md`.
 3. `git ls-files data` shows which data files are tracked; `git check-ignore -v data/raw/ITC/2024-25/filing.json` shows *which line of `.gitignore`* ignores a file.
-4. Make a change, run `python make_samples.py`, then `pytest`: which test notices if a sample page was not regenerated?
+4. Make a change, run `python flow.py samples`, then `pytest`: which test notices if a sample page was not regenerated?
 
 ## 11.6 Interview self-check
 
@@ -1197,7 +1200,7 @@ Common problems: *"git is not recognized"* (close and reopen PyCharm so it sees 
 ## 8.1 What we built
 
 ```powershell
-python trends.py --company "Tata Steel" --from 2021-22 --to 2025-26 --open
+python flow.py trends --company "Tata Steel" --from 2021-22 --to 2025-26 --open
 ```
 One page with a **column per financial year**: the five topics (energy, climate, water, air, waste) with a mini bar per year and a trend verdict, then **every figure of SEBI's Principle 6 tables**
 year by year, then the list of figures that later filings changed. `--from` and `--to` are optional (default: FY 2021-22 up to the newest filing NSE has).
@@ -1256,9 +1259,9 @@ Plus small changes elsewhere: `compare(..., earlier="FY 2023-24")` (so the wordi
 
 ## 8.8 Try it yourself
 
-1. `python trends.py --company "Tata Steel" --from 2021-22 --to 2025-26 --open`. Find: the shaded FY 2021-22 column, the purple *Consolidated* → blue *Standalone* chips, a ⟲ mark (hover it), the "Can't compare" in Climate.
+1. `python flow.py trends --company "Tata Steel" --from 2021-22 --to 2025-26 --open`. Find: the shaded FY 2021-22 column, the purple *Consolidated* → blue *Standalone* chips, a ⟲ mark (hover it), the "Can't compare" in Climate.
 2. Run the same for Wipro `--from 2023-24 --to 2025-26`: which two years does each verdict compare, and why?
-3. `python trends.py --company "Reliance" --from 2025-26 --to 2021-22` and read the error page.
+3. `python flow.py trends --company "Reliance" --from 2025-26 --to 2021-22` and read the error page.
 4. Open `brsr_p6/analysis/trend_model.py` and change `RESTATEMENT_TOLERANCE` from `0.005` to `0.05`; regenerate Tata Steel: how many figures are still marked as restated? Change it back and run `pytest`.
 5. In `tests/analysis/test_trend_model.py` find the test about Wipro's "1,000 times" energy. What would go wrong if we flagged it as a restatement?
 6. Open the page on a phone-width window: where does the "swipe sideways" hint appear?
@@ -1281,7 +1284,7 @@ Plus small changes elsewhere: `compare(..., earlier="FY 2023-24")` (so the wordi
 ## 9.1 What we built
 
 ```powershell
-python summary.py --company "Tata Steel" --open
+python flow.py summary --company "Tata Steel" --open
 ```
 One page that answers one question: **since last year, which three figures improved most and which three got worse?** You only give the company; the newest year NSE has is found by itself
 (`--fy` is optional). Each of the six entries has a plain headline ("SOx (sulphur oxides) was 45.7% more than last year"), last year's and this year's number, which way is better,
@@ -1355,9 +1358,9 @@ and `summary` error pages. Because the cards come from `build_card`, a figure ca
 
 ## 9.7 Try it yourself
 
-1. `python summary.py --company "Tata Steel" --open`. Read "How we decide what is better", then find the figure that was **not** ranked because its per-sales figure was (Total energy used), and the sentence that still tells you it rose 6.2%.
-2. `python summary.py --company "Wipro" --open`: why is the "biggest setbacks" box empty, and does the page still say something useful there?
-3. `python summary.py --company "Reliance" --fy 2022-23 --open`, then read the last box. Then try `--fy 2021-22` and read the error page.
+1. `python flow.py summary --company "Tata Steel" --open`. Read "How we decide what is better", then find the figure that was **not** ranked because its per-sales figure was (Total energy used), and the sentence that still tells you it rose 6.2%.
+2. `python flow.py summary --company "Wipro" --open`: why is the "biggest setbacks" box empty, and does the page still say something useful there?
+3. `python flow.py summary --company "Reliance" --fy 2022-23 --open`, then read the last box. Then try `--fy 2021-22` and read the error page.
 4. In `tests/views/test_summary_view.py` read `test_a_share_is_ranked_by_percentage_points_not_by_percent` and `demo_report()` in `tests/helpers/summary_samples.py`. Why were 10% to 25% and a two-thirds fall in waste chosen as the example numbers? What would the order be if shares were ranked in percent?
 5. Change `TOP = 3` to `2` in `brsr_p6/views/summary_view.py` and run `pytest tests/views tests/rendering -q`. Which tests notice, and why is that a good thing? Change it back.
 6. Open `brsr_p6/analysis/comparison.py` and raise `SAME_WITHIN_PERCENT` from 1 to 5. Re-run Tata Steel: which figure moves into "about the same"? (Then run `pytest`: the dashboard tests notice too. Change it back.)
@@ -1419,7 +1422,7 @@ This is a nice example of "code can check code".
 3. **`git mv`, not copy-and-delete.** Git then records a *rename* (81 of them), so `git log --follow <file>` still shows a file's whole history.
 4. **A script for the imports.** About 70 files import from `brsr_p6`. Editing them by hand would have meant typos, so a script read each file's syntax tree and rewrote only the import statements (and sorted them the way the project already did). A find-and-replace would have broken multi-line imports.
 5. **The tests were the safety net.** All 467 tests had to pass, and the *freshness* tests were the strongest proof: they rebuild every sample page and compare it byte for byte with the committed one. After the move, `make_samples.py` changed **nothing**.
-6. **Run the real commands, from a different folder.** Tests do not prove `python main.py` works. I ran all five entry points, once from another working directory.
+6. **Run the real commands, from a different folder.** Tests do not prove `python flow.py` works. I ran all five entry points, once from another working directory.
 
 ## 12.5 What bites when you move files (all four happened here)
 
@@ -1437,7 +1440,7 @@ One judgment call worth knowing: `friendly.py` ("4.7% less than last year") sits
 3. `git log --follow --oneline brsr_p6/core/units.py`: the history reaches back before the move.
 4. `pytest tests/views -q` runs only the tests of one layer. Which folder would you run after changing `comparison.py`?
 5. Open `brsr_p6/core/paths.py`. If you moved it into `brsr_p6/core/config/paths.py`, which single line must change, and why?
-6. Run `python summary.py --company "Wipro" --output-dir C:\Temp` from a different folder (use the full path to `summary.py`). Why does it still find the filings?
+6. Run `python flow.py summary --company "Wipro" --output-dir C:\Temp` from a different folder (use the full path to `summary.py`). Why does it still find the filings?
 
 ## 12.7 Interview self-check
 
@@ -1513,7 +1516,7 @@ Tata Steel's Scope 1 is flagged "doubtful" because it looks about a million time
 
 ## 13.7 Try it yourself
 
-1. `python extract_report.py --company "Tata Steel" --fy 2025-26 --questions E6 --trace` and read the `↳` lines under Scope 1.
+1. `python flow.py extract --company "Tata Steel" --fy 2025-26 --questions E6 --trace` and read the `↳` lines under Scope 1.
 2. Open the dashboard for Tata Steel, open the Fine print of "Energy from renewable sources". Which two elements is it built from, and why are there two lines per year?
 3. In the SEBI tab, scroll to "Where every number comes from" and open *Essential 5*. Find a row that says "Unit changed by us". What does the line show next to it?
 4. Open the link in the page header. In the XML, search for `TotalScope1Emissions`. Is the value the same as on the page?
@@ -1543,7 +1546,7 @@ The brief asks for *a page* per request; nothing forbids a **way to browse** the
 ## 14.2 What we built
 
 ```powershell
-python hub.py --open
+python flow.py hub --open
 ```
 It reads every `.html` file in `output/` and writes one more, `index.html`. In that page:
 - a **search box**: type `tata`, `2025-26`, `trend` or `error` and the list narrows;
@@ -1584,11 +1587,11 @@ pytest cannot run a browser. We tested two ways:
 
 ## 14.7 Try it yourself
 
-1. `python hub.py --open`, type `tata`, press `Enter`, then press `Next`.
+1. `python flow.py hub --open`, type `tata`, press `Enter`, then press `Next`.
 2. Open `samples/index.html` and choose an *Error pages* entry. How is its label different from the others, and why?
 3. Open the address `output/index.html?q=wipro#WIPRO_2025-26` (use your own full path with `file:///`). What do you see?
-4. Run `python hub.py --link` and compare the size of `output/index.html` with before. Why is it so much smaller, and what do you lose?
-5. In `brsr_p6/views/hub_view.py` swap two names in `KINDS` and run `pytest` **before** regenerating anything: which tests fail, and what does each one protect? Then run `python make_samples.py`, `pytest` again, and look at the new order in the dropdown.
+4. Run `python flow.py hub --link` and compare the size of `output/index.html` with before. Why is it so much smaller, and what do you lose?
+5. In `brsr_p6/views/hub_view.py` swap two names in `KINDS` and run `pytest` **before** regenerating anything: which tests fail, and what does each one protect? Then run `python flow.py samples`, `pytest` again, and look at the new order in the dropdown.
 6. Why does `workflows/hub.py` read the files but `views/hub_view.py` only receive their text? (Think about testing.)
 
 ## 14.8 Interview self-check
@@ -1644,7 +1647,7 @@ The summary page already prefers the per-sales figure. Making the dashboard foll
 
 ## 15.6 Try it yourself
 
-1. `python summary.py --company "ICICI Bank"`: find the waste-per-sales row in "Not ranked, and why". What reason does it give, and which figure is ranked instead?
+1. `python flow.py summary --company "ICICI Bank"`: find the waste-per-sales row in "Not ranked, and why". What reason does it give, and which figure is ranked instead?
 2. Open `samples/HDFCBANK_2022-23.html`, Climate section, the card "Greenhouse gases per unit of sales". What does it say now, and what did it say before this phase (see `git log -p`)?
 3. In `tests/extraction/test_coarse_intensity.py` find the test for `0.20`. Why does it count as two digits but `1200` as two as well, not four?
 4. Run `python -c "from brsr_p6.extraction.values import significant_digits as s; print(s('0.0000000004'), s('0.0000004786'), s('4e-10'))"`.
@@ -1671,9 +1674,9 @@ The brief says *compare intensity metrics fairly, show the unit used, and mark f
 ## 16.2 What we built
 
 ```powershell
-python compare.py --company-a "Tata Steel" --company-b "Wipro" --fy 2025-26 --open
+python flow.py compare --company-a "Tata Steel" --company-b "Wipro" --fy 2025-26 --open
 ```
-and, on the index page (`python hub.py --open`), a picker: **year, then Company A, then Company B**. It is a set of dropdowns of its own: the comparisons are **not** in the main report dropdown or its search box (see 16.7).
+and, on the index page (`python flow.py hub --open`), a picker: **year, then Company A, then Company B**. It is a set of dropdowns of its own: the comparisons are **not** in the main report dropdown or its search box (see 16.7).
 
 The page is `views/compare_view.py` (all decisions) + `templates/compare.html` (only prints), exactly like the other pages.
 
@@ -1709,11 +1712,11 @@ The picker's rules (year first; only the companies that have a report for that y
 
 ## 16.6 Try it yourself
 
-1. `python compare.py --company-a "Reliance" --company-b "Tata Steel" --fy 2023-24 --open`. Which rows say "Depends on size"? Which say who is lower?
+1. `python flow.py compare --company-a "Reliance" --company-b "Tata Steel" --fy 2023-24 --open`. Which rows say "Depends on size"? Which say who is lower?
 2. Open `samples/HDFCBANK_vs_RELIANCE_2022-23.html`. Why do three of its fair rows say "Can't compare"? (Hint: look at the unit under the bank's number, and at what Reliance filed.)
-3. `python compare.py --company-a Wipro --company-b WIPRO --fy 2025-26`. Which error is it, and where is it caught: before or after any download? Then try `"Tata Steel"` and `TATASTEEL`: what changes?
+3. `python flow.py compare --company-a Wipro --company-b WIPRO --fy 2025-26`. Which error is it, and where is it caught: before or after any download? Then try `"Tata Steel"` and `TATASTEEL`: what changes?
 4. In `views/compare_view.py` change `MIN_SHARED_SCALE` to `0`. Which test fails, and what would the page have shown?
-5. Run `python hub.py --no-compare` and `python hub.py`. How many pages does each index hold, and why?
+5. Run `python flow.py hub --no-compare` and `python flow.py hub`. How many pages does each index hold, and why?
 
 ## 16.7 A follow-up: comparisons get their own dropdowns
 
@@ -1791,9 +1794,9 @@ Two details that make it feel finished:
 
 ## 17.5 Try it yourself
 
-1. `python hub.py --open`. Choose a company with no summary page and hover the greyed *Year-on-year* button. What does the tooltip say? Run that command and run `hub.py` again.
+1. `python flow.py hub --open`. Choose a company with no summary page and hover the greyed *Year-on-year* button. What does the tooltip say? Run that command and run `hub.py` again.
 2. Open `output/compare_companies.html`. Choose Company A = Tata Steel, Company B = Reliance. Does it keep that order? (Hint: the file is called `RELIANCE_vs_TATASTEEL...`; find the check in `compare_hub.html` that stops the dropdowns from swapping.)
-3. Delete every `*_vs_*.html` file from a copy of `output/` and run `python hub.py --no-compare`. What happens to the button, and to `compare_companies.html`?
+3. Delete every `*_vs_*.html` file from a copy of `output/` and run `python flow.py hub --no-compare`. What happens to the button, and to `compare_companies.html`?
 4. Move only `index.html` to the desktop and press the Compare button. Why does it fail, and why was it a good trade for not embedding everything twice?
 
 ## 17.6 Interview self-check
@@ -1803,3 +1806,72 @@ Two details that make it feel finished:
 3. What does a greyed-out *Year-on-year* button tell the user, and why is that better than hiding it?
 4. Which part of the code knows what "a company" is on the home page? Which part only prints?
 5. What did you check in a real browser that the unit tests cannot check?
+
+---
+
+# Phase 18: One command, `python flow.py`
+
+## 18.1 What was wrong
+
+The root folder had eight `.py` files: `main.py`, `download_filings.py`, `extract_report.py`, `trends.py`, `summary.py`, `compare.py`, `hub.py`, `make_samples.py`. Open any of them and you see about ten lines: `from brsr_p6.cli.xxx_cli import main` and `sys.exit(main())`. They contained **no logic**. They existed only so you could type `python trends.py`.
+
+The user's question was fair: why eight files that only call a `main()`? A person looking at the project sees eight things in the root and has to guess which one is "the program".
+
+## 18.2 What it is now
+
+```
+python flow.py --company "Tata Steel" --fy 2025-26 --open     the WHOLE flow: download -> read -> clean and check -> write the page
+python flow.py download --company "Tata Steel"                 only the first step
+python flow.py extract  --company "Tata Steel" --fy 2025-26    download if needed, read, clean, print as text, save JSON
+python flow.py trends | summary | compare | hub | samples ...  the extras and the tools around them
+```
+
+One file in the root. If you type a company and a year, you get the whole flow. If the first word is the name of a step or an extra, that command runs. Tools you already know work this way: `git commit`, `git push`; `pip install`, `pip list`.
+
+## 18.3 How the code does it (about 20 lines that matter)
+
+In `brsr_p6/cli/flow_cli.py`:
+
+```python
+COMMANDS = {"download": (download_cli.main, "..."), "extract": (...), "trends": (...), ...}
+
+def main(argv=None):
+    argv = list(sys.argv[1:] if argv is None else argv)
+    if argv and argv[0] in COMMANDS:             # the FIRST word is a command name
+        return COMMANDS[argv[0]][0](argv[1:])    # hand the rest of the line to that command
+    return run_flow(argv or ["--help"])          # otherwise it is the flow itself
+```
+
+- `COMMANDS` is a **dictionary**: a name on the left, the function to run on the right. Adding a new command is one line.
+- Each sub-command is **unchanged**: it still has its own argument parser (its own `--help`), only its `prog` now says `flow.py trends` instead of `trends.py`.
+- Only the **first** word counts. So `python flow.py --company trends --fy 2023-24` is still a company called "trends" (a test checks this).
+- A bare `python flow.py` prints the help, and the help ends with the list of the other commands.
+
+## 18.4 What did NOT change (and why that is the point)
+
+All the real code stayed where it was: `download/`, `parsing/`, `extraction/`, `views/`, `rendering/`, `workflows/`. The layer rule and its test still pass. Only the *front door* changed. That is what a good layering buys you: the user could ask for a new front door and it was a small change, not a rewrite.
+
+Why `workflows/pipeline.py` keeps its name: it is the code that puts the steps in order, and "pipeline" describes that well. The *command* is called `flow` because that is what the user does with it. The chain to remember: `flow.py` (type this) -> `cli/flow_cli.py` (reads what you typed) -> `workflows/pipeline.py` (does the steps in order) -> `download` -> `parsing` -> `extraction` -> `views` -> `rendering`.
+
+## 18.5 The checklist I used for a rename that touches many files
+
+1. **Find every place that mentions the old names** (`grep` for `main.py`, `trends.py`, ...): code, docstrings, the words on the error pages, the buttons' tooltips, tests, docs, the committed sample pages.
+2. **Change the code first, then run the tests.** They told me exactly which sentences still used the old names (18 failures).
+3. **Rewrite the commands in the documents with a small script**, but only whole command lines (`python trends.py` becomes `python flow.py trends`). A bare file name in a sentence can mean a real module (`workflows/compare.py` stays), so those were checked by hand.
+4. **Rebuild the committed samples**: they contain the commands on the error pages, and a test fails if they are out of date.
+5. **Look at the result as the user would**: `python flow.py` and `python flow.py hub --help`.
+
+## 18.6 Try it yourself
+
+1. `python flow.py` with nothing after it. What do you see at the bottom?
+2. `python flow.py trends --help` and `python flow.py hub --help`. Which word does each say after `usage:`?
+3. In `flow_cli.py`, add a command to `COMMANDS` that prints "hello" (give it a tiny function). What are the two things you must write?
+4. `python flow.py --company trends --fy 2023-24`. Is that the trends command? Why not?
+5. Open an error page in `samples/` and read the suggested command. Which command does it suggest?
+
+## 18.7 Interview self-check
+
+1. Why is there only one file in the root? What would you say if asked "why not eight small files?"
+2. How does `flow.py` decide between the flow and a sub-command?
+3. What stayed the same, and why was that easy?
+4. How did you make sure no old command name was left behind?

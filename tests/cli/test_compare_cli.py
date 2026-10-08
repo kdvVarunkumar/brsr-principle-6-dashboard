@@ -1,4 +1,4 @@
-"""Tests for the compare.py command (brsr_p6/cli/compare_cli.py)."""
+"""Tests for the `flow.py compare` command (brsr_p6/cli/compare_cli.py)."""
 
 from pathlib import Path
 
@@ -80,15 +80,15 @@ def test_a_missing_filing_offers_compare_commands_for_the_years_nse_has(monkeypa
     monkeypatch.setattr(compare_cli, "generate_comparison_page", fail_with(error))
     main(["--company-a", "Tata Steel", "--company-b", "Wipro", "--fy", "2021-22", "--output-dir", str(tmp_path)])
     page = (tmp_path / "error_Tata_Steel_vs_Wipro_2021-22.html").read_text(encoding="utf-8")
-    assert 'python compare.py --company-a &#34;WIPRO&#34; --company-b &#34;&lt;the other company&gt;&#34; --fy 2022-23' in page
-    assert "python main.py --company" not in page                        # the suggestion uses the command that failed, not main.py
+    assert 'python flow.py compare --company-a &#34;WIPRO&#34; --company-b &#34;&lt;the other company&gt;&#34; --fy 2022-23' in page
+    assert "python flow.py --company" not in page                        # the suggestion uses the command that failed, not the plain flow
 
 
 def test_asking_for_the_same_company_twice_has_its_own_page(monkeypatch, capsys, tmp_path):
     monkeypatch.setattr(compare_cli, "generate_comparison_page", fail_with(SameCompany("'Wipro' and 'Wipro' are the same company.")))
     assert main(["--company-a", "Wipro", "--company-b", "Wipro", "--fy", "2025-26", "--output-dir", str(tmp_path)]) == 1
     page = (tmp_path / "error_Wipro_vs_Wipro_2025-26.html").read_text(encoding="utf-8")
-    assert "A comparison needs two different companies" in page and "trends.py" in page
+    assert "A comparison needs two different companies" in page and "flow.py trends" in page
 
 
 def test_an_unexpected_bug_is_explained_on_a_page_without_a_traceback(monkeypatch, capsys, tmp_path):

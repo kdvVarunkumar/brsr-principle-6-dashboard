@@ -1,6 +1,6 @@
-"""Command-line interface of summary.py: what got better and what got worse since last year, as one HTML page.
+"""Command-line interface of `python flow.py summary`: what got better and what got worse since last year, as one HTML page.
 
-Like main.py, a failure still writes a page (output/error_<company>_<year>.html) so the reason appears where the summary would have been.
+Like the flow, a failure still writes a page (output/error_<company>_<year>.html) so the reason appears where the summary would have been.
 """
 
 import argparse
@@ -16,13 +16,13 @@ from brsr_p6.workflows.pipeline import generate_summary_page
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="summary.py",
+        prog="flow.py summary",
         description=(
             "Show the 3 biggest improvements and the 3 biggest setbacks in a listed Indian company's BRSR Principle 6 (environment) "
             "figures, compared with the year before, each explained in plain English. Without --fy the newest filing on NSE is used. "
             "Filings are downloaded from NSE if needed."
         ),
-        epilog='Example: python summary.py --company "Tata Steel" --open',
+        epilog='Example: python flow.py summary --company "Tata Steel" --open',
     )
     parser.add_argument("--company", required=True, help='Company name or NSE symbol, e.g. "Tata Steel" or TATASTEEL')
     parser.add_argument("--fy", help="Financial year to summarise, e.g. 2025-26 (default: the newest filing NSE has)")

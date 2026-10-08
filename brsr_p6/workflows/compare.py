@@ -1,6 +1,6 @@
 """Compare two companies for one financial year: load both filings, write one page.  The part of Extension 3 that reads files.
 
-Also builds a comparison for EVERY pair of companies that have a report page for the same year in a folder (used by hub.py, so the
+Also builds a comparison for EVERY pair of companies that have a report page for the same year in a folder (used by `flow.py hub`, so the
 index page can offer "compare company A with company B in FY ...").  That reads only filings already on disk: no internet.
 """
 

@@ -1,6 +1,6 @@
 # Sample pages
 
-Open any file in a web browser. They are made by `python make_samples.py` (do not edit them by hand).
+Open any file in a web browser. They are made by `python flow.py samples` (do not edit them by hand).
 
 **Easiest: open [index.html](index.html).** Choose a company and a year and its report appears; the *Compare two companies* button opens [compare_companies.html](compare_companies.html), where you choose a year and two companies (both open the files in this folder).
 
@@ -14,7 +14,7 @@ Open any file in a web browser. They are made by `python make_samples.py` (do no
 | [INFY_2021-22.html](INFY_2021-22.html) | Infosys, FY 2021-22 | IT services, older filing layout: a damaged file that had to be cleaned, monthly air figures, energy with no unit. |
 | [HDFCBANK_2022-23.html](HDFCBANK_2022-23.html) | HDFC Bank, FY 2022-23 | A bank (sparse data), older layout: many 'Not reported' and 'reported as 0', and the page still stays honest. |
 
-## Trend pages (one company over several years: `python trends.py ...`)
+## Trend pages (one company over several years: `python flow.py trends ...`)
 
 | File | Company and years | What it shows |
 |---|---|---|
@@ -22,7 +22,7 @@ Open any file in a web browser. They are made by `python make_samples.py` (do no
 | [WIPRO_trend_2023-24_to_2025-26.html](WIPRO_trend_2023-24_to_2025-26.html) | Wipro, FY 2023-24 to FY 2025-26 | The reporting basis flips from year to year (standalone, consolidated, consolidated), so only years on the same basis are compared. |
 | [RELIANCE_trend_2021-22_to_2023-24.html](RELIANCE_trend_2021-22_to_2023-24.html) | Reliance, FY 2021-22 to FY 2023-24 | A company on one basis throughout. FY 2021-22 is not on NSE, and FY 2022-23 uses the older SEBI layout with no energy unit. |
 
-## Year-on-year summaries (the 3 biggest improvements and setbacks: `python summary.py ...`)
+## Year-on-year summaries (the 3 biggest improvements and setbacks: `python flow.py summary ...`)
 
 | File | Company and year | What it shows |
 |---|---|---|
@@ -30,7 +30,7 @@ Open any file in a web browser. They are made by `python make_samples.py` (do no
 | [WIPRO_summary_2025-26.html](WIPRO_summary_2025-26.html) | Wipro, FY 2025-26 | A year where all 9 figures that can be compared improved: the page shows the three biggest, says plainly that nothing got worse, and still lists every figure. |
 | [RELIANCE_summary_2022-23.html](RELIANCE_summary_2022-23.html) | Reliance, FY 2022-23 | NSE has no filing for FY 2021-22, so there is no report of last year's own: the comparison uses the previous-year column of this filing, and the page says so. |
 
-## Company comparisons (two companies, one year: `python compare.py ...`)
+## Company comparisons (two companies, one year: `python flow.py compare ...`)
 
 | File | Companies and year | What it shows |
 |---|---|---|
@@ -46,5 +46,5 @@ Open any file in a web browser. They are made by `python make_samples.py` (do no
 | [error_Reliance_2019-20.html](error_Reliance_2019-20.html) | Reliance, 2019-20 | A financial year before BRSR reporting began (FY 2021-22). |
 | [error_Tata_Steel_2021-22.html](error_Tata_Steel_2021-22.html) | Tata Steel, 2021-22 | A real company and a valid year, but NSE has no filing for it: lists the years it does have. |
 | [error_Infosys_2021-22.html](error_Infosys_2021-22.html) | Infosys, 2021-22 | A filing file on NSE that is damaged (here a deliberately broken file). |
-| [error_Reliance_2025-26_to_2021-22.html](error_Reliance_2025-26_to_2021-22.html) | Reliance, 2025-26 to 2021-22 | A trend request with the years the wrong way round (trends.py). |
-| [error_Reliance_2021-22.html](error_Reliance_2021-22.html) | Reliance, 2021-22 | A summary request (summary.py) for a year NSE has no filing for: the suggested commands use summary.py. |
+| [error_Reliance_2025-26_to_2021-22.html](error_Reliance_2025-26_to_2021-22.html) | Reliance, 2025-26 to 2021-22 | A trend request with the years the wrong way round (flow.py trends). |
+| [error_Reliance_2021-22.html](error_Reliance_2021-22.html) | Reliance, 2021-22 | A summary request (flow.py summary) for a year NSE has no filing for: the suggested commands use flow.py summary. |

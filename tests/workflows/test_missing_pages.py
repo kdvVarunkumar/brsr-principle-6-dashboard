@@ -45,10 +45,10 @@ def test_a_summary_is_made_for_every_report_page_and_says_whether_last_years_own
 
 def test_an_existing_summary_is_never_overwritten_and_not_even_loaded(tmp_path):
     report_pages(tmp_path, "AAA_2023-24", "AAA_summary_2023-24")
-    (tmp_path / "AAA_summary_2023-24.html").write_text("made by summary.py", encoding="utf-8")
+    (tmp_path / "AAA_summary_2023-24.html").write_text("made by flow.py summary", encoding="utf-8")
     load = loader_of(("AAA", "2023-24"))
     assert generate_missing_summaries(tmp_path, load) == 0
-    assert text(tmp_path, "AAA_summary_2023-24") == "made by summary.py" and load.asked == []
+    assert text(tmp_path, "AAA_summary_2023-24") == "made by flow.py summary" and load.asked == []
 
 
 def test_a_report_page_whose_filing_is_not_saved_gets_no_summary(tmp_path):
@@ -91,7 +91,7 @@ def test_a_company_with_one_saved_year_gets_no_trend(tmp_path):
 
 
 def test_a_company_that_already_has_a_trend_page_keeps_it(tmp_path):
-    report_pages(tmp_path, "AAA_2022-23", "AAA_2023-24", "AAA_trend_2021-22_to_2023-24")       # made by trends.py, which knows what NSE has
+    report_pages(tmp_path, "AAA_2022-23", "AAA_2023-24", "AAA_trend_2021-22_to_2023-24")       # made by flow.py trends, which knows what NSE has
     load = loader_of(("AAA", "2022-23"), ("AAA", "2023-24"))
     assert generate_missing_trends(tmp_path, load) == 0 and load.asked == []
     assert not (tmp_path / "AAA_trend_2022-23_to_2023-24.html").exists()

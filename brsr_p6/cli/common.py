@@ -7,10 +7,10 @@ from brsr_p6.rendering.render import write_error_page
 from brsr_p6.views.error_view import build_error_view
 
 
-def explain_failure(error, company_text, fy_text, output_dir, open_page, tool="main") -> int:
+def explain_failure(error, company_text, fy_text, output_dir, open_page, tool="flow") -> int:
     """Print the problem and write the error page.  Returns the exit code (1 = something went wrong).
 
-    Shared by main.py, trends.py and summary.py; `tool` ("main", "trends" or "summary") makes the suggested commands use that command."""
+    Shared by the flow, trends, summary and compare commands; `tool` ("flow", "trends", "summary" or "compare") makes the suggested commands use that command."""
     if isinstance(error, BrsrError):
         print(f"Error: {error}")
     else:

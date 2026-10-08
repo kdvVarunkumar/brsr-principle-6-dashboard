@@ -1,4 +1,4 @@
-"""Command-line interface of `python extract_report.py ...`: download if needed -> read -> clean -> print + save."""
+"""Command-line interface of `python flow.py extract ...`: download if needed -> read -> clean -> print + save (the flow without the page)."""
 
 import argparse
 import sys
@@ -11,12 +11,12 @@ from brsr_p6.workflows.pipeline import load_report
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="extract_report.py",
+        prog="flow.py extract",
         description=(
             "Read a company's BRSR filing for one financial year, clean it into the SEBI Principle 6 layout, "
             "print it and save it as JSON in data/parsed/. Downloads the filing first if it is not on disk."
         ),
-        epilog='Example: python extract_report.py --company Reliance --fy 2023-24 --questions E1,E6',
+        epilog='Example: python flow.py extract --company Reliance --fy 2023-24 --questions E1,E6',
     )
     parser.add_argument("--company", required=True, help='Company name or NSE symbol, e.g. "Reliance" or TATASTEEL')
     parser.add_argument("--fy", required=True, help="Financial year, e.g. 2023-24")

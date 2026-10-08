@@ -1,6 +1,6 @@
 """Gather every page of a folder into the two viewer pages: the part that reads files.
 
-The pages are made by main.py, trends.py, summary.py, compare.py (and the error pages by any of them).  This reads whatever HTML pages the
+The pages are made by `flow.py`, `flow.py trends`, `flow.py summary` and `flow.py compare` (and the error pages by any of them).  This reads whatever HTML pages the
 folder holds, hands them to views/hub_view.py to be named and grouped, and writes the viewers next to them:
 
     index.html                one company at a time (its report, summary and trend)

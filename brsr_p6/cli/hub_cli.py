@@ -1,4 +1,4 @@
-"""Command-line interface of hub.py: every page in a folder behind a home page (choose a company) and a compare page (choose two companies)."""
+"""Command-line interface of `python flow.py hub`: every page in a folder behind a home page (choose a company) and a compare page (choose two companies)."""
 
 import argparse
 import sys
@@ -12,14 +12,14 @@ from brsr_p6.workflows.hub import generate_hub
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="hub.py",
+        prog="flow.py hub",
         description=(
-            "Put every page in a folder (the reports, trend pages, summaries, comparisons and error pages that main.py, trends.py, "
-            "summary.py and compare.py wrote) behind a home page, index.html, where you choose a company and a year, and a compare page, "
+            "Put every page in a folder (the reports, trend pages, summaries, comparisons and error pages that the other commands "
+            "wrote) behind a home page, index.html, where you choose a company and a year, and a compare page, "
             "compare_companies.html, where you choose two companies (a button on the home page opens it). "
             "By default every page is embedded, so each of the two is one self-contained file; keep them in the same folder."
         ),
-        epilog="Example: python hub.py --open      (then, after running more commands, run it again to include the new pages)",
+        epilog="Example: python flow.py hub --open      (then, after running more commands, run it again to include the new pages)",
     )
     parser.add_argument("--dir", type=Path, default=DEFAULT_OUTPUT_DIR, help="Folder that holds the pages (default: output/)")
     parser.add_argument("--link", action="store_true",
@@ -40,7 +40,7 @@ def main(argv: list[str] | None = None) -> int:
 
     made = generate_hub(args.dir, embed=not args.link, fill=not args.only_existing)
     if made is None:
-        print(f"There is no HTML page in {args.dir} yet. Make one first, for example:  python main.py --company \"Reliance\" --fy 2023-24")
+        print(f"There is no HTML page in {args.dir} yet. Make one first, for example:  python flow.py --company \"Reliance\" --fy 2023-24")
         return 1
     path, count = made
     print(f"One page for all {count} pages ({'linked, not embedded' if args.link else 'embedded, one self-contained file'}) written to: {path}")

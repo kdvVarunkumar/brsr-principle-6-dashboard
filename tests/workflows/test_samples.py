@@ -1,7 +1,7 @@
 """Tests for brsr_p6/workflows/samples.py and the committed pages in samples/.
 
 The most useful test here is "the committed samples are up to date": it rebuilds every page from the filings on disk and compares it
-with the file in samples/.  If the templates or the rules change and nobody re-runs `python make_samples.py`, this fails.
+with the file in samples/.  If the templates or the rules change and nobody re-runs `python flow.py samples`, this fails.
 """
 
 import json
@@ -30,7 +30,7 @@ def test_there_are_at_least_two_companies_and_the_assignments_error_cases():
 def test_every_sample_page_is_committed_and_well_formed():
     for name in expected_files():
         path = SAMPLES_DIR / name
-        assert path.exists(), f"{name} is missing: run  python make_samples.py"
+        assert path.exists(), f"{name} is missing: run  python flow.py samples"
         assert_well_formed(path.read_text(encoding="utf-8"))
 
 
@@ -59,7 +59,7 @@ def test_committed_report_pages_are_up_to_date():
         if report is None:
             continue                                          # the filing is not on this machine: nothing to compare with
         committed = (SAMPLES_DIR / f"{sample.symbol}_{sample.fy}.html").read_text(encoding="utf-8")
-        assert committed == render_page(report), f"{sample.symbol} {sample.fy} is out of date: run  python make_samples.py"
+        assert committed == render_page(report), f"{sample.symbol} {sample.fy} is out of date: run  python flow.py samples"
         checked += 1
     if not checked:
         pytest.skip("no sample filing is downloaded")
@@ -73,7 +73,7 @@ def test_committed_trend_pages_are_up_to_date(tmp_path):
             continue                                          # a filing is not on this machine: nothing to compare with (and no internet in tests)
         page = samples._write_trend(sample, tmp_path, progress=lambda message: None)
         committed = (SAMPLES_DIR / page.name).read_text(encoding="utf-8")
-        assert committed == page.read_text(encoding="utf-8"), f"{page.name} is out of date: run  python make_samples.py"
+        assert committed == page.read_text(encoding="utf-8"), f"{page.name} is out of date: run  python flow.py samples"
         checked += 1
     if not checked:
         pytest.skip("no trend sample filing is downloaded")
@@ -93,7 +93,7 @@ def test_committed_summary_pages_are_up_to_date(tmp_path):
         if found is None:
             continue                                          # a filing is not on this machine: nothing to compare with (and no internet in tests)
         committed = (SAMPLES_DIR / f"{sample.symbol}_summary_{sample.fy}.html").read_text(encoding="utf-8")
-        assert committed == render_summary_page(*found), f"{sample.symbol} summary {sample.fy} is out of date: run  python make_samples.py"
+        assert committed == render_summary_page(*found), f"{sample.symbol} summary {sample.fy} is out of date: run  python flow.py samples"
         checked += 1
     if not checked:
         pytest.skip("no summary sample filing is downloaded")
@@ -114,9 +114,9 @@ def test_the_committed_viewers_list_every_sample_page_and_are_up_to_date():
     pages = read_pages(SAMPLES_DIR)
     view = build_hub_view(pages, embed=False, title=SAMPLES_TITLE)
     compare_view = build_compare_hub_view(pages, embed=False, title=SAMPLES_TITLE)
-    assert (SAMPLES_DIR / "index.html").read_text(encoding="utf-8") == render_hub_page(view), "samples/index.html is out of date: run  python make_samples.py"
+    assert (SAMPLES_DIR / "index.html").read_text(encoding="utf-8") == render_hub_page(view), "samples/index.html is out of date: run  python flow.py samples"
     assert (SAMPLES_DIR / "compare_companies.html").read_text(encoding="utf-8") == render_compare_hub_page(compare_view), \
-        "samples/compare_companies.html is out of date: run  python make_samples.py"
+        "samples/compare_companies.html is out of date: run  python flow.py samples"
     shown = {entry.file for entry in view.entries} | {entry.file for entry in compare_view.entries}
     assert shown == set(expected_files()) - {"index.html", "compare_companies.html"}              # every page is behind one of the two viewers, and nothing else
     assert "html" not in json.loads(view.data_json)["entries"][0]                                  # linked, so the repository does not store each page twice

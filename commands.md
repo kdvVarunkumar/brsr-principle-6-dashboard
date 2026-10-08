@@ -3,7 +3,7 @@
 Every command here was run and checked. Replace the company name and the year with whatever the interviewer asks for.
 **Run all commands from the project folder**, in the **PyCharm Terminal** (it activates the project's environment, so you see `(.venv)` at the start of the line).
 
-> **Project status:** download ✅ · clean/parse ✅ · SEBI-format HTML page ✅ · plain-English dashboard ✅ (opens first) · error pages ✅ · `samples/` ✅ · README ✅ · **several years side by side (`trends.py`, Extension 1) ✅** · **what got better / worse (`summary.py`, Extension 2) ✅** · **two companies compared for one year (`compare.py`, Extension 3) ✅** · **every page behind a home page + a compare page (`hub.py`) ✅** · code in nine layered packages ✅. All three extensions are built.
+> **Project status:** download ✅ · clean/parse ✅ · SEBI-format HTML page ✅ · plain-English dashboard ✅ (opens first) · error pages ✅ · `samples/` ✅ · README ✅ · **several years side by side (`flow.py trends`, Extension 1) ✅** · **what got better / worse (`flow.py summary`, Extension 2) ✅** · **two companies compared for one year (`flow.py compare`, Extension 3) ✅** · **every page behind a home page + a compare page (`flow.py hub`) ✅** · code in nine layered packages ✅. All three extensions are built.
 
 ---
 
@@ -11,30 +11,32 @@ Every command here was run and checked. Replace the company name and the year wi
 
 | I want to... | Command |
 |---|---|
-| **Make the report page** (does everything: download → clean → page) | `python main.py --company "Reliance" --fy 2023-24 --open` |
-| Only **download** the filings | `python download_filings.py --company "Reliance"` |
-| Only **clean/parse** and print the data | `python extract_report.py --company "Reliance" --fy 2023-24` |
-| **Several years side by side** (Extension 1) | `python trends.py --company "Tata Steel" --from 2021-22 --to 2025-26 --open` |
-| **What got better / worse since last year** (Extension 2) | `python summary.py --company "Tata Steel" --open` |
-| **Two companies, one year** (Extension 3) | `python compare.py --company-a "Tata Steel" --company-b "Wipro" --fy 2025-26 --open` |
-| **Every page in one place** (home page + compare page) | `python hub.py --open` |
-| Rebuild the pages in `samples/` | `python make_samples.py` |
+| **Make the report page** (does everything: download → clean → page) | `python flow.py --company "Reliance" --fy 2023-24 --open` |
+| Only **download** the filings | `python flow.py download --company "Reliance"` |
+| Only **clean/parse** and print the data | `python flow.py extract --company "Reliance" --fy 2023-24` |
+| **Several years side by side** (Extension 1) | `python flow.py trends --company "Tata Steel" --from 2021-22 --to 2025-26 --open` |
+| **What got better / worse since last year** (Extension 2) | `python flow.py summary --company "Tata Steel" --open` |
+| **Two companies, one year** (Extension 3) | `python flow.py compare --company-a "Tata Steel" --company-b "Wipro" --fy 2025-26 --open` |
+| **Every page in one place** (home page + compare page) | `python flow.py hub --open` |
+| Rebuild the pages in `samples/` | `python flow.py samples` |
 | Run all automatic tests | `pytest -q` |
 
 Pattern to remember: **`--company "<name or NSE symbol>"`** and **`--fy <year>`**, e.g. `--company "Tata Steel" --fy 2025-26`.
+
+**One file runs everything: `flow.py`.** With a company and a year it is the whole flow; the first word after it picks a single step or an extra (`download`, `extract`, `trends`, `summary`, `compare`, `hub`, `samples`). `python flow.py --help` lists them, and `python flow.py <word> --help` shows that command's options.
 
 ---
 
 ## 2. The commands in detail
 
-### 2.1 Download from NSE: `download_filings.py`
+### 2.1 Download from NSE: `flow.py download`
 Downloads a company's BRSR filing files (XBRL) into `data\raw\<SYMBOL>\<FY>\`. Anything already on disk is reused.
 
 ```powershell
-python download_filings.py --company "Reliance"                       # every year NSE has (FY 2021-22 onwards)
-python download_filings.py --company "Tata Steel" --fy 2023-24         # only one year
-python download_filings.py --company "HDFC Bank" --fy 2022-23 --with-pdf   # also the PDF (optional)
-python download_filings.py --company "Reliance" --refresh              # ignore the saved filing list, ask NSE again
+python flow.py download --company "Reliance"                       # every year NSE has (FY 2021-22 onwards)
+python flow.py download --company "Tata Steel" --fy 2023-24         # only one year
+python flow.py download --company "HDFC Bank" --fy 2022-23 --with-pdf   # also the PDF (optional)
+python flow.py download --company "Reliance" --refresh              # ignore the saved filing list, ask NSE again
 ```
 | Option | Meaning |
 |---|---|
@@ -46,14 +48,14 @@ python download_filings.py --company "Reliance" --refresh              # ignore 
 What you see: the company NSE matched, the years NSE has, one line per file (`downloaded` / `already on disk, skipped`), a summary, and **`Requests sent to NSE in this run: N`**.
 Talking point: a second run sends **0 requests**.
 
-### 2.2 Clean the data: `extract_report.py`
+### 2.2 Clean the data: `flow.py extract`
 Reads the downloaded XML, fills SEBI's 21 Principle 6 questions, prints them as text and saves clean JSON in `data\parsed\<SYMBOL>\<FY>.json`. If the filing is not on disk yet, it downloads it first.
 
 ```powershell
-python extract_report.py --company "Reliance" --fy 2023-24                    # whole report as text
-python extract_report.py --company "TATASTEEL" --fy 2025-26 --questions E1,E6  # only some questions
-python extract_report.py --company "Infosys" --fy 2021-22 --quiet              # only save the JSON
-python extract_report.py --company "TATASTEEL" --fy 2025-26 --questions E6 --trace   # + the filing's element behind every value
+python flow.py extract --company "Reliance" --fy 2023-24                    # whole report as text
+python flow.py extract --company "TATASTEEL" --fy 2025-26 --questions E1,E6  # only some questions
+python flow.py extract --company "Infosys" --fy 2021-22 --quiet              # only save the JSON
+python flow.py extract --company "TATASTEEL" --fy 2025-26 --questions E6 --trace   # + the filing's element behind every value
 ```
 | Option | Meaning |
 |---|---|
@@ -65,9 +67,9 @@ Marks in the printout: `c` = calculated by us · `k` = converted by us · `!` = 
 
 **Talking point for `--trace`:** *"Every figure traces back to the filing."* Tata Steel's Scope 1 shows `= 64 MtCO2e`: that is exactly what the company typed (64, where it means 64 million), which is why it is flagged as doubtful and never compared.
 
-### 2.3 Make the page: `main.py`  ← the main one
+### 2.3 Make the page: `flow.py`  ← the main one
 ```powershell
-python main.py --company "Tata Steel" --fy 2025-26 --open
+python flow.py --company "Tata Steel" --fy 2025-26 --open
 ```
 Downloads if needed, cleans, saves the JSON **and** writes one self-contained HTML page: **`output\<SYMBOL>_<FY>.html`**
 (two tabs: the plain-English **Dashboard**, which opens first, and the **SEBI-format report**). `--open` opens it in your browser; without it, double-click the file.
@@ -80,16 +82,16 @@ Downloads if needed, cleans, saves the JSON **and** writes one self-contained HT
 
 **If something goes wrong, the same command still writes a page**: `output\error_<company>_<year>.html` (see section 6).
 
-### 2.4 Several years side by side: `trends.py`  ← Extension 1
+### 2.4 Several years side by side: `flow.py trends`  ← Extension 1
 ```powershell
-python trends.py --company "Tata Steel" --from 2021-22 --to 2025-26 --open
-python trends.py --company "Wipro" --from 2023-24 --to 2025-26          # the reporting basis flips between years
-python trends.py --company "Reliance"                                   # no years given = FY 2021-22 up to the newest filing
+python flow.py trends --company "Tata Steel" --from 2021-22 --to 2025-26 --open
+python flow.py trends --company "Wipro" --from 2023-24 --to 2025-26          # the reporting basis flips between years
+python flow.py trends --company "Reliance"                                   # no years given = FY 2021-22 up to the newest filing
 ```
 | Option | Meaning |
 |---|---|
 | `--from` / `--to` | first and last financial year (optional; default FY 2021-22 up to the newest filing NSE has) |
-| `--open`, `--output-dir`, `--debug` | the same as `main.py` |
+| `--open`, `--output-dir`, `--debug` | the same as `flow.py` |
 
 Writes **`output\<SYMBOL>_trend_<from>_to_<to>.html`**: a column per year, the five topics with a mini bar per year and a trend verdict, then **every figure of SEBI's Principle 6
 tables** year by year, then the figures later filings changed. Downloads the years it needs (3 s apart, cached); a company already downloaded takes about 3 seconds.
@@ -103,16 +105,16 @@ What to point at (2 minutes):
 
 If one year's filing is damaged, only that column is flagged. Errors give a page too: `--from 2025-26 --to 2021-22` ("That range of years cannot be used"), an unknown company, a year before FY 2021-22.
 
-### 2.5 What got better and worse: `summary.py`  ← Extension 2
+### 2.5 What got better and worse: `flow.py summary`  ← Extension 2
 ```powershell
-python summary.py --company "Tata Steel" --open                  # newest year NSE has, against the year before
-python summary.py --company "Wipro" --fy 2025-26                 # a named year
-python summary.py --company "Reliance" --fy 2022-23              # NSE has no FY 2021-22 filing: the page says so and still works
+python flow.py summary --company "Tata Steel" --open                  # newest year NSE has, against the year before
+python flow.py summary --company "Wipro" --fy 2025-26                 # a named year
+python flow.py summary --company "Reliance" --fy 2022-23              # NSE has no FY 2021-22 filing: the page says so and still works
 ```
 | Option | Meaning |
 |---|---|
 | `--fy` | the year to summarise (optional; default = the newest filing NSE has, chosen automatically) |
-| `--open`, `--output-dir`, `--debug` | the same as `main.py` |
+| `--open`, `--output-dir`, `--debug` | the same as `flow.py` |
 
 Writes **`output\<SYMBOL>_summary_<FY>.html`**. Downloads only the two years it needs (3 s apart, cached); a company already downloaded needs no download at all and takes a second or two.
 
@@ -123,19 +125,19 @@ What to point at (2 minutes):
 4. **"Every figure we compared"** (starred = shown above) and **"Not ranked, and why"**: a total replaced by its per-sales figure (with the total's own change quoted, nothing hidden), a doubtful figure, zero last year, zero in both years.
 5. **"Where last year's figures come from":** the previous-year column of the same filing, so both years are on the same basis; last year's own filing is checked for restated figures; if NSE has none (Reliance FY 2021-22) the page says so instead of failing.
 
-Errors give a page too, with suggested commands that use `summary.py`: an unknown company, a year NSE does not have (lists the years it does), a year before FY 2021-22, a damaged newest filing.
+Errors give a page too, with suggested commands that use `flow.py summary`: an unknown company, a year NSE does not have (lists the years it does), a year before FY 2021-22, a damaged newest filing.
 
-### 2.6 Two companies, one year: `compare.py`  ← Extension 3
+### 2.6 Two companies, one year: `flow.py compare`  ← Extension 3
 ```powershell
-python compare.py --company-a "Tata Steel" --company-b "Wipro" --fy 2025-26 --open    # steel vs IT: totals differ 888 times, so they are not ranked
-python compare.py --company-a "Reliance" --company-b "Tata Steel" --fy 2023-24        # same basis (standalone): the fairest pair
-python compare.py --company-a "HDFC Bank" --company-b "Reliance" --fy 2022-23         # older layout: no stated unit / filed as 0, so only the two shares get a verdict
+python flow.py compare --company-a "Tata Steel" --company-b "Wipro" --fy 2025-26 --open    # steel vs IT: totals differ 888 times, so they are not ranked
+python flow.py compare --company-a "Reliance" --company-b "Tata Steel" --fy 2023-24        # same basis (standalone): the fairest pair
+python flow.py compare --company-a "HDFC Bank" --company-b "Reliance" --fy 2022-23         # older layout: no stated unit / filed as 0, so only the two shares get a verdict
 ```
 | Option | Meaning |
 |---|---|
 | `--company-a`, `--company-b` | the two companies (name or NSE symbol); they must be different |
 | `--fy` | the one financial year, the same for both (FY 2021-22 or later) |
-| `--open`, `--output-dir`, `--debug` | the same as `main.py` |
+| `--open`, `--output-dir`, `--debug` | the same as `flow.py` |
 
 Writes **`output\<SYMBOL A>_vs_<SYMBOL B>_<FY>.html`**. Downloads whichever of the two filings is missing (3 s apart, cached); two companies already downloaded need no internet.
 
@@ -146,21 +148,21 @@ What to point at (2 minutes):
 4. **"Not reported" is never 0**, and the row says who did not report it (covered by tests; the samples happen not to contain such a row). A doubtful figure (Tata Steel's mis-scaled emissions, Reliance's FY 2022-23 intensities filed as 0) is shown as filed with its note and not compared.
 5. **The amber "Different reporting basis" box:** Tata Steel reports standalone and Wipro consolidated, so totals are not like-for-like.
 
-Errors give a page too, with suggested `compare.py` commands: the same company twice ("A comparison needs two different companies"), an unknown company, a year NSE has no filing for.
+Errors give a page too, with suggested `flow.py compare` commands: the same company twice ("A comparison needs two different companies"), an unknown company, a year NSE has no filing for.
 
-### 2.7 All pages in one place: `hub.py`
+### 2.7 All pages in one place: `flow.py hub`
 Every command writes its own file, so `output\` fills up with pages. This puts them behind **two simple pages**: pick a company and see its report, or press *Compare two companies* and pick two:
 
 ```powershell
-python hub.py --open                     # every page in output\  ->  output\index.html (+ output\compare_companies.html), each one self-contained file
-python hub.py --dir samples              # another folder
-python hub.py --link                     # tiny index that only opens the files next to it
-python hub.py --only-existing            # make no missing page: only gather what exists
+python flow.py hub --open                     # every page in output\  ->  output\index.html (+ output\compare_companies.html), each one self-contained file
+python flow.py hub --dir samples              # another folder
+python flow.py hub --link                     # tiny index that only opens the files next to it
+python flow.py hub --only-existing            # make no missing page: only gather what exists
 ```
 | Option | Meaning |
 |---|---|
 | `--dir` | the folder that holds the pages (default `output`) |
-| `--link` | do not embed the pages; the two viewers open the files in the same folder (what `make_samples.py` uses for `samples\index.html`) |
+| `--link` | do not embed the pages; the two viewers open the files in the same folder (what `flow.py samples` uses for `samples\index.html`) |
 | `--only-existing` | make no missing page (older name: `--no-compare`). By default, from the saved filings and offline, it first writes a comparison for every pair of companies with a report for the same year, a *Year-on-year* summary for every report page, and a *Multi-year trend* for every company with two or more years in a row; it never overwrites a summary or trend you made yourself |
 | `--open` | open `index.html` in your browser |
 
@@ -176,20 +178,20 @@ python hub.py --only-existing            # make no missing page: only gather wha
 | Step | Command | What to say |
 |---|---|---|
 | 1 | `pytest -q` | "About 680 automatic tests pass, with no internet needed." |
-| 2 | `python download_filings.py --company "<NEW COMPANY>"` | "It finds the company on NSE, downloads each year politely (3 s apart), and flags years NSE does not have." |
+| 2 | `python flow.py download --company "<NEW COMPANY>"` | "It finds the company on NSE, downloads each year politely (3 s apart), and flags years NSE does not have." |
 | 3 | *(run step 2 again)* | "Second run: 0 requests. Everything is cached." |
-| 4 | `python extract_report.py --company "<NEW COMPANY>" --fy 2024-25 --questions E1,E6` | "XML → clean SEBI rows. Calculated, converted and doubtful values are marked, and nothing is invented: missing = Not reported." |
-| 5 | `python main.py --company "<NEW COMPANY>" --fy 2024-25 --open` | "One HTML page, two tabs. It opens on the plain-English **Dashboard**; the second tab is the **SEBI-format report**, same question numbers and wording as SEBI's form." |
+| 4 | `python flow.py extract --company "<NEW COMPANY>" --fy 2024-25 --questions E1,E6` | "XML → clean SEBI rows. Calculated, converted and doubtful values are marked, and nothing is invented: missing = Not reported." |
+| 5 | `python flow.py --company "<NEW COMPANY>" --fy 2024-25 --open` | "One HTML page, two tabs. It opens on the plain-English **Dashboard**; the second tab is the **SEBI-format report**, same question numbers and wording as SEBI's form." |
 | 6 | click the **SEBI-format report** tab, then back | "Same data, two audiences. Every dashboard number comes from this table." |
-| 6b | `python trends.py --company "<COMPANY>" --open` | "Extension 1: the same company over every year NSE has. Missing years flagged, basis changes and restatements marked." |
-| 6c | `python summary.py --company "<COMPANY>" --open` | "Extension 2: the 3 biggest improvements and setbacks against last year, with the definition of 'better' stated on the page, and everything it could not rank listed with the reason." |
-| 6d | `python compare.py --company-a "<COMPANY A>" --company-b "<COMPANY B>" --fy 2025-26 --open` | "Extension 3: two companies, one year. A bigger company uses more, so totals are shown but not ranked; only the figure per ₹ of sales and the shares get a verdict, and the page warns when one reports standalone and the other consolidated." |
-| 6e | `python hub.py --open` | "Every page I generated, behind two simple pages. On the home page I pick a company and a year and its report opens, with the plain-English Dashboard in one tab and the SEBI-format report in the other; Year-on-year and Multi-year trend are one click away. The Compare button opens a second page where I pick a year and two companies." |
+| 6b | `python flow.py trends --company "<COMPANY>" --open` | "Extension 1: the same company over every year NSE has. Missing years flagged, basis changes and restatements marked." |
+| 6c | `python flow.py summary --company "<COMPANY>" --open` | "Extension 2: the 3 biggest improvements and setbacks against last year, with the definition of 'better' stated on the page, and everything it could not rank listed with the reason." |
+| 6d | `python flow.py compare --company-a "<COMPANY A>" --company-b "<COMPANY B>" --fy 2025-26 --open` | "Extension 3: two companies, one year. A bigger company uses more, so totals are shown but not ranked; only the figure per ₹ of sales and the shares get a verdict, and the page warns when one reports standalone and the other consolidated." |
+| 6e | `python flow.py hub --open` | "Every page I generated, behind two simple pages. On the home page I pick a company and a year and its report opens, with the plain-English Dashboard in one tab and the SEBI-format report in the other; Year-on-year and Multi-year trend are one click away. The Compare button opens a second page where I pick a year and two companies." |
 | 7 | the error commands in section 6 | "Specific messages instead of crashes." |
 
 ### 3b. "Prove that this number is not invented" (about 90 seconds, no extra command)
 
-Open `python main.py --company "Tata Steel" --fy 2025-26 --open`, then:
+Open `python flow.py --company "Tata Steel" --fy 2025-26 --open`, then:
 1. **Dashboard → "Total energy used" → Fine print.** It says *Source in the SEBI tab: Essential 1* and **Where it is in the filing:** `FY 2025-26: TotalEnergyConsumedFromRenewableAndNonRenewableSources = 623812739.43 Gigajoule` (and last year's).
 2. **SEBI-format report tab → hover the number** in Essential 1: the same element appears as a tooltip.
 3. **Scroll to the last section, "Where every number comes from".** Open *Essential 1*: each row shows the value on the page, *Reported by the company / Calculated by us / Unit changed by us*, and the element(s) with the text exactly as filed. A calculated row (electricity = renewable + non-renewable) lists **both** elements.
@@ -216,7 +218,7 @@ The proof that this holds for every number: `pytest tests/extraction/test_origin
 
 **Template (copy, then edit the two highlighted parts):**
 ```powershell
-python main.py --company "COMPANY NAME OR SYMBOL" --fy YEAR --open
+python flow.py --company "COMPANY NAME OR SYMBOL" --fy YEAR --open
 ```
 
 **Company** can be a name (`"Tata Steel"`, `"hdfc bank"`, `Reliance`) or the NSE symbol (`TATASTEEL`, `INFY`). Use **double quotes** if the name has a space or `&` (for example `"M&M"`). If several companies match (e.g. `Tata`), it lists them: re-run with the symbol it suggests.
@@ -225,11 +227,11 @@ python main.py --company "COMPANY NAME OR SYMBOL" --fy YEAR --open
 
 **Copy-paste examples**
 ```powershell
-python main.py --company "Tata Steel" --fy 2025-26 --open     # a doubtful figure: shown as filed, warned, never compared
-python main.py --company "Reliance" --fy 2023-24 --open       # the cleanest example
-python main.py --company "Infosys" --fy 2021-22 --open        # old-style filing + a file that needed cleaning + monthly air figures
-python main.py --company "HDFC Bank" --fy 2022-23 --open      # a bank: older layout, no units, little environmental data
-python main.py --company "Wipro" --fy 2025-26 --open          # energy filed in megajoules, shown in GJ
+python flow.py --company "Tata Steel" --fy 2025-26 --open     # a doubtful figure: shown as filed, warned, never compared
+python flow.py --company "Reliance" --fy 2023-24 --open       # the cleanest example
+python flow.py --company "Infosys" --fy 2021-22 --open        # old-style filing + a file that needed cleaning + monthly air figures
+python flow.py --company "HDFC Bank" --fy 2022-23 --open      # a bank: older layout, no units, little environmental data
+python flow.py --company "Wipro" --fy 2025-26 --open          # energy filed in megajoules, shown in GJ
 ```
 
 **Timing you can expect:** a brand-new company takes about **10 s** for one year (about **20-30 s** to download every year); anything already downloaded takes **under 1 s**.
@@ -257,25 +259,25 @@ Any other company works too: it is fetched from NSE the first time. **Tip: run e
 ## 6. Showing the error handling
 
 ```powershell
-python main.py --company "Xyzzy Quux" --fy 2023-24         # unknown company
-python main.py --company "Tata" --fy 2023-24                # ambiguous: lists 10 matches and says to use a symbol
-python main.py --company "Reliance" --fy 2019-20            # before FY 2021-22: refused with a clear message
-python main.py --company "Reliance" --fy banana             # not a year
-python main.py --company "Tata Steel" --fy 2021-22          # valid year, but NSE has no filing: lists the years it does have
-python main.py --company "Sakuma Exports" --fy 2023-24      # listed company with no BRSR filing
-python trends.py --company "Reliance" --from 2025-26 --to 2021-22      # years the wrong way round
-python trends.py --company "Tata Steel" --from 2019-20                # a year before BRSR reporting began
-python summary.py --company "Reliance" --fy 2021-22                   # NSE has no filing for that year: lists the years it does have
-python summary.py --company "Xyzzy Quux"                              # unknown company
-python compare.py --company-a "Wipro" --company-b "Wipro" --fy 2025-26    # the same company twice: "A comparison needs two different companies"
-python compare.py --company-a "Tata Steel" --company-b "Wipro" --fy 2021-22   # NSE has no filing for that year: lists the years it does have
+python flow.py --company "Xyzzy Quux" --fy 2023-24         # unknown company
+python flow.py --company "Tata" --fy 2023-24                # ambiguous: lists 10 matches and says to use a symbol
+python flow.py --company "Reliance" --fy 2019-20            # before FY 2021-22: refused with a clear message
+python flow.py --company "Reliance" --fy banana             # not a year
+python flow.py --company "Tata Steel" --fy 2021-22          # valid year, but NSE has no filing: lists the years it does have
+python flow.py --company "Sakuma Exports" --fy 2023-24      # listed company with no BRSR filing
+python flow.py trends --company "Reliance" --from 2025-26 --to 2021-22      # years the wrong way round
+python flow.py trends --company "Tata Steel" --from 2019-20                # a year before BRSR reporting began
+python flow.py summary --company "Reliance" --fy 2021-22                   # NSE has no filing for that year: lists the years it does have
+python flow.py summary --company "Xyzzy Quux"                              # unknown company
+python flow.py compare --company-a "Wipro" --company-b "Wipro" --fy 2025-26    # the same company twice: "A comparison needs two different companies"
+python flow.py compare --company-a "Tata Steel" --company-b "Wipro" --fy 2021-22   # NSE has no filing for that year: lists the years it does have
 ```
 Each one prints `Error: ...` with the specific reason, **and writes an explanation page** `output\error_<company>_<year>.html` (add `--open` to show it). Exit code 1, never a Python traceback.
 
 What the page shows: the exact message, what you typed, "What you can try", and **ready-to-run commands** where we know them (the companies that matched an ambiguous name; the years NSE does have). Error pages never overwrite a report page.
 
 ```powershell
-python main.py --company "Tata Steel" --fy 2021-22 --open       # page lists FY 2022-23 ... 2025-26, each with a command
+python flow.py --company "Tata Steel" --fy 2021-22 --open       # page lists FY 2022-23 ... 2025-26, each with a command
 ```
 
 | Situation | Page title |
@@ -286,10 +288,10 @@ python main.py --company "Tata Steel" --fy 2021-22 --open       # page lists FY 
 | NSE has no filing for the year | NSE has no BRSR filing for that company and year |
 | NSE unreachable or blocking | We could not get the data from NSE |
 | damaged or wrong kind of file | The filing on NSE could not be read |
-| the same company twice in `compare.py` | A comparison needs two different companies |
+| the same company twice in `flow.py compare` | A comparison needs two different companies |
 | a bug in the tool | Something unexpected went wrong (run again with `--debug`) |
 
-Ready-made examples of six of these are in `samples\` (`error_*.html`): unknown company, year before FY 2021-22, year NSE does not have, damaged file, trend years the wrong way round, and a `summary.py` request for a missing year.
+Ready-made examples of six of these are in `samples\` (`error_*.html`): unknown company, year before FY 2021-22, year NSE does not have, damaged file, trend years the wrong way round, and a `flow.py summary` request for a missing year.
 
 ---
 
@@ -299,13 +301,13 @@ Ready-made examples of six of these are in `samples\` (`error_*.html`): unknown 
 |---|---|---|
 | Downloaded filings (XBRL) | `data\raw\<SYMBOL>\<FY>\*.xml` + `filing.json` | open the folder in PyCharm |
 | Clean data (JSON) | `data\parsed\<SYMBOL>\<FY>.json` | open in PyCharm; find `E6.scope1`: it has `value`, `unit`, `status`, `as_filed`, `warnings` |
-| The report page | `output\<SYMBOL>_<FY>.html` | `python main.py ... --open`, or double-click |
+| The report page | `output\<SYMBOL>_<FY>.html` | `python flow.py ... --open`, or double-click |
 | An error page | `output\error_<company>_<year>.html` | written by the same command when something fails |
-| The trend page | `output\<SYMBOL>_trend_<from>_to_<to>.html` | `python trends.py ... --open` |
-| The summary page | `output\<SYMBOL>_summary_<FY>.html` | `python summary.py ... --open` |
-| The comparison page | `output\<SYMBOL A>_vs_<SYMBOL B>_<FY>.html` | `python compare.py ... --open` (or the *Compare two companies* button on `index.html`) |
-| **All of them in one page** | `output\index.html` (and `samples\index.html`) | `python hub.py --open` |
-| Sample pages (5 company reports, 3 trend pages, 3 summaries, 3 comparisons, 6 error pages) | `samples\` + `samples\README.md` | open in a browser; rebuild with `python make_samples.py` |
+| The trend page | `output\<SYMBOL>_trend_<from>_to_<to>.html` | `python flow.py trends ... --open` |
+| The summary page | `output\<SYMBOL>_summary_<FY>.html` | `python flow.py summary ... --open` |
+| The comparison page | `output\<SYMBOL A>_vs_<SYMBOL B>_<FY>.html` | `python flow.py compare ... --open` (or the *Compare two companies* button on `index.html`) |
+| **All of them in one page** | `output\index.html` (and `samples\index.html`) | `python flow.py hub --open` |
+| Sample pages (5 company reports, 3 trend pages, 3 summaries, 3 comparisons, 6 error pages) | `samples\` + `samples\README.md` | open in a browser; rebuild with `python flow.py samples` |
 
 Handy PowerShell lines:
 ```powershell
@@ -336,7 +338,7 @@ This deletes only files that can be downloaded again:
 Remove-Item -Recurse -Force data\raw\TCS          # forget one company's downloads
 Remove-Item -Recurse -Force data\cache            # forget saved company searches
 ```
-Then run `python download_filings.py --company "TCS"` again to show a real download.
+Then run `python flow.py download --company "TCS"` again to show a real download.
 
 ---
 
@@ -344,7 +346,7 @@ Then run `python download_filings.py --company "TCS"` again to show a real downl
 
 | Problem | Fix |
 |---|---|
-| `python` is not recognised, or `ModuleNotFoundError: requests` | You are not in the project's environment. Use the **PyCharm Terminal**, or run `.\.venv\Scripts\python.exe main.py ...` |
+| `python` is not recognised, or `ModuleNotFoundError: requests` | You are not in the project's environment. Use the **PyCharm Terminal**, or run `.\.venv\Scripts\python.exe flow.py ...` |
 | PowerShell says "running scripts is disabled" when activating | `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`, or skip activating and use `.\.venv\Scripts\python.exe` |
 | `Error: NSE refused the request (HTTP 403/429)` | NSE is limiting automated access. Wait a few minutes and retry. (We never retry hard; that is by design.) |
 | `Error: Could not get ... from NSE` | No internet or NSE is down. A company you have downloaded before still works: the tool uses the saved filing list and says so ("... may be out of date"). A company you never downloaded needs the internet. |
@@ -374,12 +376,12 @@ Then run `python download_filings.py --company "TCS"` again to show a real downl
 - **What does the trend page do with a missing year?** It flags it ("No filing", never 0). If the next filing exists, that filing's previous-year column holds the company's own figures for the missing year, so they are shown and marked.
 - **How do you handle a change from consolidated to standalone?** Every column shows its basis; trend verdicts only compare years on the same basis and unit, and the page says which years were left out.
 - **What is a restatement?** The next filing gives a different figure for the same year (more than 0.5% apart). We keep the figure as filed in its own year and mark it ⟲ with the later figure.
-- **Where do I find all the generated pages?** `python hub.py --open` puts every page in `output/` behind a home page (choose a company and a year) and a compare page (choose two companies); `samples/index.html` does the same for the committed samples. Each is one self-contained file by default; keep the two together.
+- **Where do I find all the generated pages?** `python flow.py hub --open` puts every page in `output/` behind a home page (choose a company and a year) and a compare page (choose two companies); `samples/index.html` does the same for the committed samples. Each is one self-contained file by default; keep the two together.
 - **How do you compare two companies fairly?** Same financial year, each from its own filing. Totals are shown but never ranked, because a bigger company uses more; only the figure per ₹ 1 crore of sales (lower is better) and the shares of renewable energy and recycled waste (higher is better, in percentage points) get a verdict. Both numbers of a row use one unit and one scale, a figure with no stated unit or a doubtful one is not compared, and "Not reported" is never 0.
 - **Why not say which company is "greener"?** There is no benchmark in the filings, and a steel maker and an IT firm use energy and water very differently. The page says so, and warns when one company reports standalone and the other consolidated.
-- **Where is the comparison?** On its own page: the big *Compare two companies* button at the top right of the home page opens `compare_companies.html`, where you pick a year, then Company A and Company B. `hub.py` writes a comparison for every pair of companies that have a report page for the same year, so any pair you pick already exists. The home page only shows one company at a time.
+- **Where is the comparison?** On its own page: the big *Compare two companies* button at the top right of the home page opens `compare_companies.html`, where you pick a year, then Company A and Company B. `flow.py hub` writes a comparison for every pair of companies that have a report page for the same year, so any pair you pick already exists. The home page only shows one company at a time.
 - **Does the page use JavaScript?** The report, trend, summary and error pages do not. Only the two viewer pages do, because a dropdown cannot work without it; it shows the pages in a sandboxed frame and, without JavaScript, falls back to a plain list of links.
-- **How do you show that a number is not invented?** Every value remembers the filing's own XBRL element, the year, and the text and unit exactly as written. The dashboard's Fine print, a hover in the SEBI tab, the last section of the SEBI tab and `extract_report.py --trace` all show it, and the page links to NSE's file. A test checks every value of every downloaded filing against the raw XML.
+- **How do you show that a number is not invented?** Every value remembers the filing's own XBRL element, the year, and the text and unit exactly as written. The dashboard's Fine print, a hover in the SEBI tab, the last section of the SEBI tab and `flow.py extract --trace` all show it, and the page links to NSE's file. A test checks every value of every downloaded filing against the raw XML.
 - **What if a number was converted or calculated?** It is labelled (*Unit changed by us* / *Calculated by us*), the filed text is quoted, and a calculated number lists every element it was built from.
 - **What does a missing value look like in the trace?** "Not reported", plus the elements we looked for (or "the structured filing has no field for this item"). It is never shown as 0.
 - **How do you define "better" in the summary?** Against the company's own last year only, with a direction per figure (lower is better for energy, gases, water, waste per ₹ of sales and every pollutant; higher for the renewable and recycled shares). Under 1% (a share: under half a point) is "about the same". The page states all of this.
@@ -411,11 +413,11 @@ The code is in `brsr_p6/`, one folder per step. Open the file in the right-hand 
 | the **two-company comparison** (fairness rules, units, "Not reported") | `brsr_p6/views/compare_view.py` (decides), `brsr_p6/workflows/compare.py` (loads both filings, every pair), `brsr_p6/rendering/templates/compare.html` | `compare_view.py` |
 | how the **HTML** is made | `brsr_p6/rendering/` | `render.py` and `templates/` |
 | the error pages | `brsr_p6/views/error_view.py` and `brsr_p6/rendering/templates/error.html` | |
-| how a command runs end to end | `brsr_p6/workflows/` and `brsr_p6/cli/` | `pipeline.py`, `main_cli.py` |
+| how a command runs end to end | `brsr_p6/workflows/` and `brsr_p6/cli/` | `pipeline.py` (the flow), `flow_cli.py` (the command) |
 | the "all pages in one place" viewer | `brsr_p6/views/hub_view.py` (names, groups), `brsr_p6/workflows/hub.py` (reads the folder), `brsr_p6/rendering/templates/hub.html` (page + script) | `hub_view.py` |
 | the rule that keeps the layers apart | `tests/test_architecture.py` | the whole file |
 
-The tests live in folders with the same names (`tests/download/`, `tests/views/`, ...). `python make_samples.py` rebuilds `samples/`.
+The tests live in folders with the same names (`tests/download/`, `tests/views/`, ...). `python flow.py samples` rebuilds `samples/`.
 
 ---
 
@@ -437,4 +439,4 @@ First publication (once, needs your GitHub login): create an **empty** repositor
 git remote add origin https://github.com/<your-username>/<repository-name>.git
 git push -u origin main
 ```
-Before every commit that touches pages or rules, run `python make_samples.py` and `pytest -q`: a test fails if a sample page is out of date.
+Before every commit that touches pages or rules, run `python flow.py samples` and `pytest -q`: a test fails if a sample page is out of date.

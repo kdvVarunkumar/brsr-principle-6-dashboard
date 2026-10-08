@@ -102,9 +102,9 @@ a.open:hover { text-decoration: underline; }
     <div class="field views">
       <span class="label" id="show-label">Show</span>
       <div class="seg" role="group" aria-labelledby="show-label">
-        <button type="button" data-view="report" data-hint="The dashboard and the SEBI-format report for this year" data-make="main.py --company {name} --fy {fy}">Report</button>
-        <button type="button" data-view="summary" data-hint="What got better and worse since last year" data-make="summary.py --company {name} --fy {fy}">Year-on-year</button>
-        <button type="button" data-view="trend" data-hint="Several years side by side" data-make="trends.py --company {name}">Multi-year trend</button>
+        <button type="button" data-view="report" data-hint="The dashboard and the SEBI-format report for this year" data-make="flow.py --company {name} --fy {fy}">Report</button>
+        <button type="button" data-view="summary" data-hint="What got better and worse since last year" data-make="flow.py summary --company {name} --fy {fy}">Year-on-year</button>
+        <button type="button" data-view="trend" data-hint="Several years side by side" data-make="flow.py trends --company {name}">Multi-year trend</button>
       </div>
     </div>
   </div>

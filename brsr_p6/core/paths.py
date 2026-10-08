@@ -1,7 +1,7 @@
 """Where things live on disk: every folder the program reads or writes is named here, once.
 
 The project root is found from this file's own location (brsr_p6/core/paths.py, so two folders up is the folder that contains
-main.py), which means the program works from any current folder.  If this file ever moves, only `PROJECT_ROOT` has to change.
+flow.py), which means the program works from any current folder.  If this file ever moves, only `PROJECT_ROOT` has to change.
 """
 
 import re

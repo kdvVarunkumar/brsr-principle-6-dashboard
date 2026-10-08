@@ -1,4 +1,4 @@
-"""Tests for the year-on-year summary page: rendering (templates/summary.html), the summary.py command, and real filings."""
+"""Tests for the year-on-year summary page: rendering (templates/summary.html), the low.py summary command, and real filings."""
 
 from pathlib import Path
 
@@ -112,7 +112,7 @@ def test_a_missing_year_writes_an_error_page_with_summary_commands(monkeypatch, 
     assert main(["--company", "Tata Steel", "--fy", "2019-20", "--output-dir", str(tmp_path)]) == 1
     assert "explanation page was written" in capsys.readouterr().out
     page = (tmp_path / "error_Tata_Steel_2019-20.html").read_text(encoding="utf-8")
-    assert "python summary.py --company" in page and "--fy 2022-23" in page and "--fy 2025-26" in page and "main.py --company" not in page
+    assert "python flow.py summary --company" in page and "--fy 2022-23" in page and "--fy 2025-26" in page and "flow.py --company" not in page.replace("flow.py summary --company", "")
 
 
 def test_a_damaged_latest_filing_gets_the_unreadable_filing_page(monkeypatch, tmp_path):
