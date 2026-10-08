@@ -55,7 +55,7 @@ def test_a_doubtful_figure_is_marked_and_its_note_is_printed_under_the_company_i
     put(a, "E6.scope1", 64, 0, unit="tCO2e", warnings=[SCALE_SLIP])
     put(a, "E6.scope2", 5, 0, unit="tCO2e", warnings=[SCALE_SLIP])
     html = render_compare_page(a, b)
-    assert 'class="warn"' in html and "Notes on the figures" in html
+    assert 'class="note-mark"' in html and "⚠" not in html and "Notes on the figures" in html
     notes = html[html.index("Notes on the figures"):]
     assert notes.index("Alpha Steel") < notes.index("1,000,000 times too small") and "Beta Software</h3>" not in notes
 

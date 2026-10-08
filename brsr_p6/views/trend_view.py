@@ -228,7 +228,7 @@ def _marks(item, divisor, shape, unit_text, other_unit=False):
                                "with this one.", "basis"))
     if item.cell.warnings:
         label = "Doubtful figure" if worst_kind(item.cell.warnings) == DOUBTFUL else "Note on this figure"
-        marks.append(Mark("⚠", f"{label}: " + " ".join(item.cell.warnings), "warn"))
+        marks.append(Mark("ⓘ", f"{label}: " + " ".join(item.cell.warnings), "note"))
     if other_unit:
         marks.append(Mark("u", "This year's unit differs from the other years, so it is not compared with them.", "unit"))
     return marks
@@ -356,7 +356,7 @@ def _figure_marks(item):
                                "with this one.", "basis"))
     if item.cell.warnings:
         label = "Doubtful figure" if worst_kind(item.cell.warnings) == DOUBTFUL else "Note on this figure"
-        marks.append(Mark("⚠", f"{label}: " + " ".join(item.cell.warnings), "warn"))
+        marks.append(Mark("ⓘ", f"{label}: " + " ".join(item.cell.warnings), "note"))
     return marks
 
 

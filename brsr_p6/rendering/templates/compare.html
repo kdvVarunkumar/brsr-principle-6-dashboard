@@ -45,7 +45,7 @@
       </div>
       {% endfor %}
     </div>
-    {% if view.basis_note %}<p class="alert shared"><b>⚠ Different reporting basis:</b> {{ view.basis_note }}</p>{% endif %}
+    {% if view.basis_note %}<p class="alert shared"><b>ⓘ Different reporting basis:</b> {{ view.basis_note }}</p>{% endif %}
   </section>
 
   <section class="topic" aria-labelledby="cmp-fair-h">
@@ -67,7 +67,7 @@
           <tr class="{{ 'fair' if row.fair else 'size' }}">
             <th scope="row">{{ row.title }}<span class="dir">{{ row.better if row.fair else "a total: shown for size, not ranked" }}</span></th>
             {% for fig, side in ((row.a, "a"), (row.b, "b")) %}
-            <td class="fig {{ fig.css }}{% if row.result.winner == side %} win{% endif %}"><span class="num">{{ fig.text }}</span>{% if fig.unit %} <span class="u">{{ fig.unit }}</span>{% endif %}{% if fig.warned %} <span class="warn" title="This figure carries a note: see the notes at the bottom of the page">⚠</span>{% endif %}</td>
+            <td class="fig {{ fig.css }}{% if row.result.winner == side %} win{% endif %}"><span class="num">{{ fig.text }}</span>{% if fig.unit %} <span class="u">{{ fig.unit }}</span>{% endif %}{% if fig.warned %} <span class="note-mark" title="This figure carries a note: see the notes at the bottom of the page">ⓘ</span>{% endif %}</td>
             {% endfor %}
             <td class="res">{{ chip(row.result.chip_class, row.result.chip_text) }}{% if row.result.detail %}<span class="detail">{{ row.result.detail }}</span>{% endif %}</td>
           </tr>

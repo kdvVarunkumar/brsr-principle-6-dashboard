@@ -15,9 +15,12 @@
   --accent: #0f6b5c;
   --accent-soft: #e3f1ee;
   --head-bg: #e8eef2;
-  --warn-ink: #7a4b00;
-  --warn-bg: #fff3d4;
-  --warn-line: #e5b84a;
+  --note-ink: #3d4a57;      /* a note about a figure: calm slate, never yellow */
+  --note-bg: #f1f4f7;
+  --note-line: #c5cfd9;
+  --err-ink: #7a4b00;       /* error pages only */
+  --err-bg: #fff3d4;
+  --err-line: #e5b84a;
 }
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--page); color: var(--ink); font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
@@ -42,7 +45,7 @@ h1 .symbol { font-weight: 400; opacity: 0.85; }
 .boundary { font-weight: 700; }
 .boundary-help { display: block; font-size: 0.82rem; color: var(--muted); font-weight: 400; }
 .legend { margin: 12px 0 0; font-size: 0.9rem; color: var(--muted); }
-.callout { margin: 12px 0 0; padding: 10px 14px; background: var(--warn-bg); border: 1px solid var(--warn-line); border-left-width: 5px; border-radius: 6px; color: var(--warn-ink); font-size: 0.92rem; }
+.callout { margin: 12px 0 0; padding: 8px 12px; background: var(--note-bg); border: 1px solid var(--note-line); border-radius: 6px; color: var(--note-ink); font-size: 0.9rem; }
 
 /* ---------- tabs (CSS only: no JavaScript) ---------- */
 main { padding: 0 16px 32px; }
@@ -85,12 +88,12 @@ td.missing { background: #fafbfc; }
 .tag-converted { border: 1px solid #7a5aa6; color: #573a82; background: #f1ecf8; }
 sup.fn { margin-left: 2px; font-size: 0.7rem; }
 sup.fn a { text-decoration: none; font-weight: 700; padding: 0 1px; }
-sup.fn-warn a { color: var(--warn-ink); }
+sup.fn-note a { color: var(--note-ink); }
 
 ul.footnotes { list-style: none; margin: 8px 0 0; padding: 0; font-size: 0.85rem; color: var(--muted); }
 ul.footnotes li { margin: 3px 0; padding-left: 1.8em; text-indent: -1.8em; }
 ul.footnotes .fn-num { display: inline-block; min-width: 1.4em; font-weight: 700; text-indent: 0; }
-ul.footnotes li.warning { color: var(--warn-ink); background: var(--warn-bg); border-radius: 4px; padding: 3px 8px 3px 2.4em; }
+ul.footnotes li.warning { color: var(--note-ink); background: var(--note-bg); border-radius: 4px; padding: 3px 8px 3px 2.4em; }
 
 .answer-box { border-left: 4px solid var(--accent-soft); padding: 2px 0 2px 14px; }
 .answer-box p { margin: 4px 0; }
@@ -162,7 +165,7 @@ table.trace-table th:not([scope]) { width: 35%; }
 .dash .chip-bad { color: var(--bad-ink); background: var(--bad-bg); border-color: var(--bad-line); }
 .dash .chip-same { color: var(--same-ink); background: var(--same-bg); border-color: var(--same-line); }
 .dash .chip-unsure { color: var(--same-ink); background: #fff; border-color: var(--same-line); border-style: dashed; }
-.dash .chip-warn { color: var(--warn-ink); background: var(--warn-bg); border-color: var(--warn-line); }
+.dash .chip-note { color: var(--note-ink); background: var(--note-bg); border-color: var(--note-line); }
 
 /* ---- at a glance ---- */
 .dash .glance { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 20px 22px; margin: 18px 0; }
@@ -191,7 +194,7 @@ table.trace-table th:not([scope]) { width: 35%; }
 .dash .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 14px; }
 .dash .minis { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 12px; margin-top: 12px; }
 .dash .card, .dash .mini { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
-.dash .card.doubtful, .dash .mini.doubtful { border: 2px dashed var(--warn-line); background: #fffdf6; }
+.dash .card.doubtful, .dash .mini.doubtful { border: 2px dashed var(--note-line); background: #f9fafb; }
 .dash .card.empty, .dash .mini.empty { background: #fafbfc; border-style: dashed; }
 .dash .card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
 .dash .card h3, .dash .mini h3 { margin: 0; font-size: 1rem; line-height: 1.3; }
@@ -202,7 +205,7 @@ table.trace-table th:not([scope]) { width: 35%; }
 .dash .big .u { font-size: 1rem; color: var(--muted); margin-left: 4px; }
 .dash .mini .big .v { font-size: 1.55rem; }
 .dash .big.none .v { font-size: 1.3rem; font-weight: 600; color: var(--muted); font-style: italic; }
-.dash .doubtful .big .v { color: var(--warn-ink); }       /* a doubtful number must not look as sure as a good one */
+.dash .doubtful .big .v { color: var(--note-ink); }       /* a doubtful number must not look as sure as a good one */
 .dash .trend { margin: 0; font-size: .93rem; display: flex; flex-wrap: wrap; gap: 6px 8px; align-items: center; }
 .dash .caveat { margin: 0; font-size: .8rem; color: var(--muted); }
 .dash .bars { display: grid; gap: 4px; }
@@ -214,7 +217,7 @@ table.trace-table th:not([scope]) { width: 35%; }
 .dash .what, .dash .why { margin: 0; font-size: .88rem; }
 .dash .what b, .dash .why b { color: var(--ink); }
 .dash .why { color: var(--muted); }
-.dash .alert { margin: 0; padding: 7px 10px; background: var(--warn-bg); border: 1px solid var(--warn-line); border-left-width: 5px; border-radius: 6px; color: var(--warn-ink); font-size: .86rem; }
+.dash .alert { margin: 0; padding: 6px 10px; background: var(--note-bg); border: 1px solid var(--note-line); border-radius: 6px; color: var(--note-ink); font-size: .84rem; }
 .dash .alert.shared { margin-top: 12px; }
 .dash details.fine { font-size: .84rem; color: var(--muted); border-top: 1px dashed var(--line); padding-top: 6px; }
 .dash details.fine summary { cursor: pointer; font-weight: 600; color: var(--accent); }
@@ -296,8 +299,8 @@ table.cmptable td.fig .num { font-size: 1.05rem; font-weight: 700; }
 table.cmptable td.fig .u { font-size: .8rem; color: var(--muted); }
 table.cmptable td.win { background: var(--accent-soft); }
 table.cmptable td.missing .num { font-weight: 400; font-style: italic; color: var(--muted); font-size: .95rem; }
-table.cmptable td.doubtful { background: var(--warn-bg); }
-table.cmptable .warn { color: var(--warn-ink); font-weight: 700; cursor: help; }
+table.cmptable td.doubtful { background: var(--note-bg); }
+table.cmptable .note-mark { color: var(--note-ink); font-weight: 700; cursor: help; }
 table.cmptable tr.size { color: var(--muted); }
 table.cmptable tr.size td.fig .num { font-weight: 600; }
 table.cmptable td.res .detail { display: block; margin-top: 4px; font-size: .82rem; color: var(--muted); }</style>
@@ -358,20 +361,20 @@ table.cmptable td.res .detail { display: block; margin-top: 4px; font-size: .82r
         <tbody>
           <tr class="size">
             <th scope="row">Total energy used<span class="dir">a total: shown for size, not ranked</span></th>
-            <td class="fig "><span class="num">19,75,098</span> <span class="u">unit not stated</span> <span class="warn" title="This figure carries a note: see the notes at the bottom of the page">⚠</span></td>
-            <td class="fig "><span class="num">47,35,90,585</span> <span class="u">unit not stated</span> <span class="warn" title="This figure carries a note: see the notes at the bottom of the page">⚠</span></td>
+            <td class="fig "><span class="num">19,75,098</span> <span class="u">unit not stated</span> <span class="note-mark" title="This figure carries a note: see the notes at the bottom of the page">ⓘ</span></td>
+            <td class="fig "><span class="num">47,35,90,585</span> <span class="u">unit not stated</span> <span class="note-mark" title="This figure carries a note: see the notes at the bottom of the page">ⓘ</span></td>
             <td class="res"><span class="chip chip-same">Depends on size</span><span class="detail">Reliance Industries&#39;s figure is 240 times HDFC Bank&#39;s</span></td>
           </tr>
           <tr class="fair">
             <th scope="row">Energy for every ₹ 1 crore of sales<span class="dir">Lower is better ↓</span></th>
-            <td class="fig "><span class="num">1,024</span> <span class="u">unit not stated</span> <span class="warn" title="This figure carries a note: see the notes at the bottom of the page">⚠</span></td>
-            <td class="fig doubtful"><span class="num">Filed as 0</span> <span class="warn" title="This figure carries a note: see the notes at the bottom of the page">⚠</span></td>
+            <td class="fig "><span class="num">1,024</span> <span class="u">unit not stated</span> <span class="note-mark" title="This figure carries a note: see the notes at the bottom of the page">ⓘ</span></td>
+            <td class="fig doubtful"><span class="num">Filed as 0</span> <span class="note-mark" title="This figure carries a note: see the notes at the bottom of the page">ⓘ</span></td>
             <td class="res"><span class="chip chip-unsure">? Can’t compare</span><span class="detail">The figure looks doubtful, so we do not compare it.</span></td>
           </tr>
           <tr class="fair">
             <th scope="row">Energy from renewable sources<span class="dir">Higher is better ↑</span></th>
-            <td class="fig "><span class="num">0.52</span> <span class="u">% of all energy</span> <span class="warn" title="This figure carries a note: see the notes at the bottom of the page">⚠</span></td>
-            <td class="fig  win"><span class="num">1.42</span> <span class="u">% of all energy</span> <span class="warn" title="This figure carries a note: see the notes at the bottom of the page">⚠</span></td>
+            <td class="fig "><span class="num">0.52</span> <span class="u">% of all energy</span> <span class="note-mark" title="This figure carries a note: see the notes at the bottom of the page">ⓘ</span></td>
+            <td class="fig  win"><span class="num">1.42</span> <span class="u">% of all energy</span> <span class="note-mark" title="This figure carries a note: see the notes at the bottom of the page">ⓘ</span></td>
             <td class="res"><span class="chip chip-good">✔ Reliance Industries is higher</span><span class="detail">HDFC Bank is 0.89 percentage points below Reliance Industries</span></td>
           </tr>
         </tbody>
@@ -393,8 +396,8 @@ table.cmptable td.res .detail { display: block; margin-top: 4px; font-size: .82r
           </tr>
           <tr class="fair">
             <th scope="row">Greenhouse gases for every ₹ 1 crore of sales<span class="dir">Lower is better ↓</span></th>
-            <td class="fig "><span class="num">0.17</span> <span class="u">unit not stated</span> <span class="warn" title="This figure carries a note: see the notes at the bottom of the page">⚠</span></td>
-            <td class="fig doubtful"><span class="num">Filed as 0</span> <span class="warn" title="This figure carries a note: see the notes at the bottom of the page">⚠</span></td>
+            <td class="fig "><span class="num">0.17</span> <span class="u">unit not stated</span> <span class="note-mark" title="This figure carries a note: see the notes at the bottom of the page">ⓘ</span></td>
+            <td class="fig doubtful"><span class="num">Filed as 0</span> <span class="note-mark" title="This figure carries a note: see the notes at the bottom of the page">ⓘ</span></td>
             <td class="res"><span class="chip chip-unsure">? Can’t compare</span><span class="detail">The figure looks doubtful, so we do not compare it.</span></td>
           </tr>
         </tbody>
@@ -416,8 +419,8 @@ table.cmptable td.res .detail { display: block; margin-top: 4px; font-size: .82r
           </tr>
           <tr class="fair">
             <th scope="row">Water for every ₹ 1 crore of sales<span class="dir">Lower is better ↓</span></th>
-            <td class="fig doubtful"><span class="num">0.0001</span> <span class="u">unit not stated</span> <span class="warn" title="This figure carries a note: see the notes at the bottom of the page">⚠</span></td>
-            <td class="fig doubtful"><span class="num">Filed as 0</span> <span class="warn" title="This figure carries a note: see the notes at the bottom of the page">⚠</span></td>
+            <td class="fig doubtful"><span class="num">0.0001</span> <span class="u">unit not stated</span> <span class="note-mark" title="This figure carries a note: see the notes at the bottom of the page">ⓘ</span></td>
+            <td class="fig doubtful"><span class="num">Filed as 0</span> <span class="note-mark" title="This figure carries a note: see the notes at the bottom of the page">ⓘ</span></td>
             <td class="res"><span class="chip chip-unsure">? Can’t compare</span><span class="detail">The figure looks doubtful, so we do not compare it.</span></td>
           </tr>
         </tbody>
@@ -433,25 +436,25 @@ table.cmptable td.res .detail { display: block; margin-top: 4px; font-size: .82r
         <tbody>
           <tr class="size">
             <th scope="row">NOx (nitrogen oxides)<span class="dir">a total: shown for size, not ranked</span></th>
-            <td class="fig "><span class="num">0</span> <span class="u">unit not stated</span> <span class="warn" title="This figure carries a note: see the notes at the bottom of the page">⚠</span></td>
+            <td class="fig "><span class="num">0</span> <span class="u">unit not stated</span> <span class="note-mark" title="This figure carries a note: see the notes at the bottom of the page">ⓘ</span></td>
             <td class="fig "><span class="num">34,337</span> <span class="u">tonnes</span></td>
             <td class="res"><span class="chip chip-same">Depends on size</span><span class="detail">The two companies state different units ((unit not stated) and tonnes).</span></td>
           </tr>
           <tr class="size">
             <th scope="row">SOx (sulphur oxides)<span class="dir">a total: shown for size, not ranked</span></th>
-            <td class="fig "><span class="num">0</span> <span class="u">unit not stated</span> <span class="warn" title="This figure carries a note: see the notes at the bottom of the page">⚠</span></td>
+            <td class="fig "><span class="num">0</span> <span class="u">unit not stated</span> <span class="note-mark" title="This figure carries a note: see the notes at the bottom of the page">ⓘ</span></td>
             <td class="fig "><span class="num">17,438</span> <span class="u">tonnes</span></td>
             <td class="res"><span class="chip chip-same">Depends on size</span><span class="detail">The two companies state different units ((unit not stated) and tonnes).</span></td>
           </tr>
           <tr class="size">
             <th scope="row">PM (particulate matter)<span class="dir">a total: shown for size, not ranked</span></th>
-            <td class="fig "><span class="num">0</span> <span class="u">unit not stated</span> <span class="warn" title="This figure carries a note: see the notes at the bottom of the page">⚠</span></td>
+            <td class="fig "><span class="num">0</span> <span class="u">unit not stated</span> <span class="note-mark" title="This figure carries a note: see the notes at the bottom of the page">ⓘ</span></td>
             <td class="fig "><span class="num">1,659</span> <span class="u">tonnes</span></td>
             <td class="res"><span class="chip chip-same">Depends on size</span><span class="detail">The two companies state different units ((unit not stated) and tonnes).</span></td>
           </tr>
           <tr class="size">
             <th scope="row">VOC (volatile organic compounds)<span class="dir">a total: shown for size, not ranked</span></th>
-            <td class="fig "><span class="num">0</span> <span class="u">unit not stated</span> <span class="warn" title="This figure carries a note: see the notes at the bottom of the page">⚠</span></td>
+            <td class="fig "><span class="num">0</span> <span class="u">unit not stated</span> <span class="note-mark" title="This figure carries a note: see the notes at the bottom of the page">ⓘ</span></td>
             <td class="fig "><span class="num">46,275</span> <span class="u">tonnes</span></td>
             <td class="res"><span class="chip chip-same">Depends on size</span><span class="detail">The two companies state different units ((unit not stated) and tonnes).</span></td>
           </tr>

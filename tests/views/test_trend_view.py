@@ -122,7 +122,7 @@ def test_a_figure_in_a_different_unit_keeps_its_own_unit_and_is_marked():
     entry = year("2022-23", energy=2_000_000, previous=1, unit=UNKNOWN, warnings=[NO_UNIT])
     r = row(view_of(entry, year("2023-24", energy=500_000_000, previous=1)), "energy", "Total energy used")
     assert texts(r) == ["20,00,000", "50"] and r.cells[0].unit == "unit not stated"
-    assert [m.symbol for m in r.cells[0].marks] == ["⚠", "u"] and r.unit == "crore GJ"
+    assert [m.symbol for m in r.cells[0].marks] == ["ⓘ", "u"] and r.unit == "crore GJ"
 
 
 # ------------------------------------------------------------------------------------------------ the trend verdict

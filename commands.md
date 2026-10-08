@@ -100,7 +100,7 @@ What to point at (2 minutes):
 1. **The column headers:** each year says *Standalone* or *Consolidated*. A year NSE does not have (Tata Steel FY 2021-22) is shaded and says *"no filing on NSE; figures from the FY 2022-23 filing"*: real data from the next filing's previous-year column, never a zero.
 2. **"Read this before comparing years":** the missing year, the change of basis, the older layout with no units, the restatements.
 3. **The Trend column:** the verdict only compares years on the **same basis and unit**. Tata: *"▲ 14.3% higher than FY 2023-24 ... earlier years use another basis and are not included"*. Wipro: only the two consolidated years. Mis-scaled emissions: *"Can't compare"*.
-4. **The marks:** ⟲ restated by the next filing (hover for the later figure), ⚠ a note or a doubtful figure, ≠ the next filing is on a different basis, u a different unit.
+4. **The marks:** ⟲ restated by the next filing (hover for the later figure), ⓘ a note or a doubtful figure, ≠ the next filing is on a different basis, u a different unit.
 5. **"Every figure, year by year"** (collapsible per SEBI question) and **"Figures changed by a later filing"**.
 
 If one year's filing is damaged, only that column is flagged. Errors give a page too: `--from 2025-26 --to 2021-22` ("That range of years cannot be used"), an unknown company, a year before FY 2021-22.
@@ -146,7 +146,7 @@ What to point at (2 minutes):
 2. **"How we compare fairly":** the rules are on the page. Totals are shown but never ranked ("Depends on size", Tata Steel's total energy is 888 times Wipro's); verdicts only on the figure per ₹ 1 crore of sales (lower is better) and the shares (higher is better, in percentage points); within 1% is "about the same".
 3. **The two numbers of a row use one unit and one scale**, so you can read across; a real figure is never shown as "0 crore". A figure with no stated unit is not compared.
 4. **"Not reported" is never 0**, and the row says who did not report it (covered by tests; the samples happen not to contain such a row). A doubtful figure (Tata Steel's mis-scaled emissions, Reliance's FY 2022-23 intensities filed as 0) is shown as filed with its note and not compared.
-5. **The amber "Different reporting basis" box:** Tata Steel reports standalone and Wipro consolidated, so totals are not like-for-like.
+5. **The grey "Different reporting basis" note:** Tata Steel reports standalone and Wipro consolidated, so totals are not like-for-like.
 
 Errors give a page too, with suggested `flow.py compare` commands: the same company twice ("A comparison needs two different companies"), an unknown company, a year NSE has no filing for.
 
@@ -229,7 +229,7 @@ The proof that this holds for every number: `pytest tests/extraction/test_origin
 2. **One card**: plain title, "Lower is better", big number in lakh/crore, verdict chip + arrow, bars from zero, *What it is*, *Why it matters*, **Fine print** (full number, how we calculated it), and the badge saying where the number came from.
 3. **"How to read better and worse" box**: it compares the company with *itself last year* only. No invented benchmark.
 4. **Show the honesty** with a second company:
-   - `Tata Steel 2025-26`: Climate section is dashed amber: *"The greenhouse gas figure looks doubtful, so we do not quote it."* (the company typed millions of tonnes as tonnes).
+   - `Tata Steel 2025-26`: Climate section has a dashed grey card: *"The greenhouse gas figure looks doubtful, so we do not quote it."* (the company typed millions of tonnes as tonnes).
    - `HDFC Bank 2022-23`: older filing: "unit not stated", "Last year's figure was 0, so a percentage change cannot be worked out", air pollutants "reported as 0 in both years".
    - `Wipro 2025-26`: energy filed in megajoules; shown in GJ with "unit changed by us"; open **Fine print** to see the original.
 5. **"Can I trust these numbers?"** panel: counts of reported / calculated / unit-changed / not reported / noted.
@@ -337,7 +337,7 @@ Get-ChildItem data\raw -Directory | ForEach-Object { "{0,-10} {1}" -f $_.Name, (
 Get-ChildItem output\*.html                                                                                                                  # pages generated so far
 Get-Content data\parsed\RELIANCE\2023-24.json -TotalCount 40                                                                                 # peek at the clean JSON
 ```
-How to read a page: *Not reported* = the filing has nothing (never shown as 0) · `calc.` = we added reported numbers · `conv.` = we changed the unit · ⚠ = doubtful value, explained in the note under the table.
+How to read a page: *Not reported* = the filing has nothing (never shown as 0) · `calc.` = we added reported numbers · `conv.` = we changed the unit · ⓘ = a note about the value (unusual or doubtful), explained under the table.
 
 ---
 
@@ -390,7 +390,7 @@ Then run `python flow.py download --company "TCS"` again to show a real download
 - **Who is the dashboard for?** A non-expert. It answers four questions: how big is the footprint, better or worse than last year, is it under control, can I trust the numbers.
 - **What does "better" mean?** Better than the company's *own* figure last year, nothing more. The filing has no industry benchmark or legal limit, so we do not rate or score.
 - **What if an intensity is rounded to one digit?** (ICICI Bank filed waste per rupee as 0.0000000002, then 0.0000000004: that reads `100% more`, but the true change is anywhere from about +40% to +200%.) The figure is shown as filed, marked *Too coarse to compare*, and not called better or worse; in the summary the exact total takes its place.
-- **What if a number looks wrong?** (Tata Steel typed Scope 1 as 64 instead of 64 million.) It is shown exactly as filed, in amber, with the reason; it gets no better/worse verdict and is kept out of the summary sentences.
+- **What if a number looks wrong?** (Tata Steel typed Scope 1 as 64 instead of 64 million.) It is shown exactly as filed, with a grey note giving the reason; it gets no better/worse verdict and is kept out of the summary sentences.
 - **Why per ₹ crore?** The filed intensity (0.0000807 GJ per ₹) is unreadable. Only the unit changes; the filed number stays in the Fine print.
 - **How do you stop it inventing things?** Missing is "Not reported" (never 0), a zero last year gives "can't compare", figures with no unit are not quoted in sentences, and a test checks every warning in every real filing is classified.
 - **What happens on bad input?** The same command writes an *error page* instead of a report: the exact reason, what you typed, what to try, and commands you can copy (for example the years NSE does have). A real bug gets a page too, and `--debug` shows the traceback.

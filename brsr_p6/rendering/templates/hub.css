@@ -41,7 +41,7 @@ a.open:hover { text-decoration: underline; }
 #viewer { flex: 1 1 auto; display: block; width: 100%; min-height: 480px; border: 0; background: #fff; }
 
 /* ---------- without a script ---------- */
-.nojs { margin: 16px 20px; background: var(--paper); border: 1px solid var(--line); border-left: 5px solid #e5b84a; border-radius: 8px; padding: 12px 16px; }
+.nojs { margin: 16px 20px; background: var(--paper); border: 1px solid var(--line); border-left: 5px solid var(--line); border-radius: 8px; padding: 12px 16px; }
 .nojs h2 { margin: 0 0 6px; font-size: 1.05rem; }
 .nojs ul { margin: 4px 0 10px; padding-left: 20px; }
 

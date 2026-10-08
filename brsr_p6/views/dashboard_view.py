@@ -401,7 +401,7 @@ def _set_answer(view, answer):
     elif answer == "Not applicable":
         view.chip_class, view.chip_text = "chip-same", "n/a Not applicable"
     else:
-        view.chip_class, view.chip_text = "chip-warn", f"⚠ {answer}"
+        view.chip_class, view.chip_text = "chip-note", f"ⓘ {answer}"
 
 
 def _set_assurance(view, report):

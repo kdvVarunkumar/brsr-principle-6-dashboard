@@ -91,7 +91,7 @@ def test_a_doubtful_figure_is_shown_as_filed_but_not_compared_or_quoted():
     put(report, "E6.scope2", 5, 5, unit="tCO2e", warnings=[SCALE_SLIP])
     c = card(report, "ghg_total")
     assert (c.big, c.verdict, c.trust, c.css) == ("69", UNSURE, "doubtful", "doubtful")
-    assert c.bars == [] and c.alerts == [SCALE_SLIP] and c.badge.startswith("⚠ Check this figure")
+    assert c.bars == [] and c.alerts == [SCALE_SLIP] and c.badge.startswith("ⓘ Note on this figure")
 
 
 def test_an_intensity_filed_as_zero_is_not_shown_as_a_real_zero():
@@ -156,7 +156,7 @@ def test_the_warning_box_is_named_for_what_is_wrong_with_the_figure():
     put(report, "E6.scope2", 5, 5, unit="tCO2e", warnings=[SCALE_SLIP])
     assert card(report, "ghg_total").alert_title == "Doubtful figure."                       # a real doubt keeps its strong name
     put(report, "E1.total", 2_000_000, 1_600_000, unit="(unit not stated)", warnings=[NO_UNIT])
-    assert card(report, "energy_total").alert_title == "Check this figure."                  # a mere note stays a note
+    assert card(report, "energy_total").alert_title == "Note on this figure."                   # a mere note stays a note
 
 
 # ------------------------------------------------------------------------------------------------ the trace to the filing

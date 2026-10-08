@@ -13,6 +13,7 @@ Output shape (all plain objects):
 
 from dataclasses import dataclass, field
 
+from brsr_p6.analysis.warning_kinds import DOUBTFUL, kind_of
 from brsr_p6.core.formatting import format_number_html
 from brsr_p6.core.models import Status
 from brsr_p6.core.sebi_template import QUESTIONS
@@ -121,8 +122,8 @@ def cell_view(cell, footnotes):
             view.tags.append(cell.status.value)
     if cell.note and cell.note not in NOTHING_TO_SAY:
         view.notes.append(footnotes.number("note", cell.note))
-    for warning in cell.warnings:
-        view.warns.append(footnotes.number("warning", warning))
+    for warning in cell.warnings:                       # a footnote says how serious it is: 'Doubtful' only for a figure that may be wrong
+        view.warns.append(footnotes.number("warning" if kind_of(warning) == DOUBTFUL else "check", warning))
     return view
 
 

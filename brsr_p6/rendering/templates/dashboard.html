@@ -52,7 +52,7 @@
   {% if t.cards %}<div class="cards">{% for c in t.cards %}{{ card(c) }}{% endfor %}</div>{% endif %}
   {% if t.minis %}<div class="minis">{% for c in t.minis %}{{ card(c) }}{% endfor %}</div>{% endif %}
   {% for note in t.notes %}
-  <p class="alert shared"><b>⚠ Note for {{ note.titles|join(", ") }}:</b> {{ note.text }}</p>
+  <p class="alert shared"><b>ⓘ Note for {{ note.titles|join(", ") }}:</b> {{ note.text }}</p>
   {% endfor %}
   {% if t.stack %}{{ stack(t.stack) }}{% endif %}
 </section>
@@ -89,7 +89,7 @@
         <li><b>{{ tr.calculated }}</b> ∑ added up by us from reported figures</li>
         <li><b>{{ tr.converted }}</b> ⇄ unit changed by us (the original is kept)</li>
         <li><b>{{ tr.not_reported }}</b> ∅ not reported (never shown as 0)</li>
-        <li><b>{{ tr.with_notes }}</b> ⚠ carry a note about the figure</li>
+        <li><b>{{ tr.with_notes }}</b> ⓘ carry a note about the figure</li>
       </ul>
       <p class="small">These counts cover every number in the SEBI-format tab for this year, not only the ones shown above.</p>
     </div>

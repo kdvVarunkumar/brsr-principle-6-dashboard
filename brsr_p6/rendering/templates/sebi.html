@@ -8,7 +8,7 @@
 {% if c.missing %}<span class="missing">Not reported</span>{% else %}<span class="num"{% if c.trace %} title="{{ c.trace }}"{% endif %}>{{ c.text }}</span>{% if c.unit %}<span class="unit{% if c.unit.startswith('(') %} unit-unknown{% endif %}">{{ c.unit }}</span>{% endif %}{% endif %}
 {% for tag in c.tags %}<span class="tag tag-{{ tag }}" title="{{ 'Built by adding reported numbers together' if tag == 'calculated' else 'The unit was converted; the figure as filed is kept in the saved data' }}">{{ 'calc.' if tag == 'calculated' else 'conv.' }}</span>{% endfor %}
 {% for n in c.notes %}<sup class="fn"><a href="#fn-{{ qid }}-{{ n }}">{{ n }}</a></sup>{% endfor %}
-{% for n in c.warns %}<sup class="fn fn-warn"><a href="#fn-{{ qid }}-{{ n }}" title="Doubtful value: see the note">⚠{{ n }}</a></sup>{% endfor %}
+{% for n in c.warns %}<sup class="fn fn-note"><a href="#fn-{{ qid }}-{{ n }}" title="See the note">ⓘ{{ n }}</a></sup>{% endfor %}
 {% endmacro %}
 
 {# The numbered notes under a table. #}
@@ -16,7 +16,7 @@
 {% if items %}
 <ul class="footnotes">
   {% for n, kind, text in items %}
-  <li id="fn-{{ qid }}-{{ n }}" class="{{ kind }}"><span class="fn-num">{{ n }}</span>{% if kind == "warning" %}<strong>⚠ Doubtful:</strong> {% endif %}{{ text }}</li>
+  <li id="fn-{{ qid }}-{{ n }}" class="{{ kind }}"><span class="fn-num">{{ n }}</span>{% if kind == "warning" %}<strong>ⓘ Doubtful:</strong> {% elif kind == "check" %}<strong>ⓘ Note:</strong> {% endif %}{{ text }}</li>
   {% endfor %}
 </ul>
 {% endif %}
@@ -79,7 +79,7 @@
   <span class="missing">Not reported</span> = the filing has nothing for that item (it is never shown as 0).
   <span class="tag tag-calculated">calc.</span> = we added reported numbers together.
   <span class="tag tag-converted">conv.</span> = we changed the unit.
-  <sup class="fn fn-warn"><a href="#">⚠1</a></sup> = a doubtful value, explained in the note under the table. Numbers are always shown exactly as filed unless marked.
+  <sup class="fn fn-note"><a href="#">ⓘ1</a></sup> = a note about the value (it may be unusual or doubtful), explained under the table. Numbers are always shown exactly as filed unless marked.
   Units shown: energy in gigajoules (GJ), water in kilolitres (kL), waste and air pollutants in tonnes, greenhouse gases in tonnes of CO₂ equivalent (tCO₂e).
   <strong>Tracing a number:</strong> hover over it to see the filing's element it was read from; the last section of this tab lists every number with its element and the text exactly as filed.
 </p>

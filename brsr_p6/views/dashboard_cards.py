@@ -72,7 +72,7 @@ class CardView:
     change: float | None = None   # how much it changed: percent for amounts, percentage points for shares (None: not comparable)
     css: str = ""             # "doubtful" or "empty"
     trace: list = field(default_factory=list)   # "FY 2023-24: TotalEnergyConsumed = 375373200 Gigajoule", one line per year
-    alert_title: str = "Check this figure."     # the bold words that start the warning box
+    alert_title: str = "Note on this figure."    # the bold words that start the note
 
 
 # ------------------------------------------------------------------------------------------------ step 1: the figure
@@ -172,7 +172,7 @@ def build_card(report, info):
     title = info.title
     if info.shape == "intensity" and has_number(now) and not _is_per_crore(now):
         title = info.title_as_filed or info.title        # the unit is unclear, so we cannot promise "per ₹ 1 crore"
-    badge = "⚠ Check this figure · filed as 0" if zero_not_real else _badge(info, filed_now, now, comparison.trust)
+    badge = "ⓘ Note on this figure · filed as 0" if zero_not_real else _badge(info, filed_now, now, comparison.trust)
 
     return CardView(
         id=info.id, title=title, size=info.size, name=info.name, better_label=BETTER_LABELS[info.better],
@@ -199,7 +199,7 @@ def _alert_title(trust, warnings):
     """What to call the warning box: a figure that is merely rounded too coarsely is not 'doubtful' (nobody made a mistake)."""
     if only_coarse(warnings):
         return "Too coarse to compare."
-    return "Doubtful figure." if trust == DOUBTFUL else "Check this figure."
+    return "Doubtful figure." if trust == DOUBTFUL else "Note on this figure."
 
 
 def _rows_behind(report, info, metric):
@@ -301,7 +301,7 @@ def _badge(info, filed, shown, trust):
         source = "⇄ Reported by the company · unit changed by us"
     else:
         source = "✔ Reported by the company"
-    return ("⚠ Check this figure · " if trust != OK else "") + source
+    return ("ⓘ Note on this figure · " if trust != OK else "") + source
 
 
 # ------------------------------------------------------------------------------------------------ fine print

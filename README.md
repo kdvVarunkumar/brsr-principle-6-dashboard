@@ -320,7 +320,7 @@ ordered to give them: *How big is the footprint? Is it better or worse than last
 - **Totals mislead, so intensity sits beside them.** A growing company uses more in total, so each topic also shows the figure per ₹ 1 crore
   of sales. Big numbers are written in lakh and crore, matching the Indian digit grouping of the SEBI tab.
 - **"Better" means better than the company's own last year, nothing more.** Inventing a benchmark would break "never invent numbers".
-- **Doubt is visible, never hidden.** A figure that looks wrong is shown exactly as filed, in amber, with no verdict, and is left out of the
+- **Doubt is visible, never hidden.** A figure that looks wrong is shown exactly as filed, with a calm grey note (the symbol ⓘ, never a yellow box or a warning triangle) and no verdict, and is left out of the
   summary sentences, which then say why. A missing figure says "Not reported" (never 0). A zero last year gives "can't compare" because that
   zero probably means "not measured".
 - **Never colour alone.** Verdicts are words plus symbols (✔ ✖ ≈ ?) plus arrows; the layout works on a phone.

@@ -22,9 +22,7 @@
   <p class="what">{% if c.size == "card" %}<b>What it is:</b> {% endif %}{{ c.what }}</p>
   {% if c.size == "card" and c.why %}<p class="why"><b>Why it matters:</b> {{ c.why }}</p>{% endif %}
   {% if c.alerts %}
-  <p class="alert"><b>⚠ {{ c.alert_title }}</b> {{ c.alerts|join(" ") }}</p>
-  {% elif c.shared_alert %}
-  <p class="alert">⚠ See the note below the figures.</p>
+  <p class="alert"><b>ⓘ {{ c.alert_title }}</b> {{ c.alerts|join(" ") }}</p>
   {% endif %}
   {% if c.size == "card" and c.fine %}
   <details class="fine"><summary>Fine print</summary>{% for line in c.fine %}<p>{{ line }}</p>{% endfor %}

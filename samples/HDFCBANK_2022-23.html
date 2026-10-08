@@ -15,9 +15,12 @@
   --accent: #0f6b5c;
   --accent-soft: #e3f1ee;
   --head-bg: #e8eef2;
-  --warn-ink: #7a4b00;
-  --warn-bg: #fff3d4;
-  --warn-line: #e5b84a;
+  --note-ink: #3d4a57;      /* a note about a figure: calm slate, never yellow */
+  --note-bg: #f1f4f7;
+  --note-line: #c5cfd9;
+  --err-ink: #7a4b00;       /* error pages only */
+  --err-bg: #fff3d4;
+  --err-line: #e5b84a;
 }
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--page); color: var(--ink); font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
@@ -42,7 +45,7 @@ h1 .symbol { font-weight: 400; opacity: 0.85; }
 .boundary { font-weight: 700; }
 .boundary-help { display: block; font-size: 0.82rem; color: var(--muted); font-weight: 400; }
 .legend { margin: 12px 0 0; font-size: 0.9rem; color: var(--muted); }
-.callout { margin: 12px 0 0; padding: 10px 14px; background: var(--warn-bg); border: 1px solid var(--warn-line); border-left-width: 5px; border-radius: 6px; color: var(--warn-ink); font-size: 0.92rem; }
+.callout { margin: 12px 0 0; padding: 8px 12px; background: var(--note-bg); border: 1px solid var(--note-line); border-radius: 6px; color: var(--note-ink); font-size: 0.9rem; }
 
 /* ---------- tabs (CSS only: no JavaScript) ---------- */
 main { padding: 0 16px 32px; }
@@ -85,12 +88,12 @@ td.missing { background: #fafbfc; }
 .tag-converted { border: 1px solid #7a5aa6; color: #573a82; background: #f1ecf8; }
 sup.fn { margin-left: 2px; font-size: 0.7rem; }
 sup.fn a { text-decoration: none; font-weight: 700; padding: 0 1px; }
-sup.fn-warn a { color: var(--warn-ink); }
+sup.fn-note a { color: var(--note-ink); }
 
 ul.footnotes { list-style: none; margin: 8px 0 0; padding: 0; font-size: 0.85rem; color: var(--muted); }
 ul.footnotes li { margin: 3px 0; padding-left: 1.8em; text-indent: -1.8em; }
 ul.footnotes .fn-num { display: inline-block; min-width: 1.4em; font-weight: 700; text-indent: 0; }
-ul.footnotes li.warning { color: var(--warn-ink); background: var(--warn-bg); border-radius: 4px; padding: 3px 8px 3px 2.4em; }
+ul.footnotes li.warning { color: var(--note-ink); background: var(--note-bg); border-radius: 4px; padding: 3px 8px 3px 2.4em; }
 
 .answer-box { border-left: 4px solid var(--accent-soft); padding: 2px 0 2px 14px; }
 .answer-box p { margin: 4px 0; }
@@ -162,7 +165,7 @@ table.trace-table th:not([scope]) { width: 35%; }
 .dash .chip-bad { color: var(--bad-ink); background: var(--bad-bg); border-color: var(--bad-line); }
 .dash .chip-same { color: var(--same-ink); background: var(--same-bg); border-color: var(--same-line); }
 .dash .chip-unsure { color: var(--same-ink); background: #fff; border-color: var(--same-line); border-style: dashed; }
-.dash .chip-warn { color: var(--warn-ink); background: var(--warn-bg); border-color: var(--warn-line); }
+.dash .chip-note { color: var(--note-ink); background: var(--note-bg); border-color: var(--note-line); }
 
 /* ---- at a glance ---- */
 .dash .glance { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 20px 22px; margin: 18px 0; }
@@ -191,7 +194,7 @@ table.trace-table th:not([scope]) { width: 35%; }
 .dash .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 14px; }
 .dash .minis { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 12px; margin-top: 12px; }
 .dash .card, .dash .mini { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
-.dash .card.doubtful, .dash .mini.doubtful { border: 2px dashed var(--warn-line); background: #fffdf6; }
+.dash .card.doubtful, .dash .mini.doubtful { border: 2px dashed var(--note-line); background: #f9fafb; }
 .dash .card.empty, .dash .mini.empty { background: #fafbfc; border-style: dashed; }
 .dash .card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
 .dash .card h3, .dash .mini h3 { margin: 0; font-size: 1rem; line-height: 1.3; }
@@ -202,7 +205,7 @@ table.trace-table th:not([scope]) { width: 35%; }
 .dash .big .u { font-size: 1rem; color: var(--muted); margin-left: 4px; }
 .dash .mini .big .v { font-size: 1.55rem; }
 .dash .big.none .v { font-size: 1.3rem; font-weight: 600; color: var(--muted); font-style: italic; }
-.dash .doubtful .big .v { color: var(--warn-ink); }       /* a doubtful number must not look as sure as a good one */
+.dash .doubtful .big .v { color: var(--note-ink); }       /* a doubtful number must not look as sure as a good one */
 .dash .trend { margin: 0; font-size: .93rem; display: flex; flex-wrap: wrap; gap: 6px 8px; align-items: center; }
 .dash .caveat { margin: 0; font-size: .8rem; color: var(--muted); }
 .dash .bars { display: grid; gap: 4px; }
@@ -214,7 +217,7 @@ table.trace-table th:not([scope]) { width: 35%; }
 .dash .what, .dash .why { margin: 0; font-size: .88rem; }
 .dash .what b, .dash .why b { color: var(--ink); }
 .dash .why { color: var(--muted); }
-.dash .alert { margin: 0; padding: 7px 10px; background: var(--warn-bg); border: 1px solid var(--warn-line); border-left-width: 5px; border-radius: 6px; color: var(--warn-ink); font-size: .86rem; }
+.dash .alert { margin: 0; padding: 6px 10px; background: var(--note-bg); border: 1px solid var(--note-line); border-radius: 6px; color: var(--note-ink); font-size: .84rem; }
 .dash .alert.shared { margin-top: 12px; }
 .dash details.fine { font-size: .84rem; color: var(--muted); border-top: 1px dashed var(--line); padding-top: 6px; }
 .dash details.fine summary { cursor: pointer; font-weight: 600; color: var(--accent); }
@@ -363,9 +366,8 @@ table.trace-table th:not([scope]) { width: 35%; }
     <div class="bar-row prev"><span>2021-22</span><span class="bar"><i style="width:80.83%"></i></span><span class="bv">15,96,500</span></div>
   </div>
   <p class="what"><b>What it is:</b> All the electricity, fuel and other energy the company used.</p>
-<p class="why"><b>Why it matters:</b> Energy use drives both costs and greenhouse-gas emissions. Bigger companies use more, so also check the figure per ₹ of sales.</p>  <p class="alert">⚠ See the note below the figures.</p>
-  <details class="fine"><summary>Fine print</summary><p>Filed as 19,75,098.37 (unit not stated) (last year 15,96,499.55).</p><p>Source in the SEBI tab: Essential 1, “Total energy consumption (A+B+C)”.</p><p class="trace-head"><b>Where it is in the filing:</b></p><p class="trace">FY 2022-23: TotalEnergyConsumption = 1975098.37 pure</p><p class="trace">FY 2021-22: TotalEnergyConsumption = 1596499.55 pure</p></details>
-  <p class="badge">⚠ Check this figure · ✔ Reported by the company</p>
+<p class="why"><b>Why it matters:</b> Energy use drives both costs and greenhouse-gas emissions. Bigger companies use more, so also check the figure per ₹ of sales.</p>  <details class="fine"><summary>Fine print</summary><p>Filed as 19,75,098.37 (unit not stated) (last year 15,96,499.55).</p><p>Source in the SEBI tab: Essential 1, “Total energy consumption (A+B+C)”.</p><p class="trace-head"><b>Where it is in the filing:</b></p><p class="trace">FY 2022-23: TotalEnergyConsumption = 1975098.37 pure</p><p class="trace">FY 2021-22: TotalEnergyConsumption = 1596499.55 pure</p></details>
+  <p class="badge">ⓘ Note on this figure · ✔ Reported by the company</p>
 </article>
 <article class="card">
   <div class="card-top">
@@ -378,9 +380,9 @@ table.trace-table th:not([scope]) { width: 35%; }
     <div class="bar-row prev"><span>2021-22</span><span class="bar"><i style="width:99.10%"></i></span><span class="bv">1,015</span></div>
   </div>
   <p class="what"><b>What it is:</b> Energy used divided by sales (called “energy intensity”).</p>
-<p class="why"><b>Why it matters:</b> The fairest way to judge efficiency, because it still works when the company grows.</p>  <p class="alert"><b>⚠ Check this figure.</b> The filing does not state the unit of this intensity figure. Shown as filed.</p>
+<p class="why"><b>Why it matters:</b> The fairest way to judge efficiency, because it still works when the company grows.</p>  <p class="alert"><b>ⓘ Note on this figure.</b> The filing does not state the unit of this intensity figure. Shown as filed.</p>
   <details class="fine"><summary>Fine print</summary><p>Filed as 1,024.43 (unit not stated) (last year 1,015.18).</p><p>Source in the SEBI tab: Essential 1, “Energy intensity per rupee of turnover (Total energy consumption/ turnover in rupees)”.</p><p class="trace-head"><b>Where it is in the filing:</b></p><p class="trace">FY 2022-23: EnergyIntensityPerRupeeOfTurnover = 1024.43 pure</p><p class="trace">FY 2021-22: EnergyIntensityPerRupeeOfTurnover = 1015.18 pure</p></details>
-  <p class="badge">⚠ Check this figure · ✔ Reported by the company</p>
+  <p class="badge">ⓘ Note on this figure · ✔ Reported by the company</p>
 </article>
 <article class="card">
   <div class="card-top">
@@ -393,11 +395,10 @@ table.trace-table th:not([scope]) { width: 35%; }
     <div class="bar-row prev"><span>2021-22</span><span class="bar"><i style="width:0.00%"></i></span><span class="bv">0%</span></div>
   </div>
   <p class="what"><b>What it is:</b> The part of all energy that came from renewables such as solar and wind.</p>
-<p class="why"><b>Why it matters:</b> The more energy comes from renewables, the fewer greenhouse gases the same work causes.</p>  <p class="alert">⚠ See the note below the figures.</p>
-  <details class="fine"><summary>Fine print</summary><p>Calculated by us: renewable energy ÷ (renewable + non-renewable energy). This year: 10,333.68 ÷ (10,333.68 + 19,64,764.69) (last year 0 ÷ (0 + 15,96,499.55)).</p><p>Source in the SEBI tab: Leadership 1.</p><p class="trace-head"><b>Where it is in the filing:</b></p><p class="trace">FY 2022-23: TotalEnergyConsumedFromRenewableSources = 10333.68 pure; TotalEnergyConsumedFromNonRenewableSources = 1964764.69 pure</p><p class="trace">FY 2021-22: TotalEnergyConsumedFromRenewableSources = 0 pure; TotalEnergyConsumedFromNonRenewableSources = 1596499.55 pure</p></details>
-  <p class="badge">⚠ Check this figure · ∑ Calculated by us from reported figures</p>
+<p class="why"><b>Why it matters:</b> The more energy comes from renewables, the fewer greenhouse gases the same work causes.</p>  <details class="fine"><summary>Fine print</summary><p>Calculated by us: renewable energy ÷ (renewable + non-renewable energy). This year: 10,333.68 ÷ (10,333.68 + 19,64,764.69) (last year 0 ÷ (0 + 15,96,499.55)).</p><p>Source in the SEBI tab: Leadership 1.</p><p class="trace-head"><b>Where it is in the filing:</b></p><p class="trace">FY 2022-23: TotalEnergyConsumedFromRenewableSources = 10333.68 pure; TotalEnergyConsumedFromNonRenewableSources = 1964764.69 pure</p><p class="trace">FY 2021-22: TotalEnergyConsumedFromRenewableSources = 0 pure; TotalEnergyConsumedFromNonRenewableSources = 1596499.55 pure</p></details>
+  <p class="badge">ⓘ Note on this figure · ∑ Calculated by us from reported figures</p>
 </article>
-</div>  <p class="alert shared"><b>⚠ Note for Total energy used, Energy from renewable sources:</b> This filing does not state the unit of its energy figures (the SEBI form says &#39;Joules or multiples&#39;). Shown as filed.</p>
+</div>  <p class="alert shared"><b>ⓘ Note for Total energy used, Energy from renewable sources:</b> This filing does not state the unit of its energy figures (the SEBI form says &#39;Joules or multiples&#39;). Shown as filed.</p>
 <figure class="stack">
   <figcaption>What kind of energy was it?</figcaption>
   <div class="stack-bar" role="img" aria-label="Electricity 79.3 percent; Fuel 20.7 percent">
@@ -433,9 +434,9 @@ table.trace-table th:not([scope]) { width: 35%; }
   <p class="big"><span class="v num">0.17</span><span class="u">unit not stated · as filed</span></p>
   <p class="trend"><span class="chip chip-unsure">? Can’t compare</span><span>Filed with one digit of precision, so too coarse to compare with another year.</span></p>
   <p class="what"><b>What it is:</b> Scope 1 + 2 emissions divided by sales (“emission intensity”).</p>
-<p class="why"><b>Why it matters:</b> Shows whether the company is getting cleaner per unit of business, even while it grows.</p>  <p class="alert"><b>⚠ Too coarse to compare.</b> The filing does not state the unit of this intensity figure. Shown as filed. The FY 2021-22 figure was filed as 0.2, which has only one digit of precision. It is rounded too coarsely to compare with another year: the real figure could be much higher or lower.</p>
+<p class="why"><b>Why it matters:</b> Shows whether the company is getting cleaner per unit of business, even while it grows.</p>  <p class="alert"><b>ⓘ Too coarse to compare.</b> The filing does not state the unit of this intensity figure. Shown as filed. The FY 2021-22 figure was filed as 0.2, which has only one digit of precision. It is rounded too coarsely to compare with another year: the real figure could be much higher or lower.</p>
   <details class="fine"><summary>Fine print</summary><p>Filed as 0.17 (unit not stated) (last year 0.2).</p><p>Source in the SEBI tab: Essential 6, “Total Scope 1 and Scope 2 emissions per rupee of turnover”.</p><p class="trace-head"><b>Where it is in the filing:</b></p><p class="trace">FY 2022-23: TotalScope1AndScope2EmissionsPerRupeeOfTurnover = 0.17 pure; UnitOfTotalScope1AndScope2EmissionsPerRupeeOfTurnover = 0</p><p class="trace">FY 2021-22: TotalScope1AndScope2EmissionsPerRupeeOfTurnover = 0.2 pure; UnitOfTotalScope1AndScope2EmissionsPerRupeeOfTurnover = 0</p></details>
-  <p class="badge">⚠ Check this figure · ✔ Reported by the company</p>
+  <p class="badge">ⓘ Note on this figure · ✔ Reported by the company</p>
 </article>
 <article class="card">
   <div class="card-top">
@@ -483,9 +484,9 @@ table.trace-table th:not([scope]) { width: 35%; }
   <p class="big"><span class="v num">0.0001</span><span class="u">unit not stated · as filed</span></p>
   <p class="trend"><span class="chip chip-unsure">? Can’t compare</span><span>Filed with one digit of precision, so too coarse to compare with another year.</span></p>
   <p class="what"><b>What it is:</b> Water consumed divided by sales (“water intensity”).</p>
-<p class="why"><b>Why it matters:</b> Shows whether each ₹ of business needs more or less water than before.</p>  <p class="alert"><b>⚠ Too coarse to compare.</b> The filing does not state the unit of this intensity figure. Shown as filed. The FY 2022-23 figure was filed as 0.0001, which has only one digit of precision. It is rounded too coarsely to compare with another year: the real figure could be much higher or lower.</p>
+<p class="why"><b>Why it matters:</b> Shows whether each ₹ of business needs more or less water than before.</p>  <p class="alert"><b>ⓘ Too coarse to compare.</b> The filing does not state the unit of this intensity figure. Shown as filed. The FY 2022-23 figure was filed as 0.0001, which has only one digit of precision. It is rounded too coarsely to compare with another year: the real figure could be much higher or lower.</p>
   <details class="fine"><summary>Fine print</summary><p>Filed as 0.0001 (unit not stated) (last year 0).</p><p>Source in the SEBI tab: Essential 3, “Water intensity per rupee of turnover (Water consumed / turnover)”.</p><p class="trace-head"><b>Where it is in the filing:</b></p><p class="trace">FY 2022-23: WaterIntensityPerRupeeOfTurnover = 0.0001 pure</p><p class="trace">FY 2021-22: WaterIntensityPerRupeeOfTurnover = 0 pure</p></details>
-  <p class="badge">⚠ Check this figure · ✔ Reported by the company</p>
+  <p class="badge">ⓘ Note on this figure · ✔ Reported by the company</p>
 </article>
 <article class="card">
   <div class="card-top">
@@ -509,8 +510,7 @@ table.trace-table th:not([scope]) { width: 35%; }
   <p class="big"><span class="v num">0</span><span class="u">unit not stated</span></p>
   <p class="trend"><span class="chip chip-same">≈ About the same</span><span>No change: 0 in both years</span></p>
   <p class="what">From burning fuel; cause smog and breathing problems.</p>
-  <p class="alert">⚠ See the note below the figures.</p>
-  <p class="badge" title="From the filing: FY 2022-23: Nox = 0; UnitOfNox = 0 | FY 2021-22: Nox = 0; UnitOfNox = 0">Last year: 0 unit not stated · ⚠ Check this figure · ✔ Reported by the company</p>
+  <p class="badge" title="From the filing: FY 2022-23: Nox = 0; UnitOfNox = 0 | FY 2021-22: Nox = 0; UnitOfNox = 0">Last year: 0 unit not stated · ⓘ Note on this figure · ✔ Reported by the company</p>
 </article>
 <article class="mini">
   <div class="card-top">
@@ -519,8 +519,7 @@ table.trace-table th:not([scope]) { width: 35%; }
   <p class="big"><span class="v num">0</span><span class="u">unit not stated</span></p>
   <p class="trend"><span class="chip chip-same">≈ About the same</span><span>No change: 0 in both years</span></p>
   <p class="what">From burning coal and oil; cause acid rain.</p>
-  <p class="alert">⚠ See the note below the figures.</p>
-  <p class="badge" title="From the filing: FY 2022-23: Sox = 0; UnitOfSox = 0 | FY 2021-22: Sox = 0; UnitOfSox = 0">Last year: 0 unit not stated · ⚠ Check this figure · ✔ Reported by the company</p>
+  <p class="badge" title="From the filing: FY 2022-23: Sox = 0; UnitOfSox = 0 | FY 2021-22: Sox = 0; UnitOfSox = 0">Last year: 0 unit not stated · ⓘ Note on this figure · ✔ Reported by the company</p>
 </article>
 <article class="mini">
   <div class="card-top">
@@ -529,8 +528,7 @@ table.trace-table th:not([scope]) { width: 35%; }
   <p class="big"><span class="v num">0</span><span class="u">unit not stated</span></p>
   <p class="trend"><span class="chip chip-same">≈ About the same</span><span>No change: 0 in both years</span></p>
   <p class="what">Tiny dust and soot particles that reach deep into lungs.</p>
-  <p class="alert">⚠ See the note below the figures.</p>
-  <p class="badge" title="From the filing: FY 2022-23: ParticulateMatter = 0; UnitOfParticulateMatter = 0 | FY 2021-22: ParticulateMatter = 0; UnitOfParticulateMatter = 0">Last year: 0 unit not stated · ⚠ Check this figure · ✔ Reported by the company</p>
+  <p class="badge" title="From the filing: FY 2022-23: ParticulateMatter = 0; UnitOfParticulateMatter = 0 | FY 2021-22: ParticulateMatter = 0; UnitOfParticulateMatter = 0">Last year: 0 unit not stated · ⓘ Note on this figure · ✔ Reported by the company</p>
 </article>
 <article class="mini">
   <div class="card-top">
@@ -539,8 +537,7 @@ table.trace-table th:not([scope]) { width: 35%; }
   <p class="big"><span class="v num">0</span><span class="u">unit not stated</span></p>
   <p class="trend"><span class="chip chip-same">≈ About the same</span><span>No change: 0 in both years</span></p>
   <p class="what">Vapours from fuels and solvents that help form smog.</p>
-  <p class="alert">⚠ See the note below the figures.</p>
-  <p class="badge" title="From the filing: FY 2022-23: VolatileOrganicCompounds = 0; UnitOfVolatileOrganicCompounds = 0 | FY 2021-22: VolatileOrganicCompounds = 0; UnitOfVolatileOrganicCompounds = 0">Last year: 0 unit not stated · ⚠ Check this figure · ✔ Reported by the company</p>
+  <p class="badge" title="From the filing: FY 2022-23: VolatileOrganicCompounds = 0; UnitOfVolatileOrganicCompounds = 0 | FY 2021-22: VolatileOrganicCompounds = 0; UnitOfVolatileOrganicCompounds = 0">Last year: 0 unit not stated · ⓘ Note on this figure · ✔ Reported by the company</p>
 </article>
 <article class="mini">
   <div class="card-top">
@@ -549,8 +546,7 @@ table.trace-table th:not([scope]) { width: 35%; }
   <p class="big"><span class="v num">0</span><span class="u">unit not stated</span></p>
   <p class="trend"><span class="chip chip-same">≈ About the same</span><span>No change: 0 in both years</span></p>
   <p class="what">Long-lasting toxic chemicals.</p>
-  <p class="alert">⚠ See the note below the figures.</p>
-  <p class="badge" title="From the filing: FY 2022-23: PersistentOrganicPollutants = 0; UnitOfPersistentOrganicPollutants = 0 | FY 2021-22: PersistentOrganicPollutants = 0; UnitOfPersistentOrganicPollutants = 0">Last year: 0 unit not stated · ⚠ Check this figure · ✔ Reported by the company</p>
+  <p class="badge" title="From the filing: FY 2022-23: PersistentOrganicPollutants = 0; UnitOfPersistentOrganicPollutants = 0 | FY 2021-22: PersistentOrganicPollutants = 0; UnitOfPersistentOrganicPollutants = 0">Last year: 0 unit not stated · ⓘ Note on this figure · ✔ Reported by the company</p>
 </article>
 <article class="mini">
   <div class="card-top">
@@ -559,11 +555,10 @@ table.trace-table th:not([scope]) { width: 35%; }
   <p class="big"><span class="v num">0</span><span class="u">unit not stated</span></p>
   <p class="trend"><span class="chip chip-same">≈ About the same</span><span>No change: 0 in both years</span></p>
   <p class="what">Toxic gases linked to cancer and other illness.</p>
-  <p class="alert">⚠ See the note below the figures.</p>
-  <p class="badge" title="From the filing: FY 2022-23: HazardousAirPollutants = 0; UnitOfHazardousAirPollutants = 0 | FY 2021-22: HazardousAirPollutants = 0; UnitOfHazardousAirPollutants = 0">Last year: 0 unit not stated · ⚠ Check this figure · ✔ Reported by the company</p>
+  <p class="badge" title="From the filing: FY 2022-23: HazardousAirPollutants = 0; UnitOfHazardousAirPollutants = 0 | FY 2021-22: HazardousAirPollutants = 0; UnitOfHazardousAirPollutants = 0">Last year: 0 unit not stated · ⓘ Note on this figure · ✔ Reported by the company</p>
 </article>
-</div>  <p class="alert shared"><b>⚠ Note for NOx, SOx, PM, VOC, POP, HAP:</b> The filing does not state a usable unit for this figure. Shown as filed.</p>
-  <p class="alert shared"><b>⚠ Note for NOx, SOx, PM, VOC, POP, HAP:</b> A reported 0 can mean &#39;none&#39;, or &#39;not measured / not material&#39;. The filing does not say which.</p>
+</div>  <p class="alert shared"><b>ⓘ Note for NOx, SOx, PM, VOC, POP, HAP:</b> The filing does not state a usable unit for this figure. Shown as filed.</p>
+  <p class="alert shared"><b>ⓘ Note for NOx, SOx, PM, VOC, POP, HAP:</b> A reported 0 can mean &#39;none&#39;, or &#39;not measured / not material&#39;. The filing does not say which.</p>
 </section>
 <section class="topic" id="dash-waste" aria-labelledby="dash-waste-h">
   <div class="topic-head"><svg aria-hidden="true"><use href="#i-bin"/></svg><h2 id="dash-waste-h">Waste</h2><span class="src">SEBI Essential 8-9</span></div>
@@ -671,7 +666,7 @@ table.trace-table th:not([scope]) { width: 35%; }
         <li><b>0</b> ∑ added up by us from reported figures</li>
         <li><b>1</b> ⇄ unit changed by us (the original is kept)</li>
         <li><b>1</b> ∅ not reported (never shown as 0)</li>
-        <li><b>24</b> ⚠ carry a note about the figure</li>
+        <li><b>24</b> ⓘ carry a note about the figure</li>
       </ul>
       <p class="small">These counts cover every number in the SEBI-format tab for this year, not only the ones shown above.</p>
     </div>
@@ -716,7 +711,7 @@ table.trace-table th:not([scope]) { width: 35%; }
   <span class="missing">Not reported</span> = the filing has nothing for that item (it is never shown as 0).
   <span class="tag tag-calculated">calc.</span> = we added reported numbers together.
   <span class="tag tag-converted">conv.</span> = we changed the unit.
-  <sup class="fn fn-warn"><a href="#">⚠1</a></sup> = a doubtful value, explained in the note under the table. Numbers are always shown exactly as filed unless marked.
+  <sup class="fn fn-note"><a href="#">ⓘ1</a></sup> = a note about the value (it may be unusual or doubtful), explained under the table. Numbers are always shown exactly as filed unless marked.
   Units shown: energy in gigajoules (GJ), water in kilolitres (kL), waste and air pollutants in tonnes, greenhouse gases in tonnes of CO₂ equivalent (tCO₂e).
   <strong>Tracing a number:</strong> hover over it to see the filing's element it was read from; the last section of this tab lists every number with its element and the text exactly as filed.
 </p>
@@ -738,40 +733,40 @@ table.trace-table th:not([scope]) { width: 35%; }
     <tbody>
       <tr>
         <th scope="row">Total electricity consumption (A)</th>
-        <td class="val"><span class="num" title="From the filing: TotalElectricityConsumption = 1566144.37 pure">15,66,144.37</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-warn"><a href="#fn-E1-1" title="Doubtful value: see the note">⚠1</a></sup></td>
-        <td class="val"><span class="num" title="From the filing: TotalElectricityConsumption = 1310888.1 pure">13,10,888.1</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-warn"><a href="#fn-E1-1" title="Doubtful value: see the note">⚠1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: TotalElectricityConsumption = 1566144.37 pure">15,66,144.37</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-E1-1" title="See the note">ⓘ1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: TotalElectricityConsumption = 1310888.1 pure">13,10,888.1</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-E1-1" title="See the note">ⓘ1</a></sup></td>
       </tr>
       <tr>
         <th scope="row">Total fuel consumption (B)</th>
-        <td class="val"><span class="num" title="From the filing: TotalFuelConsumption = 408954 pure">4,08,954</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-warn"><a href="#fn-E1-1" title="Doubtful value: see the note">⚠1</a></sup></td>
-        <td class="val"><span class="num" title="From the filing: TotalFuelConsumption = 285611.45 pure">2,85,611.45</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-warn"><a href="#fn-E1-1" title="Doubtful value: see the note">⚠1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: TotalFuelConsumption = 408954 pure">4,08,954</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-E1-1" title="See the note">ⓘ1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: TotalFuelConsumption = 285611.45 pure">2,85,611.45</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-E1-1" title="See the note">ⓘ1</a></sup></td>
       </tr>
       <tr>
         <th scope="row">Energy consumption through other sources (C)</th>
-        <td class="val"><span class="num" title="From the filing: EnergyConsumptionThroughOtherSources = 0 pure">0</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-warn"><a href="#fn-E1-1" title="Doubtful value: see the note">⚠1</a></sup></td>
-        <td class="val"><span class="num" title="From the filing: EnergyConsumptionThroughOtherSources = 0 pure">0</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-warn"><a href="#fn-E1-1" title="Doubtful value: see the note">⚠1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: EnergyConsumptionThroughOtherSources = 0 pure">0</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-E1-1" title="See the note">ⓘ1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: EnergyConsumptionThroughOtherSources = 0 pure">0</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-E1-1" title="See the note">ⓘ1</a></sup></td>
       </tr>
       <tr>
         <th scope="row">Total energy consumption (A+B+C)</th>
-        <td class="val"><span class="num" title="From the filing: TotalEnergyConsumption = 1975098.37 pure">19,75,098.37</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-warn"><a href="#fn-E1-1" title="Doubtful value: see the note">⚠1</a></sup></td>
-        <td class="val"><span class="num" title="From the filing: TotalEnergyConsumption = 1596499.55 pure">15,96,499.55</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-warn"><a href="#fn-E1-1" title="Doubtful value: see the note">⚠1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: TotalEnergyConsumption = 1975098.37 pure">19,75,098.37</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-E1-1" title="See the note">ⓘ1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: TotalEnergyConsumption = 1596499.55 pure">15,96,499.55</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-E1-1" title="See the note">ⓘ1</a></sup></td>
       </tr>
       <tr>
         <th scope="row">Energy intensity per rupee of turnover (Total energy consumption/ turnover in rupees)</th>
-        <td class="val"><span class="num" title="From the filing: EnergyIntensityPerRupeeOfTurnover = 1024.43 pure">1,024.43</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-warn"><a href="#fn-E1-2" title="Doubtful value: see the note">⚠2</a></sup></td>
-        <td class="val"><span class="num" title="From the filing: EnergyIntensityPerRupeeOfTurnover = 1015.18 pure">1,015.18</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-warn"><a href="#fn-E1-2" title="Doubtful value: see the note">⚠2</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: EnergyIntensityPerRupeeOfTurnover = 1024.43 pure">1,024.43</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-E1-2" title="See the note">ⓘ2</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: EnergyIntensityPerRupeeOfTurnover = 1015.18 pure">1,015.18</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-E1-2" title="See the note">ⓘ2</a></sup></td>
       </tr>
       <tr>
         <th scope="row">Energy intensity (optional) – the relevant metric may be selected by the entity</th>
-        <td class="val"><span class="num" title="From the filing: EnergyIntensityTheRelevantMetricMayBeSelectedByTheEntity = 11.4 pure">11.4</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-warn"><a href="#fn-E1-2" title="Doubtful value: see the note">⚠2</a></sup></td>
-        <td class="val"><span class="num" title="From the filing: EnergyIntensityTheRelevantMetricMayBeSelectedByTheEntity = 11.28 pure">11.28</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-warn"><a href="#fn-E1-2" title="Doubtful value: see the note">⚠2</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: EnergyIntensityTheRelevantMetricMayBeSelectedByTheEntity = 11.4 pure">11.4</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-E1-2" title="See the note">ⓘ2</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: EnergyIntensityTheRelevantMetricMayBeSelectedByTheEntity = 11.28 pure">11.28</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-E1-2" title="See the note">ⓘ2</a></sup></td>
       </tr>
     </tbody>
   </table>
 </div>
 <ul class="footnotes">
-  <li id="fn-E1-1" class="warning"><span class="fn-num">1</span><strong>⚠ Doubtful:</strong> This filing does not state the unit of its energy figures (the SEBI form says &#39;Joules or multiples&#39;). Shown as filed.</li>
-  <li id="fn-E1-2" class="warning"><span class="fn-num">2</span><strong>⚠ Doubtful:</strong> The filing does not state the unit of this intensity figure. Shown as filed.</li>
+  <li id="fn-E1-1" class="check"><span class="fn-num">1</span><strong>ⓘ Note:</strong> This filing does not state the unit of its energy figures (the SEBI form says &#39;Joules or multiples&#39;). Shown as filed.</li>
+  <li id="fn-E1-2" class="check"><span class="fn-num">2</span><strong>ⓘ Note:</strong> The filing does not state the unit of this intensity figure. Shown as filed.</li>
 </ul>
 
 
@@ -844,21 +839,21 @@ table.trace-table th:not([scope]) { width: 35%; }
       </tr>
       <tr>
         <th scope="row">Water intensity per rupee of turnover (Water consumed / turnover)</th>
-        <td class="val"><span class="num" title="From the filing: WaterIntensityPerRupeeOfTurnover = 0.0001 pure">0.0001</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-warn"><a href="#fn-E3-2" title="Doubtful value: see the note">⚠2</a></sup><sup class="fn fn-warn"><a href="#fn-E3-3" title="Doubtful value: see the note">⚠3</a></sup></td>
-        <td class="val"><span class="num" title="From the filing: WaterIntensityPerRupeeOfTurnover = 0 pure">0</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-warn"><a href="#fn-E3-2" title="Doubtful value: see the note">⚠2</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: WaterIntensityPerRupeeOfTurnover = 0.0001 pure">0.0001</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-E3-2" title="See the note">ⓘ2</a></sup><sup class="fn fn-note"><a href="#fn-E3-3" title="See the note">ⓘ3</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: WaterIntensityPerRupeeOfTurnover = 0 pure">0</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-E3-2" title="See the note">ⓘ2</a></sup></td>
       </tr>
       <tr>
         <th scope="row">Water intensity (optional) – the relevant metric may be selected by the entity</th>
-        <td class="val"><span class="num" title="From the filing: WaterIntensityTheRelevantMetricMayBeSelectedByTheEntity = 12.51 pure">12.51</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-warn"><a href="#fn-E3-2" title="Doubtful value: see the note">⚠2</a></sup></td>
-        <td class="val"><span class="num" title="From the filing: WaterIntensityTheRelevantMetricMayBeSelectedByTheEntity = 0 pure">0</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-warn"><a href="#fn-E3-2" title="Doubtful value: see the note">⚠2</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: WaterIntensityTheRelevantMetricMayBeSelectedByTheEntity = 12.51 pure">12.51</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-E3-2" title="See the note">ⓘ2</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: WaterIntensityTheRelevantMetricMayBeSelectedByTheEntity = 0 pure">0</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-E3-2" title="See the note">ⓘ2</a></sup></td>
       </tr>
     </tbody>
   </table>
 </div>
 <ul class="footnotes">
   <li id="fn-E3-1" class="note"><span class="fn-num">1</span>The filing states no unit; kL as required by the SEBI form.</li>
-  <li id="fn-E3-2" class="warning"><span class="fn-num">2</span><strong>⚠ Doubtful:</strong> The filing does not state the unit of this intensity figure. Shown as filed.</li>
-  <li id="fn-E3-3" class="warning"><span class="fn-num">3</span><strong>⚠ Doubtful:</strong> The FY 2022-23 figure was filed as 0.0001, which has only one digit of precision. It is rounded too coarsely to compare with another year: the real figure could be much higher or lower.</li>
+  <li id="fn-E3-2" class="check"><span class="fn-num">2</span><strong>ⓘ Note:</strong> The filing does not state the unit of this intensity figure. Shown as filed.</li>
+  <li id="fn-E3-3" class="warning"><span class="fn-num">3</span><strong>ⓘ Doubtful:</strong> The FY 2022-23 figure was filed as 0.0001, which has only one digit of precision. It is rounded too coarsely to compare with another year: the real figure could be much higher or lower.</li>
 </ul>
 
 
@@ -895,33 +890,33 @@ table.trace-table th:not([scope]) { width: 35%; }
     <tbody>
       <tr>
         <th scope="row">NOx</th>
-<td class="unit-col">(unit not stated)</td>        <td class="val"><span class="num" title="From the filing: Nox = 0; UnitOfNox = 0">0</span><sup class="fn fn-warn"><a href="#fn-E5-1" title="Doubtful value: see the note">⚠1</a></sup><sup class="fn fn-warn"><a href="#fn-E5-2" title="Doubtful value: see the note">⚠2</a></sup></td>
-        <td class="val"><span class="num" title="From the filing: Nox = 0; UnitOfNox = 0">0</span><sup class="fn fn-warn"><a href="#fn-E5-1" title="Doubtful value: see the note">⚠1</a></sup><sup class="fn fn-warn"><a href="#fn-E5-2" title="Doubtful value: see the note">⚠2</a></sup></td>
+<td class="unit-col">(unit not stated)</td>        <td class="val"><span class="num" title="From the filing: Nox = 0; UnitOfNox = 0">0</span><sup class="fn fn-note"><a href="#fn-E5-1" title="See the note">ⓘ1</a></sup><sup class="fn fn-note"><a href="#fn-E5-2" title="See the note">ⓘ2</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: Nox = 0; UnitOfNox = 0">0</span><sup class="fn fn-note"><a href="#fn-E5-1" title="See the note">ⓘ1</a></sup><sup class="fn fn-note"><a href="#fn-E5-2" title="See the note">ⓘ2</a></sup></td>
       </tr>
       <tr>
         <th scope="row">SOx</th>
-<td class="unit-col">(unit not stated)</td>        <td class="val"><span class="num" title="From the filing: Sox = 0; UnitOfSox = 0">0</span><sup class="fn fn-warn"><a href="#fn-E5-1" title="Doubtful value: see the note">⚠1</a></sup><sup class="fn fn-warn"><a href="#fn-E5-2" title="Doubtful value: see the note">⚠2</a></sup></td>
-        <td class="val"><span class="num" title="From the filing: Sox = 0; UnitOfSox = 0">0</span><sup class="fn fn-warn"><a href="#fn-E5-1" title="Doubtful value: see the note">⚠1</a></sup><sup class="fn fn-warn"><a href="#fn-E5-2" title="Doubtful value: see the note">⚠2</a></sup></td>
+<td class="unit-col">(unit not stated)</td>        <td class="val"><span class="num" title="From the filing: Sox = 0; UnitOfSox = 0">0</span><sup class="fn fn-note"><a href="#fn-E5-1" title="See the note">ⓘ1</a></sup><sup class="fn fn-note"><a href="#fn-E5-2" title="See the note">ⓘ2</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: Sox = 0; UnitOfSox = 0">0</span><sup class="fn fn-note"><a href="#fn-E5-1" title="See the note">ⓘ1</a></sup><sup class="fn fn-note"><a href="#fn-E5-2" title="See the note">ⓘ2</a></sup></td>
       </tr>
       <tr>
         <th scope="row">Particulate matter (PM)</th>
-<td class="unit-col">(unit not stated)</td>        <td class="val"><span class="num" title="From the filing: ParticulateMatter = 0; UnitOfParticulateMatter = 0">0</span><sup class="fn fn-warn"><a href="#fn-E5-1" title="Doubtful value: see the note">⚠1</a></sup><sup class="fn fn-warn"><a href="#fn-E5-2" title="Doubtful value: see the note">⚠2</a></sup></td>
-        <td class="val"><span class="num" title="From the filing: ParticulateMatter = 0; UnitOfParticulateMatter = 0">0</span><sup class="fn fn-warn"><a href="#fn-E5-1" title="Doubtful value: see the note">⚠1</a></sup><sup class="fn fn-warn"><a href="#fn-E5-2" title="Doubtful value: see the note">⚠2</a></sup></td>
+<td class="unit-col">(unit not stated)</td>        <td class="val"><span class="num" title="From the filing: ParticulateMatter = 0; UnitOfParticulateMatter = 0">0</span><sup class="fn fn-note"><a href="#fn-E5-1" title="See the note">ⓘ1</a></sup><sup class="fn fn-note"><a href="#fn-E5-2" title="See the note">ⓘ2</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: ParticulateMatter = 0; UnitOfParticulateMatter = 0">0</span><sup class="fn fn-note"><a href="#fn-E5-1" title="See the note">ⓘ1</a></sup><sup class="fn fn-note"><a href="#fn-E5-2" title="See the note">ⓘ2</a></sup></td>
       </tr>
       <tr>
         <th scope="row">Persistent organic pollutants (POP)</th>
-<td class="unit-col">(unit not stated)</td>        <td class="val"><span class="num" title="From the filing: PersistentOrganicPollutants = 0; UnitOfPersistentOrganicPollutants = 0">0</span><sup class="fn fn-warn"><a href="#fn-E5-1" title="Doubtful value: see the note">⚠1</a></sup><sup class="fn fn-warn"><a href="#fn-E5-2" title="Doubtful value: see the note">⚠2</a></sup></td>
-        <td class="val"><span class="num" title="From the filing: PersistentOrganicPollutants = 0; UnitOfPersistentOrganicPollutants = 0">0</span><sup class="fn fn-warn"><a href="#fn-E5-1" title="Doubtful value: see the note">⚠1</a></sup><sup class="fn fn-warn"><a href="#fn-E5-2" title="Doubtful value: see the note">⚠2</a></sup></td>
+<td class="unit-col">(unit not stated)</td>        <td class="val"><span class="num" title="From the filing: PersistentOrganicPollutants = 0; UnitOfPersistentOrganicPollutants = 0">0</span><sup class="fn fn-note"><a href="#fn-E5-1" title="See the note">ⓘ1</a></sup><sup class="fn fn-note"><a href="#fn-E5-2" title="See the note">ⓘ2</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: PersistentOrganicPollutants = 0; UnitOfPersistentOrganicPollutants = 0">0</span><sup class="fn fn-note"><a href="#fn-E5-1" title="See the note">ⓘ1</a></sup><sup class="fn fn-note"><a href="#fn-E5-2" title="See the note">ⓘ2</a></sup></td>
       </tr>
       <tr>
         <th scope="row">Volatile organic compounds (VOC)</th>
-<td class="unit-col">(unit not stated)</td>        <td class="val"><span class="num" title="From the filing: VolatileOrganicCompounds = 0; UnitOfVolatileOrganicCompounds = 0">0</span><sup class="fn fn-warn"><a href="#fn-E5-1" title="Doubtful value: see the note">⚠1</a></sup><sup class="fn fn-warn"><a href="#fn-E5-2" title="Doubtful value: see the note">⚠2</a></sup></td>
-        <td class="val"><span class="num" title="From the filing: VolatileOrganicCompounds = 0; UnitOfVolatileOrganicCompounds = 0">0</span><sup class="fn fn-warn"><a href="#fn-E5-1" title="Doubtful value: see the note">⚠1</a></sup><sup class="fn fn-warn"><a href="#fn-E5-2" title="Doubtful value: see the note">⚠2</a></sup></td>
+<td class="unit-col">(unit not stated)</td>        <td class="val"><span class="num" title="From the filing: VolatileOrganicCompounds = 0; UnitOfVolatileOrganicCompounds = 0">0</span><sup class="fn fn-note"><a href="#fn-E5-1" title="See the note">ⓘ1</a></sup><sup class="fn fn-note"><a href="#fn-E5-2" title="See the note">ⓘ2</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: VolatileOrganicCompounds = 0; UnitOfVolatileOrganicCompounds = 0">0</span><sup class="fn fn-note"><a href="#fn-E5-1" title="See the note">ⓘ1</a></sup><sup class="fn fn-note"><a href="#fn-E5-2" title="See the note">ⓘ2</a></sup></td>
       </tr>
       <tr>
         <th scope="row">Hazardous air pollutants (HAP)</th>
-<td class="unit-col">(unit not stated)</td>        <td class="val"><span class="num" title="From the filing: HazardousAirPollutants = 0; UnitOfHazardousAirPollutants = 0">0</span><sup class="fn fn-warn"><a href="#fn-E5-1" title="Doubtful value: see the note">⚠1</a></sup><sup class="fn fn-warn"><a href="#fn-E5-2" title="Doubtful value: see the note">⚠2</a></sup></td>
-        <td class="val"><span class="num" title="From the filing: HazardousAirPollutants = 0; UnitOfHazardousAirPollutants = 0">0</span><sup class="fn fn-warn"><a href="#fn-E5-1" title="Doubtful value: see the note">⚠1</a></sup><sup class="fn fn-warn"><a href="#fn-E5-2" title="Doubtful value: see the note">⚠2</a></sup></td>
+<td class="unit-col">(unit not stated)</td>        <td class="val"><span class="num" title="From the filing: HazardousAirPollutants = 0; UnitOfHazardousAirPollutants = 0">0</span><sup class="fn fn-note"><a href="#fn-E5-1" title="See the note">ⓘ1</a></sup><sup class="fn fn-note"><a href="#fn-E5-2" title="See the note">ⓘ2</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: HazardousAirPollutants = 0; UnitOfHazardousAirPollutants = 0">0</span><sup class="fn fn-note"><a href="#fn-E5-1" title="See the note">ⓘ1</a></sup><sup class="fn fn-note"><a href="#fn-E5-2" title="See the note">ⓘ2</a></sup></td>
       </tr>
       <tr>
         <th scope="row">Others – please specify</th>
@@ -932,8 +927,8 @@ table.trace-table th:not([scope]) { width: 35%; }
   </table>
 </div>
 <ul class="footnotes">
-  <li id="fn-E5-1" class="warning"><span class="fn-num">1</span><strong>⚠ Doubtful:</strong> The filing does not state a usable unit for this figure. Shown as filed.</li>
-  <li id="fn-E5-2" class="warning"><span class="fn-num">2</span><strong>⚠ Doubtful:</strong> A reported 0 can mean &#39;none&#39;, or &#39;not measured / not material&#39;. The filing does not say which.</li>
+  <li id="fn-E5-1" class="check"><span class="fn-num">1</span><strong>ⓘ Note:</strong> The filing does not state a usable unit for this figure. Shown as filed.</li>
+  <li id="fn-E5-2" class="check"><span class="fn-num">2</span><strong>ⓘ Note:</strong> A reported 0 can mean &#39;none&#39;, or &#39;not measured / not material&#39;. The filing does not say which.</li>
   <li id="fn-E5-3" class="note"><span class="fn-num">3</span>The structured filing has no field for this item.</li>
 </ul>
 
@@ -969,20 +964,20 @@ table.trace-table th:not([scope]) { width: 35%; }
       </tr>
       <tr>
         <th scope="row">Total Scope 1 and Scope 2 emissions per rupee of turnover</th>
-<td class="unit-col">(unit not stated)</td>        <td class="val"><span class="num" title="From the filing: TotalScope1AndScope2EmissionsPerRupeeOfTurnover = 0.17 pure; UnitOfTotalScope1AndScope2EmissionsPerRupeeOfTurnover = 0">0.17</span><sup class="fn fn-warn"><a href="#fn-E6-1" title="Doubtful value: see the note">⚠1</a></sup></td>
-        <td class="val"><span class="num" title="From the filing: TotalScope1AndScope2EmissionsPerRupeeOfTurnover = 0.2 pure; UnitOfTotalScope1AndScope2EmissionsPerRupeeOfTurnover = 0">0.2</span><sup class="fn fn-warn"><a href="#fn-E6-1" title="Doubtful value: see the note">⚠1</a></sup><sup class="fn fn-warn"><a href="#fn-E6-2" title="Doubtful value: see the note">⚠2</a></sup></td>
+<td class="unit-col">(unit not stated)</td>        <td class="val"><span class="num" title="From the filing: TotalScope1AndScope2EmissionsPerRupeeOfTurnover = 0.17 pure; UnitOfTotalScope1AndScope2EmissionsPerRupeeOfTurnover = 0">0.17</span><sup class="fn fn-note"><a href="#fn-E6-1" title="See the note">ⓘ1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: TotalScope1AndScope2EmissionsPerRupeeOfTurnover = 0.2 pure; UnitOfTotalScope1AndScope2EmissionsPerRupeeOfTurnover = 0">0.2</span><sup class="fn fn-note"><a href="#fn-E6-1" title="See the note">ⓘ1</a></sup><sup class="fn fn-note"><a href="#fn-E6-2" title="See the note">ⓘ2</a></sup></td>
       </tr>
       <tr>
         <th scope="row">Total Scope 1 and Scope 2 emission intensity (optional) – the relevant metric may be selected by the entity</th>
-<td class="unit-col">(unit not stated)</td>        <td class="val"><span class="num" title="From the filing: TotalScope1AndScope2EmissionIntensity = 1.94 pure; UnitOfTotalScope1AndScope2EmissionIntensity = 0">1.94</span><sup class="fn fn-warn"><a href="#fn-E6-1" title="Doubtful value: see the note">⚠1</a></sup></td>
-        <td class="val"><span class="num" title="From the filing: TotalScope1AndScope2EmissionIntensity = 2.18 pure; UnitOfTotalScope1AndScope2EmissionIntensity = 0">2.18</span><sup class="fn fn-warn"><a href="#fn-E6-1" title="Doubtful value: see the note">⚠1</a></sup></td>
+<td class="unit-col">(unit not stated)</td>        <td class="val"><span class="num" title="From the filing: TotalScope1AndScope2EmissionIntensity = 1.94 pure; UnitOfTotalScope1AndScope2EmissionIntensity = 0">1.94</span><sup class="fn fn-note"><a href="#fn-E6-1" title="See the note">ⓘ1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: TotalScope1AndScope2EmissionIntensity = 2.18 pure; UnitOfTotalScope1AndScope2EmissionIntensity = 0">2.18</span><sup class="fn fn-note"><a href="#fn-E6-1" title="See the note">ⓘ1</a></sup></td>
       </tr>
     </tbody>
   </table>
 </div>
 <ul class="footnotes">
-  <li id="fn-E6-1" class="warning"><span class="fn-num">1</span><strong>⚠ Doubtful:</strong> The filing does not state the unit of this intensity figure. Shown as filed.</li>
-  <li id="fn-E6-2" class="warning"><span class="fn-num">2</span><strong>⚠ Doubtful:</strong> The FY 2021-22 figure was filed as 0.2, which has only one digit of precision. It is rounded too coarsely to compare with another year: the real figure could be much higher or lower.</li>
+  <li id="fn-E6-1" class="check"><span class="fn-num">1</span><strong>ⓘ Note:</strong> The filing does not state the unit of this intensity figure. Shown as filed.</li>
+  <li id="fn-E6-2" class="warning"><span class="fn-num">2</span><strong>ⓘ Doubtful:</strong> The FY 2021-22 figure was filed as 0.2, which has only one digit of precision. It is rounded too coarsely to compare with another year: the real figure could be much higher or lower.</li>
 </ul>
 
 
@@ -1197,50 +1192,50 @@ table.trace-table th:not([scope]) { width: 35%; }
       <tr class="subhead"><th colspan="3" scope="colgroup">From renewable sources</th></tr>
       <tr>
         <th scope="row">Total electricity consumption (A)</th>
-        <td class="val"><span class="num" title="From the filing: TotalElectricityConsumptionFromRenewableSources = 10333.68 pure">10,333.68</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-warn"><a href="#fn-L1-1" title="Doubtful value: see the note">⚠1</a></sup></td>
-        <td class="val"><span class="num" title="From the filing: TotalElectricityConsumptionFromRenewableSources = 0 pure">0</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-warn"><a href="#fn-L1-1" title="Doubtful value: see the note">⚠1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: TotalElectricityConsumptionFromRenewableSources = 10333.68 pure">10,333.68</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-L1-1" title="See the note">ⓘ1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: TotalElectricityConsumptionFromRenewableSources = 0 pure">0</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-L1-1" title="See the note">ⓘ1</a></sup></td>
       </tr>
       <tr>
         <th scope="row">Total fuel consumption (B)</th>
-        <td class="val"><span class="num" title="From the filing: TotalFuelConsumptionFromRenewableSources = 0 pure">0</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-warn"><a href="#fn-L1-1" title="Doubtful value: see the note">⚠1</a></sup></td>
-        <td class="val"><span class="num" title="From the filing: TotalFuelConsumptionFromRenewableSources = 0 pure">0</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-warn"><a href="#fn-L1-1" title="Doubtful value: see the note">⚠1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: TotalFuelConsumptionFromRenewableSources = 0 pure">0</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-L1-1" title="See the note">ⓘ1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: TotalFuelConsumptionFromRenewableSources = 0 pure">0</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-L1-1" title="See the note">ⓘ1</a></sup></td>
       </tr>
       <tr>
         <th scope="row">Energy consumption through other sources (C)</th>
-        <td class="val"><span class="num" title="From the filing: EnergyConsumptionThroughOtherSourcesFromRenewableSources = 0 pure">0</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-warn"><a href="#fn-L1-1" title="Doubtful value: see the note">⚠1</a></sup></td>
-        <td class="val"><span class="num" title="From the filing: EnergyConsumptionThroughOtherSourcesFromRenewableSources = 0 pure">0</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-warn"><a href="#fn-L1-1" title="Doubtful value: see the note">⚠1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: EnergyConsumptionThroughOtherSourcesFromRenewableSources = 0 pure">0</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-L1-1" title="See the note">ⓘ1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: EnergyConsumptionThroughOtherSourcesFromRenewableSources = 0 pure">0</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-L1-1" title="See the note">ⓘ1</a></sup></td>
       </tr>
       <tr>
         <th scope="row">Total energy consumed from renewable sources (A+B+C)</th>
-        <td class="val"><span class="num" title="From the filing: TotalEnergyConsumedFromRenewableSources = 10333.68 pure">10,333.68</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-warn"><a href="#fn-L1-1" title="Doubtful value: see the note">⚠1</a></sup></td>
-        <td class="val"><span class="num" title="From the filing: TotalEnergyConsumedFromRenewableSources = 0 pure">0</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-warn"><a href="#fn-L1-1" title="Doubtful value: see the note">⚠1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: TotalEnergyConsumedFromRenewableSources = 10333.68 pure">10,333.68</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-L1-1" title="See the note">ⓘ1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: TotalEnergyConsumedFromRenewableSources = 0 pure">0</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-L1-1" title="See the note">ⓘ1</a></sup></td>
       </tr>
       <tr class="subhead"><th colspan="3" scope="colgroup">From non-renewable sources</th></tr>
       <tr>
         <th scope="row">Total electricity consumption (D)</th>
-        <td class="val"><span class="num" title="From the filing: TotalElectricityConsumptionFromNonRenewableSources = 1555810.69 pure">15,55,810.69</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-warn"><a href="#fn-L1-1" title="Doubtful value: see the note">⚠1</a></sup></td>
-        <td class="val"><span class="num" title="From the filing: TotalElectricityConsumptionFromNonRenewableSources = 1310888.1 pure">13,10,888.1</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-warn"><a href="#fn-L1-1" title="Doubtful value: see the note">⚠1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: TotalElectricityConsumptionFromNonRenewableSources = 1555810.69 pure">15,55,810.69</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-L1-1" title="See the note">ⓘ1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: TotalElectricityConsumptionFromNonRenewableSources = 1310888.1 pure">13,10,888.1</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-L1-1" title="See the note">ⓘ1</a></sup></td>
       </tr>
       <tr>
         <th scope="row">Total fuel consumption (E)</th>
-        <td class="val"><span class="num" title="From the filing: TotalFuelConsumptionFromNonRenewableSources = 408954 pure">4,08,954</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-warn"><a href="#fn-L1-1" title="Doubtful value: see the note">⚠1</a></sup></td>
-        <td class="val"><span class="num" title="From the filing: TotalFuelConsumptionFromNonRenewableSources = 285611.45 pure">2,85,611.45</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-warn"><a href="#fn-L1-1" title="Doubtful value: see the note">⚠1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: TotalFuelConsumptionFromNonRenewableSources = 408954 pure">4,08,954</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-L1-1" title="See the note">ⓘ1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: TotalFuelConsumptionFromNonRenewableSources = 285611.45 pure">2,85,611.45</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-L1-1" title="See the note">ⓘ1</a></sup></td>
       </tr>
       <tr>
         <th scope="row">Energy consumption through other sources (F)</th>
-        <td class="val"><span class="num" title="From the filing: EnergyConsumptionThroughOtherSourcesFromNonRenewableSources = 0 pure">0</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-warn"><a href="#fn-L1-1" title="Doubtful value: see the note">⚠1</a></sup></td>
-        <td class="val"><span class="num" title="From the filing: EnergyConsumptionThroughOtherSourcesFromNonRenewableSources = 0 pure">0</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-warn"><a href="#fn-L1-1" title="Doubtful value: see the note">⚠1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: EnergyConsumptionThroughOtherSourcesFromNonRenewableSources = 0 pure">0</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-L1-1" title="See the note">ⓘ1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: EnergyConsumptionThroughOtherSourcesFromNonRenewableSources = 0 pure">0</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-L1-1" title="See the note">ⓘ1</a></sup></td>
       </tr>
       <tr>
         <th scope="row">Total energy consumed from non-renewable sources (D+E+F)</th>
-        <td class="val"><span class="num" title="From the filing: TotalEnergyConsumedFromNonRenewableSources = 1964764.69 pure">19,64,764.69</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-warn"><a href="#fn-L1-1" title="Doubtful value: see the note">⚠1</a></sup></td>
-        <td class="val"><span class="num" title="From the filing: TotalEnergyConsumedFromNonRenewableSources = 1596499.55 pure">15,96,499.55</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-warn"><a href="#fn-L1-1" title="Doubtful value: see the note">⚠1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: TotalEnergyConsumedFromNonRenewableSources = 1964764.69 pure">19,64,764.69</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-L1-1" title="See the note">ⓘ1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: TotalEnergyConsumedFromNonRenewableSources = 1596499.55 pure">15,96,499.55</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-L1-1" title="See the note">ⓘ1</a></sup></td>
       </tr>
     </tbody>
   </table>
 </div>
 <ul class="footnotes">
-  <li id="fn-L1-1" class="warning"><span class="fn-num">1</span><strong>⚠ Doubtful:</strong> This filing does not state the unit of its energy figures (the SEBI form says &#39;Joules or multiples&#39;). Shown as filed.</li>
+  <li id="fn-L1-1" class="check"><span class="fn-num">1</span><strong>ⓘ Note:</strong> This filing does not state the unit of its energy figures (the SEBI form says &#39;Joules or multiples&#39;). Shown as filed.</li>
 </ul>
 
 
@@ -1394,13 +1389,13 @@ table.trace-table th:not([scope]) { width: 35%; }
       <tr>
         <th scope="row">Total Scope 3 emission intensity (optional) – the relevant metric may be selected by the entity</th>
 <td class="unit-col">tCO2e per Full Time Employee</td>        <td class="val"><span class="num" title="From the filing: TotalScope3EmissionIntensity = 0.28; UnitOfTotalScope3EmissionIntensity = tCO2e per Full Time Employee">0.28</span></td>
-        <td class="val"><span class="num" title="From the filing: TotalScope3EmissionIntensity = 0.3; UnitOfTotalScope3EmissionIntensity = tCO2e per Full Time Employee">0.3</span><sup class="fn fn-warn"><a href="#fn-L4-1" title="Doubtful value: see the note">⚠1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: TotalScope3EmissionIntensity = 0.3; UnitOfTotalScope3EmissionIntensity = tCO2e per Full Time Employee">0.3</span><sup class="fn fn-note"><a href="#fn-L4-1" title="See the note">ⓘ1</a></sup></td>
       </tr>
     </tbody>
   </table>
 </div>
 <ul class="footnotes">
-  <li id="fn-L4-1" class="warning"><span class="fn-num">1</span><strong>⚠ Doubtful:</strong> The FY 2021-22 figure was filed as 0.3, which has only one digit of precision. It is rounded too coarsely to compare with another year: the real figure could be much higher or lower.</li>
+  <li id="fn-L4-1" class="warning"><span class="fn-num">1</span><strong>ⓘ Doubtful:</strong> The FY 2021-22 figure was filed as 0.3, which has only one digit of precision. It is rounded too coarsely to compare with another year: the real figure could be much higher or lower.</li>
 </ul>
 
 

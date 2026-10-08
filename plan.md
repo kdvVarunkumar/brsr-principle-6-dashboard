@@ -304,6 +304,15 @@ Time estimates are rough hours for you working with my help. Core (Phases 0-7) i
 - [x] Deleted: `main.py`, `download_filings.py`, `extract_report.py`, `trends.py`, `summary.py`, `compare.py`, `hub.py`, `make_samples.py`. `cli/main_cli.py` is now `cli/flow_cli.py` (the flow + the dispatcher); new `cli/samples_cli.py`
 - [x] Error pages, page footers, viewer tooltips, `--help` texts, README, commands.md, demo guide and samples all use the new commands
 - [x] 711 tests pass; the sample pages were rebuilt with the new command; checked in a fresh clone
+
+### Phase 19: Calm notes instead of yellow warnings  ✅ DONE
+*Asked for by the user: "yellow colour warning symbols in the UI ... handle them in a proper way instead of highlighting them".*
+- [x] Looked first at what the notes really are: 21 of 22 saved reports had some, and nearly all say HOW the company filed (unit not stated, a 0 that may mean "not measured", one digit of precision), not that a number is wrong. The numbers and the "shown as filed, no verdict" rule are unchanged
+- [x] One neutral slate note colour for every page (amber kept only for error pages); the symbol is `ⓘ`, no ⚠ anywhere
+- [x] Severity in words: SEBI footnotes say "Note:" or "Doubtful:" (only a figure that may be wrong is "Doubtful"); card lead-in "Note on this figure."
+- [x] Removed the repeated "See the note below the figures" line on every card (Air quality showed it six times)
+- [x] `tests/rendering/test_calm_notes.py` (7 tests): no ⚠, ⓘ in dashboard and SEBI marks, footnote wording by severity, no repeated line, no old yellow in any style sheet but the error page's
+- [x] 718 tests pass; looked at HDFC Bank (the page with the most notes) before and after
 ---
 
 ## 6. Milestones

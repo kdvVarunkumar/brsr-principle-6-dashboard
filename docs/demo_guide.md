@@ -98,7 +98,7 @@ Say it like this: *"One entry point, like `git` or `pip`: `flow.py` is the whole
 | 0-1 | Show the folder; open `README.md` top | The 60-second opening in section 1 |
 | 1-2 | `python flow.py --company "Tata Steel" --fy 2025-26 --open` | "One command, one page. It took about ten seconds; the second run is instant because filings are cached." |
 | 2-6 | **Dashboard** (30%): the one-sentence summary and scoreboard -> a topic tile -> one card -> "Can I trust this?" -> glossary | See section 6, stage 7. Point out: *which direction is better*, *why it matters*, units, "better than its own last year" only |
-| 6-7 | Show the doubtful figure (Tata Steel's Scope 1) and a "Not reported" row | "Shown exactly as filed, amber, with no verdict. I never silently fix a number." |
+| 6-7 | Show the doubtful figure (Tata Steel's Scope 1) and a "Not reported" row | "Shown exactly as filed, with a calm note and no verdict. I never silently fix a number." |
 | 7-8 | **SEBI tab** next to the SEBI template; last section "Where every number comes from" | "Same numbering E1..E12 and L1..L9, same row labels, current and previous year. Every row traces to an XBRL element." |
 | 8-9 | Errors: `python flow.py --company "Xyzzy Quux" --fy 2023-24 --open`, then `--fy 2019-20` | "Specific message, what to try next, no stack trace." |
 | 9-10 | `pytest -q`; show `brsr_p6/` tree and `tests/test_architecture.py` | "Extraction is separate from presentation; a test enforces it." |
@@ -178,7 +178,7 @@ Have these ready in a terminal: `commands.md` has every command and the one-line
 ### Stage 6: Checks and warnings (`extraction/checks`)
 
 **Say:** Filings contain mistakes. I do not fix them silently; I **flag them and show the value as filed.** Examples the checks catch: Tata Steel typed its Scope 1/2/3 emissions in *millions* (64) while the unit said tonnes, found by comparing emissions to energy; intensities rounded to zero; totals that do not equal their parts; an intensity filed with one digit of precision (too coarse to compare).
-**Open:** `extraction/checks.py`, then the amber figure on the page.
+**Open:** `extraction/checks.py`, then the figure with the grey ⓘ note on the page.
 
 | Likely question | Answer |
 |---|---|

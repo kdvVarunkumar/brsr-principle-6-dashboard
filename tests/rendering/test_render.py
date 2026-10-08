@@ -89,7 +89,7 @@ def test_marks_and_footnotes_appear(tmp_path):
     html = render_page(report_for(tmp_path, facts))
     assert "tag-calculated" in html and ">calc.<" in html          # calculated electricity is labelled
     assert "tag-converted" in html                                  # kilotonnes were converted
-    assert "⚠ Doubtful:" in html                                    # the zero pollutant got a caveat
+    assert "ⓘ Note:" in html and "⚠" not in html                    # the zero pollutant got a calm note, and no warning triangle anywhere
     assert 'id="fn-E5-' in html                                     # footnotes are linkable
 
 

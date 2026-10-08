@@ -27,8 +27,8 @@ table.cmptable td.fig .num { font-size: 1.05rem; font-weight: 700; }
 table.cmptable td.fig .u { font-size: .8rem; color: var(--muted); }
 table.cmptable td.win { background: var(--accent-soft); }
 table.cmptable td.missing .num { font-weight: 400; font-style: italic; color: var(--muted); font-size: .95rem; }
-table.cmptable td.doubtful { background: var(--warn-bg); }
-table.cmptable .warn { color: var(--warn-ink); font-weight: 700; cursor: help; }
+table.cmptable td.doubtful { background: var(--note-bg); }
+table.cmptable .note-mark { color: var(--note-ink); font-weight: 700; cursor: help; }
 table.cmptable tr.size { color: var(--muted); }
 table.cmptable tr.size td.fig .num { font-weight: 600; }
 table.cmptable td.res .detail { display: block; margin-top: 4px; font-size: .82rem; color: var(--muted); }
