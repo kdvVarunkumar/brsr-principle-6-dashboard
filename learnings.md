@@ -1067,7 +1067,7 @@ project we looked at a stale page by mistake; now a stale sample makes the test 
 
 ## 7.6 The README is part of the product
 
-The first thing a reviewer reads. Ours says plainly what is done and **what is not** (the three optional extensions are not built), lists known limitations
+The first thing a reviewer reads. Ours says plainly what is done and **what is not** (when this was written none of the three optional extensions was built; the README has been kept in sync as each one landed), lists known limitations
 (waste split by category, treatment level, errors a few percent wide that no check can catch...), discloses the AI tool and what it was used for, and has the design note.
 Honest limits build more trust than a long list of features.
 
@@ -1276,9 +1276,106 @@ Plus small changes elsewhere: `compare(..., earlier="FY 2023-24")` (so the wordi
 
 ---
 
-# 12. Phase 12: from one flat folder to layers
+# Phase 9: Extension 2, "what got better and what got worse?" (`summary.py`)
 
-*(Numbered 12 because it is the twelfth phase of the plan. The notes for Phase 9, the year-on-year summary, will be added as §9; that phase is built but its notes are not written yet.)*
+## 9.1 What we built
+
+```powershell
+python summary.py --company "Tata Steel" --open
+```
+One page that answers one question: **since last year, which three figures improved most and which three got worse?** You only give the company; the newest year NSE has is found by itself
+(`--fy` is optional). Each of the six entries has a plain headline ("SOx (sulphur oxides) was 45.7% more than last year"), last year's and this year's number, which way is better,
+and the same card as on the dashboard. The page also prints **how "better" is decided**, lists every figure it compared, and lists every figure it did **not** rank, with the reason.
+
+## 9.2 What does "better" mean? (the hardest question of this phase)
+
+A page that says "better" must say better *than what*. Our answer, printed on the page, is deliberately small:
+
+| Rule | Why |
+|---|---|
+| Better means better than the **company's own last year** | The filings contain no industry benchmark or legal limit. Inventing one would break "never invent numbers" |
+| Each figure has a **direction**: lower is better for energy, gases, water and waste per ₹ of sales and for each air pollutant; higher is better for the renewable and recycled shares | Less pollution is good, more recycling is good. The directions are data in `metric_info.py`, not code |
+| Under **1%** (a share: under half a percentage point) is **"about the same"**, not ranked | Tiny changes are rounding, not news. The same margin as the dashboard, so the two pages cannot disagree |
+| **Amounts** are ranked by percent change, **shares** by percentage points | See 9.3 |
+| A figure **per ₹ of sales is ranked instead of its total** | See 9.3 |
+
+## 9.3 What the real data taught us (we looked BEFORE writing the ranking)
+
+I printed a text version of the ranking for four real companies and read it. Three things were wrong with the first idea ("sort everything by percent change"):
+
+| What we saw | Rule we wrote |
+|---|---|
+| Tata Steel's renewable share went from 0.0655% to 0.2415%. In percent that is **+269%**, the biggest "improvement" on the page, but it is only **0.18 of a percentage point** (Wipro's recycled waste share showed +145%) | Rank shares in **percentage points**. A rise from 80% to 90% counts as 10 |
+| Total energy and "energy per ₹ of sales" are the same story. Both would fill two of the six places, and a total rises when a company simply grows | Rank the **per-sales figure instead of its total**, and quote the total as context ("For comparison, total energy used was 6.2% more than last year"). Nothing is hidden |
+| HDFC Bank's recycled share was 100% last year and 100% this year, and the page said "reported as 0 in both years". "No change" results carried no number, so the code could not tell "100 → 100" from "0 → 0" | A result now carries the **signed size of the change** (`Comparison.amount`). Only a real zero-to-zero is left out |
+
+Figures that cannot be ranked fairly are **not dropped silently**. Each is listed under "Not ranked, and why":
+- missing, or the company filed no figure → "Not reported";
+- looks doubtful (a mis-scaled number) → we do not compare it, as everywhere else;
+- a different unit in the two years, or **0 last year** (a percentage cannot be worked out, and the zero may mean "not measured");
+- 0 in both years → nothing to compare.
+
+When fewer than three figures improved (or got worse), the page says so ("Only 2 figures improved", "Nothing got worse by more than the 'about the same' margin"). It never pads the list.
+
+## 9.4 Where last year's figures come from (and what if last year's report is missing)
+
+This is the same trick as the trends (§8.2): **every filing holds two years**, its own and the year before. So the summary compares the two columns of **one filing**. That has a useful side effect: both years use
+the same reporting basis (standalone or consolidated), so the basis problem of the trends cannot happen here.
+
+Last year's *own* filing is a bonus, not a requirement. If NSE has it and it can be read, we compare it with the previous-year column only to mark figures the company has **restated** since (the comparison uses
+the newer figure, and the page says so). If it is missing or damaged, nothing breaks. The page says why: Reliance's earliest filing is FY 2022-23, and the page for that year says *"NSE has no BRSR filing of its own for FY 2021-22"*.
+
+Two different failures, two different results (the brief asks for both to be handled):
+
+| What is missing | What happens |
+|---|---|
+| Last year's **own** filing (not on NSE, or damaged) | Not an error. The previous-year column of the newest filing is used, and the page explains |
+| The **newest** filing (unknown company, a year NSE does not have, a damaged file) | There is nothing to summarise, so an error page with the specific reason and ready-to-run `summary.py` commands |
+
+## 9.5 The code, in three layers (after the Phase 12 reorganisation each is in its own folder)
+
+| Layer | File | Touches | Job |
+|---|---|---|---|
+| Load | `brsr_p6/workflows/summary_loader.py` | files + NSE | find the newest year, download **only that year and the one before** (politely, cached), read both |
+| Logic + words | `brsr_p6/views/summary_view.py` | nothing | build the dashboard cards, rank, find what to leave out and why, write the sentences |
+| Page | `brsr_p6/rendering/templates/summary.html` | nothing | only prints; reuses the dashboard's card and chip (`dashboard_macros.html`) |
+
+Small changes elsewhere, all reusing what already existed: `download_filings(pick=...)` (the years are chosen **after** NSE's list is known, so the newest year needs no guessing), `Comparison.amount` and
+`CardView.change` (the size of a change), `MetricInfo.replaces` (which total a per-sales figure stands in for), `figure_getter` (one way to read a figure, shared by the trends and the summary),
+and `summary` error pages. Because the cards come from `build_card`, a figure cannot be "better" here and "worse" on the dashboard.
+
+## 9.6 Smaller design choices worth knowing
+
+- **Ties** keep the dashboard's order (NOx before PM when both rose 12.5%), because the sort is stable.
+- **A share reads as a sentence**, not a percent: "Waste recycled or reused went up from 36.9% to 90.4%."
+- **"unit not stated"** is written "(unit not stated)" so it does not read like "0.2 unit not stated".
+- **"About the same" figures show both years**, and carry their total's story when the total moved more.
+- **If the unit is unclear** the title says "per unit of sales", not "per ₹ 1 crore". We never dress up a number we cannot convert.
+- **Samples:** Tata Steel (1 improved, 3 same, 4 worse), Wipro (all 9 improved, so the "setbacks" box says nothing got worse), Reliance FY 2022-23 (no previous filing on NSE), and one `summary.py` error page.
+
+## 9.7 Try it yourself
+
+1. `python summary.py --company "Tata Steel" --open`. Read "How we decide what is better", then find the figure that was **not** ranked because its per-sales figure was (Total energy used), and the sentence that still tells you it rose 6.2%.
+2. `python summary.py --company "Wipro" --open`: why is the "biggest setbacks" box empty, and does the page still say something useful there?
+3. `python summary.py --company "Reliance" --fy 2022-23 --open`, then read the last box. Then try `--fy 2021-22` and read the error page.
+4. In `tests/views/test_summary_view.py` read `test_a_share_is_ranked_by_percentage_points_not_by_percent` and `demo_report()` in `tests/helpers/summary_samples.py`. Why were 10% to 25% and a two-thirds fall in waste chosen as the example numbers? What would the order be if shares were ranked in percent?
+5. Change `TOP = 3` to `2` in `brsr_p6/views/summary_view.py` and run `pytest tests/views tests/rendering -q`. Which tests notice, and why is that a good thing? Change it back.
+6. Open `brsr_p6/analysis/comparison.py` and raise `SAME_WITHIN_PERCENT` from 1 to 5. Re-run Tata Steel: which figure moves into "about the same"? (Then run `pytest`: the dashboard tests notice too. Change it back.)
+
+## 9.8 Interview self-check
+
+1. How do you define "better"? Why only against the company's own last year?
+2. Why rank shares in percentage points and amounts in percent? Give the Tata Steel example.
+3. Why is "energy per ₹ of sales" ranked instead of "total energy"? Is the total hidden anywhere?
+4. What happens to a figure that cannot be ranked? Where does the reader see it?
+5. What are the two kinds of "missing report", and what does the page do in each?
+6. Why do both years come from the same filing? When is last year's own filing used, and for what?
+7. How was the "0 in both years" bug found (HDFC Bank), and what was the cause?
+8. How would you reuse these pieces to build Extension 3, the comparison of two companies?
+
+---
+
+# Phase 12: From one flat folder to layers
 
 ## 12.1 What was wrong
 

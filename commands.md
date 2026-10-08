@@ -3,7 +3,7 @@
 Every command here was run and checked. Replace the company name and the year with whatever the interviewer asks for.
 **Run all commands from the project folder**, in the **PyCharm Terminal** (it activates the project's environment, so you see `(.venv)` at the start of the line).
 
-> **Project status:** download ✅ · clean/parse ✅ · SEBI-format HTML page ✅ · plain-English dashboard ✅ (opens first) · error pages ✅ · `samples/` ✅ · README ✅ · **several years side by side (`trends.py`, Extension 1) ✅**. Extensions 2 and 3 are not built.
+> **Project status:** download ✅ · clean/parse ✅ · SEBI-format HTML page ✅ · plain-English dashboard ✅ (opens first) · error pages ✅ · `samples/` ✅ · README ✅ · **several years side by side (`trends.py`, Extension 1) ✅** · **what got better / worse (`summary.py`, Extension 2) ✅** · code in nine layered packages ✅. Extension 3 (company comparison) is not built.
 
 ---
 
@@ -15,6 +15,7 @@ Every command here was run and checked. Replace the company name and the year wi
 | Only **download** the filings | `python download_filings.py --company "Reliance"` |
 | Only **clean/parse** and print the data | `python extract_report.py --company "Reliance" --fy 2023-24` |
 | **Several years side by side** (Extension 1) | `python trends.py --company "Tata Steel" --from 2021-22 --to 2025-26 --open` |
+| **What got better / worse since last year** (Extension 2) | `python summary.py --company "Tata Steel" --open` |
 | Rebuild the pages in `samples/` | `python make_samples.py` |
 | Run all automatic tests | `pytest -q` |
 
@@ -22,7 +23,7 @@ Pattern to remember: **`--company "<name or NSE symbol>"`** and **`--fy <year>`*
 
 ---
 
-## 2. The four commands in detail
+## 2. The commands in detail
 
 ### 2.1 Download from NSE: `download_filings.py`
 Downloads a company's BRSR filing files (XBRL) into `data\raw\<SYMBOL>\<FY>\`. Anything already on disk is reused.
@@ -96,6 +97,28 @@ What to point at (2 minutes):
 
 If one year's filing is damaged, only that column is flagged. Errors give a page too: `--from 2025-26 --to 2021-22` ("That range of years cannot be used"), an unknown company, a year before FY 2021-22.
 
+### 2.5 What got better and worse: `summary.py`  ← Extension 2
+```powershell
+python summary.py --company "Tata Steel" --open                  # newest year NSE has, against the year before
+python summary.py --company "Wipro" --fy 2025-26                 # a named year
+python summary.py --company "Reliance" --fy 2022-23              # NSE has no FY 2021-22 filing: the page says so and still works
+```
+| Option | Meaning |
+|---|---|
+| `--fy` | the year to summarise (optional; default = the newest filing NSE has, chosen automatically) |
+| `--open`, `--output-dir`, `--debug` | the same as `main.py` |
+
+Writes **`output\<SYMBOL>_summary_<FY>.html`**. Downloads only the two years it needs (3 s apart, cached); a company already downloaded needs no download at all and takes a second or two.
+
+What to point at (2 minutes):
+1. **The sentence and scoreboard on top:** *"We compared 8 figures for Tata Steel between FY 2024-25 and FY 2025-26: 1 improved, 3 stayed about the same and 4 got worse."*
+2. **"How we decide what is better":** against the company's *own* last year only; the direction of each figure; under 1% (a share: under half a point) is "about the same"; amounts ranked by percent, shares by percentage points; per-₹-of-sales figure ranked instead of its total.
+3. **The 3 improvements and 3 setbacks:** each has a headline, last year's and this year's number, "Lower is better here, so this is a step backwards", and the dashboard card. Tata: SOx +45.7%, NOx and PM +12.5%. Wipro: all nine improved, so *"Nothing got worse by more than the 'about the same' margin"*.
+4. **"Every figure we compared"** (starred = shown above) and **"Not ranked, and why"**: a total replaced by its per-sales figure (with the total's own change quoted, nothing hidden), a doubtful figure, zero last year, zero in both years.
+5. **"Where last year's figures come from":** the previous-year column of the same filing, so both years are on the same basis; last year's own filing is checked for restated figures; if NSE has none (Reliance FY 2021-22) the page says so instead of failing.
+
+Errors give a page too, with suggested commands that use `summary.py`: an unknown company, a year NSE does not have (lists the years it does), a year before FY 2021-22, a damaged newest filing.
+
 ---
 
 ## 3. A 5-minute demo flow
@@ -109,6 +132,7 @@ If one year's filing is damaged, only that column is flagged. Errors give a page
 | 5 | `python main.py --company "<NEW COMPANY>" --fy 2024-25 --open` | "One HTML page, two tabs. It opens on the plain-English **Dashboard**; the second tab is the **SEBI-format report**, same question numbers and wording as SEBI's form." |
 | 6 | click the **SEBI-format report** tab, then back | "Same data, two audiences. Every dashboard number comes from this table." |
 | 6b | `python trends.py --company "<COMPANY>" --open` | "Extension 1: the same company over every year NSE has. Missing years flagged, basis changes and restatements marked." |
+| 6c | `python summary.py --company "<COMPANY>" --open` | "Extension 2: the 3 biggest improvements and setbacks against last year, with the definition of 'better' stated on the page, and everything it could not rank listed with the reason." |
 | 7 | the error commands in section 6 | "Specific messages instead of crashes." |
 
 ### 3a. What to point at on the Dashboard (about 2 minutes)
@@ -179,6 +203,8 @@ python main.py --company "Tata Steel" --fy 2021-22          # valid year, but NS
 python main.py --company "Sakuma Exports" --fy 2023-24      # listed company with no BRSR filing
 python trends.py --company "Reliance" --from 2025-26 --to 2021-22      # years the wrong way round
 python trends.py --company "Tata Steel" --from 2019-20                # a year before BRSR reporting began
+python summary.py --company "Reliance" --fy 2021-22                   # NSE has no filing for that year: lists the years it does have
+python summary.py --company "Xyzzy Quux"                              # unknown company
 ```
 Each one prints `Error: ...` with the specific reason, **and writes an explanation page** `output\error_<company>_<year>.html` (add `--open` to show it). Exit code 1, never a Python traceback.
 
@@ -198,7 +224,7 @@ python main.py --company "Tata Steel" --fy 2021-22 --open       # page lists FY 
 | damaged or wrong kind of file | The filing on NSE could not be read |
 | a bug in the tool | Something unexpected went wrong (run again with `--debug`) |
 
-Ready-made examples of four of these are in `samples\` (`error_*.html`).
+Ready-made examples of six of these are in `samples\` (`error_*.html`): unknown company, year before FY 2021-22, year NSE does not have, damaged file, trend years the wrong way round, and a `summary.py` request for a missing year.
 
 ---
 
@@ -210,7 +236,9 @@ Ready-made examples of four of these are in `samples\` (`error_*.html`).
 | Clean data (JSON) | `data\parsed\<SYMBOL>\<FY>.json` | open in PyCharm; find `E6.scope1`: it has `value`, `unit`, `status`, `as_filed`, `warnings` |
 | The report page | `output\<SYMBOL>_<FY>.html` | `python main.py ... --open`, or double-click |
 | An error page | `output\error_<company>_<year>.html` | written by the same command when something fails |
-| Sample pages (5 companies, 4 error cases) | `samples\` + `samples\README.md` | open in a browser; rebuild with `python make_samples.py` |
+| The trend page | `output\<SYMBOL>_trend_<from>_to_<to>.html` | `python trends.py ... --open` |
+| The summary page | `output\<SYMBOL>_summary_<FY>.html` | `python summary.py ... --open` |
+| Sample pages (5 company reports, 3 trend pages, 3 summaries, 6 error pages) | `samples\` + `samples\README.md` | open in a browser; rebuild with `python make_samples.py` |
 
 Handy PowerShell lines:
 ```powershell
@@ -278,12 +306,41 @@ Then run `python download_filings.py --company "ITC"` again to show a real downl
 - **What does the trend page do with a missing year?** It flags it ("No filing", never 0). If the next filing exists, that filing's previous-year column holds the company's own figures for the missing year, so they are shown and marked.
 - **How do you handle a change from consolidated to standalone?** Every column shows its basis; trend verdicts only compare years on the same basis and unit, and the page says which years were left out.
 - **What is a restatement?** The next filing gives a different figure for the same year (more than 0.5% apart). We keep the figure as filed in its own year and mark it ⟲ with the later figure.
+- **How do you define "better" in the summary?** Against the company's own last year only, with a direction per figure (lower is better for energy, gases, water, waste per ₹ of sales and every pollutant; higher for the renewable and recycled shares). Under 1% (a share: under half a point) is "about the same". The page states all of this.
+- **Why rank shares in percentage points?** A renewable share rising from 0.07% to 0.24% is +269% in percent but only 0.18 of a point; ranked in percent it would beat a real improvement.
+- **Why is a total missing from the best / worst lists?** A total grows when a company grows, so the figure per ₹ of sales is ranked instead and the total is quoted as context. Nothing is hidden: the "not ranked" list says why.
+- **What if last year's report is missing?** Every filing carries its previous-year column, so the summary still works; the page says NSE has no filing of its own for that year. If the newest filing cannot be read, there is nothing to summarise and an error page says so.
+- **How is the code organised?** Nine packages, one per step: `core` (data model) → `download` → `parsing` → `extraction` → `analysis` → `views` → `rendering` → `workflows` → `cli`. A package may only import from the ones before it; `tests/test_architecture.py` fails if that is broken. See section 12.
 - **Does it run from a clean checkout?** Yes: tested in a brand-new virtual environment: `pip install -r requirements.txt`, one command, and the page is written (about 11 seconds for a new company).
 - **Why Python + a template?** Python decides (verdicts, sentences, warnings), the HTML template only prints. That makes every rule testable without a browser.
 
 ---
 
-## 12. Git cheat-sheet
+## 12. Where is the code? (for "show me the ..." questions)
+
+The code is in `brsr_p6/`, one folder per step. Open the file in the right-hand column.
+
+| "Show me ..." | Folder | Start with |
+|---|---|---|
+| how it **downloads** from NSE (polite: 3 s pause, cache, stop on 403/429) | `brsr_p6/download/` | `nse_client.py`, then `downloader.py` |
+| how it finds the company and the filing for a year | `brsr_p6/download/` | `company_lookup.py`, `filings.py` |
+| how it **parses** the XBRL file | `brsr_p6/parsing/` | `xbrl_reader.py`, and `p6_mapping.py` (tag → SEBI row) |
+| how it **cleans** the data (units, warnings, nothing invented) | `brsr_p6/extraction/` and `brsr_p6/core/units.py` | `extractor.py`, `checks.py` |
+| the **SEBI template** as data | `brsr_p6/core/sebi_template.py` | the whole file |
+| how "better / worse" is decided | `brsr_p6/analysis/` | `comparison.py` |
+| the year-by-year logic (basis change, restatement) | `brsr_p6/analysis/` | `trend_model.py` |
+| what the **dashboard** says, and its wording | `brsr_p6/views/` | `dashboard_cards.py`, `metric_info.py` |
+| the **3 best / 3 worst** ranking | `brsr_p6/views/` | `summary_view.py` |
+| how the **HTML** is made | `brsr_p6/rendering/` | `render.py` and `templates/` |
+| the error pages | `brsr_p6/views/error_view.py` and `brsr_p6/rendering/templates/error.html` | |
+| how a command runs end to end | `brsr_p6/workflows/` and `brsr_p6/cli/` | `pipeline.py`, `main_cli.py` |
+| the rule that keeps the layers apart | `tests/test_architecture.py` | the whole file |
+
+The tests live in folders with the same names (`tests/download/`, `tests/views/`, ...). `python make_samples.py` rebuilds `samples/`.
+
+---
+
+## 13. Git cheat-sheet
 
 Git was installed in Phase 11. If PyCharm says "git is not recognized", close and reopen PyCharm. Everything here is read-only except `commit` and `push`.
 

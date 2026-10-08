@@ -208,11 +208,14 @@ Time estimates are rough hours for you working with my help. Core (Phases 0-7) i
 - [x] Check units are consistent across years; note when a later filing *restated* an earlier year
 - [x] Specific errors: missing report, unparseable filing, unknown company
 
-### Phase 9: Extension 2, year-on-year summary (~3 h)
-- [ ] State clearly how we define "better" (e.g. lower emissions intensity = better; higher recycled share = better)
-- [ ] Rank metrics by direction-adjusted % change; show **3 best + 3 worst** with plain-English explanations
-- [ ] Prefer intensity metrics for fairness; exclude metrics with missing values and say so
-- [ ] Handle a missing previous-year report (idea: the latest filing already contains a previous-year column; if that is also empty, say so)
+### Phase 9: Extension 2, year-on-year summary (~3 h)  ✅ DONE
+- [x] Input: company; the latest FY is chosen automatically (`--fy` is optional). Only the latest year and the year before are downloaded
+- [x] State clearly how we define "better": against the company's own last year, a direction per figure, under 1% (a share: under 0.5 point) = "about the same"; the page prints the definition
+- [x] Rank metrics by direction-adjusted change (percent for amounts, **percentage points for shares**); show **3 best + 3 worst** with a plain-English explanation each
+- [x] Prefer intensity metrics for fairness: a per-sales figure is ranked **instead of its total**, the total is quoted as context; exclude missing, doubtful, other-unit and zero-base figures **and list them with the reason**
+- [x] Handle a missing previous-year report: the previous-year column of the latest filing is used and the page says why; last year's own filing, when readable, is only used to mark restated figures
+- [x] Specific errors: missing report, unparseable filing, unknown company, each its own page with `summary.py` commands
+- [x] Samples: 3 summary pages (Tata Steel, Wipro, Reliance FY 2022-23) + 1 summary error page; 472 tests
 
 ### Phase 10: Extension 3, company comparison (~3 h, only if time remains)
 - [ ] Two companies, one FY, side by side; compare **intensity** metrics fairly; show the unit used; mark fields one company didn't report
@@ -227,14 +230,15 @@ Time estimates are rough hours for you working with my help. Core (Phases 0-7) i
 - [ ] **Interview prep:** for each module, write 2-3 lines "what it does and why". You must be able to explain every part.
 
 ### Phase 12: Restructure the package into layers (code quality, 10% of the grade)  ✅ DONE
-*Asked for by the user: 39 modules lay in one flat folder; "downloading, parsing and generating HTML should each be a module". Done before Extension 2 was finished.*
+*Asked for by the user: 39 modules lay in one flat folder; "downloading, parsing and generating HTML should each be a module". Done after the code of Extension 2 and before its notes were written, so those notes already describe the new layout.*
 - [x] Plan from the real import graph (no cycles) and group the modules into nine packages: `core`, `download`, `parsing`, `extraction`, `analysis`, `views`, `rendering`, `workflows`, `cli`
 - [x] Move with `git mv` (81 renames, history kept); rewrite imports with a script that reads the code structure; every package has an `__init__.py` that says what it is for
 - [x] `core/paths.py`: the project root and every data folder in one place (it was in `downloader.py`, so "make HTML" depended on "download"); `cli.py` split into `main_cli.py` + `common.py`
 - [x] Tests moved into folders that mirror the packages; shared helpers in `tests/helpers/`; the four tests that found `data/raw` from their own depth now use `core.paths`
 - [x] `tests/test_architecture.py`: layer rule, no circular imports, no loose modules, test folders mirror packages
 - [x] Proof: 472 tests pass, every entry point runs (also from another folder), `make_samples.py` changes no sample page
-- [ ] Still to do for **Phase 9**: README + `commands.md` + `learnings.md` §9, `context.md` decisions, clean-clone check
+- [x] Notes brought up to date with the new layout and Phase 9: README, `commands.md` (with a "where is the code?" table), `context.md` D69-D77, `learnings.md` Phases 9 and 12
+- [x] Fresh `git clone` in a short path: 472 passed, 0 skipped, `make_samples.py` changed nothing, `main.py` ran
 
 ---
 
