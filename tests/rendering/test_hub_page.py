@@ -16,7 +16,7 @@ PAGES = [
 def test_the_viewer_has_a_search_box_a_dropdown_buttons_and_a_frame_for_the_page():
     html = render_hub_page(build_hub_view(PAGES))
     assert_well_formed(html)
-    for part in ('id="page-search"', 'id="page-select"', 'id="prev"', 'id="next"', 'id="open-tab"', 'id="viewer"', "2 pages in one place"):
+    for part in ('id="page-search"', 'id="page-select"', 'id="prev"', 'id="next"', 'id="open-tab"', 'id="viewer"', "2 reports in one place"):
         assert part in html, part
 
 

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{{ view.title }}: BRSR Principle 6 pages</title>
+<title>{{ view.title }}</title>
 <noscript><style>.js-only { display: none; }</style></noscript>
 <style>
 {# The hub viewer.  This is the only page with a script: a dropdown and a search box cannot work without one.  The pages it shows
@@ -42,7 +42,7 @@ kbd { background: #eef1f4; border: 1px solid var(--line); border-radius: 4px; pa
   <div class="inner">
     <p class="eyebrow">Business Responsibility &amp; Sustainability Report · Principle 6 (environment)</p>
     <h1>{{ view.title }}</h1>
-    <p class="sub">{{ view.entries|length }} page{{ "" if view.entries|length == 1 else "s" }} in one place: choose one from the dropdown, or search by company, year or type.</p>
+    <p class="sub">{{ view.entries|length }} report{{ "" if view.entries|length == 1 else "s" }} in one place: pick one from the dropdown, or search by company, year or type.</p>
   </div>
 </header>
 
@@ -64,7 +64,7 @@ kbd { background: #eef1f4; border: 1px solid var(--line); border-radius: 4px; pa
       <input id="page-search" type="search" placeholder="for example: tata, 2025-26, trend, error" autocomplete="off">
     </div>
     <div class="field grow">
-      <label for="page-select">Page <span id="match-count"></span></label>
+      <label for="page-select">Report <span id="match-count"></span></label>
       <select id="page-select"></select>
     </div>
     <div class="field actions">

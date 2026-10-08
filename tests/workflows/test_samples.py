@@ -14,7 +14,7 @@ from brsr_p6.core.fiscal_year import fiscal_years_between
 from brsr_p6.core.paths import DEFAULT_RAW_DIR, SAMPLES_DIR
 from brsr_p6.rendering.render import error_page_path, render_error_page, render_hub_page, render_page, render_summary_page
 from brsr_p6.views.error_view import build_error_view
-from brsr_p6.views.hub_view import build_hub_view
+from brsr_p6.views.hub_view import SAMPLES_TITLE, build_hub_view
 from brsr_p6.workflows import samples
 from brsr_p6.workflows.hub import read_pages
 from brsr_p6.workflows.pipeline import load_saved_report
@@ -111,7 +111,7 @@ def test_the_summary_samples_show_the_cases_they_claim_to():
 def test_the_committed_viewer_lists_every_sample_page_and_is_up_to_date():
     """samples/index.html puts all the sample pages behind one dropdown and search box; it must match what the code builds today."""
     committed = (SAMPLES_DIR / "index.html").read_text(encoding="utf-8")
-    view = build_hub_view(read_pages(SAMPLES_DIR), embed=False, title="Sample pages")
+    view = build_hub_view(read_pages(SAMPLES_DIR), embed=False, title=SAMPLES_TITLE)
     assert committed == render_hub_page(view), "samples/index.html is out of date: run  python make_samples.py"
     assert {entry.file for entry in view.entries} == set(expected_files()) - {"index.html"}      # every page, and nothing else
     assert "html" not in json.loads(view.data_json)["entries"][0]                                  # linked, so the repository does not store each page twice

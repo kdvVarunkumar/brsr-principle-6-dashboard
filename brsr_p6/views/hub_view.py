@@ -15,6 +15,8 @@ import re
 from dataclasses import dataclass, field
 
 REPORTS, SUMMARIES, TRENDS, ERRORS, OTHER = "Reports", "Year-on-year summaries", "Multi-year trends", "Error pages", "Other pages"
+HUB_TITLE = "BRSR Principle 6: Environmental Dashboard"     # the name in the header of the viewer
+SAMPLES_TITLE = HUB_TITLE + " (sample reports)"
 KINDS = (REPORTS, SUMMARIES, TRENDS, ERRORS, OTHER)          # the order of the groups in the dropdown
 
 _REPORT_NAME = re.compile(r"^.+_\d{4}-\d{2}$")                # TATASTEEL_2025-26
@@ -65,7 +67,7 @@ def label_for(kind, stem, title):
     return title
 
 
-def build_hub_view(pages, embed=True, title="All pages"):
+def build_hub_view(pages, embed=True, title=HUB_TITLE):
     """`pages` is a list of (file name, HTML text), for example [("TATASTEEL_2025-26.html", "<!doctype html>...")]."""
     entries = []
     for file, text in pages:

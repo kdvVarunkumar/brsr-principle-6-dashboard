@@ -22,6 +22,7 @@ from brsr_p6.parsing.xbrl_reader import read_filing
 from brsr_p6.rendering.render import (HUB_FILE_NAME, error_page_path, trend_page_name, write_error_page, write_page, write_summary_page,
                                       write_trend_page)
 from brsr_p6.views.error_view import build_error_view
+from brsr_p6.views.hub_view import SAMPLES_TITLE
 from brsr_p6.workflows.hub import generate_hub
 from brsr_p6.workflows.pipeline import generate_page, generate_summary_page, generate_trend_page, load_saved_report
 
@@ -190,7 +191,7 @@ def make_samples(output_dir: Path = SAMPLES_DIR, progress=print) -> list:
 
     (output_dir / "README.md").write_text(_readme(report_pages, trend_pages, summary_pages, error_pages), encoding="utf-8")
     pages = [page for _, page in report_pages + trend_pages + summary_pages + error_pages]
-    hub, _ = generate_hub(output_dir, embed=False, title="Sample pages")     # linked, not embedded: the pages are already in this folder
+    hub, _ = generate_hub(output_dir, embed=False, title=SAMPLES_TITLE)     # linked, not embedded: the pages are already in this folder
     progress(f"wrote {hub.name}")
     return pages + [hub]
 

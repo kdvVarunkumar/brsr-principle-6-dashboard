@@ -8,7 +8,7 @@ from pathlib import Path
 
 from brsr_p6.core.paths import DEFAULT_OUTPUT_DIR
 from brsr_p6.rendering.render import HUB_FILE_NAME, write_hub_page
-from brsr_p6.views.hub_view import build_hub_view
+from brsr_p6.views.hub_view import HUB_TITLE, build_hub_view
 
 
 def read_pages(folder: Path):
@@ -17,7 +17,7 @@ def read_pages(folder: Path):
     return [(p.name, p.read_text(encoding="utf-8")) for p in paths]
 
 
-def generate_hub(folder: Path = DEFAULT_OUTPUT_DIR, embed=True, title="All pages"):
+def generate_hub(folder: Path = DEFAULT_OUTPUT_DIR, embed=True, title=HUB_TITLE):
     """Write <folder>/index.html.  Returns (path, number of pages), or None when the folder has no page yet.
 
     embed=True puts every page inside index.html (one self-contained file); embed=False only names the files next to it."""
