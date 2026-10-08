@@ -43,7 +43,7 @@ kbd { background: #eef1f4; border: 1px solid var(--line); border-radius: 4px; pa
   <div class="inner">
     <p class="eyebrow">Business Responsibility &amp; Sustainability Report · Principle 6 (environment)</p>
     <h1>BRSR Principle 6: Environmental Dashboard (sample reports)</h1>
-    <p class="sub">20 reports in one place: pick one from the dropdown, or search by company, year or type.</p>
+    <p class="sub">17 reports in one place: pick one from the dropdown, or search by company, year or type. 3 company comparisons have their own dropdowns below.</p>
   </div>
 </header>
 
@@ -81,7 +81,7 @@ kbd { background: #eef1f4; border: 1px solid var(--line); border-radius: 4px; pa
     </div>
   </section>
   <section class="controls compare js-only" id="compare-panel" aria-label="Compare two companies" hidden>
-    <p class="lead"><strong>Compare two companies in one financial year.</strong> Pick the year and two companies: the comparison opens below.</p>
+    <p class="lead"><strong>Compare two companies in one financial year.</strong> Pick the year and two companies: the comparison opens below. (Comparisons are not in the report dropdown above.)</p>
     <div class="field"><label for="cmp-fy">Financial year</label><select id="cmp-fy"></select></div>
     <div class="field grow"><label for="cmp-a">Company A</label><select id="cmp-a"></select></div>
     <div class="field grow"><label for="cmp-b">Company B</label><select id="cmp-b"></select></div>
@@ -99,6 +99,8 @@ kbd { background: #eef1f4; border: 1px solid var(--line); border-radius: 4px; pa
   var entries = data.entries;
   var byId = {};
   entries.forEach(function (entry) { byId[entry.id] = entry; });
+  // the comparisons have their own dropdowns (the picker further down), so the main dropdown, its count and the search leave them out
+  var pages = entries.filter(function (entry) { return !entry.compare; });
 
   var search = document.getElementById("page-search");
   var select = document.getElementById("page-select");
@@ -116,7 +118,7 @@ kbd { background: #eef1f4; border: 1px solid var(--line); border-radius: 4px; pa
 
   function fillList() {
     var words = search.value.toLowerCase().split(/\s+/).filter(Boolean);
-    visible = entries.filter(function (entry) {
+    visible = pages.filter(function (entry) {
       return words.every(function (word) { return entry.search.indexOf(word) !== -1; });
     });
     select.textContent = "";
@@ -135,7 +137,7 @@ kbd { background: #eef1f4; border: 1px solid var(--line); border-radius: 4px; pa
       group.appendChild(option);
     });
     select.disabled = visible.length === 0;
-    count.textContent = "(" + visible.length + " of " + entries.length + (visible.length === 0 ? ": nothing matches" : "") + ")";
+    count.textContent = "(" + visible.length + " of " + pages.length + (visible.length === 0 ? ": nothing matches" : "") + ")";
     if (current && visible.indexOf(current) !== -1) { select.value = current.id; } else { select.selectedIndex = -1; }
     setButtons();
   }
@@ -156,7 +158,7 @@ kbd { background: #eef1f4; border: 1px solid var(--line); border-radius: 4px; pa
       frame.removeAttribute("srcdoc");
       frame.src = encodeURI(entry.file);
     }
-    if (visible.indexOf(entry) !== -1) { select.value = id; }
+    if (visible.indexOf(entry) !== -1) { select.value = id; } else if (entry.compare) { select.selectedIndex = -1; }     // a comparison is chosen in its own dropdowns
     document.title = entry.label;
     syncPicker(entry);
     try { history.replaceState(null, "", "#" + encodeURIComponent(id)); } catch (error) { /* the page still works without a saved address */ }
@@ -220,6 +222,9 @@ kbd { background: #eef1f4; border: 1px solid var(--line); border-radius: 4px; pa
 
   function syncPicker(entry) {
     if (!entry.compare || comparisons.length === 0) { return; }
+    var chosen = pickFy.value === entry.compare.fy && ((pickA.value === entry.compare.a && pickB.value === entry.compare.b)
+                                                        || (pickA.value === entry.compare.b && pickB.value === entry.compare.a));
+    if (chosen) { return; }       // the user picked this very pair: keep A and B in the order they chose (the file name is alphabetical)
     pickFy.value = entry.compare.fy;
     fillCompanyA();
     pickA.value = entry.compare.a;

@@ -70,6 +70,31 @@ def test_the_comparison_pages_are_listed_as_links_without_a_script_and_their_dat
     assert '"compare": {"fy": "2025-26", "a": "TATASTEEL", "b": "WIPRO"' in html or '"compare":{"fy":"2025-26","a":"TATASTEEL","b":"WIPRO"' in html
 
 
+def test_the_heading_counts_the_reports_apart_from_the_comparisons_which_have_their_own_dropdowns():
+    html = render_hub_page(build_hub_view(PAGES + [COMPARISON]))
+    assert "2 reports in one place" in html and "1 company comparison have their own dropdowns below" in html
+    assert "3 reports" not in html                                                         # the comparison is not counted as a report
+    assert "company comparison" not in render_hub_page(build_hub_view(PAGES)).split("<main>")[0]          # no comparisons, no sentence about them
+
+
+def test_the_main_dropdown_and_search_leave_the_comparisons_out_and_only_the_picker_offers_them():
+    html = render_hub_page(build_hub_view(PAGES + [COMPARISON]))
+    script = html[html.index("<script>"):]
+    assert "var pages = entries.filter(function (entry) { return !entry.compare; });" in script
+    assert "visible = pages.filter(" in script and "visible = entries.filter(" not in script        # the search looks in the pages only
+    assert 'comparisons.filter(function (entry) { return entry.compare.fy === fy; })' in script     # the picker looks in the comparisons only
+    assert "Comparisons are not in the report dropdown above" in html
+
+
+def test_the_picker_keeps_the_order_the_user_chose_although_the_file_name_is_alphabetical():
+    """RELIANCE_vs_TATASTEEL is one page whether the user picked Reliance first or Tata Steel first; showing it must not swap A and B."""
+    script = render_hub_page(build_hub_view(PAGES + [COMPARISON]))
+    script = script[script.index("function syncPicker"):script.index("function setUpPicker")]
+    assert "if (chosen) { return; }" in script
+    assert script.index("var chosen") < script.index("if (chosen)") < script.index("pickFy.value = entry.compare.fy")      # the check comes before anything is rewritten
+    assert "pickA.value === entry.compare.b && pickB.value === entry.compare.a" in script                                  # either order counts as "the pair the user picked"
+
+
 def test_the_picker_adds_no_script_and_nothing_a_comparison_page_holds_can_end_the_data_block():
     nasty = ("A_vs_B_2024-25.html", "<!doctype html><title>A Ltd vs B Ltd: x, FY 2024-25</title></script><script>alert(1)</script>")
     html = render_hub_page(build_hub_view(PAGES + [COMPARISON, nasty]))

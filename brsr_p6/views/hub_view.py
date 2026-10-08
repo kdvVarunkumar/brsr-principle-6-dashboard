@@ -18,7 +18,7 @@ REPORTS, COMPARISONS, SUMMARIES, TRENDS, ERRORS, OTHER = ("Reports", "Company co
                                                           "Error pages", "Other pages")
 HUB_TITLE = "BRSR Principle 6: Environmental Dashboard"     # the name in the header of the viewer
 SAMPLES_TITLE = HUB_TITLE + " (sample reports)"
-KINDS = (REPORTS, COMPARISONS, SUMMARIES, TRENDS, ERRORS, OTHER)          # the order of the groups in the dropdown
+KINDS = (REPORTS, COMPARISONS, SUMMARIES, TRENDS, ERRORS, OTHER)          # the order of the groups (the comparisons are not in the main dropdown, they have their own)
 
 _REPORT_NAME = re.compile(r"^.+_\d{4}-\d{2}$")                # TATASTEEL_2025-26
 _COMPARE_NAME = re.compile(r"^(?P<a>.+?)_vs_(?P<b>.+)_(?P<fy>\d{4}-\d{2})$")                    # TATASTEEL_vs_WIPRO_2025-26
@@ -43,6 +43,8 @@ class HubView:
     embed: bool
     kinds: list = field(default_factory=list)       # the groups that have at least one page, in order
     data_json: str = ""                             # everything the viewer's script needs, safe to put inside a <script> block
+    page_count: int = 0                             # the pages in the main dropdown and search (everything except the comparisons)
+    compare_count: int = 0                          # the comparisons: kept out of the main dropdown, they have their own picker
 
 
 def kind_of(stem):
@@ -94,7 +96,8 @@ def build_hub_view(pages, embed=True, title=HUB_TITLE):
         entries.append(HubEntry(stem, file, label, kind, f"{label} {kind} {file}".lower(), text if embed else None, compare))
     entries.sort(key=lambda e: (KINDS.index(e.kind), e.label.casefold(), e.file))
     kinds = [kind for kind in KINDS if any(e.kind == kind for e in entries)]
-    return HubView(title, entries, embed, kinds, _data_json(entries, embed))
+    compare_count = sum(1 for e in entries if e.compare)
+    return HubView(title, entries, embed, kinds, _data_json(entries, embed), len(entries) - compare_count, compare_count)
 
 
 def _data_json(entries, embed):

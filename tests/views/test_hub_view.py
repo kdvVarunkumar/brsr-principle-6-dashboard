@@ -92,9 +92,15 @@ def test_only_comparison_entries_carry_the_compare_data_the_picker_reads():
     assert "compare" in json.loads(build_hub_view(PAGES, embed=False).data_json)["entries"][2]            # linked pages still carry it
 
 
-def test_the_comparisons_sit_between_the_reports_and_the_summaries_in_the_dropdown():
+def test_the_comparisons_sit_between_the_reports_and_the_summaries_in_the_list_of_groups():
     assert KINDS.index(REPORTS) < KINDS.index(COMPARISONS) < KINDS.index(SUMMARIES)
     assert COMPARISONS == "Company comparisons"
+
+
+def test_the_comparisons_are_counted_apart_from_the_pages_of_the_main_dropdown():
+    view = build_hub_view(PAGES)
+    assert view.compare_count == 1 and view.page_count == len(view.entries) - 1 == len(PAGES) - 1
+    assert (build_hub_view(PAGES[:1]).page_count, build_hub_view(PAGES[:1]).compare_count) == (1, 0)
 
 
 def test_text_from_a_title_is_data_not_markup():

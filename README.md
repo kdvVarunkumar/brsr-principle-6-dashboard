@@ -228,11 +228,12 @@ Every command writes its own page, so after a few runs `output/` holds many file
 `output/index.html`:
 
 - **A search box and a dropdown.** Type part of a company, a year or a type (`tata`, `2025-26`, `trend`, `error`, `vs`) and the dropdown narrows to the
-  matching pages, grouped as *Reports*, *Company comparisons*, *Year-on-year summaries*, *Multi-year trends* and *Error pages*. Choosing one shows it right there.
-- **Compare two companies.** A picker above the dropdown takes a financial year, then Company A and Company B (only companies that have a report for that year,
-  and B can never be A) and opens their comparison. `hub.py` first writes a comparison for **every pair of companies that have a report page for the same
-  year**, from the filings already on disk (no internet; `--no-compare` skips this). For a pair that has no page yet, run `compare.py`.
+  matching pages, grouped as *Reports*, *Year-on-year summaries*, *Multi-year trends* and *Error pages*. Choosing one shows it right there.
   *Previous* and *Next* step through the matches, and *Open in a new tab* opens the chosen page on its own.
+- **Compare two companies: its own dropdowns, not in the list above.** The comparisons are kept out of the main dropdown and the search box (there can be dozens
+  of them). A separate panel under the search box takes a financial year, then Company A and Company B (only companies that have a report for that year,
+  and B can never be A) and opens their comparison; it keeps the order you chose. `hub.py` first writes a comparison for **every pair of companies that have a
+  report page for the same year**, from the filings already on disk (no internet; `--no-compare` skips this). For a pair that has no page yet, run `compare.py`.
 - **Keyboard:** `/` jumps to the search box, `Enter` opens the first match, `Esc` clears the search.
 - **A shareable address.** `index.html#WIPRO_2025-26` opens that page, and `index.html?q=tata` starts with that search.
 - **One self-contained file by default.** Every page is embedded, so `index.html` can be moved or sent on its own. `python hub.py --link` makes a tiny

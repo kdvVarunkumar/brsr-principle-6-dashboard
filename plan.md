@@ -276,9 +276,9 @@ Time estimates are rough hours for you working with my help. Core (Phases 0-7) i
 - [x] Units made the same (one unit and one lakh / crore scale per row, and a real figure is never shown as "0 crore"); a figure with no stated unit, a doubtful figure and a one-digit intensity are shown as filed and not compared; a figure one company did not report says "Not reported" and who (never 0)
 - [x] Warnings: standalone vs consolidated; different industries; no benchmark in the filings. The rules are printed on the page
 - [x] Layers kept: `views/compare_view.py` (decides everything), `workflows/compare.py` (loads both, or every pair of a folder), `rendering/templates/compare.html` + `compare.css`, `cli/compare_cli.py`; new error `SameCompany` with its own page and `compare.py` commands
-- [x] On the index page: a "Company comparisons" dropdown group and a picker (year, Company A, Company B). `hub.py` writes a comparison for every pair of companies with a report page for the same year (offline); `--no-compare` skips it
+- [x] On the index page: a separate picker (year, Company A, Company B); the comparisons are kept out of the main report dropdown and search. `hub.py` writes a comparison for every pair of companies with a report page for the same year (offline); `--no-compare` skips it
 - [x] Samples: 3 comparison pages (Tata Steel vs Wipro, Reliance vs Tata Steel, HDFC Bank vs Reliance); `samples/index.html` has them
-- [x] Checked in a real browser (Edge): the picker lists the years, A and B choices exclude each other, choosing opens the right page, the search finds "wipro vs"
+- [x] Checked in a real browser (Edge): the picker lists the years, A and B choices exclude each other, choosing opens the right page and keeps the order chosen; the main dropdown and search do not list the comparisons
 - [x] 664 tests pass; samples regenerated; the error-page footer now names `compare.py --help` too
 - [ ] *Not built:* more than two companies at once, or a comparison across different years; the picker never downloads (it offers the pairs whose pages exist)
 ---

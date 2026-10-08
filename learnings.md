@@ -1673,7 +1673,7 @@ The brief says *compare intensity metrics fairly, show the unit used, and mark f
 ```powershell
 python compare.py --company-a "Tata Steel" --company-b "Wipro" --fy 2025-26 --open
 ```
-and, on the index page (`python hub.py --open`), a picker: **year, then Company A, then Company B**. Under it the same pages are also in the dropdown group *Company comparisons*.
+and, on the index page (`python hub.py --open`), a picker: **year, then Company A, then Company B**. It is a set of dropdowns of its own: the comparisons are **not** in the main report dropdown or its search box (see 16.7).
 
 The page is `views/compare_view.py` (all decisions) + `templates/compare.html` (only prints), exactly like the other pages.
 
@@ -1715,7 +1715,15 @@ The picker's rules (year first; only the companies that have a report for that y
 4. In `views/compare_view.py` change `MIN_SHARED_SCALE` to `0`. Which test fails, and what would the page have shown?
 5. Run `python hub.py --no-compare` and `python hub.py`. How many pages does each index hold, and why?
 
-## 16.7 Interview self-check
+## 16.7 A follow-up: comparisons get their own dropdowns
+
+With 21 reports the comparison pages added 31 more entries, so the main dropdown was mostly comparisons. The user asked for the compare part to be a separate dropdown, not in the main page list. Two small changes:
+- The viewer script builds a list `pages` (every entry that is not a comparison). The dropdown, its "(n of m)" count and the search read `pages`; the picker reads the comparisons. One test line checks `visible = pages.filter(` so nobody changes it back by accident.
+- The comparisons are still *in the data*. That is why `index.html#TATASTEEL_vs_WIPRO_2025-26` still opens one, and why the no-script link list still names them. Hiding something from a list is not the same as deleting it.
+
+**The bug this found.** I drove the page in a real browser (Edge) with a short script that changes the dropdowns the way a person would. Choosing Company A = Tata Steel and Company B = Reliance showed A = Reliance. The file is called `RELIANCE_vs_TATASTEEL_...` (alphabetical), and after opening it the picker copied the names from the file name. The next change (B = Wipro) then opened Reliance vs Wipro instead of Tata Steel vs Wipro. The fix is one check: if the page just opened is the pair the picker already shows (in either order), leave the picker alone. Lesson: the same page can be reached from two directions (A then B, or B then A), so any code that "syncs" a control to a page must not undo what the user just chose.
+
+## 16.8 Interview self-check
 
 1. Why are totals not ranked? What *is* ranked, and why is that fairer?
 2. A company did not report a figure. What does the page show, and why not 0?
