@@ -136,6 +136,21 @@ def test_nothing_comparable_gives_an_honest_page_not_a_crash():
     assert view.best_note == "Nothing improved by more than the “about the same” margin."
 
 
+# ------------------------------------------------------------------------------------------------ rounded too coarsely (found on ICICI Bank)
+def test_a_per_sales_figure_rounded_to_one_digit_is_not_ranked_and_its_total_takes_its_place():
+    """ICICI Bank: waste per sales 0.0000000002 -> 0.0000000004 would read 'exactly 100% more'. The total (334.61 -> 756.32 tonnes) is exact."""
+    coarse = ("Filed as 0.0000000004, which has only one digit of precision. It is rounded too coarsely to compare with another year: "
+              "the real figure could be much higher or lower.")
+    r = blank_report("ICICI Bank Limited")
+    put(r, "E8.total", 756.32, 334.61, unit="tonnes")
+    put(r, "X.waste_rupee", 4e-10, 2e-10, unit="tonnes per ₹", warnings=[coarse], extra=True)
+    view = build_summary_view(r)
+    assert ids(view.worst) == ["waste_total"] and view.worst[0].headline == "Waste produced was 126% more than last year."
+    assert not any("100%" in e.headline for e in view.worst + view.best)                  # the false precision is gone
+    left = next(item for item in view.left_out if item.title == "Waste for every ₹ 1 crore of sales")
+    assert left.reason == "Filed with one digit of precision, so too coarse to compare with another year."
+
+
 # ------------------------------------------------------------------------------------------------ the definition of "better"
 def test_the_definition_of_better_is_stated_with_the_real_margins():
     text = " ".join(build_summary_view(demo_report()).definition)

@@ -92,6 +92,23 @@ def test_missing_or_mismatched_figures_are_never_compared(current, previous, rea
     assert result.verdict == UNSURE and result.reason == reason and result.arrow == ""
 
 
+COARSE = ("Filed as 0.0000000004, which has only one digit of precision. It is rounded too coarsely to compare with another year: "
+          "the real figure could be much higher or lower.")
+
+
+def test_a_figure_rounded_to_one_digit_is_not_compared_and_the_reason_says_so():
+    """ICICI Bank's waste intensity, 0.0000000002 -> 0.0000000004, must not be reported as 'exactly 100% more'."""
+    result = compare(number(4e-10, "tonnes per ₹", [COARSE]), number(2e-10, "tonnes per ₹", [COARSE]), LOWER)
+    assert result.verdict == UNSURE and result.trust == DOUBTFUL and result.amount is None
+    assert result.reason == "Filed with one digit of precision, so too coarse to compare with another year."
+
+
+def test_when_a_figure_has_another_doubt_too_the_general_reason_is_used():
+    other = "The rows above add up to 6,958,071.00 but the filing's own total is 6,826,744.00."
+    result = compare(number(4e-10, "tonnes per ₹", [COARSE, other]), number(2e-10, "tonnes per ₹"), LOWER)
+    assert result.verdict == UNSURE and result.reason == "The figure looks doubtful, so we do not compare it."
+
+
 def test_a_doubtful_figure_is_never_compared_even_when_both_years_look_fine():
     result = compare(number(64, "tCO2e", [SCALE_SLIP]), number(61, "tCO2e", [SCALE_SLIP]), LOWER)
     assert (result.verdict, result.trust) == (UNSURE, DOUBTFUL) and "doubtful" in result.reason

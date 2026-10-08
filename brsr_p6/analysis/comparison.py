@@ -3,7 +3,7 @@
 "Better" only ever means "better than the company's OWN figure last year".  There is no rating against other companies or legal
 limits, because the filing contains neither.  Rules (see context.md D38 and D41):
 
-  * a doubtful figure (warning_kinds.DOUBTFUL) is never compared;
+  * a doubtful figure (warning_kinds.DOUBTFUL) is never compared (this includes an intensity rounded to one digit: too coarse);
   * a missing figure is never compared (and is never treated as 0);
   * two years in different units are never compared;
   * amounts count as "about the same" within +-1 %, shares within +-0.5 percentage points.
@@ -11,7 +11,7 @@ limits, because the filing contains neither.  Rules (see context.md D38 and D41)
 
 from dataclasses import dataclass
 
-from brsr_p6.analysis.warning_kinds import DOUBTFUL, OK, worst_kind
+from brsr_p6.analysis.warning_kinds import DOUBTFUL, OK, only_coarse, worst_kind
 from brsr_p6.core.friendly import percent_change_text, points_text
 from brsr_p6.core.models import Status
 
@@ -96,6 +96,8 @@ def _verdict(rising, same, better):
 def _why_not(current, previous, trust, earlier="last year"):
     """The reason these two cells cannot be compared, or "" when they can."""
     if trust == DOUBTFUL:
+        if only_coarse(current.warnings + previous.warnings):
+            return "Filed with one digit of precision, so too coarse to compare with another year."
         return "The figure looks doubtful, so we do not compare it."
     if not has_number(current) and not has_number(previous):
         return "No figure for either year."

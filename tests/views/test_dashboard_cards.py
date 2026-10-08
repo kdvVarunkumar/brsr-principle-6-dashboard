@@ -136,6 +136,29 @@ def test_renewable_share_is_calculated_marked_so_and_inherits_warnings():
     assert any("renewable energy ÷ (renewable + non-renewable energy)" in line for line in c.fine)
 
 
+# ------------------------------------------------------------------------------------------------ rounded too coarsely to compare
+COARSE_NOTE = ("Filed as 0.0000000004, which has only one digit of precision. It is rounded too coarsely to compare with another year: "
+               "the real figure could be much higher or lower.")
+
+
+def test_an_intensity_rounded_to_one_digit_is_shown_as_filed_but_not_called_better_or_worse():
+    report = blank_report()
+    put(report, "X.waste_rupee", 4e-10, 2e-10, unit="tonnes per ₹", warnings=[COARSE_NOTE], extra=True)
+    c = card(report, "waste_intensity")
+    assert c.verdict == UNSURE and c.chip_text == "? Can’t compare" and c.css == "doubtful"
+    assert c.trend == "Filed with one digit of precision, so too coarse to compare with another year."
+    assert c.alert_title == "Too coarse to compare." and c.alerts == [COARSE_NOTE] and c.bars == []
+
+
+def test_the_warning_box_is_named_for_what_is_wrong_with_the_figure():
+    report = blank_report()
+    put(report, "E6.scope1", 64, 61, unit="tCO2e", warnings=[SCALE_SLIP])
+    put(report, "E6.scope2", 5, 5, unit="tCO2e", warnings=[SCALE_SLIP])
+    assert card(report, "ghg_total").alert_title == "Doubtful figure."                       # a real doubt keeps its strong name
+    put(report, "E1.total", 2_000_000, 1_600_000, unit="(unit not stated)", warnings=[NO_UNIT])
+    assert card(report, "energy_total").alert_title == "Check this figure."                  # a mere note stays a note
+
+
 # ------------------------------------------------------------------------------------------------ the trace to the filing
 def with_origin(report, key, side, element, raw, unit="Gigajoule"):
     getattr(report.metrics[key], side).origin = [Origin(element, raw, unit, "2024-03-31" if side == "current" else "2023-03-31")]

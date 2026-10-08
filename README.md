@@ -123,7 +123,7 @@ company text ─► NSE symbol ─► filing list ─► XBRL file (cached) ─�
   converted is marked and the filed figure is kept (in the JSON and in the dashboard's "Fine print"). In real filings `MtCO2e` means
   metric tonnes (not million tonnes), per-month air figures stay per month, and older filings often state no energy unit at all, so we say so.
 - **Checks only add warnings, they never change a number:** an intensity of 0, a total that does not equal its parts, a pollutant reported
-  as 0, and emissions that look a thousand or a million times too small for the company's energy use (this caught Tata Steel).
+  as 0, an intensity written with a single digit of precision (`0.0000000004`: too coarse to say whether it really changed, so it is shown as filed but not compared), and emissions that look a thousand or a million times too small for the company's energy use (this caught Tata Steel).
 - **Revised filings:** NSE keeps one row per company per year and a revision replaces the original, so we always use the latest revision.
 - **Standalone vs consolidated:** we do not choose. We use the filing NSE lists for that year, and the page header states its reporting
   boundary. A company can switch basis between years (Wipro does), so figures should not be compared across such years.
@@ -285,7 +285,7 @@ The design was prototyped first with real numbers: [`design/dashboard_mockup.htm
 pytest
 ```
 
-About 560 tests, a few seconds, no internet. They cover unit conversion, the XBRL reader, every SEBI row, the verdict and sentence rules, HTML
+About 600 tests, a few seconds, no internet. They cover unit conversion, the XBRL reader, every SEBI row, the verdict and sentence rules, HTML
 well-formedness, escaping of filing text, the error pages, and (when the filings are on disk) real-filing spot checks, the trace of every value to
 the raw XML, and "the committed sample pages are up to date". The test folders mirror the code folders (`tests/views` tests `brsr_p6/views`, and so on), so
 `pytest tests/views` runs one layer. `tests/test_architecture.py` checks the layer rule below on every run.

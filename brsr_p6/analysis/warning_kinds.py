@@ -20,7 +20,10 @@ _DOUBTFUL_PHRASES = (
     "look mis-scaled",                              # checks.py: Scope 3 follows Scope 1+2
     "A real intensity is never exactly 0",          # checks.py: an intensity of 0 is rounding, not a measurement
     "The rows above add up to",                     # checks.py: parts do not equal the filed total
+    "rounded too coarsely",                         # checks.py: an intensity filed with one digit of precision
 )
+
+COARSE = "rounded too coarsely"
 
 _CHECK_PHRASES = (
     "does not state the unit of its energy figures",      # units.py
@@ -46,6 +49,12 @@ def kind_of(warning):
     if any(phrase in warning for phrase in _CHECK_PHRASES):
         return CHECK
     return DOUBTFUL
+
+
+def only_coarse(warnings):
+    """True when the ONLY reason to doubt these figures is that they are rounded too coarsely to compare (the number itself is not wrong)."""
+    doubts = [w for w in warnings if kind_of(w) == DOUBTFUL]
+    return bool(doubts) and all(COARSE in w for w in doubts)
 
 
 def worst_kind(warnings):

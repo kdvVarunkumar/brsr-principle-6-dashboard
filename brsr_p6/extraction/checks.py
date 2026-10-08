@@ -6,6 +6,7 @@ reader the value as filed and say clearly when it is doubtful.
 """
 
 from brsr_p6.core.models import Status
+from brsr_p6.extraction.values import significant_digits
 
 YEARS = ("current", "previous")
 
@@ -22,6 +23,9 @@ INTENSITY_PAIRS = (
 )
 
 AIR_ROWS = ("E5.nox", "E5.sox", "E5.pm", "E5.pop", "E5.voc", "E5.hap")
+
+# every "per rupee of turnover" row (the waste one only exists in newer filings, as an extra)
+INTENSITY_ROWS = tuple(row for row, _ in INTENSITY_PAIRS) + ("X.waste_rupee",)
 
 # (total row, the rows that should add up to it)
 SUM_RULES = (
@@ -42,6 +46,7 @@ PLAUSIBLE_TONNES_PER_GJ = (0.003, 1.0)
 
 def run_checks(report):
     _suspicious_zero_intensities(report)
+    _coarse_intensities(report)
     _air_zeros(report)
     _totals_add_up(report)
     _emission_scale(report)
@@ -72,6 +77,30 @@ def _suspicious_zero_intensities(report):
                 _warn(report, intensity_key, year,
                       "Reported as 0, but the total it relates to is not zero. A real intensity is never exactly 0, so this 0 means "
                       "'rounded away or left blank'; it is not a real zero.")
+
+
+def _coarse_intensities(report):
+    """An intensity filed with ONE digit of precision ('0.0000000004') is rounded so coarsely that a change from year to year means little.
+
+    Real example: ICICI Bank's waste intensity went from 0.0000000002 to 0.0000000004.  That reads as "exactly 100% more", but a figure
+    written with one digit can be off by up to half a unit of that digit (from about 5% for a 9 to 50% for a 1), so here the true change
+    lies anywhere from about +40% to +200%.  We keep the figure as filed and only say it is too coarse to compare (the totals, which carry
+    full precision, are still compared)."""
+    for key in INTENSITY_ROWS:
+        metric = report.metrics.get(key) or report.extras.get(key)
+        if metric is None:
+            continue
+        for year in YEARS:
+            cell = getattr(metric, year)
+            if cell.status == Status.NOT_REPORTED or not cell.origin or not isinstance(cell.value, (int, float)) or cell.value == 0:
+                continue
+            filed = cell.origin[0].raw
+            if significant_digits(filed) == 1:
+                fy = report.fy if year == "current" else report.previous_fy
+                message = (f"The FY {fy} figure was filed as {filed}, which has only one digit of precision. It is rounded too coarsely "
+                           "to compare with another year: the real figure could be much higher or lower.")
+                if message not in cell.warnings:
+                    cell.warnings.append(message)
 
 
 def _air_zeros(report):

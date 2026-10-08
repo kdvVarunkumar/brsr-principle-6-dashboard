@@ -148,7 +148,7 @@ python hub.py --link                     # tiny index that only opens the files 
 
 | Step | Command | What to say |
 |---|---|---|
-| 1 | `pytest -q` | "About 560 automatic tests pass, with no internet needed." |
+| 1 | `pytest -q` | "About 600 automatic tests pass, with no internet needed." |
 | 2 | `python download_filings.py --company "<NEW COMPANY>"` | "It finds the company on NSE, downloads each year politely (3 s apart), and flags years NSE does not have." |
 | 3 | *(run step 2 again)* | "Second run: 0 requests. Everything is cached." |
 | 4 | `python extract_report.py --company "<NEW COMPANY>" --fy 2024-25 --questions E1,E6` | "XML → clean SEBI rows. Calculated, converted and doubtful values are marked, and nothing is invented: missing = Not reported." |
@@ -292,7 +292,7 @@ How to read a page: *Not reported* = the filing has nothing (never shown as 0) �
 ## 8. Tests
 
 ```powershell
-pytest -q                              # everything (about 560 tests, a few seconds, no internet)
+pytest -q                              # everything (about 600 tests, a few seconds, no internet)
 pytest tests/views -q                  # one layer: the test folders mirror brsr_p6/ (core, download, parsing, extraction, analysis, views, ...)
 pytest tests/extraction/test_extractor.py -v      # one file, one line per test
 pytest tests/test_architecture.py -q   # only the "layers import downwards" rule
@@ -337,6 +337,7 @@ Then run `python download_filings.py --company "ITC"` again to show a real downl
 - **Two formats of filing?** Yes: filings before April 2024 use an older layout than later ones; the code detects which one and uses the matching tag mapping.
 - **Who is the dashboard for?** A non-expert. It answers four questions: how big is the footprint, better or worse than last year, is it under control, can I trust the numbers.
 - **What does "better" mean?** Better than the company's *own* figure last year, nothing more. The filing has no industry benchmark or legal limit, so we do not rate or score.
+- **What if an intensity is rounded to one digit?** (ICICI Bank filed waste per rupee as 0.0000000002, then 0.0000000004: that reads `100% more`, but the true change is anywhere from about +40% to +200%.) The figure is shown as filed, marked *Too coarse to compare*, and not called better or worse; in the summary the exact total takes its place.
 - **What if a number looks wrong?** (Tata Steel typed Scope 1 as 64 instead of 64 million.) It is shown exactly as filed, in amber, with the reason; it gets no better/worse verdict and is kept out of the summary sentences.
 - **Why per ₹ crore?** The filed intensity (0.0000807 GJ per ₹) is unreadable. Only the unit changes; the filed number stays in the Fine print.
 - **How do you stop it inventing things?** Missing is "Not reported" (never 0), a zero last year gives "can't compare", figures with no unit are not quoted in sentences, and a test checks every warning in every real filing is classified.

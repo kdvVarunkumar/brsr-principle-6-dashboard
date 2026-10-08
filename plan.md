@@ -259,6 +259,15 @@ Time estimates are rough hours for you working with my help. Core (Phases 0-7) i
 - [x] 35 new tests; 564 in all; samples regenerated
 - [ ] *Not done:* the viewer is not refreshed automatically after `main.py` / `trends.py` / `summary.py`; run `python hub.py` again. Full-text search inside the pages is not offered (the search looks at the page's company, year and type)
 
+### Phase 15: Evaluator audit before submission  ✅ DONE
+*Asked for by the user: "check as an evaluator whether everything is as per the requirement".*
+- [x] Clean install proof: fresh clone, brand-new venv, only `requests`, `Jinja2`, `pytest`: all tests pass
+- [x] Four companies the tool was never built on, by name, lowercase name and symbol: all produce a page in about 11 s; the one-year, trend and summary pages work on them
+- [x] The graded errors (unknown company, missing report, unparseable filing) on all three commands: each gives a specific message on the page; a corrupted filing is flagged inside a trend or summary page that can still be built
+- [x] Numbers checked independently against the raw XML (water, waste, energy incl. a Terajoule conversion)
+- [x] **Fix:** an intensity filed with one digit of precision is "too coarse to compare" (D84); found on ICICI Bank, present in the HDFC sample
+- [ ] *Open, needs a decision:* the dashboard's topic tiles and scoreboard follow the totals, the summary page the per-sales figure. See `context.md` Phase 15
+- [ ] *Not built:* Extension 3 (company comparison). Nothing of it is half-finished
 ---
 
 ## 6. Milestones

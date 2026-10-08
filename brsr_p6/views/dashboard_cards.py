@@ -12,7 +12,7 @@ Nothing here knows about HTML.  The template only prints what a CardView says.
 from dataclasses import dataclass, field
 
 from brsr_p6.analysis.comparison import CONTEXT, CONTEXT_ONLY, HIGHER, IMPROVED, LOWER, SAME, UNSURE, WORSE, compare, has_number
-from brsr_p6.analysis.warning_kinds import CHECK, DOUBTFUL, OK
+from brsr_p6.analysis.warning_kinds import CHECK, DOUBTFUL, OK, only_coarse
 from brsr_p6.core import friendly
 from brsr_p6.core.formatting import format_number
 from brsr_p6.core.models import Cell, Metric, Status
@@ -72,6 +72,7 @@ class CardView:
     change: float | None = None   # how much it changed: percent for amounts, percentage points for shares (None: not comparable)
     css: str = ""             # "doubtful" or "empty"
     trace: list = field(default_factory=list)   # "FY 2023-24: TotalEnergyConsumed = 375373200 Gigajoule", one line per year
+    alert_title: str = "Check this figure."     # the bold words that start the warning box
 
 
 # ------------------------------------------------------------------------------------------------ step 1: the figure
@@ -190,7 +191,15 @@ def build_card(report, info):
         change=comparison.amount,
         css="doubtful" if comparison.trust == DOUBTFUL else ("empty" if not has_number(now) else ""),
         trace=figure_trace(report, _rows_behind(report, info, metric)),
+        alert_title=_alert_title(comparison.trust, now.warnings + before.warnings),
     )
+
+
+def _alert_title(trust, warnings):
+    """What to call the warning box: a figure that is merely rounded too coarsely is not 'doubtful' (nobody made a mistake)."""
+    if only_coarse(warnings):
+        return "Too coarse to compare."
+    return "Doubtful figure." if trust == DOUBTFUL else "Check this figure."
 
 
 def _rows_behind(report, info, metric):

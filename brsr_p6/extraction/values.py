@@ -1,5 +1,7 @@
 """Small cleaners for the raw text found in a filing (numbers, yes/no answers, free text)."""
 
+import re
+
 NOTHING = ("", "-", "--", "na", "n/a", "nil", "none", "null", "not applicable", "not available")
 
 
@@ -14,6 +16,19 @@ def clean_number(text):
         return float(cleaned)
     except ValueError:
         return None
+
+
+def significant_digits(text):
+    """How many digits of precision a number written as text has: '0.0000000004' -> 1, '0.0000004786' -> 4, '4e-10' -> 1, '0.20' -> 2.
+
+    Leading zeros never count.  Trailing zeros count after a decimal point ('0.20' was written to two digits) but not in a whole
+    number ('1200' may be rounded to the hundred).  Unreadable text or zero -> 0."""
+    mantissa = re.split(r"[eE]", str(text).strip().replace(",", ""))[0].lstrip("+-")
+    if not re.fullmatch(r"\d*\.?\d*", mantissa):
+        return 0
+    if "." in mantissa:
+        return len(mantissa.replace(".", "").lstrip("0"))
+    return len(mantissa.lstrip("0").rstrip("0"))
 
 
 def clean_yes_no(text):

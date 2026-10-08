@@ -1599,3 +1599,62 @@ pytest cannot run a browser. We tested two ways:
 4. Why does the frame have `sandbox` and what does leaving out `allow-scripts` do?
 5. How do you test a page's JavaScript when you only have pytest?
 6. Which layer does each part live in (reading the folder, naming and grouping, the page, the command) and why?
+
+---
+
+# Phase 15: Check it like the evaluator would
+
+## 15.1 Why this phase exists
+
+By now every feature had tests, but tests only prove what **we** thought of. An evaluator brings different companies, different typos and a fresh computer. So the question "are we ready?" was answered by **running things**, not by reading our own notes.
+
+## 15.2 What we ran (and what each run proves)
+
+| Run | What it proves |
+|---|---|
+| Fresh `git clone`, a **brand-new virtual environment**, `pip install -r requirements.txt` (only `requests`, `Jinja2`, `pytest`), then the tests | The README's setup really works on a clean machine; nothing depends on libraries that happen to be on our PC |
+| Four companies **never used while building** (NTPC, Hindustan Unilever, ICICI Bank, L&T typed as the symbol `LT`) | "Not hard-coded to one company" is true: each made a page in about 11 s |
+| Summary and trends on those companies | The extensions are not tuned to the samples |
+| Unknown company, a year NSE does not have, years before BRSR, and a **deliberately damaged filing**, on all three commands | The graded errors give a specific message *on the page*; a damaged year inside a trend or summary is flagged and the page still works |
+| Three NTPC numbers read straight from the raw XML | The dashboard matches the filing (NTPC files energy in **Terajoule**; the page converts to GJ and says so on the card) |
+
+## 15.3 What it found: false precision
+
+ICICI Bank's summary said *"Waste for every ₹ 1 crore of sales was **100% more** than last year"*. The cause was in the filing: the company wrote the figure with **one digit**, `0.0000000002` and then `0.0000000004`.
+
+**The idea:** a number written with one digit is rounded. `4e-10` means "somewhere between 3.5e-10 and 4.5e-10". Likewise `2e-10` is between 1.5e-10 and 2.5e-10. So the true change is anywhere from about **+40% to +200%**. Printing "100%" claims accuracy that the filing does not contain. (The direction was right, because the exact total rose from 334.6 to 756.3 tonnes, but the number was not.)
+
+**What we did:**
+- `significant_digits("0.0000000004")` counts the real digits of the text as filed.
+- `checks.py` adds a warning to any per-rupee intensity with exactly one digit; the figure is **kept as filed**.
+- `warning_kinds` treats it as "cannot be compared", with its own reason ("Filed with one digit of precision, so too coarse to compare with another year") and its own box title ("Too coarse to compare.", not "Doubtful": nobody made a mistake).
+- In the year-on-year summary the **exact total** is then ranked in its place (the rule from Phase 9 doing its job: +126%).
+
+It affects 6% of the intensity values we have (mostly banks, IT firms and older layouts), including the committed HDFC Bank sample, which used to say "Improved*, 15% lower" for a change from `0.2` to `0.17`.
+
+## 15.4 Two smaller lessons
+
+- **A check can be wrong too.** My first "error page" probe misread a shared footer link as the page's suggestion, and a "Substring" failed in my own test script. Both were mistakes in the *checking*, not the product. When a result surprises you, check the checker.
+- **Characters can be eaten by your tools.** In PowerShell, a backtick is an escape character: writing `` `0.0000000004` `` inside a double-quoted string silently inserted an invisible NUL character into the README. The fix was a small Python script (no such traps). Lesson: after scripted edits to text files, search for strange characters.
+
+## 15.5 What we noticed but did not change (needs a decision)
+
+On NTPC the dashboard says *Energy: Got worse* because total energy rose 3.5%, while the fairer measure (energy per ₹ of sales) says *about the same* (+0.89%). The page explains that totals grow with company size, but the topic tile and the scoreboard still follow the total.
+The summary page already prefers the per-sales figure. Making the dashboard follow the same rule would remove the mixed message, but it changes every scoreboard, so it should be an explicit decision, not a last-minute edit.
+
+## 15.6 Try it yourself
+
+1. `python summary.py --company "ICICI Bank"`: find the waste-per-sales row in "Not ranked, and why". What reason does it give, and which figure is ranked instead?
+2. Open `samples/HDFCBANK_2022-23.html`, Climate section, the card "Greenhouse gases per unit of sales". What does it say now, and what did it say before this phase (see `git log -p`)?
+3. In `tests/extraction/test_coarse_intensity.py` find the test for `0.20`. Why does it count as two digits but `1200` as two as well, not four?
+4. Run `python -c "from brsr_p6.extraction.values import significant_digits as s; print(s('0.0000000004'), s('0.0000004786'), s('4e-10'))"`.
+5. Make a clean clone in a short folder (`%TEMP%\x`), create a new venv and run `pytest`. What would you check if it failed only there?
+
+## 15.7 Interview self-check
+
+1. How did you decide the project was ready? Why is "all tests pass" not enough?
+2. What is false precision? Show the ICICI Bank example with the range of the true change.
+3. Why does the card say "Too coarse to compare" and not "Doubtful"?
+4. What happens in the summary when a per-sales figure is too coarse? Why is that fine?
+5. Which tests would an evaluator's unknown company exercise that your samples did not?
+6. What did you decide *not* to change the night before the demo, and why?
