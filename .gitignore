@@ -61,3 +61,7 @@ data/raw/INFY/*
 !data/raw/HDFCBANK/
 data/raw/HDFCBANK/*
 !data/raw/HDFCBANK/2022-23/
+
+# Personal learning notes: kept locally, not published.
+demo.md
+learnings.md
