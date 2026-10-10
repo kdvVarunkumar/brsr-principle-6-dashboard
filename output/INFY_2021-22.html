@@ -1,0 +1,2131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Infosys Limited: BRSR Principle 6, FY 2021-22</title>
+<style>
+/* Styles for the generated report page. Everything is inline in the HTML so the page opens anywhere, offline. */
+:root {
+  --ink: #1d2733;
+  --muted: #5d6b7a;
+  --paper: #ffffff;
+  --page: #f3f5f7;
+  --line: #d5dce3;
+  --accent: #0f6b5c;
+  --accent-soft: #e3f1ee;
+  --head-bg: #e8eef2;
+  --note-ink: #3d4a57;      /* a note about a figure: calm slate, never yellow */
+  --note-bg: #f1f4f7;
+  --note-line: #c5cfd9;
+  --err-ink: #7a4b00;       /* error pages only */
+  --err-bg: #fff3d4;
+  --err-line: #e5b84a;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--page); color: var(--ink); font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+a { color: var(--accent); }
+
+/* ---------- page header ---------- */
+.page-header { background: var(--accent); color: #fff; padding: 18px 16px 24px; }
+.page-header .inner, main, footer { max-width: 1120px; margin: 0 auto; }
+.eyebrow { margin: 0 0 4px; font-size: 0.85rem; letter-spacing: 0.04em; text-transform: uppercase; opacity: 0.9; }
+h1 { margin: 0; font-size: 1.7rem; line-height: 1.2; }
+h1 .symbol { font-weight: 400; opacity: 0.85; }
+.subtitle { margin: 4px 0 0; opacity: 0.95; }
+
+/* ---------- facts box ---------- */
+.facts-box { background: var(--paper); border: 1px solid var(--line); border-radius: 8px; margin: -14px 16px 18px; padding: 14px 18px; max-width: 1088px; }
+@media (min-width: 1152px) { .facts-box { margin-left: auto; margin-right: auto; } }
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 10px 24px; margin: 0; }
+.facts div { min-width: 0; }
+.facts dt { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
+.facts dd { margin: 0; overflow-wrap: anywhere; }
+.facts dd.source a { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }       /* the long file name stays on one line (the whole name is in the tooltip and in the footer) */
+.boundary { font-weight: 700; }
+.boundary-help { display: block; font-size: 0.82rem; color: var(--muted); font-weight: 400; }
+.legend { margin: 12px 0 0; font-size: 0.9rem; color: var(--muted); }
+.callout { margin: 12px 0 0; padding: 8px 12px; background: var(--note-bg); border: 1px solid var(--note-line); border-radius: 6px; color: var(--note-ink); font-size: 0.9rem; }
+
+/* ---------- tabs (CSS only: no JavaScript) ---------- */
+main { padding: 0 16px 32px; }
+main > input[type="radio"] { position: absolute; opacity: 0; pointer-events: none; }
+main > label { display: inline-block; padding: 9px 18px; margin-right: 6px; border: 1px solid var(--line); border-bottom: none; border-radius: 8px 8px 0 0; background: var(--head-bg); cursor: pointer; font-weight: 600; }
+#view-sebi:checked ~ label[for="view-sebi"], #view-dashboard:checked ~ label[for="view-dashboard"] { background: var(--paper); color: var(--accent); box-shadow: inset 0 3px 0 var(--accent); }
+main > input:focus-visible + label { outline: 3px solid #1a73e8; outline-offset: 2px; }
+.panel { display: none; background: var(--paper); border: 1px solid var(--line); border-radius: 0 8px 8px 8px; padding: 20px 22px 28px; }
+#view-sebi:checked ~ .panel-sebi, #view-dashboard:checked ~ .panel-dashboard { display: block; }
+
+/* ---------- SEBI view ---------- */
+.principle-title { margin: 0 0 4px; font-size: 1.1rem; color: var(--accent); }
+.principle-sub { margin: 0 0 8px; color: var(--muted); font-size: 0.92rem; }
+h2.section { margin: 30px 0 4px; padding-bottom: 6px; border-bottom: 3px solid var(--accent); font-size: 1.25rem; }
+article.question { margin: 26px 0 0; padding-top: 6px; }
+article.question h3 { margin: 0 0 10px; font-size: 1rem; font-weight: 600; line-height: 1.45; }
+.qnum { display: inline-block; min-width: 1.8em; color: var(--accent); }
+
+.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 6px; }
+table.sebi { width: 100%; min-width: 620px; border-collapse: collapse; font-size: 0.93rem; }
+table.sebi th, table.sebi td { padding: 7px 10px; border-bottom: 1px solid var(--line); vertical-align: top; text-align: left; }
+table.sebi thead th { background: var(--head-bg); font-weight: 600; }
+table.sebi thead th small { font-weight: 400; color: var(--muted); display: block; }
+table.sebi tbody th[scope="row"] { font-weight: 400; width: 46%; }
+table.sebi tr.subhead th { background: #f3f6f8; font-weight: 600; }
+table.sebi tbody tr:last-child th, table.sebi tbody tr:last-child td { border-bottom: none; }
+table.sebi td.val, table.sebi th.valhead { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+table.sebi td.unit-col { color: var(--muted); white-space: nowrap; }
+table.list td { text-align: left; white-space: normal; overflow-wrap: anywhere; }
+
+.num { font-variant-numeric: tabular-nums; }
+.unit { color: var(--muted); font-size: 0.85em; margin-left: 5px; }
+.unit-unknown { font-style: italic; }
+.missing { color: var(--muted); font-style: italic; }
+td.missing { background: #fafbfc; }
+
+/* marks: words and symbols, never colour alone */
+.tag { display: inline-block; margin-left: 4px; padding: 0 5px; border-radius: 3px; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.02em; vertical-align: middle; }
+.tag-calculated { border: 1px solid #3b6ea8; color: #24507f; background: #eaf2fb; }
+.tag-converted { border: 1px solid #7a5aa6; color: #573a82; background: #f1ecf8; }
+sup.fn { margin-left: 2px; font-size: 0.7rem; }
+sup.fn a { text-decoration: none; font-weight: 700; padding: 0 1px; }
+sup.fn-note a { color: var(--note-ink); }
+
+ul.footnotes { list-style: none; margin: 8px 0 0; padding: 0; font-size: 0.85rem; color: var(--muted); }
+ul.footnotes li { margin: 3px 0; padding-left: 1.8em; text-indent: -1.8em; }
+ul.footnotes .fn-num { display: inline-block; min-width: 1.4em; font-weight: 700; text-indent: 0; }
+ul.footnotes li.warning { color: var(--note-ink); background: var(--note-bg); border-radius: 4px; padding: 3px 8px 3px 2.4em; }
+
+.answer-box { border-left: 4px solid var(--accent-soft); padding: 2px 0 2px 14px; }
+.answer-box p { margin: 4px 0; }
+.details { white-space: pre-line; margin: 4px 0 0; }
+.assurance { margin: 10px 0 0; font-size: 0.88rem; }
+.sebi-note { color: var(--muted); }
+.remark { margin: 10px 0 0; padding: 7px 12px; background: var(--accent-soft); border-radius: 6px; font-size: 0.86rem; }
+.facility { margin: 16px 0 6px; }
+.facility h4 { margin: 0 0 6px; font-size: 0.95rem; }
+
+.placeholder { color: var(--muted); font-style: italic; }
+footer { padding: 4px 16px 40px; color: var(--muted); font-size: 0.85rem; }
+
+/* phones: let the tables fit the screen (units drop under the number, cells may wrap) instead of forcing a sideways swipe */
+@media (max-width: 640px) {
+  .panel { padding: 14px 12px 22px; }
+  table.sebi { min-width: 0; table-layout: fixed; font-size: 0.8rem; }
+  table.sebi th, table.sebi td { padding: 6px 4px; overflow-wrap: anywhere; }
+  table.sebi thead th:first-child { width: 36%; }               /* parameter column; the other columns share the rest */
+  table.sebi.has-unit thead th:nth-child(2) { width: 15%; }     /* the Unit column of E5, E6, L4 */
+  table.sebi th.valhead { white-space: normal; }
+  table.sebi td.val { white-space: normal; }
+  table.sebi td.val .unit { display: block; margin-left: 0; }
+  table.sebi td.unit-col { white-space: normal; }
+  table.sebi thead th small { font-size: 0.68rem; }
+  table.sebi.list { table-layout: auto; min-width: 560px; }     /* list tables have many columns: these may still scroll sideways */
+}
+
+@media print {
+  body { background: #fff; }
+  main > input, main > label { display: none; }
+  .panel { display: block !important; border: none; padding: 0; }
+  .panel-dashboard { display: none !important; }
+  .table-wrap { overflow: visible; }
+}
+
+/* ---- the trace from every number to the filing (templates/trace.html) ---- */
+.trace-steps { margin: 6px 0 12px 20px; padding: 0; color: var(--muted); font-size: 0.92rem; }
+.trace-source { background: var(--paper); border: 1px solid var(--line); border-radius: 8px; padding: 12px 16px; margin: 0 0 12px; }
+details.trace-q { background: var(--paper); border: 1px solid var(--line); border-radius: 6px; margin: 8px 0; padding: 0 12px; }
+details.trace-q > summary { cursor: pointer; padding: 9px 0; font-size: 0.95rem; }
+details.trace-q[open] > summary { border-bottom: 1px solid var(--line); margin-bottom: 8px; }
+details.trace-q .table-wrap { margin-bottom: 12px; }
+table.trace-table { width: 100%; min-width: 620px; table-layout: fixed; }
+table.trace-table th[scope="row"] { width: 30%; font-weight: 400; }
+table.trace-table th:not([scope]) { width: 35%; }
+.t-shown { display: block; font-weight: 600; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.t-status { display: block; font-size: 0.78rem; color: var(--accent); }
+.t-line { display: block; margin-top: 3px; font-family: ui-monospace, Consolas, monospace; font-size: 0.76rem; color: var(--muted); overflow-wrap: anywhere; }
+.t-note { display: block; margin-top: 3px; font-size: 0.78rem; font-style: italic; color: var(--muted); }details.trace-q .remark { overflow-wrap: anywhere; }/* The Dashboard tab.  Every rule starts with .dash so it can never change how the SEBI tab looks. */
+.dash {
+  --good-ink: #0b6b4f; --good-bg: #e0f3ec; --good-line: #86c9b3;
+  --bad-ink: #9a3608;  --bad-bg: #fde9dc;  --bad-line: #eba67d;
+  --same-ink: #46525f; --same-bg: #eceff2; --same-line: #b9c3cc;
+}
+/* the tab panel itself: no white box, so the white cards stand out on the page colour */
+.panel-dashboard { background: var(--page); border: none; padding: 0; }
+#view-dashboard:checked ~ label[for="view-dashboard"] { background: var(--page); }
+
+/* ---- jump menu ---- */
+.dash .jump { position: sticky; top: 0; z-index: 5; background: var(--paper); border-bottom: 1px solid var(--line); border-radius: 0 8px 0 0; }
+.dash .jump ul { list-style: none; margin: 0; padding: 0 6px; display: flex; gap: 2px; overflow-x: auto; white-space: nowrap; }
+.dash .jump a { display: block; padding: 10px 12px; text-decoration: none; font-weight: 600; font-size: .92rem; color: var(--ink); border-bottom: 3px solid transparent; }
+.dash .jump a:hover, .dash .jump a:focus-visible { border-bottom-color: var(--accent); color: var(--accent); outline: none; }
+
+/* ---- chips: words and symbols, never colour alone ---- */
+.dash .chip { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: .8rem; font-weight: 700; border: 1px solid; white-space: nowrap; }
+.dash .chip-good { color: var(--good-ink); background: var(--good-bg); border-color: var(--good-line); }
+.dash .chip-bad { color: var(--bad-ink); background: var(--bad-bg); border-color: var(--bad-line); }
+.dash .chip-same { color: var(--same-ink); background: var(--same-bg); border-color: var(--same-line); }
+.dash .chip-unsure { color: var(--same-ink); background: #fff; border-color: var(--same-line); border-style: dashed; }
+.dash .chip-note { color: var(--note-ink); background: var(--note-bg); border-color: var(--note-line); }
+
+/* ---- at a glance ---- */
+.dash .glance { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 20px 22px; margin: 18px 0; }
+.dash .glance h2 { margin: 0 0 6px; font-size: 1.35rem; }
+.dash .story { font-size: 1.06rem; margin: 0 0 14px; }
+.dash .score { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 16px; align-items: center; }
+.dash .score .lbl { color: var(--muted); font-size: .9rem; margin-right: 4px; }
+.dash .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(136px, 1fr)); gap: 10px; }
+.dash .tile { display: block; text-decoration: none; color: inherit; border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; background: #fbfcfd; }
+.dash .tile:hover, .dash .tile:focus-visible { border-color: var(--accent); outline: none; box-shadow: 0 0 0 2px var(--accent-soft); }
+.dash .t-name { display: flex; align-items: center; gap: 6px; font-weight: 700; margin-bottom: 6px; }
+.dash .t-name svg { width: 20px; height: 20px; color: var(--accent); flex: none; }
+.dash .t-stat { display: block; font-size: .82rem; color: var(--muted); margin-top: 6px; }
+.dash .fairness { margin: 14px 0 0; padding: 9px 12px; background: var(--accent-soft); border-radius: 8px; font-size: .88rem; }
+
+/* ---- topic sections ---- */
+.dash .topic { margin: 34px 0 0; scroll-margin-top: 52px; }
+.dash .topic-head { display: flex; align-items: center; gap: 10px; border-bottom: 3px solid var(--accent); padding-bottom: 6px; }
+.dash .topic-head svg { width: 30px; height: 30px; color: var(--accent); flex: none; }
+.dash .topic-head h2 { margin: 0; font-size: 1.4rem; }
+.dash .topic-head .src { margin-left: auto; font-size: .78rem; color: var(--muted); text-align: right; }
+.dash .plain { margin: 10px 0 4px; color: var(--muted); }
+.dash .headline { margin: 6px 0 14px; padding: 10px 14px; background: var(--paper); border-left: 5px solid var(--accent); border-radius: 0 8px 8px 0; font-size: 1.05rem; font-weight: 600; }
+
+/* ---- cards ---- */
+.dash .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 14px; }
+.dash .minis { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 12px; margin-top: 12px; }
+.dash .card, .dash .mini { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.dash .card.doubtful, .dash .mini.doubtful { border: 2px dashed var(--note-line); background: #f9fafb; }
+.dash .card.empty, .dash .mini.empty { background: #fafbfc; border-style: dashed; }
+.dash .card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+.dash .card h3, .dash .mini h3 { margin: 0; font-size: 1rem; line-height: 1.3; }
+.dash .name { display: block; font-size: .76rem; font-weight: 400; color: var(--muted); }
+.dash .better { font-size: .74rem; color: var(--muted); border: 1px solid var(--line); border-radius: 4px; padding: 1px 6px; white-space: nowrap; }
+.dash .big { margin: 0; line-height: 1.1; }
+.dash .big .v { font-size: 2.1rem; font-weight: 700; letter-spacing: -.01em; }
+.dash .big .u { font-size: 1rem; color: var(--muted); margin-left: 4px; }
+.dash .mini .big .v { font-size: 1.55rem; }
+.dash .big.none .v { font-size: 1.3rem; font-weight: 600; color: var(--muted); font-style: italic; }
+.dash .doubtful .big .v { color: var(--note-ink); }       /* a doubtful number must not look as sure as a good one */
+.dash .trend { margin: 0; font-size: .93rem; display: flex; flex-wrap: wrap; gap: 6px 8px; align-items: center; }
+.dash .caveat { margin: 0; font-size: .8rem; color: var(--muted); }
+.dash .bars { display: grid; gap: 4px; }
+.dash .bar-row { display: grid; grid-template-columns: 78px 1fr 64px; gap: 8px; align-items: center; font-size: .78rem; color: var(--muted); }
+.dash .bar-row .bv { text-align: right; font-variant-numeric: tabular-nums; }
+.dash .bar { display: block; height: 10px; background: #edf0f3; border-radius: 5px; overflow: hidden; }
+.dash .bar i { display: block; height: 100%; min-width: 3px; background: var(--accent); border-radius: 5px; }
+.dash .bar-row.prev .bar i { background: #9fb0bd; }
+.dash .what, .dash .why { margin: 0; font-size: .88rem; }
+.dash .what b, .dash .why b { color: var(--ink); }
+.dash .why { color: var(--muted); }
+.dash .alert { margin: 0; padding: 6px 10px; background: var(--note-bg); border: 1px solid var(--note-line); border-radius: 6px; color: var(--note-ink); font-size: .84rem; }
+.dash .alert.shared { margin-top: 12px; }
+.dash details.fine { font-size: .84rem; color: var(--muted); border-top: 1px dashed var(--line); padding-top: 6px; }
+.dash details.fine summary { cursor: pointer; font-weight: 600; color: var(--accent); }
+.dash details.fine p { margin: 6px 0 0; }
+.dash .badge { font-size: .76rem; color: var(--muted); margin: auto 0 0; padding-top: 2px; }
+
+/* ---- "where does it come from / go" bars ---- */
+.dash figure.stack { margin: 16px 0 0; background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; }
+.dash figure.stack figcaption { font-weight: 700; margin-bottom: 8px; }
+.dash .stack-bar { display: flex; height: 22px; border-radius: 6px; overflow: hidden; background: #edf0f3; }
+.dash .stack-bar span { display: block; height: 100%; min-width: 3px; }
+.dash .key { list-style: none; margin: 10px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(310px, 1fr)); gap: 5px 22px; font-size: .88rem; }
+.dash .key li { display: grid; grid-template-columns: 12px 3.6em 1fr; gap: 0 8px; align-items: baseline; }
+.dash .key .sw { width: 12px; height: 12px; border-radius: 3px; transform: translateY(1px); }
+.dash .key .pct { font-weight: 700; text-align: right; }
+.dash .key .amt { color: var(--muted); }
+.dash .stack-note { margin: 8px 0 0; font-size: .84rem; color: var(--muted); }
+.dash .c1 { background: #0f6b5c; } .dash .c2 { background: #3b6ea8; } .dash .c3 { background: #7a5aa6; } .dash .c4 { background: #8fc1e3; } .dash .c5 { background: #9aa7b3; }
+.dash .g1 { background: #0f6b5c; } .dash .g2 { background: #5fb9a5; } .dash .g3 { background: #a9ddd0; }
+.dash .o1 { background: #e08a2e; } .dash .o2 { background: #8a5a2b; } .dash .o3 { background: #9aa7b3; }
+.dash .grey { background: #cfd6dc; }
+
+/* ---- safeguards ---- */
+.dash .safe { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 12px; }
+.dash .sg { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; }
+.dash .sg h3 { margin: 0; font-size: .98rem; line-height: 1.3; }
+.dash .sg .ans { margin: 0; }
+.dash .sg .what { color: var(--muted); }
+.dash .quote { margin: 6px 0 0; padding: 6px 10px; border-left: 3px solid var(--line); color: var(--ink); font-size: .85rem; overflow-wrap: anywhere; }
+
+/* ---- trust box + glossary ---- */
+.dash .box { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; margin-top: 12px; }
+.dash .trust-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; }
+.dash .box h3 { margin: 0 0 6px; font-size: 1rem; }
+.dash .box ul { margin: 6px 0 0; padding-left: 1.2em; }
+.dash .small { font-size: .84rem; color: var(--muted); }
+.dash dl.gloss { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 8px 28px; margin: 0; }
+.dash dl.gloss dt { font-weight: 700; }
+.dash dl.gloss dd { margin: 0 0 6px; color: var(--muted); font-size: .92rem; }
+
+/* wide screens: reserve two lines for titles so the big numbers line up across a row */
+@media (min-width: 700px) { .dash .card-top { min-height: 2.7em; } .dash .sg h3 { min-height: 2.6em; } }
+@media (max-width: 560px) {
+  .dash .topic-head { flex-wrap: wrap; }
+  .dash .topic-head .src { margin-left: 40px; flex-basis: 100%; text-align: left; }
+  .dash .big .v { font-size: 1.8rem; }
+  .dash .glance { padding: 16px 14px; }
+  .dash .bar-row { grid-template-columns: 70px 1fr 58px; }
+}
+
+/* ---- trace lines in a card's Fine print ---- */
+.dash .trace-head { margin: 8px 0 2px; }
+.dash .trace { margin: 2px 0; font-family: ui-monospace, Consolas, monospace; font-size: 0.76rem; color: var(--muted); overflow-wrap: anywhere; }</style>
+</head>
+<body>
+
+<header class="page-header">
+  <div class="inner">
+    <p class="eyebrow">Business Responsibility &amp; Sustainability Report · Principle 6 (environment)</p>
+    <h1>Infosys Limited <span class="symbol">(INFY)</span></h1>
+    <p class="subtitle">Financial year 2021-22, compared with 2020-21</p>
+  </div>
+</header>
+
+<div class="facts-box">
+  <dl class="facts">
+    <div>
+      <dt>Reporting boundary</dt>
+      <dd class="boundary">Consolidated basis
+<span class="boundary-help">The figures cover the company together with its subsidiaries.</span>      </dd>
+    </div>
+    <div>
+      <dt>Filed on NSE</dt>
+      <dd>29-Aug-2022</dd>
+    </div>
+    <div>
+      <dt>Edition of SEBI's XBRL form</dt>
+      <dd>2021-09-30 <span class="missing">(legacy layout)</span></dd>
+    </div>
+    <div>
+      <dt>Source file (NSE)</dt>
+      <dd class="source" title="BR_INFY_2021_2022_20220800145.xml"><a href="https://nsearchives.nseindia.com/corporate/xbrl/BR_INFY_2021_2022_20220800145.xml" rel="noopener noreferrer" target="_blank">BR_INFY_2021_2022_20220800145.xml</a><span class="boundary-help">The same filing as a PDF: <a href="https://nsearchives.nseindia.com/corporate/BR_INFY_2021_2022_20220800145.pdf" rel="noopener noreferrer" target="_blank">open</a></span>      </dd>
+    </div>
+  </dl>
+  <p class="callout"><strong>ⓘ About this filing:</strong> The file contained 15 characters that XML forbids (inside free-text answers); they were removed before reading.</p>
+</div>
+
+<main>
+  <input type="radio" name="view" id="view-dashboard" checked>
+  <label for="view-dashboard">Dashboard</label>
+  <input type="radio" name="view" id="view-sebi">
+  <label for="view-sebi">SEBI-format report</label>
+
+  <section class="panel panel-dashboard" aria-label="Dashboard">
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-bolt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></symbol>
+  <symbol id="i-cloud" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M7 18a4 4 0 0 1-.5-7.97A6 6 0 0 1 18 9a4.5 4.5 0 0 1 0 9z"/></symbol>
+  <symbol id="i-drop" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2.5s6 6.2 6 10.5a6 6 0 0 1-12 0c0-4.3 6-10.5 6-10.5z"/></symbol>
+  <symbol id="i-wind" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10a3 3 0 1 0-3-3M3 12h14a3 3 0 1 1-3 3M3 16h7"/></symbol>
+  <symbol id="i-bin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></symbol>
+</svg>
+
+
+
+
+<div class="dash">
+
+<nav class="jump" aria-label="Jump to a topic">
+  <ul>
+<li><a href="#dash-energy">Energy</a></li><li><a href="#dash-climate">Climate</a></li><li><a href="#dash-water">Water</a></li><li><a href="#dash-air">Air quality</a></li><li><a href="#dash-waste">Waste</a></li>    <li><a href="#dash-safeguards">Safeguards</a></li>
+    <li><a href="#dash-trust">Can I trust this?</a></li>
+    <li><a href="#dash-glossary">Glossary</a></li>
+  </ul>
+</nav>
+
+<section class="glance" aria-labelledby="dash-glance-h">
+  <h2 id="dash-glance-h">How is Infosys doing on the environment?</h2>
+  <p class="story">In FY 2021-22, Infosys released 60,682 tonnes CO₂e of greenhouse gases (21.5% less than last year). It took in 13.12 lakh kL of water (1.4% more than last year) and produced 11,179 tonnes of waste (20.2% more than last year), of which 91.6% was recycled or reused. The energy figure does not state its unit, so we do not quote it.</p>
+  <p class="score"><span class="lbl">Of the 11 headline figures we can compare with last year:</span>
+    <span class="chip chip-good">✔ 6 improved</span><span class="chip chip-same">≈ 0 about the same</span><span class="chip chip-bad">✖ 5 got worse</span></p>
+  <div class="tiles">
+    <a class="tile" href="#dash-energy"><span class="t-name"><svg aria-hidden="true"><use href="#i-bolt"/></svg>Energy</span><span class="chip chip-same">◐ Mixed</span><span class="t-stat">2 improved, 1 worse</span></a>
+    <a class="tile" href="#dash-climate"><span class="t-name"><svg aria-hidden="true"><use href="#i-cloud"/></svg>Climate</span><span class="chip chip-good">✔ Improved</span><span class="t-stat">1 figure compared</span></a>
+    <a class="tile" href="#dash-water"><span class="t-name"><svg aria-hidden="true"><use href="#i-drop"/></svg>Water</span><span class="chip chip-same">◐ Mixed</span><span class="t-stat">1 improved, 1 worse</span></a>
+    <a class="tile" href="#dash-air"><span class="t-name"><svg aria-hidden="true"><use href="#i-wind"/></svg>Air quality</span><span class="chip chip-same">◐ Mixed</span><span class="t-stat">2 improved, 1 worse</span></a>
+    <a class="tile" href="#dash-waste"><span class="t-name"><svg aria-hidden="true"><use href="#i-bin"/></svg>Waste</span><span class="chip chip-bad">✖ Got worse</span><span class="t-stat">2 figures compared</span></a>
+    <a class="tile" href="#dash-safeguards"><span class="t-name"><svg aria-hidden="true"><use href="#i-shield"/></svg>Nature and safeguards</span><span class="chip chip-same">5 of 9 “Yes”</span><span class="t-stat">1 “No”, 3 with details or n/a</span></a>
+  </div>
+  <p class="fairness"><b>How to read “better” and “worse”:</b> it only compares the company with <b>itself last year</b>. It is not a rating against other companies or legal limits; the filing does not contain those. A bigger business can use more in total, so we always show the figure <b>per ₹ of sales</b> next to the total.</p>
+</section>
+
+<section class="topic" id="dash-energy" aria-labelledby="dash-energy-h">
+  <div class="topic-head"><svg aria-hidden="true"><use href="#i-bolt"/></svg><h2 id="dash-energy-h">Energy</h2><span class="src">SEBI Essential 1 · Leadership 1</span></div>
+  <p class="plain">Factories, offices and vehicles run on electricity and fuel. Here is how much the company used, how much it uses for each ₹ of sales, and how much came from renewable sources such as solar and wind.</p>
+  <p class="headline">40.9% of its energy came from renewable sources. The energy figure does not state its unit, so we do not quote it.</p>
+<div class="cards"><article class="card">
+  <div class="card-top">
+    <h3>Total energy used</h3>
+<span class="better">Lower is better ↓</span>  </div>
+  <p class="big"><span class="v num">6,50,476</span><span class="u">unit not stated</span></p>
+  <p class="trend"><span class="chip chip-good">✔ Improved*</span><span>▼ 3.2% lower than last year</span></p>
+<p class="caveat">* This comparison relies on a figure that carries a note below.</p>  <div class="bars" role="img" aria-label="2021-22: 6,50,476; 2020-21: 6,71,660">
+    <div class="bar-row"><span>2021-22</span><span class="bar"><i style="width:96.85%"></i></span><span class="bv">6,50,476</span></div>
+    <div class="bar-row prev"><span>2020-21</span><span class="bar"><i style="width:100.00%"></i></span><span class="bv">6,71,660</span></div>
+  </div>
+  <p class="what"><b>What it is:</b> All the electricity, fuel and other energy the company used.</p>
+<p class="why"><b>Why it matters:</b> Energy use drives both costs and greenhouse-gas emissions. Bigger companies use more, so also check the figure per ₹ of sales.</p>  <details class="fine"><summary>Fine print</summary><p>Filed as 6,50,476 (unit not stated) (last year 6,71,660).</p><p>Source in the SEBI tab: Essential 1, “Total energy consumption (A+B+C)”.</p><p class="trace-head"><b>Where it is in the filing:</b></p><p class="trace">FY 2021-22: TotalEnergyConsumption = 650476 pure</p><p class="trace">FY 2020-21: TotalEnergyConsumption = 671660 pure</p></details>
+  <p class="badge">ⓘ Note on this figure · ✔ Reported by the company</p>
+</article>
+<article class="card">
+  <div class="card-top">
+    <h3>Energy per unit of sales</h3>
+<span class="better">Lower is better ↓</span>  </div>
+  <p class="big"><span class="v num">5.35</span><span class="u">unit not stated</span></p>
+  <p class="trend"><span class="chip chip-good">✔ Improved*</span><span>▼ 20.0% lower than last year</span></p>
+<p class="caveat">* This comparison relies on a figure that carries a note below.</p>  <div class="bars" role="img" aria-label="2021-22: 5.35; 2020-21: 6.69">
+    <div class="bar-row"><span>2021-22</span><span class="bar"><i style="width:79.97%"></i></span><span class="bv">5.35</span></div>
+    <div class="bar-row prev"><span>2020-21</span><span class="bar"><i style="width:100.00%"></i></span><span class="bv">6.69</span></div>
+  </div>
+  <p class="what"><b>What it is:</b> Energy used divided by sales (called “energy intensity”).</p>
+<p class="why"><b>Why it matters:</b> The fairest way to judge efficiency, because it still works when the company grows.</p>  <p class="alert"><b>ⓘ Note on this figure.</b> The filing does not state the unit of this intensity figure. Shown as filed.</p>
+  <details class="fine"><summary>Fine print</summary><p>Filed as 5.35 (unit not stated) (last year 6.69).</p><p>Source in the SEBI tab: Essential 1, “Energy intensity per rupee of turnover (Total energy consumption/ turnover in rupees)”.</p><p class="trace-head"><b>Where it is in the filing:</b></p><p class="trace">FY 2021-22: EnergyIntensityPerRupeeOfTurnover = 5.35 pure</p><p class="trace">FY 2020-21: EnergyIntensityPerRupeeOfTurnover = 6.69 pure</p></details>
+  <p class="badge">ⓘ Note on this figure · ✔ Reported by the company</p>
+</article>
+<article class="card">
+  <div class="card-top">
+    <h3>Energy from renewable sources</h3>
+<span class="better">Higher is better ↑</span>  </div>
+  <p class="big"><span class="v num">40.9</span><span class="u">% of all energy</span></p>
+  <p class="trend"><span class="chip chip-bad">✖ Got worse*</span><span>▼ 1.82 percentage points below last year (last year 42.7%)</span></p>
+<p class="caveat">* This comparison relies on a figure that carries a note below.</p>  <div class="bars" role="img" aria-label="2021-22: 40.9%; 2020-21: 42.7%">
+    <div class="bar-row"><span>2021-22</span><span class="bar"><i style="width:40.91%"></i></span><span class="bv">40.9%</span></div>
+    <div class="bar-row prev"><span>2020-21</span><span class="bar"><i style="width:42.73%"></i></span><span class="bv">42.7%</span></div>
+  </div>
+  <p class="what"><b>What it is:</b> The part of all energy that came from renewables such as solar and wind.</p>
+<p class="why"><b>Why it matters:</b> The more energy comes from renewables, the fewer greenhouse gases the same work causes.</p>  <details class="fine"><summary>Fine print</summary><p>Calculated by us: renewable energy ÷ (renewable + non-renewable energy). This year: 2,66,119 ÷ (2,66,119 + 3,84,357) (last year 2,87,014 ÷ (2,87,014 + 3,84,646)).</p><p>Source in the SEBI tab: Leadership 1.</p><p class="trace-head"><b>Where it is in the filing:</b></p><p class="trace">FY 2021-22: TotalEnergyConsumedFromRenewableSources = 266119 pure; TotalEnergyConsumedFromNonRenewableSources = 384357 pure</p><p class="trace">FY 2020-21: TotalEnergyConsumedFromRenewableSources = 287014 pure; TotalEnergyConsumedFromNonRenewableSources = 384646 pure</p></details>
+  <p class="badge">ⓘ Note on this figure · ∑ Calculated by us from reported figures</p>
+</article>
+</div>  <p class="alert shared"><b>ⓘ Note for Total energy used, Energy from renewable sources:</b> This filing does not state the unit of its energy figures (the SEBI form says &#39;Joules or multiples&#39;). Shown as filed.</p>
+<figure class="stack">
+  <figcaption>What kind of energy was it?</figcaption>
+  <div class="stack-bar" role="img" aria-label="Electricity 94.6 percent; Fuel 5.44 percent">
+<span class="c1" style="width:94.56%"></span><span class="c2" style="width:5.44%"></span>  </div>
+  <ul class="key">
+    <li><i class="sw c1"></i><span class="pct">94.6%</span><span>Electricity <span class="amt">· 6,15,063 unit not stated</span></span></li>
+    <li><i class="sw c2"></i><span class="pct">5.44%</span><span>Fuel <span class="amt">· 35,413 unit not stated</span></span></li>
+  </ul>
+<p class="stack-note">Reported as 0 (not drawn): Other sources. </p></figure>
+</section>
+<section class="topic" id="dash-climate" aria-labelledby="dash-climate-h">
+  <div class="topic-head"><svg aria-hidden="true"><use href="#i-cloud"/></svg><h2 id="dash-climate-h">Climate: greenhouse gases</h2><span class="src">SEBI Essential 6 · Leadership 4</span></div>
+  <p class="plain">Burning fuel releases gases, mainly carbon dioxide (CO₂), that warm the planet. They are counted in tonnes of “CO₂-equivalent” (tCO₂e). Scope 1 is what the company releases itself; Scope 2 comes from the electricity it buys; Scope 3 is everything else in its supply chain (optional to report).</p>
+  <p class="headline">Infosys&#39;s Scope 1 + 2 emissions were 60,682 tonnes CO₂e, 21.5% less than last year. 15% of it came directly from the company&#39;s own operations.</p>
+<div class="cards"><article class="card">
+  <div class="card-top">
+    <h3>Greenhouse gases released (Scope 1 + 2)</h3>
+<span class="better">Lower is better ↓</span>  </div>
+  <p class="big"><span class="v num">60,682</span><span class="u">tonnes CO₂e</span></p>
+  <p class="trend"><span class="chip chip-good">✔ Improved</span><span>▼ 21.5% lower than last year</span></p>
+  <div class="bars" role="img" aria-label="2021-22: 60,682; 2020-21: 77,351">
+    <div class="bar-row"><span>2021-22</span><span class="bar"><i style="width:78.45%"></i></span><span class="bv">60,682</span></div>
+    <div class="bar-row prev"><span>2020-21</span><span class="bar"><i style="width:100.00%"></i></span><span class="bv">77,351</span></div>
+  </div>
+  <p class="what"><b>What it is:</b> Gases from the company&#39;s own operations (Scope 1) plus from the electricity it buys (Scope 2).</p>
+<p class="why"><b>Why it matters:</b> These gases trap heat in the atmosphere. This is the main number used to judge a company&#39;s climate impact.</p>  <details class="fine"><summary>Fine print</summary><p>Calculated by us: Scope 1 + Scope 2. This year: 8,965 + 51,717 (last year 8,678 + 68,673).</p><p>Source in the SEBI tab: Essential 6.</p><p class="trace-head"><b>Where it is in the filing:</b></p><p class="trace">FY 2021-22: TotalScope1Emissions = 8965 pure; UnitOfTotalScope1Emissions = tCO2 e; TotalScope2Emissions = 51717 pure; UnitOfTotalScope2Emissions = tCO2 e</p><p class="trace">FY 2020-21: TotalScope1Emissions = 8678 pure; UnitOfTotalScope1Emissions = tCO2 e; TotalScope2Emissions = 68673 pure; UnitOfTotalScope2Emissions = tCO2 e</p></details>
+  <p class="badge">∑ Calculated by us from reported figures</p>
+</article>
+<article class="card doubtful">
+  <div class="card-top">
+    <h3>Greenhouse gases per unit of sales</h3>
+<span class="better">Lower is better ↓</span>  </div>
+  <p class="big"><span class="v num">0.5</span><span class="u">unit not stated · as filed</span></p>
+  <p class="trend"><span class="chip chip-unsure">? Can’t compare</span><span>Filed with one digit of precision, so too coarse to compare with another year.</span></p>
+  <p class="what"><b>What it is:</b> Scope 1 + 2 emissions divided by sales (“emission intensity”).</p>
+<p class="why"><b>Why it matters:</b> Shows whether the company is getting cleaner per unit of business, even while it grows.</p>  <p class="alert"><b>ⓘ Too coarse to compare.</b> The filing does not state the unit of this intensity figure. Shown as filed. The FY 2021-22 figure was filed as 0.5, which has only one digit of precision. It is rounded too coarsely to compare with another year: the real figure could be much higher or lower.</p>
+  <details class="fine"><summary>Fine print</summary><p>Filed as 0.5 (unit not stated) (last year 0.77).</p><p>Source in the SEBI tab: Essential 6, “Total Scope 1 and Scope 2 emissions per rupee of turnover”.</p><p class="trace-head"><b>Where it is in the filing:</b></p><p class="trace">FY 2021-22: TotalScope1AndScope2EmissionsPerRupeeOfTurnover = 0.5 pure; UnitOfTotalScope1AndScope2EmissionsPerRupeeOfTurnover = 0</p><p class="trace">FY 2020-21: TotalScope1AndScope2EmissionsPerRupeeOfTurnover = 0.77 pure; UnitOfTotalScope1AndScope2EmissionsPerRupeeOfTurnover = 0</p></details>
+  <p class="badge">ⓘ Note on this figure · ✔ Reported by the company</p>
+</article>
+<article class="card">
+  <div class="card-top">
+    <h3>Supply-chain emissions (Scope 3)</h3>
+<span class="better">Lower is better ↓</span>  </div>
+  <p class="big"><span class="v num">1.84</span><span class="u">lakh tonnes CO₂e</span></p>
+  <p class="trend"><span class="chip chip-good">✔ Improved</span><span>▼ 14.0% lower than last year</span></p>
+  <div class="bars" role="img" aria-label="2021-22: 1.84; 2020-21: 2.14">
+    <div class="bar-row"><span>2021-22</span><span class="bar"><i style="width:85.99%"></i></span><span class="bv">1.84</span></div>
+    <div class="bar-row prev"><span>2020-21</span><span class="bar"><i style="width:100.00%"></i></span><span class="bv">2.14</span></div>
+  </div>
+  <p class="what"><b>What it is:</b> Emissions from suppliers, transport and customers, which the company does not control directly.</p>
+<p class="why"><b>Why it matters:</b> For many companies this is the biggest part of their footprint, so a missing figure leaves a gap.</p>  <details class="fine"><summary>Fine print</summary><p>Filed as 1,83,595 tCO2e (last year 2,13,514).</p><p>Source in the SEBI tab: Leadership 4, “Total Scope 3 emissions (Break-up of the GHG into CO2, CH4, N2O, HFCs, PFCs, SF6, NF3, if available)”.</p><p class="trace-head"><b>Where it is in the filing:</b></p><p class="trace">FY 2021-22: TotalScope3Emissions = 1,83,595; UnitOfTotalScope3Emissions = tCO2e</p><p class="trace">FY 2020-21: TotalScope3Emissions = 2,13,514; UnitOfTotalScope3Emissions = tCO2e</p></details>
+  <p class="badge">✔ Reported by the company</p>
+</article>
+</div><figure class="stack">
+  <figcaption>Where do the greenhouse gases come from?</figcaption>
+  <div class="stack-bar" role="img" aria-label="Scope 1: the company&#39;s own operations 3.67 percent; Scope 2: electricity it buys 21.2 percent; Scope 3: its supply chain 75.2 percent">
+<span class="c1" style="width:3.67%"></span><span class="c3" style="width:21.17%"></span><span class="c2" style="width:75.16%"></span>  </div>
+  <ul class="key">
+    <li><i class="sw c1"></i><span class="pct">3.67%</span><span>Scope 1: the company&#39;s own operations <span class="amt">· 8,965 tonnes CO₂e</span></span></li>
+    <li><i class="sw c3"></i><span class="pct">21.2%</span><span>Scope 2: electricity it buys <span class="amt">· 51,717 tonnes CO₂e</span></span></li>
+    <li><i class="sw c2"></i><span class="pct">75.2%</span><span>Scope 3: its supply chain <span class="amt">· 1.84 lakh tonnes CO₂e</span></span></li>
+  </ul>
+</figure>
+</section>
+<section class="topic" id="dash-water" aria-labelledby="dash-water-h">
+  <div class="topic-head"><svg aria-hidden="true"><use href="#i-drop"/></svg><h2 id="dash-water-h">Water</h2><span class="src">SEBI Essential 3-4 · Leadership 2-3</span></div>
+  <p class="plain">Many industries use huge amounts of water to cool, clean or make products. Here is how much was taken in, how much the company says it used up, and where it came from.</p>
+  <p class="headline">Infosys took in 13.12 lakh kL of water, 1.4% more than last year. Its largest source was water bought from suppliers (86.1%).</p>
+<div class="cards"><article class="card">
+  <div class="card-top">
+    <h3>Water taken in</h3>
+<span class="better">Lower is better ↓</span>  </div>
+  <p class="big"><span class="v num">13.12</span><span class="u">lakh kL</span></p>
+  <p class="trend"><span class="chip chip-bad">✖ Got worse</span><span>▲ 1.4% higher than last year</span></p>
+  <div class="bars" role="img" aria-label="2021-22: 13.12; 2020-21: 12.94">
+    <div class="bar-row"><span>2021-22</span><span class="bar"><i style="width:100.00%"></i></span><span class="bv">13.12</span></div>
+    <div class="bar-row prev"><span>2020-21</span><span class="bar"><i style="width:98.57%"></i></span><span class="bv">12.94</span></div>
+  </div>
+  <p class="what"><b>What it is:</b> All water drawn from rivers, groundwater, the sea or suppliers (1 kL = 1,000 litres).</p>
+<p class="why"><b>Why it matters:</b> Fresh water is scarce in many parts of India. Taking less leaves more for people and farms.</p>  <details class="fine"><summary>Fine print</summary><p>Filed as 13,12,384 kL (last year 12,93,632).</p><p>Also in the filing: Water consumed: 13,12,384 kL (last year 12,93,632).</p><p>Source in the SEBI tab: Essential 3, “Total volume of water withdrawal (in kilolitres) (i + ii + iii + iv + v)”.</p><p class="trace-head"><b>Where it is in the filing:</b></p><p class="trace">FY 2021-22: TotalVolumeOfWaterWithdrawal = 1312384 pure</p><p class="trace">FY 2020-21: TotalVolumeOfWaterWithdrawal = 1293632 pure</p></details>
+  <p class="badge">✔ Reported by the company</p>
+</article>
+<article class="card">
+  <div class="card-top">
+    <h3>Water per unit of sales</h3>
+<span class="better">Lower is better ↓</span>  </div>
+  <p class="big"><span class="v num">10.8</span><span class="u">unit not stated</span></p>
+  <p class="trend"><span class="chip chip-good">✔ Improved*</span><span>▼ 16.2% lower than last year</span></p>
+<p class="caveat">* This comparison relies on a figure that carries a note below.</p>  <div class="bars" role="img" aria-label="2021-22: 10.8; 2020-21: 12.9">
+    <div class="bar-row"><span>2021-22</span><span class="bar"><i style="width:83.77%"></i></span><span class="bv">10.8</span></div>
+    <div class="bar-row prev"><span>2020-21</span><span class="bar"><i style="width:100.00%"></i></span><span class="bv">12.9</span></div>
+  </div>
+  <p class="what"><b>What it is:</b> Water consumed divided by sales (“water intensity”).</p>
+<p class="why"><b>Why it matters:</b> Shows whether each ₹ of business needs more or less water than before.</p>  <p class="alert"><b>ⓘ Note on this figure.</b> The filing does not state the unit of this intensity figure. Shown as filed.</p>
+  <details class="fine"><summary>Fine print</summary><p>Filed as 10.79 (unit not stated) (last year 12.88).</p><p>Source in the SEBI tab: Essential 3, “Water intensity per rupee of turnover (Water consumed / turnover)”.</p><p class="trace-head"><b>Where it is in the filing:</b></p><p class="trace">FY 2021-22: WaterIntensityPerRupeeOfTurnover = 10.79 pure</p><p class="trace">FY 2020-21: WaterIntensityPerRupeeOfTurnover = 12.88 pure</p></details>
+  <p class="badge">ⓘ Note on this figure · ✔ Reported by the company</p>
+</article>
+<article class="card">
+  <div class="card-top">
+    <h3>Water given back (discharged)</h3>
+<span class="better">Context only</span>  </div>
+  <p class="big"><span class="v num">0</span><span class="u">kL</span></p>
+  <p class="trend"><span class="chip chip-same">≈ About the same</span><span>No change: 0 in both years</span></p>
+  <p class="what"><b>What it is:</b> Treated or untreated water the company released back to rivers, the sea or other receivers.</p>
+<p class="why"><b>Why it matters:</b> Discharged water can carry pollutants. Whether it was treated first is the key question.</p>  <details class="fine"><summary>Fine print</summary><p>Filed as 0 kL (last year 0).</p><p>Source in the SEBI tab: Leadership 2, “Total water discharged (in kilolitres)”.</p><p class="trace-head"><b>Where it is in the filing:</b></p><p class="trace">FY 2021-22: TotalWaterDischargedInKilolitres = 0 pure</p><p class="trace">FY 2020-21: TotalWaterDischargedInKilolitres = 0 pure</p></details>
+  <p class="badge">✔ Reported by the company</p>
+</article>
+</div><figure class="stack">
+  <figcaption>Where did the water come from?</figcaption>
+  <div class="stack-bar" role="img" aria-label="Bought from suppliers 86.1 percent; Groundwater 8.60 percent; Other sources 5.31 percent">
+<span class="c3" style="width:86.09%"></span><span class="c1" style="width:8.60%"></span><span class="c5" style="width:5.31%"></span>  </div>
+  <ul class="key">
+    <li><i class="sw c3"></i><span class="pct">86.1%</span><span>Bought from suppliers <span class="amt">· 11.3 lakh kL</span></span></li>
+    <li><i class="sw c1"></i><span class="pct">8.60%</span><span>Groundwater <span class="amt">· 1.13 lakh kL</span></span></li>
+    <li><i class="sw c5"></i><span class="pct">5.31%</span><span>Other sources <span class="amt">· 69,656 kL</span></span></li>
+  </ul>
+<p class="stack-note">Reported as 0 (not drawn): Surface water (rivers, lakes), Seawater. </p></figure>
+</section>
+<section class="topic" id="dash-air" aria-labelledby="dash-air-h">
+  <div class="topic-head"><svg aria-hidden="true"><use href="#i-wind"/></svg><h2 id="dash-air-h">Air quality</h2><span class="src">SEBI Essential 5</span></div>
+  <p class="plain">Besides greenhouse gases, furnaces and chimneys release gases and particles that harm health and cause smog and acid rain. Lower is better for every one of them.</p>
+  <p class="headline">Compared with last year, 2 of the 3 air pollutants fell and NOx rose.</p>
+<div class="minis"><article class="mini">
+  <div class="card-top">
+    <h3>NOx <span class="name">nitrogen oxides</span></h3>
+  </div>
+  <p class="big"><span class="v num">22.9</span><span class="u">tonnes per month</span></p>
+  <p class="trend"><span class="chip chip-bad">✖ Got worse*</span><span>▲ 60.9% higher than last year</span></p>
+<p class="caveat">* This comparison relies on a figure that carries a note below.</p>  <p class="what">From burning fuel; cause smog and breathing problems.</p>
+  <p class="badge" title="From the filing: FY 2021-22: Nox = 22907.32; UnitOfNox = Kg/Month | FY 2020-21: Nox = 14234.66; UnitOfNox = Kg/Month">Last year: 14.2 tonnes per month · ⓘ Note on this figure · ⇄ Reported by the company · unit changed by us</p>
+</article>
+<article class="mini">
+  <div class="card-top">
+    <h3>SOx <span class="name">sulphur oxides</span></h3>
+  </div>
+  <p class="big"><span class="v num">2.57</span><span class="u">tonnes per month</span></p>
+  <p class="trend"><span class="chip chip-good">✔ Improved*</span><span>▼ 47.8% lower than last year</span></p>
+<p class="caveat">* This comparison relies on a figure that carries a note below.</p>  <p class="what">From burning coal and oil; cause acid rain.</p>
+  <p class="badge" title="From the filing: FY 2021-22: Sox = 2566.01; UnitOfSox = Kg/Month | FY 2020-21: Sox = 4912.99; UnitOfSox = Kg/Month">Last year: 4.91 tonnes per month · ⓘ Note on this figure · ⇄ Reported by the company · unit changed by us</p>
+</article>
+<article class="mini">
+  <div class="card-top">
+    <h3>PM <span class="name">particulate matter</span></h3>
+  </div>
+  <p class="big"><span class="v num">3.9</span><span class="u">tonnes per month</span></p>
+  <p class="trend"><span class="chip chip-good">✔ Improved*</span><span>▼ 17.0% lower than last year</span></p>
+<p class="caveat">* This comparison relies on a figure that carries a note below.</p>  <p class="what">Tiny dust and soot particles that reach deep into lungs.</p>
+  <p class="badge" title="From the filing: FY 2021-22: ParticulateMatter = 3899.34; UnitOfParticulateMatter = Kg/Month | FY 2020-21: ParticulateMatter = 4696.56; UnitOfParticulateMatter = Kg/Month">Last year: 4.7 tonnes per month · ⓘ Note on this figure · ⇄ Reported by the company · unit changed by us</p>
+</article>
+<article class="mini empty">
+  <div class="card-top">
+    <h3>VOC <span class="name">volatile organic compounds</span></h3>
+  </div>
+  <p class="big none"><span class="v num">Not reported</span></p>
+  <p class="trend"><span class="chip chip-unsure">? Can’t compare</span><span>No figure for either year.</span></p>
+  <p class="what">Vapours from fuels and solvents that help form smog.</p>
+  <p class="badge" title="From the filing: FY 2021-22: not in the filing | FY 2020-21: not in the filing">∅ Not reported by the company. “Not reported” never means zero.</p>
+</article>
+<article class="mini empty">
+  <div class="card-top">
+    <h3>POP <span class="name">persistent organic pollutants</span></h3>
+  </div>
+  <p class="big none"><span class="v num">Not reported</span></p>
+  <p class="trend"><span class="chip chip-unsure">? Can’t compare</span><span>No figure for either year.</span></p>
+  <p class="what">Long-lasting toxic chemicals.</p>
+  <p class="badge" title="From the filing: FY 2021-22: not in the filing | FY 2020-21: not in the filing">∅ Not reported by the company. “Not reported” never means zero.</p>
+</article>
+<article class="mini empty">
+  <div class="card-top">
+    <h3>HAP <span class="name">hazardous air pollutants</span></h3>
+  </div>
+  <p class="big none"><span class="v num">Not reported</span></p>
+  <p class="trend"><span class="chip chip-unsure">? Can’t compare</span><span>No figure for either year.</span></p>
+  <p class="what">Toxic gases linked to cancer and other illness.</p>
+  <p class="badge" title="From the filing: FY 2021-22: not in the filing | FY 2020-21: not in the filing">∅ Not reported by the company. “Not reported” never means zero.</p>
+</article>
+</div>  <p class="alert shared"><b>ⓘ Note for NOx, SOx, PM:</b> Filed as a monthly figure (&#39;Kg/Month&#39;), not a yearly one. Shown as filed; not converted to a yearly total.</p>
+</section>
+<section class="topic" id="dash-waste" aria-labelledby="dash-waste-h">
+  <div class="topic-head"><svg aria-hidden="true"><use href="#i-bin"/></svg><h2 id="dash-waste-h">Waste</h2><span class="src">SEBI Essential 8-9</span></div>
+  <p class="plain">Waste can be recycled, reused, burned or buried. The better a company is at recovering it, the less ends up polluting land and air.</p>
+  <p class="headline">Infosys produced 11,179 tonnes of waste, 20.2% more than last year. 91.6% of the waste handled was recycled or reused.</p>
+<div class="cards"><article class="card">
+  <div class="card-top">
+    <h3>Waste produced</h3>
+<span class="better">Lower is better ↓</span>  </div>
+  <p class="big"><span class="v num">11,179</span><span class="u">tonnes</span></p>
+  <p class="trend"><span class="chip chip-bad">✖ Got worse</span><span>▲ 20.2% higher than last year</span></p>
+  <div class="bars" role="img" aria-label="2021-22: 11,179; 2020-21: 9,300">
+    <div class="bar-row"><span>2021-22</span><span class="bar"><i style="width:100.00%"></i></span><span class="bv">11,179</span></div>
+    <div class="bar-row prev"><span>2020-21</span><span class="bar"><i style="width:83.19%"></i></span><span class="bv">9,300</span></div>
+  </div>
+  <p class="what"><b>What it is:</b> All waste produced, of every kind.</p>
+<p class="why"><b>Why it matters:</b> Less waste means fewer resources thrown away and less to clean up. A growing company may produce more, so read it with the share recovered.</p>  <details class="fine"><summary>Fine print</summary><p>Filed as 11,178.9 tonnes (last year 9,299.75).</p><p>Also in the filing: Other hazardous waste (waste that can harm people or nature if not handled carefully): 55.11 tonnes (last year 57.38).</p><p>Source in the SEBI tab: Essential 8, “Total (A + B + C + D + E + F + G + H)”.</p><p class="trace-head"><b>Where it is in the filing:</b></p><p class="trace">FY 2021-22: TotalWasteGenerated = 11178.898 pure</p><p class="trace">FY 2020-21: TotalWasteGenerated = 9299.75 pure</p></details>
+  <p class="badge">✔ Reported by the company</p>
+</article>
+<article class="card">
+  <div class="card-top">
+    <h3>Waste recycled or reused</h3>
+<span class="better">Higher is better ↑</span>  </div>
+  <p class="big"><span class="v num">91.6</span><span class="u">% of waste handled</span></p>
+  <p class="trend"><span class="chip chip-bad">✖ Got worse</span><span>▼ 0.99 percentage points below last year (last year 92.6%)</span></p>
+  <div class="bars" role="img" aria-label="2021-22: 91.6%; 2020-21: 92.6%">
+    <div class="bar-row"><span>2021-22</span><span class="bar"><i style="width:91.63%"></i></span><span class="bv">91.6%</span></div>
+    <div class="bar-row prev"><span>2020-21</span><span class="bar"><i style="width:92.62%"></i></span><span class="bv">92.6%</span></div>
+  </div>
+  <p class="what"><b>What it is:</b> The share of waste that was recycled, reused or otherwise recovered instead of burned or buried.</p>
+<p class="why"><b>Why it matters:</b> Recovered waste does not end up in landfills or chimneys, so this is the best single sign of good waste handling.</p>  <details class="fine"><summary>Fine print</summary><p>Calculated by us: waste recovered ÷ (recovered + disposed). This year: 10,241.49 ÷ (10,241.49 + 936.06) (last year 6,449.11 ÷ (6,449.11 + 514.23)).</p><p>Source in the SEBI tab: Essential 8.</p><p class="trace-head"><b>Where it is in the filing:</b></p><p class="trace">FY 2021-22: TotalWasteRecovered = 10241.49 pure; TotalWasteDisposed = 936.06 pure</p><p class="trace">FY 2020-21: TotalWasteRecovered = 6449.11 pure; TotalWasteDisposed = 514.23 pure</p></details>
+  <p class="badge">∑ Calculated by us from reported figures</p>
+</article>
+</div><figure class="stack">
+  <figcaption>What happened to the waste?</figcaption>
+  <div class="stack-bar" role="img" aria-label="Recycled 85.1 percent; Reused 6.52 percent; Burned (incinerated) 0.45 percent; Buried in landfill 7.93 percent">
+<span class="g1" style="width:85.11%"></span><span class="g2" style="width:6.52%"></span><span class="o1" style="width:0.45%"></span><span class="o2" style="width:7.93%"></span>  </div>
+  <ul class="key">
+    <li><i class="sw g1"></i><span class="pct">85.1%</span><span>Recycled <span class="amt">· 9,513 tonnes</span></span></li>
+    <li><i class="sw g2"></i><span class="pct">6.52%</span><span>Reused <span class="amt">· 729 tonnes</span></span></li>
+    <li><i class="sw o1"></i><span class="pct">0.45%</span><span>Burned (incinerated) <span class="amt">· 49.9 tonnes</span></span></li>
+    <li><i class="sw o2"></i><span class="pct">7.93%</span><span>Buried in landfill <span class="amt">· 886 tonnes</span></span></li>
+  </ul>
+<p class="stack-note">Reported as 0 (not drawn): Other recovery, Other disposal. Green shades = recovered; orange and brown = disposed.</p></figure>
+</section>
+
+<section class="topic" id="dash-safeguards" aria-labelledby="dash-safeguards-h">
+  <div class="topic-head"><svg aria-hidden="true"><use href="#i-shield"/></svg><h2 id="dash-safeguards-h">Nature and safeguards</h2><span class="src">SEBI Essential 2, 4, 7, 10-12 · Leadership 7, 9</span></div>
+  <p class="plain">Numbers alone cannot show whether a company is in control. These questions show whether it has the safeguards regulators expect. We show the company&#39;s own words so you can judge.</p>
+  <p class="headline">Infosys answers “Yes” to 5 of the 9 safeguard questions and “No” to 1. It lists 1 place in or near sensitive nature areas.</p>
+  <div class="safe">
+    <article class="sg">
+      <h3>Has sites covered by the government&#39;s energy-saving scheme (PAT)?</h3>
+      <p class="ans"><span class="chip chip-same">✖ No</span></p>
+      <p class="what">PAT sets energy-saving targets for big industrial sites.</p>
+    </article>
+    <article class="sg">
+      <h3>Has a “zero liquid discharge” mechanism (no wastewater released)?</h3>
+      <p class="ans"><span class="chip chip-good">✔ Yes</span></p>
+      <p class="what">Treats and reuses wastewater instead of releasing it.</p>
+<details class="fine"><summary>What the company says</summary><p class="quote">All sewage generated on Infosys campuses is treated in the in-house sewage treatment plants and the recycled water is used for irrigation, HVAC and flushing purposes. In some of our smaller leased offices, with limited space or lesser operational control, the wastewater is discharged into municipal sewers, which undergo further treatment.</p></details>    </article>
+    <article class="sg">
+      <h3>Has projects to cut greenhouse gases?</h3>
+      <p class="ans"><span class="chip chip-good">✔ Yes</span></p>
+      <p class="what">Projects that reduce the company&#39;s own emissions.</p>
+<details class="fine"><summary>What the company says</summary><p class="quote">Taking advantage of unoccupied offices due to employees working from home, retrofit projects on lighting, air conditioning and UPS have been implemented in several critical areas, which, in a normal scenario, would need a shutdown of buildings, inconveniencing employees as well as disrupting operations. Accelerated phase-out of R-22 refrigerant-based air-conditioning units has been initiated for improving energy efficiency and simultaneously, use of units with refrigerants which have zero ODP and low GWP, thus enabling reduction of GHG emissions. Energy-efficiency retrofits have helped us… (the full answer is in the SEBI-format tab)</p></details>    </article>
+    <article class="sg">
+      <h3>Checked the environmental impact of new projects?</h3>
+      <p class="ans"><span class="chip chip-same">1 projects listed</span></p>
+      <p class="what">Impact assessments (EIAs) are studies done before building or expanding.</p>
+<details class="fine"><summary>Which projects</summary><p class="quote">Kolkata campus</p></details>    </article>
+    <article class="sg">
+      <h3>Works in or near sensitive nature areas?</h3>
+      <p class="ans"><span class="chip chip-same">1 locations listed</span></p>
+      <p class="what">Places such as national parks, wetlands and coastal zones need extra environmental approvals.</p>
+<details class="fine"><summary>Which locations</summary><p class="quote">NA</p></details>    </article>
+    <article class="sg">
+      <h3>Complies with environmental laws?</h3>
+      <p class="ans"><span class="chip chip-good">✔ Yes</span></p>
+      <p class="what">Shown exactly as the company filed it.</p>
+    </article>
+    <article class="sg">
+      <h3>Has an emergency and business-continuity plan?</h3>
+      <p class="ans"><span class="chip chip-good">✔ Yes</span></p>
+      <p class="what">A plan for keeping operations safe and running in a crisis.</p>
+<details class="fine"><summary>What the company says</summary><p class="quote">Infosys has a highly resilient Business Continuity Management System (BCMS) called Phoenix which is certified ISO 22301:2019 Security and Resilience — Business Continuity Management Systems. This program ensures seamless continuity of business and utmost safety of employees and organization assets, while continuously meeting client expectations and helping Infosys to be seen as a leader in this area. The BCMS program provides a robust framework for planning, establishing, implementing, operating, monitoring, reviewing, maintaining and continually improving BCMS across Infosys and its… (the full answer is in the SEBI-format tab)</p></details>    </article>
+    <article class="sg">
+      <h3>Checks its suppliers&#39; environmental impact?</h3>
+      <p class="ans"><span class="chip chip-same">40.0% of partners checked</span></p>
+      <p class="what">Share of supply-chain partners (by business value) assessed for environmental impact.</p>
+    </article>
+    <article class="sg">
+      <h3>Figures independently checked by outside auditors?</h3>
+      <p class="ans"><span class="chip chip-good">✔ Yes · 9 of 9 sections</span></p>
+      <p class="what">An independent check makes the numbers more trustworthy.</p>
+<details class="fine"><summary>What the company says</summary><p class="quote">Independent assurance has been carried out by KPMG Assurance and Consulting Services LLP</p></details>    </article>
+  </div>
+</section>
+
+<section class="topic" id="dash-trust" aria-labelledby="dash-trust-h">
+  <div class="topic-head"><h2 id="dash-trust-h">Can I trust these numbers?</h2></div>
+  <p class="plain">We never invent a number. Here is where each figure on this page came from, and the cases that need extra care.</p>
+  <div class="box trust-grid">
+    <div>
+      <h3>Where the 71 numbers came from</h3>
+      <ul>
+        <li><b>63</b> ✔ reported by the company, as filed</li>
+        <li><b>0</b> ∑ added up by us from reported figures</li>
+        <li><b>4</b> ⇄ unit changed by us (the original is kept)</li>
+        <li><b>4</b> ∅ not reported (never shown as 0)</li>
+        <li><b>22</b> ⓘ carry a note about the figure</li>
+      </ul>
+      <p class="small">These counts cover every number in the SEBI-format tab for this year, not only the ones shown above.</p>
+    </div>
+    <div>
+      <h3>Notes on this company’s figures</h3>
+      <ul>
+<li>This filing does not state the unit of its energy figures (the SEBI form says &#39;Joules or multiples&#39;). Shown as filed. <span class="small">(Total energy used, Energy from renewable sources)</span></li><li>The filing does not state the unit of this intensity figure. Shown as filed. <span class="small">(Energy per unit of sales, Greenhouse gases per unit of sales, Water per unit of sales)</span></li><li>The FY 2021-22 figure was filed as 0.5, which has only one digit of precision. It is rounded too coarsely to compare with another year: the real figure could be much higher or lower. <span class="small">(Greenhouse gases per unit of sales)</span></li><li>Filed as a monthly figure (&#39;Kg/Month&#39;), not a yearly one. Shown as filed; not converted to a yearly total. <span class="small">(NOx, SOx, PM)</span></li><li>Not reported, so not shown above: VOC, POP, HAP.</li>      </ul>
+    </div>
+    <div>
+      <h3>Why a figure may be flagged</h3>
+      <ul>
+        <li>The unit is missing or unusual.</li>
+        <li>A value looks far too big or too small for the company’s size.</li>
+        <li>Parts do not add up to the filed total.</li>
+        <li>A zero that may not be a real zero.</li>
+      </ul>
+      <p class="small">Flagged values are shown exactly as filed, never silently fixed.</p>
+    </div>
+  </div>
+</section>
+
+<section class="topic" id="dash-glossary" aria-labelledby="dash-glossary-h">
+  <div class="topic-head"><h2 id="dash-glossary-h">Plain-English glossary</h2></div>
+  <div class="box">
+    <dl class="gloss">
+<div><dt>GJ (gigajoule)</dt><dd>A unit of energy. 1 GJ equals about 278 kWh, the “units” on an electricity bill.</dd></div><div><dt>kL (kilolitre)</dt><dd>1,000 litres of water, the same as fifty 20-litre water cans.</dd></div><div><dt>tCO₂e (tonnes of CO₂-equivalent)</dt><dd>One way to count all greenhouse gases together, by how much each warms the planet compared with CO₂.</dd></div><div><dt>Scope 1 / 2 / 3</dt><dd>Scope 1: released by the company itself. Scope 2: released by whoever makes the electricity it buys. Scope 3: everything else along its supply chain.</dd></div><div><dt>Intensity (“per ₹ of sales”)</dt><dd>The amount used or released for each ₹ of turnover. It lets you compare a company with itself even when it grows. We show it per ₹ 1 crore.</dd></div><div><dt>Lakh and crore</dt><dd>1 lakh = 1,00,000 (a hundred thousand). 1 crore = 1,00,00,000 (ten million).</dd></div><div><dt>Renewable energy</dt><dd>Energy from sources that do not run out, such as sun, wind and flowing water.</dd></div><div><dt>NOx, SOx, PM, VOC, POP, HAP</dt><dd>Air pollutants, listed in the Air quality section. None of them are greenhouse gases.</dd></div><div><dt>Zero liquid discharge</dt><dd>Treating and reusing all wastewater so none is released.</dd></div><div><dt>PAT scheme</dt><dd>“Perform, Achieve and Trade”: the Government of India&#39;s energy-saving targets for big industrial sites.</dd></div><div><dt>EIA</dt><dd>Environmental Impact Assessment: a study of a project&#39;s effect on nature, done before it is built.</dd></div><div><dt>Standalone vs consolidated</dt><dd>Standalone covers the company on its own. Consolidated adds its subsidiaries. The two should not be compared with each other.</dd></div>    </dl>
+  </div>
+</section>
+
+</div>  </section>
+
+  <section class="panel panel-sebi" aria-label="SEBI-format report">
+
+
+
+
+
+<h2 class="principle-title">PRINCIPLE 6: Businesses should respect and make efforts to protect and restore the environment</h2>
+<p class="principle-sub">Laid out as in SEBI's Business Responsibility &amp; Sustainability Reporting format (Annexure I, May 2021). Same question numbers, tables and row labels.</p>
+<p class="legend">
+  <strong>How to read the tables.</strong>
+  <span class="missing">Not reported</span> = the filing has nothing for that item (it is never shown as 0).
+  <span class="tag tag-calculated">calc.</span> = we added reported numbers together.
+  <span class="tag tag-converted">conv.</span> = we changed the unit.
+  <sup class="fn fn-note"><a href="#">ⓘ1</a></sup> = a note about the value (it may be unusual or doubtful), explained under the table. Numbers are always shown exactly as filed unless marked.
+  Units shown: energy in gigajoules (GJ), water in kilolitres (kL), waste and air pollutants in tonnes, greenhouse gases in tonnes of CO₂ equivalent (tCO₂e).
+  <strong>Tracing a number:</strong> hover over it to see the filing's element it was read from; the last section of this tab lists every number with its element and the text exactly as filed.
+</p>
+
+<h2 class="section">Essential Indicators</h2>
+
+<article class="question" id="q-E1">
+  <h3><span class="qnum">1.</span>Details of total energy consumption (in Joules or multiples) and energy intensity, in the following format:</h3>
+
+  <div class="table-wrap">
+  <table class="sebi">
+    <thead>
+      <tr>
+        <th>Parameter</th>
+        <th class="valhead">FY 2021-22<small>(Current Financial Year)</small></th>
+        <th class="valhead">FY 2020-21<small>(Previous Financial Year)</small></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">Total electricity consumption (A)</th>
+        <td class="val"><span class="num" title="From the filing: TotalElectricityConsumption = 615063 pure">6,15,063</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-E1-1" title="See the note">ⓘ1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: TotalElectricityConsumption = 626311 pure">6,26,311</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-E1-1" title="See the note">ⓘ1</a></sup></td>
+      </tr>
+      <tr>
+        <th scope="row">Total fuel consumption (B)</th>
+        <td class="val"><span class="num" title="From the filing: TotalFuelConsumption = 35413 pure">35,413</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-E1-1" title="See the note">ⓘ1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: TotalFuelConsumption = 45349 pure">45,349</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-E1-1" title="See the note">ⓘ1</a></sup></td>
+      </tr>
+      <tr>
+        <th scope="row">Energy consumption through other sources (C)</th>
+        <td class="val"><span class="num" title="From the filing: EnergyConsumptionThroughOtherSources = 0 pure">0</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-E1-1" title="See the note">ⓘ1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: EnergyConsumptionThroughOtherSources = 0 pure">0</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-E1-1" title="See the note">ⓘ1</a></sup></td>
+      </tr>
+      <tr>
+        <th scope="row">Total energy consumption (A+B+C)</th>
+        <td class="val"><span class="num" title="From the filing: TotalEnergyConsumption = 650476 pure">6,50,476</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-E1-1" title="See the note">ⓘ1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: TotalEnergyConsumption = 671660 pure">6,71,660</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-E1-1" title="See the note">ⓘ1</a></sup></td>
+      </tr>
+      <tr>
+        <th scope="row">Energy intensity per rupee of turnover (Total energy consumption/ turnover in rupees)</th>
+        <td class="val"><span class="num" title="From the filing: EnergyIntensityPerRupeeOfTurnover = 5.35 pure">5.35</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-E1-2" title="See the note">ⓘ2</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: EnergyIntensityPerRupeeOfTurnover = 6.69 pure">6.69</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-E1-2" title="See the note">ⓘ2</a></sup></td>
+      </tr>
+      <tr>
+        <th scope="row">Energy intensity (optional) – the relevant metric may be selected by the entity</th>
+        <td class="val"><span class="num" title="From the filing: EnergyIntensityTheRelevantMetricMayBeSelectedByTheEntity = 0 pure">0</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-E1-2" title="See the note">ⓘ2</a></sup><sup class="fn fn-note"><a href="#fn-E1-3" title="See the note">ⓘ3</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: EnergyIntensityTheRelevantMetricMayBeSelectedByTheEntity = 0 pure">0</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-E1-2" title="See the note">ⓘ2</a></sup><sup class="fn fn-note"><a href="#fn-E1-3" title="See the note">ⓘ3</a></sup></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<ul class="footnotes">
+  <li id="fn-E1-1" class="check"><span class="fn-num">1</span><strong>ⓘ Note:</strong> This filing does not state the unit of its energy figures (the SEBI form says &#39;Joules or multiples&#39;). Shown as filed.</li>
+  <li id="fn-E1-2" class="check"><span class="fn-num">2</span><strong>ⓘ Note:</strong> The filing does not state the unit of this intensity figure. Shown as filed.</li>
+  <li id="fn-E1-3" class="warning"><span class="fn-num">3</span><strong>ⓘ Doubtful:</strong> Reported as 0, but the total it relates to is not zero. A real intensity is never exactly 0, so this 0 means &#39;rounded away or left blank&#39;; it is not a real zero.</li>
+</ul>
+
+
+
+
+  <p class="assurance"><span class="sebi-note">Note: Indicate if any independent assessment/ evaluation/assurance has been carried out by an external agency? (Y/N) If yes, name of the external agency.</span><br>
+    <strong>Answer:</strong> Yes: Independent assurance has been carried out by KPMG Assurance and Consulting Services LLP</p>
+
+</article>
+<article class="question" id="q-E2">
+  <h3><span class="qnum">2.</span>Does the entity have any sites / facilities identified as designated consumers (DCs) under the Performance, Achieve and Trade (PAT) Scheme of the Government of India? (Y/N) If yes, disclose whether targets set under the PAT scheme have been achieved. In case targets have not been achieved, provide the remedial action taken, if any.</h3>
+
+  <div class="answer-box">
+    <p><strong>Answer:</strong> <span class="num" title="From the filing: DoesTheEntityHaveAnySitesOrFacilitiesIdentifiedAsDesignatedConsumersUnderThePerformanceAchieveAndTradeSchemeOfTheGovernmentOfIndia = false">No</span></p>
+    <p><strong>Details:</strong> <span class="missing">Not reported</span></p>
+  </div>
+  
+
+
+
+</article>
+<article class="question" id="q-E3">
+  <h3><span class="qnum">3.</span>Provide details of the following disclosures related to water, in the following format:</h3>
+
+  <div class="table-wrap">
+  <table class="sebi">
+    <thead>
+      <tr>
+        <th>Parameter</th>
+        <th class="valhead">FY 2021-22<small>(Current Financial Year)</small></th>
+        <th class="valhead">FY 2020-21<small>(Previous Financial Year)</small></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="subhead"><th colspan="3" scope="colgroup">Water withdrawal by source (in kilolitres)</th></tr>
+      <tr>
+        <th scope="row">(i) Surface water</th>
+        <td class="val"><span class="num" title="From the filing: WaterWithdrawalBySurfaceWater = 0 pure">0</span><span class="unit">kL</span><sup class="fn"><a href="#fn-E3-1">1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: WaterWithdrawalBySurfaceWater = 0 pure">0</span><span class="unit">kL</span><sup class="fn"><a href="#fn-E3-1">1</a></sup></td>
+      </tr>
+      <tr>
+        <th scope="row">(ii) Groundwater</th>
+        <td class="val"><span class="num" title="From the filing: WaterWithdrawalByGroundwater = 112910 pure">1,12,910</span><span class="unit">kL</span><sup class="fn"><a href="#fn-E3-1">1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: WaterWithdrawalByGroundwater = 142081 pure">1,42,081</span><span class="unit">kL</span><sup class="fn"><a href="#fn-E3-1">1</a></sup></td>
+      </tr>
+      <tr>
+        <th scope="row">(iii) Third party water</th>
+        <td class="val"><span class="num" title="From the filing: WaterWithdrawalByThirdPartyWater = 1129818 pure">11,29,818</span><span class="unit">kL</span><sup class="fn"><a href="#fn-E3-1">1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: WaterWithdrawalByThirdPartyWater = 1072258 pure">10,72,258</span><span class="unit">kL</span><sup class="fn"><a href="#fn-E3-1">1</a></sup></td>
+      </tr>
+      <tr>
+        <th scope="row">(iv) Seawater / desalinated water</th>
+        <td class="val"><span class="num" title="From the filing: WaterWithdrawalBySeawaterOrDesalinatedWater = 0 pure">0</span><span class="unit">kL</span><sup class="fn"><a href="#fn-E3-1">1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: WaterWithdrawalBySeawaterOrDesalinatedWater = 0 pure">0</span><span class="unit">kL</span><sup class="fn"><a href="#fn-E3-1">1</a></sup></td>
+      </tr>
+      <tr>
+        <th scope="row">(v) Others</th>
+        <td class="val"><span class="num" title="From the filing: WaterWithdrawalByOthers = 69656 pure">69,656</span><span class="unit">kL</span><sup class="fn"><a href="#fn-E3-1">1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: WaterWithdrawalByOthers = 79293 pure">79,293</span><span class="unit">kL</span><sup class="fn"><a href="#fn-E3-1">1</a></sup></td>
+      </tr>
+      <tr>
+        <th scope="row">Total volume of water withdrawal (in kilolitres) (i + ii + iii + iv + v)</th>
+        <td class="val"><span class="num" title="From the filing: TotalVolumeOfWaterWithdrawal = 1312384 pure">13,12,384</span><span class="unit">kL</span><sup class="fn"><a href="#fn-E3-1">1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: TotalVolumeOfWaterWithdrawal = 1293632 pure">12,93,632</span><span class="unit">kL</span><sup class="fn"><a href="#fn-E3-1">1</a></sup></td>
+      </tr>
+      <tr>
+        <th scope="row">Total volume of water consumption (in kilolitres)</th>
+        <td class="val"><span class="num" title="From the filing: TotalVolumeOfWaterConsumption = 1312384 pure">13,12,384</span><span class="unit">kL</span><sup class="fn"><a href="#fn-E3-1">1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: TotalVolumeOfWaterConsumption = 1293632 pure">12,93,632</span><span class="unit">kL</span><sup class="fn"><a href="#fn-E3-1">1</a></sup></td>
+      </tr>
+      <tr>
+        <th scope="row">Water intensity per rupee of turnover (Water consumed / turnover)</th>
+        <td class="val"><span class="num" title="From the filing: WaterIntensityPerRupeeOfTurnover = 10.79 pure">10.79</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-E3-2" title="See the note">ⓘ2</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: WaterIntensityPerRupeeOfTurnover = 12.88 pure">12.88</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-E3-2" title="See the note">ⓘ2</a></sup></td>
+      </tr>
+      <tr>
+        <th scope="row">Water intensity (optional) – the relevant metric may be selected by the entity</th>
+        <td class="val"><span class="num" title="From the filing: WaterIntensityTheRelevantMetricMayBeSelectedByTheEntity = 0 pure">0</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-E3-2" title="See the note">ⓘ2</a></sup><sup class="fn fn-note"><a href="#fn-E3-3" title="See the note">ⓘ3</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: WaterIntensityTheRelevantMetricMayBeSelectedByTheEntity = 0 pure">0</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-E3-2" title="See the note">ⓘ2</a></sup><sup class="fn fn-note"><a href="#fn-E3-3" title="See the note">ⓘ3</a></sup></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<ul class="footnotes">
+  <li id="fn-E3-1" class="note"><span class="fn-num">1</span>The filing states no unit; kL as required by the SEBI form.</li>
+  <li id="fn-E3-2" class="check"><span class="fn-num">2</span><strong>ⓘ Note:</strong> The filing does not state the unit of this intensity figure. Shown as filed.</li>
+  <li id="fn-E3-3" class="warning"><span class="fn-num">3</span><strong>ⓘ Doubtful:</strong> Reported as 0, but the total it relates to is not zero. A real intensity is never exactly 0, so this 0 means &#39;rounded away or left blank&#39;; it is not a real zero.</li>
+</ul>
+
+
+
+
+  <p class="assurance"><span class="sebi-note">Note: Indicate if any independent assessment/ evaluation/assurance has been carried out by an external agency? (Y/N) If yes, name of the external agency.</span><br>
+    <strong>Answer:</strong> Yes: Independent assurance has been carried out by KPMG Assurance and Consulting Services LLP</p>
+
+</article>
+<article class="question" id="q-E4">
+  <h3><span class="qnum">4.</span>Has the entity implemented a mechanism for Zero Liquid Discharge? If yes, provide details of its coverage and implementation.</h3>
+
+  <div class="answer-box">
+    <p><strong>Answer:</strong> <span class="num" title="From the filing: HasTheEntityImplementedAMechanismForZeroLiquidDischarge = true">Yes</span></p>
+    <p><strong>Details:</strong></p>
+    <p class="details">All sewage generated on Infosys campuses is treated in the in-house sewage treatment plants and the recycled water is used for irrigation, HVAC and flushing purposes. In some of our smaller leased offices, with limited space or lesser operational control, the wastewater is discharged into municipal sewers, which undergo further treatment.</p>
+  </div>
+  
+
+
+
+</article>
+<article class="question" id="q-E5">
+  <h3><span class="qnum">5.</span>Please provide details of air emissions (other than GHG emissions) by the entity, in the following format:</h3>
+
+  <div class="table-wrap">
+  <table class="sebi has-unit">
+    <thead>
+      <tr>
+        <th>Parameter</th>
+<th>Please specify unit</th>        <th class="valhead">FY 2021-22<small>(Current Financial Year)</small></th>
+        <th class="valhead">FY 2020-21<small>(Previous Financial Year)</small></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">NOx</th>
+<td class="unit-col">tonnes per month</td>        <td class="val"><span class="num" title="From the filing: Nox = 22907.32; UnitOfNox = Kg/Month">22.91</span><span class="tag tag-converted" title="The unit was converted; the figure as filed is kept in the saved data">conv.</span><sup class="fn"><a href="#fn-E5-1">1</a></sup><sup class="fn fn-note"><a href="#fn-E5-2" title="See the note">ⓘ2</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: Nox = 14234.66; UnitOfNox = Kg/Month">14.23</span><span class="tag tag-converted" title="The unit was converted; the figure as filed is kept in the saved data">conv.</span><sup class="fn"><a href="#fn-E5-1">1</a></sup><sup class="fn fn-note"><a href="#fn-E5-2" title="See the note">ⓘ2</a></sup></td>
+      </tr>
+      <tr>
+        <th scope="row">SOx</th>
+<td class="unit-col">tonnes per month</td>        <td class="val"><span class="num" title="From the filing: Sox = 2566.01; UnitOfSox = Kg/Month">2.57</span><span class="tag tag-converted" title="The unit was converted; the figure as filed is kept in the saved data">conv.</span><sup class="fn"><a href="#fn-E5-1">1</a></sup><sup class="fn fn-note"><a href="#fn-E5-2" title="See the note">ⓘ2</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: Sox = 4912.99; UnitOfSox = Kg/Month">4.91</span><span class="tag tag-converted" title="The unit was converted; the figure as filed is kept in the saved data">conv.</span><sup class="fn"><a href="#fn-E5-1">1</a></sup><sup class="fn fn-note"><a href="#fn-E5-2" title="See the note">ⓘ2</a></sup></td>
+      </tr>
+      <tr>
+        <th scope="row">Particulate matter (PM)</th>
+<td class="unit-col">tonnes per month</td>        <td class="val"><span class="num" title="From the filing: ParticulateMatter = 3899.34; UnitOfParticulateMatter = Kg/Month">3.9</span><span class="tag tag-converted" title="The unit was converted; the figure as filed is kept in the saved data">conv.</span><sup class="fn"><a href="#fn-E5-1">1</a></sup><sup class="fn fn-note"><a href="#fn-E5-2" title="See the note">ⓘ2</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: ParticulateMatter = 4696.56; UnitOfParticulateMatter = Kg/Month">4.7</span><span class="tag tag-converted" title="The unit was converted; the figure as filed is kept in the saved data">conv.</span><sup class="fn"><a href="#fn-E5-1">1</a></sup><sup class="fn fn-note"><a href="#fn-E5-2" title="See the note">ⓘ2</a></sup></td>
+      </tr>
+      <tr>
+        <th scope="row">Persistent organic pollutants (POP)</th>
+<td class="unit-col"></td>        <td class="val"><span class="missing">Not reported</span><sup class="fn"><a href="#fn-E5-3">3</a></sup></td>
+        <td class="val"><span class="missing">Not reported</span><sup class="fn"><a href="#fn-E5-3">3</a></sup></td>
+      </tr>
+      <tr>
+        <th scope="row">Volatile organic compounds (VOC)</th>
+<td class="unit-col"></td>        <td class="val"><span class="missing">Not reported</span><sup class="fn"><a href="#fn-E5-3">3</a></sup></td>
+        <td class="val"><span class="missing">Not reported</span><sup class="fn"><a href="#fn-E5-3">3</a></sup></td>
+      </tr>
+      <tr>
+        <th scope="row">Hazardous air pollutants (HAP)</th>
+<td class="unit-col"></td>        <td class="val"><span class="missing">Not reported</span><sup class="fn"><a href="#fn-E5-3">3</a></sup></td>
+        <td class="val"><span class="missing">Not reported</span><sup class="fn"><a href="#fn-E5-3">3</a></sup></td>
+      </tr>
+      <tr>
+        <th scope="row">Others – please specify</th>
+<td class="unit-col"></td>        <td class="val"><span class="missing">Not reported</span><sup class="fn"><a href="#fn-E5-4">4</a></sup></td>
+        <td class="val"><span class="missing">Not reported</span><sup class="fn"><a href="#fn-E5-4">4</a></sup></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<ul class="footnotes">
+  <li id="fn-E5-1" class="note"><span class="fn-num">1</span>Converted from &#39;Kg/Month&#39; to tonnes (x 0.001); the filed figure is kept in the saved data.</li>
+  <li id="fn-E5-2" class="check"><span class="fn-num">2</span><strong>ⓘ Note:</strong> Filed as a monthly figure (&#39;Kg/Month&#39;), not a yearly one. Shown as filed; not converted to a yearly total.</li>
+  <li id="fn-E5-3" class="note"><span class="fn-num">3</span>The filing says &#39;NA&#39;.</li>
+  <li id="fn-E5-4" class="note"><span class="fn-num">4</span>The structured filing has no field for this item.</li>
+</ul>
+
+
+
+
+  <p class="assurance"><span class="sebi-note">Note: Indicate if any independent assessment/ evaluation/assurance has been carried out by an external agency? (Y/N) If yes, name of the external agency.</span><br>
+    <strong>Answer:</strong> Yes: Independent assurance has been carried out by KPMG Assurance and Consulting Services LLP</p>
+
+</article>
+<article class="question" id="q-E6">
+  <h3><span class="qnum">6.</span>Provide details of greenhouse gas emissions (Scope 1 and Scope 2 emissions) &amp; its intensity, in the following format:</h3>
+
+  <div class="table-wrap">
+  <table class="sebi has-unit">
+    <thead>
+      <tr>
+        <th>Parameter</th>
+<th>Unit</th>        <th class="valhead">FY 2021-22<small>(Current Financial Year)</small></th>
+        <th class="valhead">FY 2020-21<small>(Previous Financial Year)</small></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">Total Scope 1 emissions (Break-up of the GHG into CO2, CH4, N2O, HFCs, PFCs, SF6, NF3, if available)</th>
+<td class="unit-col">tCO2e</td>        <td class="val"><span class="num" title="From the filing: TotalScope1Emissions = 8965 pure; UnitOfTotalScope1Emissions = tCO2 e">8,965</span></td>
+        <td class="val"><span class="num" title="From the filing: TotalScope1Emissions = 8678 pure; UnitOfTotalScope1Emissions = tCO2 e">8,678</span></td>
+      </tr>
+      <tr>
+        <th scope="row">Total Scope 2 emissions (Break-up of the GHG into CO2, CH4, N2O, HFCs, PFCs, SF6, NF3, if available)</th>
+<td class="unit-col">tCO2e</td>        <td class="val"><span class="num" title="From the filing: TotalScope2Emissions = 51717 pure; UnitOfTotalScope2Emissions = tCO2 e">51,717</span></td>
+        <td class="val"><span class="num" title="From the filing: TotalScope2Emissions = 68673 pure; UnitOfTotalScope2Emissions = tCO2 e">68,673</span></td>
+      </tr>
+      <tr>
+        <th scope="row">Total Scope 1 and Scope 2 emissions per rupee of turnover</th>
+<td class="unit-col">(unit not stated)</td>        <td class="val"><span class="num" title="From the filing: TotalScope1AndScope2EmissionsPerRupeeOfTurnover = 0.5 pure; UnitOfTotalScope1AndScope2EmissionsPerRupeeOfTurnover = 0">0.5</span><sup class="fn fn-note"><a href="#fn-E6-1" title="See the note">ⓘ1</a></sup><sup class="fn fn-note"><a href="#fn-E6-2" title="See the note">ⓘ2</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: TotalScope1AndScope2EmissionsPerRupeeOfTurnover = 0.77 pure; UnitOfTotalScope1AndScope2EmissionsPerRupeeOfTurnover = 0">0.77</span><sup class="fn fn-note"><a href="#fn-E6-1" title="See the note">ⓘ1</a></sup></td>
+      </tr>
+      <tr>
+        <th scope="row">Total Scope 1 and Scope 2 emission intensity (optional) – the relevant metric may be selected by the entity</th>
+<td class="unit-col">(unit not stated)</td>        <td class="val"><span class="num" title="From the filing: TotalScope1AndScope2EmissionIntensity = 0 pure; UnitOfTotalScope1AndScope2EmissionIntensity = 0">0</span><sup class="fn fn-note"><a href="#fn-E6-1" title="See the note">ⓘ1</a></sup><sup class="fn fn-note"><a href="#fn-E6-3" title="See the note">ⓘ3</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: TotalScope1AndScope2EmissionIntensity = 0 pure; UnitOfTotalScope1AndScope2EmissionIntensity = 0">0</span><sup class="fn fn-note"><a href="#fn-E6-1" title="See the note">ⓘ1</a></sup><sup class="fn fn-note"><a href="#fn-E6-3" title="See the note">ⓘ3</a></sup></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<ul class="footnotes">
+  <li id="fn-E6-1" class="check"><span class="fn-num">1</span><strong>ⓘ Note:</strong> The filing does not state the unit of this intensity figure. Shown as filed.</li>
+  <li id="fn-E6-2" class="warning"><span class="fn-num">2</span><strong>ⓘ Doubtful:</strong> The FY 2021-22 figure was filed as 0.5, which has only one digit of precision. It is rounded too coarsely to compare with another year: the real figure could be much higher or lower.</li>
+  <li id="fn-E6-3" class="warning"><span class="fn-num">3</span><strong>ⓘ Doubtful:</strong> Reported as 0, but the total it relates to is not zero. A real intensity is never exactly 0, so this 0 means &#39;rounded away or left blank&#39;; it is not a real zero.</li>
+</ul>
+
+
+
+
+  <p class="assurance"><span class="sebi-note">Note: Indicate if any independent assessment/ evaluation/assurance has been carried out by an external agency? (Y/N) If yes, name of the external agency.</span><br>
+    <strong>Answer:</strong> Yes: Independent assurance has been carried out by KPMG Assurance and Consulting Services LLP</p>
+
+  <p class="remark"><strong>Note from this tool:</strong> The gas-by-gas break-up (CO2, CH4, ...) is not part of the structured filing.</p>
+</article>
+<article class="question" id="q-E7">
+  <h3><span class="qnum">7.</span>Does the entity have any project related to reducing Green House Gas emission? If Yes, then provide details.</h3>
+
+  <div class="answer-box">
+    <p><strong>Answer:</strong> <span class="num" title="From the filing: DoesTheEntityHaveAnyProjectRelatedToReducingGreenHouseGasEmission = true">Yes</span></p>
+    <p><strong>Details:</strong></p>
+    <p class="details">Taking advantage of unoccupied offices due to employees working from home, retrofit projects on lighting, air conditioning and UPS have been implemented in several critical areas, which, in a normal scenario, would need a shutdown of buildings, inconveniencing employees as well as disrupting operations. Accelerated phase-out of R-22 refrigerant-based air-conditioning units has been initiated for improving energy efficiency and simultaneously, use of units with refrigerants which have zero ODP and low GWP, thus enabling reduction of GHG emissions. Energy-efficiency retrofits have helped us reduce connected load by 34.81 MW across Infosys since 2008. Retrofit projects were taken up for the following reasons: resource conservation, end-of-life equipment, indoor environment quality improvement, and technology upgrade. In fiscal 2022, our new buildings in Bengaluru, Mysuru, Thiruvananthapuram and Indianapolis were awarded the LEED Platinum certification from the US Green Building Council. We also received IGBC (Indian Green Building Council) Platinum certification for our buildings in Chennai and Bhubaneswar. With this, we now have 45 projects at Infosys with the highest level of green building certification, spanning a total area of 28.61 million sq.ft. An additional 2.1 million sq.ft. of our projects is currently undergoing green building certification.</p>
+  </div>
+  
+
+
+
+</article>
+<article class="question" id="q-E8">
+  <h3><span class="qnum">8.</span>Provide details related to waste management by the entity, in the following format:</h3>
+
+  <div class="table-wrap">
+  <table class="sebi">
+    <thead>
+      <tr>
+        <th>Parameter</th>
+        <th class="valhead">FY 2021-22<small>(Current Financial Year)</small></th>
+        <th class="valhead">FY 2020-21<small>(Previous Financial Year)</small></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="subhead"><th colspan="3" scope="colgroup">Total Waste generated (in metric tonnes)</th></tr>
+      <tr>
+        <th scope="row">Plastic waste (A)</th>
+        <td class="val"><span class="num" title="From the filing: PlasticWaste = 114.62 pure">114.62</span><span class="unit">tonnes</span><sup class="fn"><a href="#fn-E8-1">1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: PlasticWaste = 55.99 pure">55.99</span><span class="unit">tonnes</span><sup class="fn"><a href="#fn-E8-1">1</a></sup></td>
+      </tr>
+      <tr>
+        <th scope="row">E-waste (B)</th>
+        <td class="val"><span class="num" title="From the filing: EWaste = 863.67 pure">863.67</span><span class="unit">tonnes</span><sup class="fn"><a href="#fn-E8-1">1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: EWaste = 361.94 pure">361.94</span><span class="unit">tonnes</span><sup class="fn"><a href="#fn-E8-1">1</a></sup></td>
+      </tr>
+      <tr>
+        <th scope="row">Bio-medical waste (C)</th>
+        <td class="val"><span class="num" title="From the filing: BioMedicalWaste = 43.58 pure">43.58</span><span class="unit">tonnes</span><sup class="fn"><a href="#fn-E8-1">1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: BioMedicalWaste = 31.92 pure">31.92</span><span class="unit">tonnes</span><sup class="fn"><a href="#fn-E8-1">1</a></sup></td>
+      </tr>
+      <tr>
+        <th scope="row">Construction and demolition waste (D)</th>
+        <td class="val"><span class="num" title="From the filing: ConstructionAndDemolitionWaste = 3087.65 pure">3,087.65</span><span class="unit">tonnes</span><sup class="fn"><a href="#fn-E8-1">1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: ConstructionAndDemolitionWaste = 2597.5 pure">2,597.5</span><span class="unit">tonnes</span><sup class="fn"><a href="#fn-E8-1">1</a></sup></td>
+      </tr>
+      <tr>
+        <th scope="row">Battery waste (E)</th>
+        <td class="val"><span class="num" title="From the filing: BatteryWaste = 132.02 pure">132.02</span><span class="unit">tonnes</span><sup class="fn"><a href="#fn-E8-1">1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: BatteryWaste = 97.42 pure">97.42</span><span class="unit">tonnes</span><sup class="fn"><a href="#fn-E8-1">1</a></sup></td>
+      </tr>
+      <tr>
+        <th scope="row">Radioactive waste (F)</th>
+        <td class="val"><span class="num" title="From the filing: RadioactiveWaste = 0.008 pure">0.008</span><span class="unit">tonnes</span><sup class="fn"><a href="#fn-E8-1">1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: RadioactiveWaste = 0 pure">0</span><span class="unit">tonnes</span><sup class="fn"><a href="#fn-E8-1">1</a></sup></td>
+      </tr>
+      <tr>
+        <th scope="row">Other Hazardous waste. Please specify, if any. (G)</th>
+        <td class="val"><span class="num" title="From the filing: OtherHazardousWaste = 55.11 pure">55.11</span><span class="unit">tonnes</span><sup class="fn"><a href="#fn-E8-1">1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: OtherHazardousWaste = 57.38 pure">57.38</span><span class="unit">tonnes</span><sup class="fn"><a href="#fn-E8-1">1</a></sup></td>
+      </tr>
+      <tr>
+        <th scope="row">Other Non-hazardous waste generated (H). Please specify, if any. (Break-up by composition i.e. by materials relevant to the sector)</th>
+        <td class="val"><span class="num" title="From the filing: OtherNonHazardousWasteGenerated = 6882.24 pure">6,882.24</span><span class="unit">tonnes</span><sup class="fn"><a href="#fn-E8-1">1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: OtherNonHazardousWasteGenerated = 6097.6 pure">6,097.6</span><span class="unit">tonnes</span><sup class="fn"><a href="#fn-E8-1">1</a></sup></td>
+      </tr>
+      <tr>
+        <th scope="row">Total (A + B + C + D + E + F + G + H)</th>
+        <td class="val"><span class="num" title="From the filing: TotalWasteGenerated = 11178.898 pure">11,178.9</span><span class="unit">tonnes</span><sup class="fn"><a href="#fn-E8-1">1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: TotalWasteGenerated = 9299.75 pure">9,299.75</span><span class="unit">tonnes</span><sup class="fn"><a href="#fn-E8-1">1</a></sup></td>
+      </tr>
+      <tr class="subhead"><th colspan="3" scope="colgroup">For each category of waste generated, total waste recovered through recycling, re-using or other recovery operations (in metric tonnes)</th></tr>
+      <tr>
+        <th scope="row">(i) Recycled</th>
+        <td class="val"><span class="num" title="From the filing: WasteRecoveredThroughRecycled = 9512.77 pure">9,512.77</span><span class="unit">tonnes</span><sup class="fn"><a href="#fn-E8-1">1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: WasteRecoveredThroughRecycled = 6116.46 pure">6,116.46</span><span class="unit">tonnes</span><sup class="fn"><a href="#fn-E8-1">1</a></sup></td>
+      </tr>
+      <tr>
+        <th scope="row">(ii) Re-used</th>
+        <td class="val"><span class="num" title="From the filing: WasteRecoveredThroughReUsed = 728.72 pure">728.72</span><span class="unit">tonnes</span><sup class="fn"><a href="#fn-E8-1">1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: WasteRecoveredThroughReUsed = 332.65 pure">332.65</span><span class="unit">tonnes</span><sup class="fn"><a href="#fn-E8-1">1</a></sup></td>
+      </tr>
+      <tr>
+        <th scope="row">(iii) Other recovery operations</th>
+        <td class="val"><span class="num" title="From the filing: WasteRecoveredThroughOtherRecoveryOperations = 0 pure">0</span><span class="unit">tonnes</span><sup class="fn"><a href="#fn-E8-1">1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: WasteRecoveredThroughOtherRecoveryOperations = 0 pure">0</span><span class="unit">tonnes</span><sup class="fn"><a href="#fn-E8-1">1</a></sup></td>
+      </tr>
+      <tr>
+        <th scope="row">Total</th>
+        <td class="val"><span class="num" title="From the filing: TotalWasteRecovered = 10241.49 pure">10,241.49</span><span class="unit">tonnes</span><sup class="fn"><a href="#fn-E8-1">1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: TotalWasteRecovered = 6449.11 pure">6,449.11</span><span class="unit">tonnes</span><sup class="fn"><a href="#fn-E8-1">1</a></sup></td>
+      </tr>
+      <tr class="subhead"><th colspan="3" scope="colgroup">For each category of waste generated, total waste disposed by nature of disposal method (in metric tonnes)</th></tr>
+      <tr>
+        <th scope="row">(i) Incineration</th>
+        <td class="val"><span class="num" title="From the filing: WasteDisposedByIncineration = 49.88 pure">49.88</span><span class="unit">tonnes</span><sup class="fn"><a href="#fn-E8-1">1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: WasteDisposedByIncineration = 39.89 pure">39.89</span><span class="unit">tonnes</span><sup class="fn"><a href="#fn-E8-1">1</a></sup></td>
+      </tr>
+      <tr>
+        <th scope="row">(ii) Landfilling</th>
+        <td class="val"><span class="num" title="From the filing: WasteDisposedByLandfilling = 886.18 pure">886.18</span><span class="unit">tonnes</span><sup class="fn"><a href="#fn-E8-1">1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: WasteDisposedByLandfilling = 474.34 pure">474.34</span><span class="unit">tonnes</span><sup class="fn"><a href="#fn-E8-1">1</a></sup></td>
+      </tr>
+      <tr>
+        <th scope="row">(iii) Other disposal operations</th>
+        <td class="val"><span class="num" title="From the filing: WasteDisposedByOtherDisposalOperations = 0 pure">0</span><span class="unit">tonnes</span><sup class="fn"><a href="#fn-E8-1">1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: WasteDisposedByOtherDisposalOperations = 0 pure">0</span><span class="unit">tonnes</span><sup class="fn"><a href="#fn-E8-1">1</a></sup></td>
+      </tr>
+      <tr>
+        <th scope="row">Total</th>
+        <td class="val"><span class="num" title="From the filing: TotalWasteDisposed = 936.06 pure">936.06</span><span class="unit">tonnes</span><sup class="fn"><a href="#fn-E8-1">1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: TotalWasteDisposed = 514.23 pure">514.23</span><span class="unit">tonnes</span><sup class="fn"><a href="#fn-E8-1">1</a></sup></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<ul class="footnotes">
+  <li id="fn-E8-1" class="note"><span class="fn-num">1</span>The filing states no unit; tonnes as required by the SEBI form.</li>
+</ul>
+
+
+
+
+  <p class="assurance"><span class="sebi-note">Note: Indicate if any independent assessment/ evaluation/assurance has been carried out by an external agency? (Y/N) If yes, name of the external agency.</span><br>
+    <strong>Answer:</strong> Yes: Independent assurance has been carried out by KPMG Assurance and Consulting Services LLP.</p>
+
+  <p class="remark"><strong>Note from this tool:</strong> The SEBI form asks for recovery and disposal for each waste category; the structured filing gives only the totals for all categories together, so that is what these rows show.</p>
+</article>
+<article class="question" id="q-E9">
+  <h3><span class="qnum">9.</span>Briefly describe the waste management practices adopted in your establishments. Describe the strategy adopted by your company to reduce usage of hazardous and toxic chemicals in your products and processes and the practices adopted to manage such wastes.</h3>
+
+  <div class="answer-box">
+    <p><strong>Details:</strong></p>
+    <p class="details">Our waste management approach is based on the philosophy of Reduce, Reuse and Recycle. We seek to uphold our ambition of zero waste to landfills through active minimization combined with technology investment in recycling and streamlining systems and processes. With our efforts, we contribute to a circular economy and convert waste to resource. Refer to the Waste management section of Infosys ESG Report 2021-22.</p>
+  </div>
+  
+
+
+
+</article>
+<article class="question" id="q-E10">
+  <h3><span class="qnum">10.</span>If the entity has operations/offices in/around ecologically sensitive areas (such as national parks, wildlife sanctuaries, biosphere reserves, wetlands, biodiversity hotspots, forests, coastal regulation zones etc.) where environmental approvals / clearances are required, please specify details in the following format:</h3>
+
+  <div class="table-wrap">
+  <table class="sebi list">
+    <thead><tr><th>S. No.</th><th>Location of operations/offices</th><th>Type of operations</th><th>Whether the conditions of environmental approval / clearance are being complied with? (Y/N) If no, the reasons thereof and corrective action taken, if any.</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>NA</td><td>NA</td><td>No; NA</td></tr>
+    </tbody>
+  </table>
+</div>
+
+
+
+
+</article>
+<article class="question" id="q-E11">
+  <h3><span class="qnum">11.</span>Details of environmental impact assessments of projects undertaken by the entity based on applicable laws, in the current financial year:</h3>
+
+  <div class="table-wrap">
+  <table class="sebi list">
+    <thead><tr><th>Name and brief details of project</th><th>EIA Notification No.</th><th>Date</th><th>Whether conducted by independent external agency (Yes / No)</th><th>Results communicated in public domain (Yes / No)</th><th>Relevant Web link</th></tr></thead>
+    <tbody>
+      <tr><td>Kolkata campus</td><td>1628/EN/T-II-1/067/2019</td><td>2021-09-17</td><td>Yes</td><td>Yes</td><td class="missing">Not in the structured filing</td></tr>
+    </tbody>
+  </table>
+</div>
+
+
+
+
+</article>
+<article class="question" id="q-E12">
+  <h3><span class="qnum">12.</span>Is the entity compliant with the applicable environmental law/ regulations/ guidelines in India; such as the Water (Prevention and Control of Pollution) Act, Air (Prevention and Control of Pollution) Act, Environment protection act and rules thereunder (Y/N). If not, provide details of all such non-compliances, in the following format:</h3>
+
+  <div class="answer-box">
+    <p><strong>Answer:</strong> <span class="num" title="From the filing: IsTheEntityCompliantWithTheApplicableEnvironmentalLaw = true">Yes</span></p>
+    <p><strong>Details:</strong> <span class="missing">Not reported</span></p>
+  </div>
+  
+
+
+
+  <p class="remark"><strong>Note from this tool:</strong> SEBI asks for a table of non-compliances (law, details, fines, corrective action); the structured filing gives one free-text answer instead.</p>
+</article>
+<h2 class="section">Leadership Indicators</h2>
+
+<article class="question" id="q-L1">
+  <h3><span class="qnum">1.</span>Provide break-up of the total energy consumed (in Joules or multiples) from renewable and non-renewable sources, in the following format:</h3>
+
+  <div class="table-wrap">
+  <table class="sebi">
+    <thead>
+      <tr>
+        <th>Parameter</th>
+        <th class="valhead">FY 2021-22<small>(Current Financial Year)</small></th>
+        <th class="valhead">FY 2020-21<small>(Previous Financial Year)</small></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="subhead"><th colspan="3" scope="colgroup">From renewable sources</th></tr>
+      <tr>
+        <th scope="row">Total electricity consumption (A)</th>
+        <td class="val"><span class="num" title="From the filing: TotalElectricityConsumptionFromRenewableSources = 266119 pure">2,66,119</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-L1-1" title="See the note">ⓘ1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: TotalElectricityConsumptionFromRenewableSources = 287014 pure">2,87,014</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-L1-1" title="See the note">ⓘ1</a></sup></td>
+      </tr>
+      <tr>
+        <th scope="row">Total fuel consumption (B)</th>
+        <td class="val"><span class="num" title="From the filing: TotalFuelConsumptionFromRenewableSources = 0 pure">0</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-L1-1" title="See the note">ⓘ1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: TotalFuelConsumptionFromRenewableSources = 0 pure">0</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-L1-1" title="See the note">ⓘ1</a></sup></td>
+      </tr>
+      <tr>
+        <th scope="row">Energy consumption through other sources (C)</th>
+        <td class="val"><span class="num" title="From the filing: EnergyConsumptionThroughOtherSourcesFromRenewableSources = 0 pure">0</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-L1-1" title="See the note">ⓘ1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: EnergyConsumptionThroughOtherSourcesFromRenewableSources = 0 pure">0</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-L1-1" title="See the note">ⓘ1</a></sup></td>
+      </tr>
+      <tr>
+        <th scope="row">Total energy consumed from renewable sources (A+B+C)</th>
+        <td class="val"><span class="num" title="From the filing: TotalEnergyConsumedFromRenewableSources = 266119 pure">2,66,119</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-L1-1" title="See the note">ⓘ1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: TotalEnergyConsumedFromRenewableSources = 287014 pure">2,87,014</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-L1-1" title="See the note">ⓘ1</a></sup></td>
+      </tr>
+      <tr class="subhead"><th colspan="3" scope="colgroup">From non-renewable sources</th></tr>
+      <tr>
+        <th scope="row">Total electricity consumption (D)</th>
+        <td class="val"><span class="num" title="From the filing: TotalElectricityConsumptionFromNonRenewableSources = 348944 pure">3,48,944</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-L1-1" title="See the note">ⓘ1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: TotalElectricityConsumptionFromNonRenewableSources = 339297 pure">3,39,297</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-L1-1" title="See the note">ⓘ1</a></sup></td>
+      </tr>
+      <tr>
+        <th scope="row">Total fuel consumption (E)</th>
+        <td class="val"><span class="num" title="From the filing: TotalFuelConsumptionFromNonRenewableSources = 35413 pure">35,413</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-L1-1" title="See the note">ⓘ1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: TotalFuelConsumptionFromNonRenewableSources = 45349 pure">45,349</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-L1-1" title="See the note">ⓘ1</a></sup></td>
+      </tr>
+      <tr>
+        <th scope="row">Energy consumption through other sources (F)</th>
+        <td class="val"><span class="num" title="From the filing: EnergyConsumptionThroughOtherSourcesFromNonRenewableSources = 0 pure">0</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-L1-1" title="See the note">ⓘ1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: EnergyConsumptionThroughOtherSourcesFromNonRenewableSources = 0 pure">0</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-L1-1" title="See the note">ⓘ1</a></sup></td>
+      </tr>
+      <tr>
+        <th scope="row">Total energy consumed from non-renewable sources (D+E+F)</th>
+        <td class="val"><span class="num" title="From the filing: TotalEnergyConsumedFromNonRenewableSources = 384357 pure">3,84,357</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-L1-1" title="See the note">ⓘ1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: TotalEnergyConsumedFromNonRenewableSources = 384646 pure">3,84,646</span><span class="unit unit-unknown">(unit not stated)</span><sup class="fn fn-note"><a href="#fn-L1-1" title="See the note">ⓘ1</a></sup></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<ul class="footnotes">
+  <li id="fn-L1-1" class="check"><span class="fn-num">1</span><strong>ⓘ Note:</strong> This filing does not state the unit of its energy figures (the SEBI form says &#39;Joules or multiples&#39;). Shown as filed.</li>
+</ul>
+
+
+
+
+  <p class="assurance"><span class="sebi-note">Note: Indicate if any independent assessment/ evaluation/assurance has been carried out by an external agency? (Y/N) If yes, name of the external agency.</span><br>
+    <strong>Answer:</strong> Yes: Independent assurance has been carried out by KPMG Assurance and Consulting Services LLP</p>
+
+</article>
+<article class="question" id="q-L2">
+  <h3><span class="qnum">2.</span>Provide the following details related to water discharged:</h3>
+
+  <div class="table-wrap">
+  <table class="sebi">
+    <thead>
+      <tr>
+        <th>Parameter</th>
+        <th class="valhead">FY 2021-22<small>(Current Financial Year)</small></th>
+        <th class="valhead">FY 2020-21<small>(Previous Financial Year)</small></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="subhead"><th colspan="3" scope="colgroup">Water discharge by destination and level of treatment (in kilolitres)</th></tr>
+      <tr>
+        <th scope="row">(i) To Surface water</th>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToSurfaceWater = 0 pure">0</span><span class="unit">kL</span><sup class="fn"><a href="#fn-L2-1">1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToSurfaceWater = 0 pure">0</span><span class="unit">kL</span><sup class="fn"><a href="#fn-L2-1">1</a></sup></td>
+      </tr>
+      <tr>
+        <th scope="row">- No treatment</th>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToSurfaceWaterWithOutTreatment = 0 pure">0</span><span class="unit">kL</span><sup class="fn"><a href="#fn-L2-1">1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToSurfaceWaterWithOutTreatment = 0 pure">0</span><span class="unit">kL</span><sup class="fn"><a href="#fn-L2-1">1</a></sup></td>
+      </tr>
+      <tr>
+        <th scope="row">- With treatment – please specify level of treatment</th>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToSurfaceWaterWithTreatment = 0 pure">0</span><span class="unit">kL</span><sup class="fn"><a href="#fn-L2-1">1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToSurfaceWaterWithTreatment = 0 pure">0</span><span class="unit">kL</span><sup class="fn"><a href="#fn-L2-1">1</a></sup></td>
+      </tr>
+      <tr>
+        <th scope="row">(ii) To Groundwater</th>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToGroundwater = 0 pure">0</span><span class="unit">kL</span><sup class="fn"><a href="#fn-L2-1">1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToGroundwater = 0 pure">0</span><span class="unit">kL</span><sup class="fn"><a href="#fn-L2-1">1</a></sup></td>
+      </tr>
+      <tr>
+        <th scope="row">- No treatment</th>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToGroundwaterWithOutTreatment = 0 pure">0</span><span class="unit">kL</span><sup class="fn"><a href="#fn-L2-1">1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToGroundwaterWithOutTreatment = 0 pure">0</span><span class="unit">kL</span><sup class="fn"><a href="#fn-L2-1">1</a></sup></td>
+      </tr>
+      <tr>
+        <th scope="row">- With treatment – please specify level of treatment</th>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToGroundwaterWithTreatment = 0 pure">0</span><span class="unit">kL</span><sup class="fn"><a href="#fn-L2-1">1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToGroundwaterWithTreatment = 0 pure">0</span><span class="unit">kL</span><sup class="fn"><a href="#fn-L2-1">1</a></sup></td>
+      </tr>
+      <tr>
+        <th scope="row">(iii) To Seawater</th>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToSeawater = 0 pure">0</span><span class="unit">kL</span><sup class="fn"><a href="#fn-L2-1">1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToSeawater = 0 pure">0</span><span class="unit">kL</span><sup class="fn"><a href="#fn-L2-1">1</a></sup></td>
+      </tr>
+      <tr>
+        <th scope="row">- No treatment</th>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToSeawaterWithOutTreatment = 0 pure">0</span><span class="unit">kL</span><sup class="fn"><a href="#fn-L2-1">1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToSeawaterWithOutTreatment = 0 pure">0</span><span class="unit">kL</span><sup class="fn"><a href="#fn-L2-1">1</a></sup></td>
+      </tr>
+      <tr>
+        <th scope="row">- With treatment – please specify level of treatment</th>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToSeawaterWithTreatment = 0 pure">0</span><span class="unit">kL</span><sup class="fn"><a href="#fn-L2-1">1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToSeawaterWithTreatment = 0 pure">0</span><span class="unit">kL</span><sup class="fn"><a href="#fn-L2-1">1</a></sup></td>
+      </tr>
+      <tr>
+        <th scope="row">(iv) Sent to third-parties</th>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeBySentToThirdParties = 0 pure">0</span><span class="unit">kL</span><sup class="fn"><a href="#fn-L2-1">1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeBySentToThirdParties = 0 pure">0</span><span class="unit">kL</span><sup class="fn"><a href="#fn-L2-1">1</a></sup></td>
+      </tr>
+      <tr>
+        <th scope="row">- No treatment</th>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeBySentToThirdPartiesWithoutTreatment = 0 pure">0</span><span class="unit">kL</span><sup class="fn"><a href="#fn-L2-1">1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeBySentToThirdPartiesWithoutTreatment = 0 pure">0</span><span class="unit">kL</span><sup class="fn"><a href="#fn-L2-1">1</a></sup></td>
+      </tr>
+      <tr>
+        <th scope="row">- With treatment – please specify level of treatment</th>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeBySentToThirdPartiesWithTreatment = 0 pure">0</span><span class="unit">kL</span><sup class="fn"><a href="#fn-L2-1">1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeBySentToThirdPartiesWithTreatment = 0 pure">0</span><span class="unit">kL</span><sup class="fn"><a href="#fn-L2-1">1</a></sup></td>
+      </tr>
+      <tr>
+        <th scope="row">(v) Others</th>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToOthers = 0 pure">0</span><span class="unit">kL</span><sup class="fn"><a href="#fn-L2-1">1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToOthers = 0 pure">0</span><span class="unit">kL</span><sup class="fn"><a href="#fn-L2-1">1</a></sup></td>
+      </tr>
+      <tr>
+        <th scope="row">- No treatment</th>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToOthersWithoutTreatment = 0 pure">0</span><span class="unit">kL</span><sup class="fn"><a href="#fn-L2-1">1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToOthersWithoutTreatment = 0 pure">0</span><span class="unit">kL</span><sup class="fn"><a href="#fn-L2-1">1</a></sup></td>
+      </tr>
+      <tr>
+        <th scope="row">- With treatment – please specify level of treatment</th>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToOthersWithTreatment = 0 pure">0</span><span class="unit">kL</span><sup class="fn"><a href="#fn-L2-1">1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: WaterDischargeToOthersWithTreatment = 0 pure">0</span><span class="unit">kL</span><sup class="fn"><a href="#fn-L2-1">1</a></sup></td>
+      </tr>
+      <tr>
+        <th scope="row">Total water discharged (in kilolitres)</th>
+        <td class="val"><span class="num" title="From the filing: TotalWaterDischargedInKilolitres = 0 pure">0</span><span class="unit">kL</span><sup class="fn"><a href="#fn-L2-1">1</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: TotalWaterDischargedInKilolitres = 0 pure">0</span><span class="unit">kL</span><sup class="fn"><a href="#fn-L2-1">1</a></sup></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<ul class="footnotes">
+  <li id="fn-L2-1" class="note"><span class="fn-num">1</span>The filing states no unit; kL as required by the SEBI form.</li>
+</ul>
+
+
+
+
+  <p class="assurance"><span class="sebi-note">Note: Indicate if any independent assessment/ evaluation/assurance has been carried out by an external agency? (Y/N) If yes, name of the external agency.</span><br>
+    <strong>Answer:</strong> Yes: Independent assurance has been carried out by KPMG Assurance and Consulting Services LLP.</p>
+
+  <p class="remark"><strong>Note from this tool:</strong> The &#39;level of treatment&#39; text is not part of the structured filing; only the volumes are.</p>
+</article>
+<article class="question" id="q-L3">
+  <h3><span class="qnum">3.</span>Water withdrawal, consumption and discharge in areas of water stress (in kilolitres): For each facility / plant located in areas of water stress, provide the following information: (i) Name of the area (ii) Nature of operations (iii) Water withdrawal, consumption and discharge in the following format:</h3>
+
+  <p class="missing">No facility in an area of water stress is listed in the structured filing.</p>
+
+  <p class="assurance"><span class="sebi-note">Note: Indicate if any independent assessment/ evaluation/assurance has been carried out by an external agency? (Y/N) If yes, name of the external agency.</span><br>
+    <strong>Answer:</strong> Yes: Independent assurance has been carried out by KPMG Assurance and Consulting Services LLP.</p>
+
+</article>
+<article class="question" id="q-L4">
+  <h3><span class="qnum">4.</span>Please provide details of total Scope 3 emissions &amp; its intensity, in the following format:</h3>
+
+  <div class="table-wrap">
+  <table class="sebi has-unit">
+    <thead>
+      <tr>
+        <th>Parameter</th>
+<th>Unit</th>        <th class="valhead">FY 2021-22<small>(Current Financial Year)</small></th>
+        <th class="valhead">FY 2020-21<small>(Previous Financial Year)</small></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">Total Scope 3 emissions (Break-up of the GHG into CO2, CH4, N2O, HFCs, PFCs, SF6, NF3, if available)</th>
+<td class="unit-col">tCO2e</td>        <td class="val"><span class="num" title="From the filing: TotalScope3Emissions = 1,83,595; UnitOfTotalScope3Emissions = tCO2e">1,83,595</span></td>
+        <td class="val"><span class="num" title="From the filing: TotalScope3Emissions = 2,13,514; UnitOfTotalScope3Emissions = tCO2e">2,13,514</span></td>
+      </tr>
+      <tr>
+        <th scope="row">Total Scope 3 emissions per rupee of turnover</th>
+<td class="unit-col">tCO2e / cr INR</td>        <td class="val"><span class="num" title="From the filing: TotalScope3EmissionsPerRupeeOfTurnover = 1.51; UnitOfTotalScope3EmissionsPerRupeeOfTurnover = tCO2e / cr INR">1.51</span></td>
+        <td class="val"><span class="num" title="From the filing: TotalScope3EmissionsPerRupeeOfTurnover = 2.13; UnitOfTotalScope3EmissionsPerRupeeOfTurnover = tCO2e / cr INR">2.13</span></td>
+      </tr>
+      <tr>
+        <th scope="row">Total Scope 3 emission intensity (optional) – the relevant metric may be selected by the entity</th>
+<td class="unit-col">(unit not stated)</td>        <td class="val"><span class="num" title="From the filing: TotalScope3EmissionIntensity = 0; UnitOfTotalScope3EmissionIntensity = 0">0</span><sup class="fn fn-note"><a href="#fn-L4-1" title="See the note">ⓘ1</a></sup><sup class="fn fn-note"><a href="#fn-L4-2" title="See the note">ⓘ2</a></sup></td>
+        <td class="val"><span class="num" title="From the filing: TotalScope3EmissionIntensity = 0; UnitOfTotalScope3EmissionIntensity = 0">0</span><sup class="fn fn-note"><a href="#fn-L4-1" title="See the note">ⓘ1</a></sup><sup class="fn fn-note"><a href="#fn-L4-2" title="See the note">ⓘ2</a></sup></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<ul class="footnotes">
+  <li id="fn-L4-1" class="check"><span class="fn-num">1</span><strong>ⓘ Note:</strong> The filing does not state the unit of this intensity figure. Shown as filed.</li>
+  <li id="fn-L4-2" class="warning"><span class="fn-num">2</span><strong>ⓘ Doubtful:</strong> Reported as 0, but the total it relates to is not zero. A real intensity is never exactly 0, so this 0 means &#39;rounded away or left blank&#39;; it is not a real zero.</li>
+</ul>
+
+
+
+
+  <p class="assurance"><span class="sebi-note">Note: Indicate if any independent assessment/ evaluation/assurance has been carried out by an external agency? (Y/N) If yes, name of the external agency.</span><br>
+    <strong>Answer:</strong> Yes: Independent assurance has been carried out by KPMG Assurance and Consulting Services LLP.</p>
+
+</article>
+<article class="question" id="q-L5">
+  <h3><span class="qnum">5.</span>With respect to the ecologically sensitive areas reported at Question 10 of Essential Indicators above, provide details of significant direct &amp; indirect impact of the entity on biodiversity in such areas along-with prevention and remediation activities.</h3>
+
+  <div class="answer-box">
+    <p><strong>Details:</strong></p>
+    <p class="details">NA</p>
+  </div>
+  
+
+
+
+</article>
+<article class="question" id="q-L6">
+  <h3><span class="qnum">6.</span>If the entity has undertaken any specific initiatives or used innovative technology or solutions to improve resource efficiency, or reduce impact due to emissions / effluent discharge / waste generated, please provide details of the same as well as outcome of such initiatives, as per the following format:</h3>
+
+  <div class="table-wrap">
+  <table class="sebi list">
+    <thead><tr><th>Sr. No</th><th>Initiative undertaken</th><th>Details of the initiative (Web-link, if any, may be provided along-with summary)</th><th>Outcome of the initiative</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Our vision for the environment is to “Serve the preservation of our planet by shaping and sharing technology solutions”. We adopt, invent and encourage smarter ways to mitigate GHG emissions, reduce energy consumption and manage water and waste, to make our planet stronger by consistently embracing clean tech in our operations and client solutions, thereby minimizing the impact on nature. Refer to ESG Report 2021-22 to know more about initiatives and technology solutions to improve resource efficiency, or reduce impact due to emissions / effluent discharge / waste generated. Also, refer to our microsite https://www.infosys.com/about/corporate-responsibility/environmental.html.</td><td class="missing">Not in the structured filing</td><td>https://www.infosys.com/sustainability/documents/infosys-esg-report-2021-22.pdf</td></tr>
+    </tbody>
+  </table>
+</div>
+
+
+
+
+  <p class="remark"><strong>Note from this tool:</strong> The structured filing has no separate &#39;details&#39; field for each initiative.</p>
+</article>
+<article class="question" id="q-L7">
+  <h3><span class="qnum">7.</span>Does the entity have a business continuity and disaster management plan? Give details in 100 words/ web link.</h3>
+
+  <div class="answer-box">
+    <p><strong>Answer:</strong> <span class="num" title="From the filing: DoesTheEntityHaveABusinessContinuityAndDisasterManagementPlan = true">Yes</span></p>
+    <p><strong>Details:</strong></p>
+    <p class="details">Infosys has a highly resilient Business Continuity Management System (BCMS) called Phoenix which is certified ISO 22301:2019 Security and Resilience — Business Continuity Management Systems. This program ensures seamless continuity of business and utmost safety of employees and organization assets, while continuously meeting client expectations and helping Infosys to be seen as a leader in this area. The BCMS program provides a robust framework for planning, establishing, implementing, operating, monitoring, reviewing, maintaining and continually improving BCMS across Infosys and its subsidiaries as per the global BCMS strategy. Comprehensive business continuity plans are created at three levels covering the business functions, locations and accounts. Integrated into our Enterprise Risk Management program, the BCMS plans guide our typical response to events, such as catastrophes, natural or human-made disasters, which could disrupt or severely constrain our operations. This covers various crisis scenarios as part of detailed risk assessments for functions, locations and accounts which are documented with mitigation plans along with controls put in place. This has ensured a highly resilient management system that has been continuously validated throughtests and exercises, and various incidents, which have been successfully tackled without any major business continuity or employee safety impacts. The best example of this has been the unprecedented global COVID-19 pandemic over the past two years. An efficient business continuity management policy has allowed our Company to maintain status quo as quickly and as cost effectively as possible during disasters and pandemics. It has also helped in minimizing downtime and achieving sustainable improvements in business continuity and regulatory compliance.</p>
+  </div>
+  
+
+
+
+</article>
+<article class="question" id="q-L8">
+  <h3><span class="qnum">8.</span>Disclose any significant adverse impact to the environment, arising from the value chain of the entity. What mitigation or adaptation measures have been taken by the entity in this regard.</h3>
+
+  <div class="answer-box">
+    <p><strong>Details:</strong></p>
+    <p class="details">None</p>
+  </div>
+  
+
+
+
+</article>
+<article class="question" id="q-L9">
+  <h3><span class="qnum">9.</span>Percentage of value chain partners (by value of business done with such partners) that were assessed for environmental impacts.</h3>
+
+  <div class="answer-box">
+    <p><strong>Answer:</strong> <span class="num" title="From the filing: PercentageOfValueChainPartnersByValueOfBusinessDoneWithSuchPartnersThatWereAssessedForEnvironmentalImpacts = 0.4 pure">40</span><span class="unit">%</span><span class="tag tag-converted" title="The unit was converted; the figure as filed is kept in the saved data">conv.</span><sup class="fn"><a href="#fn-L9-1">1</a></sup></p>
+  </div>
+  <ul class="footnotes">
+  <li id="fn-L9-1" class="note"><span class="fn-num">1</span>Filed as the fraction 0.4; shown as a percentage.</li>
+</ul>
+
+
+
+
+</article>
+
+
+
+
+
+<h2 class="section" id="trace">Where every number comes from</h2>
+<p class="principle-sub">This section is not part of SEBI's form. It is how you can check any number on this page against the company's own filing.</p>
+
+<ol class="trace-steps">
+  <li>On the Dashboard, open a card's <em>Fine print</em>: it names the SEBI question and the filing's element(s) behind the figure.</li>
+  <li>In the tables above, hover over a number to see the same; below, find its row. It shows the value on the page, how we got it, the element and the text exactly as filed.</li>
+  <li>Open the filing (link below) and search for that element name. The value you find there is the one quoted here.</li>
+</ol>
+
+<dl class="facts trace-source">
+  <div><dt>The filing (XBRL, on NSE)</dt><dd><a href="https://nsearchives.nseindia.com/corporate/xbrl/BR_INFY_2021_2022_20220800145.xml" rel="noopener noreferrer" target="_blank">BR_INFY_2021_2022_20220800145.xml</a></dd></div>
+<div><dt>The same filing as a PDF</dt><dd><a href="https://nsearchives.nseindia.com/corporate/BR_INFY_2021_2022_20220800145.pdf" rel="noopener noreferrer" target="_blank">open</a></dd></div>  <div><dt>Filed on NSE</dt><dd>29-Aug-2022</dd></div>
+  <div><dt>Edition of SEBI's XBRL form</dt><dd>2021-09-30 (legacy layout)</dd></div>
+  <div><dt>Reporting boundary</dt><dd>Consolidated basis</dd></div>
+</dl>
+
+<p class="legend"><strong>How to read a row.</strong> The first line is the value as shown above. <em>Reported by the company</em> means the number is the filing's own;
+  <em>Calculated by us</em> means we added reported numbers (every one is listed); <em>Unit changed by us</em> means the element holds the figure in another unit (the line shows it as filed).
+  <span class="missing">Not reported</span> says which elements were looked for, or that the structured filing has no field for the item: nothing is ever filled in.
+  Each element line reads <em>ElementName = the text as written in the filing</em>, followed by the unit as written.</p>
+
+<details class="trace-q" id="trace-E1">
+  <summary><strong>Essential 1</strong> · Details of total energy consumption (in Joules or multiples) and energy intensity, in the following format:</summary>
+<p class="remark">The assurance answer was read from: AnyIndependentAssessmentOrEvaluationOrAssuranceHasBeenCarriedOutByAnExternalAgencyForEnergyConsumption, NameOfTheExternalAgencyIfAnyIndependentAssessmentOrEvaluationOrAssuranceHasBeenCarriedOutByAnExternalAgencyForEnergyConsumptionExplanatoryTextBlock.</p>  <div class="table-wrap">
+    <table class="sebi trace-table">
+      <thead><tr><th>Row</th><th>FY 2021-22</th><th>FY 2020-21</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Total electricity consumption (A)</th><td><span class="t-shown">6,15,063 (unit not stated)</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalElectricityConsumption = 615063 pure</span></td><td><span class="t-shown">6,26,311 (unit not stated)</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalElectricityConsumption = 626311 pure</span></td></tr>
+        <tr><th scope="row">Total fuel consumption (B)</th><td><span class="t-shown">35,413 (unit not stated)</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalFuelConsumption = 35413 pure</span></td><td><span class="t-shown">45,349 (unit not stated)</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalFuelConsumption = 45349 pure</span></td></tr>
+        <tr><th scope="row">Energy consumption through other sources (C)</th><td><span class="t-shown">0 (unit not stated)</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">EnergyConsumptionThroughOtherSources = 0 pure</span></td><td><span class="t-shown">0 (unit not stated)</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">EnergyConsumptionThroughOtherSources = 0 pure</span></td></tr>
+        <tr><th scope="row">Total energy consumption (A+B+C)</th><td><span class="t-shown">6,50,476 (unit not stated)</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalEnergyConsumption = 650476 pure</span></td><td><span class="t-shown">6,71,660 (unit not stated)</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalEnergyConsumption = 671660 pure</span></td></tr>
+        <tr><th scope="row">Energy intensity per rupee of turnover (Total energy consumption/ turnover in rupees)</th><td><span class="t-shown">5.35 (unit not stated)</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">EnergyIntensityPerRupeeOfTurnover = 5.35 pure</span></td><td><span class="t-shown">6.69 (unit not stated)</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">EnergyIntensityPerRupeeOfTurnover = 6.69 pure</span></td></tr>
+        <tr><th scope="row">Energy intensity (optional) – the relevant metric may be selected by the entity</th><td><span class="t-shown">0 (unit not stated)</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">EnergyIntensityTheRelevantMetricMayBeSelectedByTheEntity = 0 pure</span></td><td><span class="t-shown">0 (unit not stated)</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">EnergyIntensityTheRelevantMetricMayBeSelectedByTheEntity = 0 pure</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</details>
+
+<details class="trace-q" id="trace-E2">
+  <summary><strong>Essential 2</strong> · Does the entity have any sites / facilities identified as designated consumers (DCs) under the Performance, A…</summary>
+  <div class="table-wrap">
+    <table class="sebi trace-table">
+      <thead><tr><th>Row</th><th>FY 2021-22</th><th>FY 2020-21</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Answer</th><td><span class="t-shown">No</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">DoesTheEntityHaveAnySitesOrFacilitiesIdentifiedAsDesignatedConsumersUnderThePerformanceAchieveAndTradeSchemeOfTheGovernmentOfIndia = false</span></td><td><span class="missing">asked for the current year only</span></td></tr>
+        <tr><th scope="row">Details</th><td><span class="t-shown missing">Not reported</span>
+<span class="t-status">Not reported</span>
+<span class="t-line">Not found in the filing. Elements looked for: DiscloseWhetherTargetsSetUnderThePatSchemeHaveBeenAchievedInCaseTargetsHaveNotBeenAchievedThenProvideTheRemedialActionTakenExplanatoryTextBlock.</span></td><td><span class="missing">asked for the current year only</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</details>
+
+<details class="trace-q" id="trace-E3">
+  <summary><strong>Essential 3</strong> · Provide details of the following disclosures related to water, in the following format:</summary>
+<p class="remark">The assurance answer was read from: AnyIndependentAssessmentOrEvaluationOrAssuranceHasBeenCarriedOutByAnExternalAgencyForWaterWithdrawal, NameOfTheExternalAgencyInCaseAnyIndependentAssessmentOrEvaluationOrAssuranceHasBeenCarriedOutByAnExternalAgencyForWaterWithdrawalExplanatoryTextBlock.</p>  <div class="table-wrap">
+    <table class="sebi trace-table">
+      <thead><tr><th>Row</th><th>FY 2021-22</th><th>FY 2020-21</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">(i) Surface water</th><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterWithdrawalBySurfaceWater = 0 pure</span></td><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterWithdrawalBySurfaceWater = 0 pure</span></td></tr>
+        <tr><th scope="row">(ii) Groundwater</th><td><span class="t-shown">1,12,910 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterWithdrawalByGroundwater = 112910 pure</span></td><td><span class="t-shown">1,42,081 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterWithdrawalByGroundwater = 142081 pure</span></td></tr>
+        <tr><th scope="row">(iii) Third party water</th><td><span class="t-shown">11,29,818 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterWithdrawalByThirdPartyWater = 1129818 pure</span></td><td><span class="t-shown">10,72,258 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterWithdrawalByThirdPartyWater = 1072258 pure</span></td></tr>
+        <tr><th scope="row">(iv) Seawater / desalinated water</th><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterWithdrawalBySeawaterOrDesalinatedWater = 0 pure</span></td><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterWithdrawalBySeawaterOrDesalinatedWater = 0 pure</span></td></tr>
+        <tr><th scope="row">(v) Others</th><td><span class="t-shown">69,656 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterWithdrawalByOthers = 69656 pure</span></td><td><span class="t-shown">79,293 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterWithdrawalByOthers = 79293 pure</span></td></tr>
+        <tr><th scope="row">Total volume of water withdrawal (in kilolitres) (i + ii + iii + iv + v)</th><td><span class="t-shown">13,12,384 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalVolumeOfWaterWithdrawal = 1312384 pure</span></td><td><span class="t-shown">12,93,632 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalVolumeOfWaterWithdrawal = 1293632 pure</span></td></tr>
+        <tr><th scope="row">Total volume of water consumption (in kilolitres)</th><td><span class="t-shown">13,12,384 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalVolumeOfWaterConsumption = 1312384 pure</span></td><td><span class="t-shown">12,93,632 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalVolumeOfWaterConsumption = 1293632 pure</span></td></tr>
+        <tr><th scope="row">Water intensity per rupee of turnover (Water consumed / turnover)</th><td><span class="t-shown">10.79 (unit not stated)</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterIntensityPerRupeeOfTurnover = 10.79 pure</span></td><td><span class="t-shown">12.88 (unit not stated)</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterIntensityPerRupeeOfTurnover = 12.88 pure</span></td></tr>
+        <tr><th scope="row">Water intensity (optional) – the relevant metric may be selected by the entity</th><td><span class="t-shown">0 (unit not stated)</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterIntensityTheRelevantMetricMayBeSelectedByTheEntity = 0 pure</span></td><td><span class="t-shown">0 (unit not stated)</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterIntensityTheRelevantMetricMayBeSelectedByTheEntity = 0 pure</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</details>
+
+<details class="trace-q" id="trace-E4">
+  <summary><strong>Essential 4</strong> · Has the entity implemented a mechanism for Zero Liquid Discharge? If yes, provide details of its coverage and…</summary>
+  <div class="table-wrap">
+    <table class="sebi trace-table">
+      <thead><tr><th>Row</th><th>FY 2021-22</th><th>FY 2020-21</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Answer</th><td><span class="t-shown">Yes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">HasTheEntityImplementedAMechanismForZeroLiquidDischarge = true</span></td><td><span class="missing">asked for the current year only</span></td></tr>
+        <tr><th scope="row">Details</th><td><span class="t-shown">All sewage generated on Infosys campuses is treated in the in-house sewage treatment plan…</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">DetailsOfCoverageAndImplementationIfForZeroLiquidDischargeExplanatoryTextBlock = All sewage generated on Infosys campuses is treated in the in-house sewage treatment plan…</span></td><td><span class="missing">asked for the current year only</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</details>
+
+<details class="trace-q" id="trace-E5">
+  <summary><strong>Essential 5</strong> · Please provide details of air emissions (other than GHG emissions) by the entity, in the following format:</summary>
+<p class="remark">The assurance answer was read from: IndicateIfAnyIndependentAssessmentOrEvaluationOrAssuranceHasBeenCarriedOutByAnExternalAgencyForAirEmissionsOtherThanGHGEmissions, NameOfTheExternalAgencyIfAnyIndependentAssessmentOrEvaluationOrAssuranceHasBeenCarriedOutByAnExternalAgencyForAirEmissionsOtherThanGHGEmissionsExplanatoryTextBlock.</p>  <div class="table-wrap">
+    <table class="sebi trace-table">
+      <thead><tr><th>Row</th><th>FY 2021-22</th><th>FY 2020-21</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">NOx</th><td><span class="t-shown">22.91 tonnes per month</span>
+<span class="t-status">Unit changed by us</span>
+<span class="t-line">Nox = 22907.32</span><span class="t-line">UnitOfNox = Kg/Month</span><span class="t-note">Converted from &#39;Kg/Month&#39; to tonnes (x 0.001); the filed figure is kept in the saved data.</span></td><td><span class="t-shown">14.23 tonnes per month</span>
+<span class="t-status">Unit changed by us</span>
+<span class="t-line">Nox = 14234.66</span><span class="t-line">UnitOfNox = Kg/Month</span><span class="t-note">Converted from &#39;Kg/Month&#39; to tonnes (x 0.001); the filed figure is kept in the saved data.</span></td></tr>
+        <tr><th scope="row">SOx</th><td><span class="t-shown">2.57 tonnes per month</span>
+<span class="t-status">Unit changed by us</span>
+<span class="t-line">Sox = 2566.01</span><span class="t-line">UnitOfSox = Kg/Month</span><span class="t-note">Converted from &#39;Kg/Month&#39; to tonnes (x 0.001); the filed figure is kept in the saved data.</span></td><td><span class="t-shown">4.91 tonnes per month</span>
+<span class="t-status">Unit changed by us</span>
+<span class="t-line">Sox = 4912.99</span><span class="t-line">UnitOfSox = Kg/Month</span><span class="t-note">Converted from &#39;Kg/Month&#39; to tonnes (x 0.001); the filed figure is kept in the saved data.</span></td></tr>
+        <tr><th scope="row">Particulate matter (PM)</th><td><span class="t-shown">3.9 tonnes per month</span>
+<span class="t-status">Unit changed by us</span>
+<span class="t-line">ParticulateMatter = 3899.34</span><span class="t-line">UnitOfParticulateMatter = Kg/Month</span><span class="t-note">Converted from &#39;Kg/Month&#39; to tonnes (x 0.001); the filed figure is kept in the saved data.</span></td><td><span class="t-shown">4.7 tonnes per month</span>
+<span class="t-status">Unit changed by us</span>
+<span class="t-line">ParticulateMatter = 4696.56</span><span class="t-line">UnitOfParticulateMatter = Kg/Month</span><span class="t-note">Converted from &#39;Kg/Month&#39; to tonnes (x 0.001); the filed figure is kept in the saved data.</span></td></tr>
+        <tr><th scope="row">Persistent organic pollutants (POP)</th><td><span class="t-shown missing">Not reported</span>
+<span class="t-status">Not reported</span>
+<span class="t-line">The filing says &#39;NA&#39;. Elements looked for: PersistentOrganicPollutants.</span></td><td><span class="t-shown missing">Not reported</span>
+<span class="t-status">Not reported</span>
+<span class="t-line">The filing says &#39;NA&#39;. Elements looked for: PersistentOrganicPollutants.</span></td></tr>
+        <tr><th scope="row">Volatile organic compounds (VOC)</th><td><span class="t-shown missing">Not reported</span>
+<span class="t-status">Not reported</span>
+<span class="t-line">The filing says &#39;NA&#39;. Elements looked for: VolatileOrganicCompounds.</span></td><td><span class="t-shown missing">Not reported</span>
+<span class="t-status">Not reported</span>
+<span class="t-line">The filing says &#39;NA&#39;. Elements looked for: VolatileOrganicCompounds.</span></td></tr>
+        <tr><th scope="row">Hazardous air pollutants (HAP)</th><td><span class="t-shown missing">Not reported</span>
+<span class="t-status">Not reported</span>
+<span class="t-line">The filing says &#39;NA&#39;. Elements looked for: HazardousAirPollutants.</span></td><td><span class="t-shown missing">Not reported</span>
+<span class="t-status">Not reported</span>
+<span class="t-line">The filing says &#39;NA&#39;. Elements looked for: HazardousAirPollutants.</span></td></tr>
+        <tr><th scope="row">Others – please specify</th><td><span class="t-shown missing">Not reported</span>
+<span class="t-status">Not reported</span>
+<span class="t-line">The structured filing has no field for this item.</span></td><td><span class="t-shown missing">Not reported</span>
+<span class="t-status">Not reported</span>
+<span class="t-line">The structured filing has no field for this item.</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</details>
+
+<details class="trace-q" id="trace-E6">
+  <summary><strong>Essential 6</strong> · Provide details of greenhouse gas emissions (Scope 1 and Scope 2 emissions) &amp; its intensity, in the following…</summary>
+<p class="remark">The assurance answer was read from: WhetherAnyIndicateIfAnyIndependentAssessmentOrEvaluationOrAssuranceHasBeenCarriedOutByAnExternalAgencyForGreenHouseGasEmissions, NameOfTheExternalAgencyThatUndertookIndependentAssessmentOrEvaluationOrAssuranceForGreenHouseGasEmissionsExplanatoryTextBlock.</p>  <div class="table-wrap">
+    <table class="sebi trace-table">
+      <thead><tr><th>Row</th><th>FY 2021-22</th><th>FY 2020-21</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Total Scope 1 emissions (Break-up of the GHG into CO2, CH4, N2O, HFCs, PFCs, SF6, NF3, if available)</th><td><span class="t-shown">8,965 tCO2e</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalScope1Emissions = 8965 pure</span><span class="t-line">UnitOfTotalScope1Emissions = tCO2 e</span></td><td><span class="t-shown">8,678 tCO2e</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalScope1Emissions = 8678 pure</span><span class="t-line">UnitOfTotalScope1Emissions = tCO2 e</span></td></tr>
+        <tr><th scope="row">Total Scope 2 emissions (Break-up of the GHG into CO2, CH4, N2O, HFCs, PFCs, SF6, NF3, if available)</th><td><span class="t-shown">51,717 tCO2e</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalScope2Emissions = 51717 pure</span><span class="t-line">UnitOfTotalScope2Emissions = tCO2 e</span></td><td><span class="t-shown">68,673 tCO2e</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalScope2Emissions = 68673 pure</span><span class="t-line">UnitOfTotalScope2Emissions = tCO2 e</span></td></tr>
+        <tr><th scope="row">Total Scope 1 and Scope 2 emissions per rupee of turnover</th><td><span class="t-shown">0.5 (unit not stated)</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalScope1AndScope2EmissionsPerRupeeOfTurnover = 0.5 pure</span><span class="t-line">UnitOfTotalScope1AndScope2EmissionsPerRupeeOfTurnover = 0</span></td><td><span class="t-shown">0.77 (unit not stated)</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalScope1AndScope2EmissionsPerRupeeOfTurnover = 0.77 pure</span><span class="t-line">UnitOfTotalScope1AndScope2EmissionsPerRupeeOfTurnover = 0</span></td></tr>
+        <tr><th scope="row">Total Scope 1 and Scope 2 emission intensity (optional) – the relevant metric may be selected by the entity</th><td><span class="t-shown">0 (unit not stated)</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalScope1AndScope2EmissionIntensity = 0 pure</span><span class="t-line">UnitOfTotalScope1AndScope2EmissionIntensity = 0</span></td><td><span class="t-shown">0 (unit not stated)</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalScope1AndScope2EmissionIntensity = 0 pure</span><span class="t-line">UnitOfTotalScope1AndScope2EmissionIntensity = 0</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</details>
+
+<details class="trace-q" id="trace-E7">
+  <summary><strong>Essential 7</strong> · Does the entity have any project related to reducing Green House Gas emission? If Yes, then provide details.</summary>
+  <div class="table-wrap">
+    <table class="sebi trace-table">
+      <thead><tr><th>Row</th><th>FY 2021-22</th><th>FY 2020-21</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Answer</th><td><span class="t-shown">Yes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">DoesTheEntityHaveAnyProjectRelatedToReducingGreenHouseGasEmission = true</span></td><td><span class="missing">asked for the current year only</span></td></tr>
+        <tr><th scope="row">Details</th><td><span class="t-shown">Taking advantage of unoccupied offices due to employees working from home, retrofit proje…</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">DetailsOfProjectRelatedToReducingGreenHouseGasEmissionExplanatoryTextBlock = Taking advantage of unoccupied offices due to employees working from home, retrofit proje…</span></td><td><span class="missing">asked for the current year only</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</details>
+
+<details class="trace-q" id="trace-E8">
+  <summary><strong>Essential 8</strong> · Provide details related to waste management by the entity, in the following format:</summary>
+<p class="remark">The assurance answer was read from: WhetherAnyIndependentAssessmentOrEvaluationOrAssuranceHasBeenCarriedOutByAnExternalAgencyForWasteManagement, NameOfTheExternalAgencyThatUndertookIndependentAssessmentOrEvaluationOrAssuranceRelatedToWasteManagementExplanatoryTextBlock.</p>  <div class="table-wrap">
+    <table class="sebi trace-table">
+      <thead><tr><th>Row</th><th>FY 2021-22</th><th>FY 2020-21</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Plastic waste (A)</th><td><span class="t-shown">114.62 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">PlasticWaste = 114.62 pure</span></td><td><span class="t-shown">55.99 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">PlasticWaste = 55.99 pure</span></td></tr>
+        <tr><th scope="row">E-waste (B)</th><td><span class="t-shown">863.67 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">EWaste = 863.67 pure</span></td><td><span class="t-shown">361.94 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">EWaste = 361.94 pure</span></td></tr>
+        <tr><th scope="row">Bio-medical waste (C)</th><td><span class="t-shown">43.58 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">BioMedicalWaste = 43.58 pure</span></td><td><span class="t-shown">31.92 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">BioMedicalWaste = 31.92 pure</span></td></tr>
+        <tr><th scope="row">Construction and demolition waste (D)</th><td><span class="t-shown">3,087.65 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">ConstructionAndDemolitionWaste = 3087.65 pure</span></td><td><span class="t-shown">2,597.5 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">ConstructionAndDemolitionWaste = 2597.5 pure</span></td></tr>
+        <tr><th scope="row">Battery waste (E)</th><td><span class="t-shown">132.02 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">BatteryWaste = 132.02 pure</span></td><td><span class="t-shown">97.42 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">BatteryWaste = 97.42 pure</span></td></tr>
+        <tr><th scope="row">Radioactive waste (F)</th><td><span class="t-shown">0.008 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">RadioactiveWaste = 0.008 pure</span></td><td><span class="t-shown">0 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">RadioactiveWaste = 0 pure</span></td></tr>
+        <tr><th scope="row">Other Hazardous waste. Please specify, if any. (G)</th><td><span class="t-shown">55.11 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">OtherHazardousWaste = 55.11 pure</span></td><td><span class="t-shown">57.38 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">OtherHazardousWaste = 57.38 pure</span></td></tr>
+        <tr><th scope="row">Other Non-hazardous waste generated (H). Please specify, if any. (Break-up by composition i.e. by materials relevant to the sector)</th><td><span class="t-shown">6,882.24 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">OtherNonHazardousWasteGenerated = 6882.24 pure</span></td><td><span class="t-shown">6,097.6 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">OtherNonHazardousWasteGenerated = 6097.6 pure</span></td></tr>
+        <tr><th scope="row">Total (A + B + C + D + E + F + G + H)</th><td><span class="t-shown">11,178.9 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalWasteGenerated = 11178.898 pure</span></td><td><span class="t-shown">9,299.75 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalWasteGenerated = 9299.75 pure</span></td></tr>
+        <tr><th scope="row">(i) Recycled</th><td><span class="t-shown">9,512.77 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WasteRecoveredThroughRecycled = 9512.77 pure</span></td><td><span class="t-shown">6,116.46 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WasteRecoveredThroughRecycled = 6116.46 pure</span></td></tr>
+        <tr><th scope="row">(ii) Re-used</th><td><span class="t-shown">728.72 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WasteRecoveredThroughReUsed = 728.72 pure</span></td><td><span class="t-shown">332.65 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WasteRecoveredThroughReUsed = 332.65 pure</span></td></tr>
+        <tr><th scope="row">(iii) Other recovery operations</th><td><span class="t-shown">0 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WasteRecoveredThroughOtherRecoveryOperations = 0 pure</span></td><td><span class="t-shown">0 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WasteRecoveredThroughOtherRecoveryOperations = 0 pure</span></td></tr>
+        <tr><th scope="row">Total</th><td><span class="t-shown">10,241.49 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalWasteRecovered = 10241.49 pure</span></td><td><span class="t-shown">6,449.11 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalWasteRecovered = 6449.11 pure</span></td></tr>
+        <tr><th scope="row">(i) Incineration</th><td><span class="t-shown">49.88 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WasteDisposedByIncineration = 49.88 pure</span></td><td><span class="t-shown">39.89 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WasteDisposedByIncineration = 39.89 pure</span></td></tr>
+        <tr><th scope="row">(ii) Landfilling</th><td><span class="t-shown">886.18 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WasteDisposedByLandfilling = 886.18 pure</span></td><td><span class="t-shown">474.34 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WasteDisposedByLandfilling = 474.34 pure</span></td></tr>
+        <tr><th scope="row">(iii) Other disposal operations</th><td><span class="t-shown">0 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WasteDisposedByOtherDisposalOperations = 0 pure</span></td><td><span class="t-shown">0 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WasteDisposedByOtherDisposalOperations = 0 pure</span></td></tr>
+        <tr><th scope="row">Total</th><td><span class="t-shown">936.06 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalWasteDisposed = 936.06 pure</span></td><td><span class="t-shown">514.23 tonnes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalWasteDisposed = 514.23 pure</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</details>
+
+<details class="trace-q" id="trace-E9">
+  <summary><strong>Essential 9</strong> · Briefly describe the waste management practices adopted in your establishments. Describe the strategy adopted…</summary>
+  <div class="table-wrap">
+    <table class="sebi trace-table">
+      <thead><tr><th>Row</th><th>FY 2021-22</th><th>FY 2020-21</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Details</th><td><span class="t-shown">Our waste management approach is based on the philosophy of Reduce, Reuse and Recycle. We…</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">DetailsOfWasteManagementPracticesAdoptedInYourEstablishmentsAndTheStrategyAdoptedByCompanyToReduceUsageOfHazardousAndToxicChemicalsExplanatoryTextBlock = Our waste management approach is based on the philosophy of Reduce, Reuse and Recycle. We…</span></td><td><span class="missing">asked for the current year only</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</details>
+
+<details class="trace-q" id="trace-E10">
+  <summary><strong>Essential 10</strong> · If the entity has operations/offices in/around ecologically sensitive areas (such as national parks, wildlife…</summary>
+<p class="remark">The 1 row(s) of this table were read from: LocationOfOperationsOrOffices, ReasonsAndCorrectiveActionTakenIfTheConditionsOfEnvironmentalApprovalOrClearanceAreNotBeingCompliedWith, TypeOfOperations, WhetherTheConditionsOfEnvironmentalApprovalOrClearanceAreBeingCompliedWith.</p></details>
+
+<details class="trace-q" id="trace-E11">
+  <summary><strong>Essential 11</strong> · Details of environmental impact assessments of projects undertaken by the entity based on applicable laws, in…</summary>
+<p class="remark">The 1 row(s) of this table were read from: DateOfEnvironmentalImpactAssessments, EIANotificationNumber, NameAndBriefDetailsOfProject, ResultsCommunicatedInPublicDomainP6, WhetherConductedByIndependentExternalAgencyP6.</p></details>
+
+<details class="trace-q" id="trace-E12">
+  <summary><strong>Essential 12</strong> · Is the entity compliant with the applicable environmental law/ regulations/ guidelines in India; such as the…</summary>
+  <div class="table-wrap">
+    <table class="sebi trace-table">
+      <thead><tr><th>Row</th><th>FY 2021-22</th><th>FY 2020-21</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Answer</th><td><span class="t-shown">Yes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">IsTheEntityCompliantWithTheApplicableEnvironmentalLaw = true</span></td><td><span class="missing">asked for the current year only</span></td></tr>
+        <tr><th scope="row">Details</th><td><span class="t-shown missing">Not reported</span>
+<span class="t-status">Not reported</span>
+<span class="t-line">Not found in the filing. Elements looked for: TheEntityHasNotApplicableEnvironmentalLawExplanatoryTextBlock.</span></td><td><span class="missing">asked for the current year only</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</details>
+
+<details class="trace-q" id="trace-L1">
+  <summary><strong>Leadership 1</strong> · Provide break-up of the total energy consumed (in Joules or multiples) from renewable and non-renewable sourc…</summary>
+<p class="remark">The assurance answer was read from: WhetherAnyIndependentAssessmentOrEvaluationOrAssuranceHasBeenCarriedOutByAnExternalAgencyForEnergyConsumptionUnderLeadershipIndicators, NameOfTheExternalAgencyThatUndertookIndependentAssessmentOrEvaluationOrAssuranceForEnergyConsumptionExplanatoryTextBlock.</p>  <div class="table-wrap">
+    <table class="sebi trace-table">
+      <thead><tr><th>Row</th><th>FY 2021-22</th><th>FY 2020-21</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Total electricity consumption (A)</th><td><span class="t-shown">2,66,119 (unit not stated)</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalElectricityConsumptionFromRenewableSources = 266119 pure</span></td><td><span class="t-shown">2,87,014 (unit not stated)</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalElectricityConsumptionFromRenewableSources = 287014 pure</span></td></tr>
+        <tr><th scope="row">Total fuel consumption (B)</th><td><span class="t-shown">0 (unit not stated)</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalFuelConsumptionFromRenewableSources = 0 pure</span></td><td><span class="t-shown">0 (unit not stated)</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalFuelConsumptionFromRenewableSources = 0 pure</span></td></tr>
+        <tr><th scope="row">Energy consumption through other sources (C)</th><td><span class="t-shown">0 (unit not stated)</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">EnergyConsumptionThroughOtherSourcesFromRenewableSources = 0 pure</span></td><td><span class="t-shown">0 (unit not stated)</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">EnergyConsumptionThroughOtherSourcesFromRenewableSources = 0 pure</span></td></tr>
+        <tr><th scope="row">Total energy consumed from renewable sources (A+B+C)</th><td><span class="t-shown">2,66,119 (unit not stated)</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalEnergyConsumedFromRenewableSources = 266119 pure</span></td><td><span class="t-shown">2,87,014 (unit not stated)</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalEnergyConsumedFromRenewableSources = 287014 pure</span></td></tr>
+        <tr><th scope="row">Total electricity consumption (D)</th><td><span class="t-shown">3,48,944 (unit not stated)</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalElectricityConsumptionFromNonRenewableSources = 348944 pure</span></td><td><span class="t-shown">3,39,297 (unit not stated)</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalElectricityConsumptionFromNonRenewableSources = 339297 pure</span></td></tr>
+        <tr><th scope="row">Total fuel consumption (E)</th><td><span class="t-shown">35,413 (unit not stated)</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalFuelConsumptionFromNonRenewableSources = 35413 pure</span></td><td><span class="t-shown">45,349 (unit not stated)</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalFuelConsumptionFromNonRenewableSources = 45349 pure</span></td></tr>
+        <tr><th scope="row">Energy consumption through other sources (F)</th><td><span class="t-shown">0 (unit not stated)</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">EnergyConsumptionThroughOtherSourcesFromNonRenewableSources = 0 pure</span></td><td><span class="t-shown">0 (unit not stated)</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">EnergyConsumptionThroughOtherSourcesFromNonRenewableSources = 0 pure</span></td></tr>
+        <tr><th scope="row">Total energy consumed from non-renewable sources (D+E+F)</th><td><span class="t-shown">3,84,357 (unit not stated)</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalEnergyConsumedFromNonRenewableSources = 384357 pure</span></td><td><span class="t-shown">3,84,646 (unit not stated)</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalEnergyConsumedFromNonRenewableSources = 384646 pure</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</details>
+
+<details class="trace-q" id="trace-L2">
+  <summary><strong>Leadership 2</strong> · Provide the following details related to water discharged:</summary>
+<p class="remark">The assurance answer was read from: WhetherAnyIndependentAssessmentOrEvaluationOrAssuranceHasBeenCarriedOutByAnExternalAgencyForWaterDischarged, NameOfTheExternalAgencyThatUndertookIndependentAssessmentOrEvaluationOrAssuranceForWaterDischargedExplanatoryTextBlock.</p>  <div class="table-wrap">
+    <table class="sebi trace-table">
+      <thead><tr><th>Row</th><th>FY 2021-22</th><th>FY 2020-21</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">(i) To Surface water</th><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToSurfaceWater = 0 pure</span></td><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToSurfaceWater = 0 pure</span></td></tr>
+        <tr><th scope="row">- No treatment</th><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToSurfaceWaterWithOutTreatment = 0 pure</span></td><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToSurfaceWaterWithOutTreatment = 0 pure</span></td></tr>
+        <tr><th scope="row">- With treatment – please specify level of treatment</th><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToSurfaceWaterWithTreatment = 0 pure</span></td><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToSurfaceWaterWithTreatment = 0 pure</span></td></tr>
+        <tr><th scope="row">(ii) To Groundwater</th><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToGroundwater = 0 pure</span></td><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToGroundwater = 0 pure</span></td></tr>
+        <tr><th scope="row">- No treatment</th><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToGroundwaterWithOutTreatment = 0 pure</span></td><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToGroundwaterWithOutTreatment = 0 pure</span></td></tr>
+        <tr><th scope="row">- With treatment – please specify level of treatment</th><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToGroundwaterWithTreatment = 0 pure</span></td><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToGroundwaterWithTreatment = 0 pure</span></td></tr>
+        <tr><th scope="row">(iii) To Seawater</th><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToSeawater = 0 pure</span></td><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToSeawater = 0 pure</span></td></tr>
+        <tr><th scope="row">- No treatment</th><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToSeawaterWithOutTreatment = 0 pure</span></td><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToSeawaterWithOutTreatment = 0 pure</span></td></tr>
+        <tr><th scope="row">- With treatment – please specify level of treatment</th><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToSeawaterWithTreatment = 0 pure</span></td><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToSeawaterWithTreatment = 0 pure</span></td></tr>
+        <tr><th scope="row">(iv) Sent to third-parties</th><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeBySentToThirdParties = 0 pure</span></td><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeBySentToThirdParties = 0 pure</span></td></tr>
+        <tr><th scope="row">- No treatment</th><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeBySentToThirdPartiesWithoutTreatment = 0 pure</span></td><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeBySentToThirdPartiesWithoutTreatment = 0 pure</span></td></tr>
+        <tr><th scope="row">- With treatment – please specify level of treatment</th><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeBySentToThirdPartiesWithTreatment = 0 pure</span></td><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeBySentToThirdPartiesWithTreatment = 0 pure</span></td></tr>
+        <tr><th scope="row">(v) Others</th><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToOthers = 0 pure</span></td><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToOthers = 0 pure</span></td></tr>
+        <tr><th scope="row">- No treatment</th><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToOthersWithoutTreatment = 0 pure</span></td><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToOthersWithoutTreatment = 0 pure</span></td></tr>
+        <tr><th scope="row">- With treatment – please specify level of treatment</th><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToOthersWithTreatment = 0 pure</span></td><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">WaterDischargeToOthersWithTreatment = 0 pure</span></td></tr>
+        <tr><th scope="row">Total water discharged (in kilolitres)</th><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalWaterDischargedInKilolitres = 0 pure</span></td><td><span class="t-shown">0 kL</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalWaterDischargedInKilolitres = 0 pure</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</details>
+
+<details class="trace-q" id="trace-L3">
+  <summary><strong>Leadership 3</strong> · Water withdrawal, consumption and discharge in areas of water stress (in kilolitres): For each facility / pla…</summary>
+<p class="remark">The structured filing lists no facility in an area of water stress.</p><p class="remark">The assurance answer was read from: IndicateIfAnyIndependentAssessmentOrEvaluationOrAssuranceHasBeenCarriedOutByAnExternalAgencyForAreasOfWaterStress, NameOfTheExternalAgencyIfAnyIndependentAssessmentOrEvaluationOrAssuranceHasBeenCarriedOutByAnExternalAgencyForAreasOfWaterStressExplanatoryTextBlock.</p></details>
+
+<details class="trace-q" id="trace-L4">
+  <summary><strong>Leadership 4</strong> · Please provide details of total Scope 3 emissions &amp; its intensity, in the following format:</summary>
+<p class="remark">The assurance answer was read from: WhetherAnyIndependentAssessmentOrEvaluationOrAssuranceHasBeenCarriedOutByAnExternalAgencyForTotalScope3Emissions, NameOfTheExternalAgencyThatUndertookIndependentAssessmentOrEvaluationOrAssuranceForTotalScope3EmissionsExplanatoryTextBlock.</p>  <div class="table-wrap">
+    <table class="sebi trace-table">
+      <thead><tr><th>Row</th><th>FY 2021-22</th><th>FY 2020-21</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Total Scope 3 emissions (Break-up of the GHG into CO2, CH4, N2O, HFCs, PFCs, SF6, NF3, if available)</th><td><span class="t-shown">1,83,595 tCO2e</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalScope3Emissions = 1,83,595</span><span class="t-line">UnitOfTotalScope3Emissions = tCO2e</span></td><td><span class="t-shown">2,13,514 tCO2e</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalScope3Emissions = 2,13,514</span><span class="t-line">UnitOfTotalScope3Emissions = tCO2e</span></td></tr>
+        <tr><th scope="row">Total Scope 3 emissions per rupee of turnover</th><td><span class="t-shown">1.51 tCO2e / cr INR</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalScope3EmissionsPerRupeeOfTurnover = 1.51</span><span class="t-line">UnitOfTotalScope3EmissionsPerRupeeOfTurnover = tCO2e / cr INR</span></td><td><span class="t-shown">2.13 tCO2e / cr INR</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalScope3EmissionsPerRupeeOfTurnover = 2.13</span><span class="t-line">UnitOfTotalScope3EmissionsPerRupeeOfTurnover = tCO2e / cr INR</span></td></tr>
+        <tr><th scope="row">Total Scope 3 emission intensity (optional) – the relevant metric may be selected by the entity</th><td><span class="t-shown">0 (unit not stated)</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalScope3EmissionIntensity = 0</span><span class="t-line">UnitOfTotalScope3EmissionIntensity = 0</span></td><td><span class="t-shown">0 (unit not stated)</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">TotalScope3EmissionIntensity = 0</span><span class="t-line">UnitOfTotalScope3EmissionIntensity = 0</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</details>
+
+<details class="trace-q" id="trace-L5">
+  <summary><strong>Leadership 5</strong> · With respect to the ecologically sensitive areas reported at Question 10 of Essential Indicators above, provi…</summary>
+  <div class="table-wrap">
+    <table class="sebi trace-table">
+      <thead><tr><th>Row</th><th>FY 2021-22</th><th>FY 2020-21</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Details</th><td><span class="t-shown">NA</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">DetailsOfSignificantDirectAndIndirectImpactOfTheEntityOnBiodiversityInSuchAreasAlongWithPreventionAndRemediationActivitiesExplanatoryTextBlock = NA</span></td><td><span class="missing">asked for the current year only</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</details>
+
+<details class="trace-q" id="trace-L6">
+  <summary><strong>Leadership 6</strong> · If the entity has undertaken any specific initiatives or used innovative technology or solutions to improve r…</summary>
+<p class="remark">The 1 row(s) of this table were read from: InitiativeUndertaken, OutcomeOfTheInitiative.</p></details>
+
+<details class="trace-q" id="trace-L7">
+  <summary><strong>Leadership 7</strong> · Does the entity have a business continuity and disaster management plan? Give details in 100 words/ web link.</summary>
+  <div class="table-wrap">
+    <table class="sebi trace-table">
+      <thead><tr><th>Row</th><th>FY 2021-22</th><th>FY 2020-21</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Answer</th><td><span class="t-shown">Yes</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">DoesTheEntityHaveABusinessContinuityAndDisasterManagementPlan = true</span></td><td><span class="missing">asked for the current year only</span></td></tr>
+        <tr><th scope="row">Details</th><td><span class="t-shown">Infosys has a highly resilient Business Continuity Management System (BCMS) called Phoeni…</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">DisclosureWebLinkOfEntityAtWhichBusinessContinuityAndDisasterManagementPlanIsPlaced = Infosys has a highly resilient Business Continuity Management System (BCMS) called Phoeni…</span></td><td><span class="missing">asked for the current year only</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</details>
+
+<details class="trace-q" id="trace-L8">
+  <summary><strong>Leadership 8</strong> · Disclose any significant adverse impact to the environment, arising from the value chain of the entity. What…</summary>
+  <div class="table-wrap">
+    <table class="sebi trace-table">
+      <thead><tr><th>Row</th><th>FY 2021-22</th><th>FY 2020-21</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Details</th><td><span class="t-shown">None</span>
+<span class="t-status">Reported by the company</span>
+<span class="t-line">DiscloseAnySignificantAdverseImpactToTheEnvironmentArisingFromTheValueChainOfTheEntityWhatMitigationOrAdaptationMeasuresHaveBeenTakenByTheEntityInThisRegardExplanatoryTextBlock = None</span></td><td><span class="missing">asked for the current year only</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</details>
+
+<details class="trace-q" id="trace-L9">
+  <summary><strong>Leadership 9</strong> · Percentage of value chain partners (by value of business done with such partners) that were assessed for envi…</summary>
+  <div class="table-wrap">
+    <table class="sebi trace-table">
+      <thead><tr><th>Row</th><th>FY 2021-22</th><th>FY 2020-21</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Percentage</th><td><span class="t-shown">40 %</span>
+<span class="t-status">Unit changed by us</span>
+<span class="t-line">PercentageOfValueChainPartnersByValueOfBusinessDoneWithSuchPartnersThatWereAssessedForEnvironmentalImpacts = 0.4 pure</span><span class="t-note">Filed as the fraction 0.4; shown as a percentage.</span></td><td><span class="missing">asked for the current year only</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</details>
+
+  </section>
+</main>
+
+<footer>
+  Source: the company's BRSR filing on NSE (structured XBRL file BR_INFY_2021_2022_20220800145.xml). Every figure comes from that filing (the last section
+  of the SEBI tab shows where each number was read); values we converted, calculated or doubt are marked. Generated from the May 2021 SEBI BRSR format, Principle 6.
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,510 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ICICI Bank Limited vs Tata Steel Limited: BRSR Principle 6 compared, FY 2024-25</title>
+<style>
+/* Styles for the generated report page. Everything is inline in the HTML so the page opens anywhere, offline. */
+:root {
+  --ink: #1d2733;
+  --muted: #5d6b7a;
+  --paper: #ffffff;
+  --page: #f3f5f7;
+  --line: #d5dce3;
+  --accent: #0f6b5c;
+  --accent-soft: #e3f1ee;
+  --head-bg: #e8eef2;
+  --warn-ink: #7a4b00;
+  --warn-bg: #fff3d4;
+  --warn-line: #e5b84a;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--page); color: var(--ink); font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+a { color: var(--accent); }
+
+/* ---------- page header ---------- */
+.page-header { background: var(--accent); color: #fff; padding: 18px 16px 24px; }
+.page-header .inner, main, footer { max-width: 1120px; margin: 0 auto; }
+.eyebrow { margin: 0 0 4px; font-size: 0.85rem; letter-spacing: 0.04em; text-transform: uppercase; opacity: 0.9; }
+h1 { margin: 0; font-size: 1.7rem; line-height: 1.2; }
+h1 .symbol { font-weight: 400; opacity: 0.85; }
+.subtitle { margin: 4px 0 0; opacity: 0.95; }
+
+/* ---------- facts box ---------- */
+.facts-box { background: var(--paper); border: 1px solid var(--line); border-radius: 8px; margin: -14px 16px 18px; padding: 14px 18px; max-width: 1088px; }
+@media (min-width: 1152px) { .facts-box { margin-left: auto; margin-right: auto; } }
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 10px 24px; margin: 0; }
+.facts div { min-width: 0; }
+.facts dt { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
+.facts dd { margin: 0; overflow-wrap: anywhere; }
+.facts dd.source a { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }       /* the long file name stays on one line (the whole name is in the tooltip and in the footer) */
+.boundary { font-weight: 700; }
+.boundary-help { display: block; font-size: 0.82rem; color: var(--muted); font-weight: 400; }
+.legend { margin: 12px 0 0; font-size: 0.9rem; color: var(--muted); }
+.callout { margin: 12px 0 0; padding: 10px 14px; background: var(--warn-bg); border: 1px solid var(--warn-line); border-left-width: 5px; border-radius: 6px; color: var(--warn-ink); font-size: 0.92rem; }
+
+/* ---------- tabs (CSS only: no JavaScript) ---------- */
+main { padding: 0 16px 32px; }
+main > input[type="radio"] { position: absolute; opacity: 0; pointer-events: none; }
+main > label { display: inline-block; padding: 9px 18px; margin-right: 6px; border: 1px solid var(--line); border-bottom: none; border-radius: 8px 8px 0 0; background: var(--head-bg); cursor: pointer; font-weight: 600; }
+#view-sebi:checked ~ label[for="view-sebi"], #view-dashboard:checked ~ label[for="view-dashboard"] { background: var(--paper); color: var(--accent); box-shadow: inset 0 3px 0 var(--accent); }
+main > input:focus-visible + label { outline: 3px solid #1a73e8; outline-offset: 2px; }
+.panel { display: none; background: var(--paper); border: 1px solid var(--line); border-radius: 0 8px 8px 8px; padding: 20px 22px 28px; }
+#view-sebi:checked ~ .panel-sebi, #view-dashboard:checked ~ .panel-dashboard { display: block; }
+
+/* ---------- SEBI view ---------- */
+.principle-title { margin: 0 0 4px; font-size: 1.1rem; color: var(--accent); }
+.principle-sub { margin: 0 0 8px; color: var(--muted); font-size: 0.92rem; }
+h2.section { margin: 30px 0 4px; padding-bottom: 6px; border-bottom: 3px solid var(--accent); font-size: 1.25rem; }
+article.question { margin: 26px 0 0; padding-top: 6px; }
+article.question h3 { margin: 0 0 10px; font-size: 1rem; font-weight: 600; line-height: 1.45; }
+.qnum { display: inline-block; min-width: 1.8em; color: var(--accent); }
+
+.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 6px; }
+table.sebi { width: 100%; min-width: 620px; border-collapse: collapse; font-size: 0.93rem; }
+table.sebi th, table.sebi td { padding: 7px 10px; border-bottom: 1px solid var(--line); vertical-align: top; text-align: left; }
+table.sebi thead th { background: var(--head-bg); font-weight: 600; }
+table.sebi thead th small { font-weight: 400; color: var(--muted); display: block; }
+table.sebi tbody th[scope="row"] { font-weight: 400; width: 46%; }
+table.sebi tr.subhead th { background: #f3f6f8; font-weight: 600; }
+table.sebi tbody tr:last-child th, table.sebi tbody tr:last-child td { border-bottom: none; }
+table.sebi td.val, table.sebi th.valhead { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+table.sebi td.unit-col { color: var(--muted); white-space: nowrap; }
+table.list td { text-align: left; white-space: normal; overflow-wrap: anywhere; }
+
+.num { font-variant-numeric: tabular-nums; }
+.unit { color: var(--muted); font-size: 0.85em; margin-left: 5px; }
+.unit-unknown { font-style: italic; }
+.missing { color: var(--muted); font-style: italic; }
+td.missing { background: #fafbfc; }
+
+/* marks: words and symbols, never colour alone */
+.tag { display: inline-block; margin-left: 4px; padding: 0 5px; border-radius: 3px; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.02em; vertical-align: middle; }
+.tag-calculated { border: 1px solid #3b6ea8; color: #24507f; background: #eaf2fb; }
+.tag-converted { border: 1px solid #7a5aa6; color: #573a82; background: #f1ecf8; }
+sup.fn { margin-left: 2px; font-size: 0.7rem; }
+sup.fn a { text-decoration: none; font-weight: 700; padding: 0 1px; }
+sup.fn-warn a { color: var(--warn-ink); }
+
+ul.footnotes { list-style: none; margin: 8px 0 0; padding: 0; font-size: 0.85rem; color: var(--muted); }
+ul.footnotes li { margin: 3px 0; padding-left: 1.8em; text-indent: -1.8em; }
+ul.footnotes .fn-num { display: inline-block; min-width: 1.4em; font-weight: 700; text-indent: 0; }
+ul.footnotes li.warning { color: var(--warn-ink); background: var(--warn-bg); border-radius: 4px; padding: 3px 8px 3px 2.4em; }
+
+.answer-box { border-left: 4px solid var(--accent-soft); padding: 2px 0 2px 14px; }
+.answer-box p { margin: 4px 0; }
+.details { white-space: pre-line; margin: 4px 0 0; }
+.assurance { margin: 10px 0 0; font-size: 0.88rem; }
+.sebi-note { color: var(--muted); }
+.remark { margin: 10px 0 0; padding: 7px 12px; background: var(--accent-soft); border-radius: 6px; font-size: 0.86rem; }
+.facility { margin: 16px 0 6px; }
+.facility h4 { margin: 0 0 6px; font-size: 0.95rem; }
+
+.placeholder { color: var(--muted); font-style: italic; }
+footer { padding: 4px 16px 40px; color: var(--muted); font-size: 0.85rem; }
+
+/* phones: let the tables fit the screen (units drop under the number, cells may wrap) instead of forcing a sideways swipe */
+@media (max-width: 640px) {
+  .panel { padding: 14px 12px 22px; }
+  table.sebi { min-width: 0; table-layout: fixed; font-size: 0.8rem; }
+  table.sebi th, table.sebi td { padding: 6px 4px; overflow-wrap: anywhere; }
+  table.sebi thead th:first-child { width: 36%; }               /* parameter column; the other columns share the rest */
+  table.sebi.has-unit thead th:nth-child(2) { width: 15%; }     /* the Unit column of E5, E6, L4 */
+  table.sebi th.valhead { white-space: normal; }
+  table.sebi td.val { white-space: normal; }
+  table.sebi td.val .unit { display: block; margin-left: 0; }
+  table.sebi td.unit-col { white-space: normal; }
+  table.sebi thead th small { font-size: 0.68rem; }
+  table.sebi.list { table-layout: auto; min-width: 560px; }     /* list tables have many columns: these may still scroll sideways */
+}
+
+@media print {
+  body { background: #fff; }
+  main > input, main > label { display: none; }
+  .panel { display: block !important; border: none; padding: 0; }
+  .panel-dashboard { display: none !important; }
+  .table-wrap { overflow: visible; }
+}
+
+/* ---- the trace from every number to the filing (templates/trace.html) ---- */
+.trace-steps { margin: 6px 0 12px 20px; padding: 0; color: var(--muted); font-size: 0.92rem; }
+.trace-source { background: var(--paper); border: 1px solid var(--line); border-radius: 8px; padding: 12px 16px; margin: 0 0 12px; }
+details.trace-q { background: var(--paper); border: 1px solid var(--line); border-radius: 6px; margin: 8px 0; padding: 0 12px; }
+details.trace-q > summary { cursor: pointer; padding: 9px 0; font-size: 0.95rem; }
+details.trace-q[open] > summary { border-bottom: 1px solid var(--line); margin-bottom: 8px; }
+details.trace-q .table-wrap { margin-bottom: 12px; }
+table.trace-table { width: 100%; min-width: 620px; table-layout: fixed; }
+table.trace-table th[scope="row"] { width: 30%; font-weight: 400; }
+table.trace-table th:not([scope]) { width: 35%; }
+.t-shown { display: block; font-weight: 600; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.t-status { display: block; font-size: 0.78rem; color: var(--accent); }
+.t-line { display: block; margin-top: 3px; font-family: ui-monospace, Consolas, monospace; font-size: 0.76rem; color: var(--muted); overflow-wrap: anywhere; }
+.t-note { display: block; margin-top: 3px; font-size: 0.78rem; font-style: italic; color: var(--muted); }details.trace-q .remark { overflow-wrap: anywhere; }/* The Dashboard tab.  Every rule starts with .dash so it can never change how the SEBI tab looks. */
+.dash {
+  --good-ink: #0b6b4f; --good-bg: #e0f3ec; --good-line: #86c9b3;
+  --bad-ink: #9a3608;  --bad-bg: #fde9dc;  --bad-line: #eba67d;
+  --same-ink: #46525f; --same-bg: #eceff2; --same-line: #b9c3cc;
+}
+/* the tab panel itself: no white box, so the white cards stand out on the page colour */
+.panel-dashboard { background: var(--page); border: none; padding: 0; }
+#view-dashboard:checked ~ label[for="view-dashboard"] { background: var(--page); }
+
+/* ---- jump menu ---- */
+.dash .jump { position: sticky; top: 0; z-index: 5; background: var(--paper); border-bottom: 1px solid var(--line); border-radius: 0 8px 0 0; }
+.dash .jump ul { list-style: none; margin: 0; padding: 0 6px; display: flex; gap: 2px; overflow-x: auto; white-space: nowrap; }
+.dash .jump a { display: block; padding: 10px 12px; text-decoration: none; font-weight: 600; font-size: .92rem; color: var(--ink); border-bottom: 3px solid transparent; }
+.dash .jump a:hover, .dash .jump a:focus-visible { border-bottom-color: var(--accent); color: var(--accent); outline: none; }
+
+/* ---- chips: words and symbols, never colour alone ---- */
+.dash .chip { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: .8rem; font-weight: 700; border: 1px solid; white-space: nowrap; }
+.dash .chip-good { color: var(--good-ink); background: var(--good-bg); border-color: var(--good-line); }
+.dash .chip-bad { color: var(--bad-ink); background: var(--bad-bg); border-color: var(--bad-line); }
+.dash .chip-same { color: var(--same-ink); background: var(--same-bg); border-color: var(--same-line); }
+.dash .chip-unsure { color: var(--same-ink); background: #fff; border-color: var(--same-line); border-style: dashed; }
+.dash .chip-warn { color: var(--warn-ink); background: var(--warn-bg); border-color: var(--warn-line); }
+
+/* ---- at a glance ---- */
+.dash .glance { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 20px 22px; margin: 18px 0; }
+.dash .glance h2 { margin: 0 0 6px; font-size: 1.35rem; }
+.dash .story { font-size: 1.06rem; margin: 0 0 14px; }
+.dash .score { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 16px; align-items: center; }
+.dash .score .lbl { color: var(--muted); font-size: .9rem; margin-right: 4px; }
+.dash .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(136px, 1fr)); gap: 10px; }
+.dash .tile { display: block; text-decoration: none; color: inherit; border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; background: #fbfcfd; }
+.dash .tile:hover, .dash .tile:focus-visible { border-color: var(--accent); outline: none; box-shadow: 0 0 0 2px var(--accent-soft); }
+.dash .t-name { display: flex; align-items: center; gap: 6px; font-weight: 700; margin-bottom: 6px; }
+.dash .t-name svg { width: 20px; height: 20px; color: var(--accent); flex: none; }
+.dash .t-stat { display: block; font-size: .82rem; color: var(--muted); margin-top: 6px; }
+.dash .fairness { margin: 14px 0 0; padding: 9px 12px; background: var(--accent-soft); border-radius: 8px; font-size: .88rem; }
+
+/* ---- topic sections ---- */
+.dash .topic { margin: 34px 0 0; scroll-margin-top: 52px; }
+.dash .topic-head { display: flex; align-items: center; gap: 10px; border-bottom: 3px solid var(--accent); padding-bottom: 6px; }
+.dash .topic-head svg { width: 30px; height: 30px; color: var(--accent); flex: none; }
+.dash .topic-head h2 { margin: 0; font-size: 1.4rem; }
+.dash .topic-head .src { margin-left: auto; font-size: .78rem; color: var(--muted); text-align: right; }
+.dash .plain { margin: 10px 0 4px; color: var(--muted); }
+.dash .headline { margin: 6px 0 14px; padding: 10px 14px; background: var(--paper); border-left: 5px solid var(--accent); border-radius: 0 8px 8px 0; font-size: 1.05rem; font-weight: 600; }
+
+/* ---- cards ---- */
+.dash .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 14px; }
+.dash .minis { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 12px; margin-top: 12px; }
+.dash .card, .dash .mini { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.dash .card.doubtful, .dash .mini.doubtful { border: 2px dashed var(--warn-line); background: #fffdf6; }
+.dash .card.empty, .dash .mini.empty { background: #fafbfc; border-style: dashed; }
+.dash .card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+.dash .card h3, .dash .mini h3 { margin: 0; font-size: 1rem; line-height: 1.3; }
+.dash .name { display: block; font-size: .76rem; font-weight: 400; color: var(--muted); }
+.dash .better { font-size: .74rem; color: var(--muted); border: 1px solid var(--line); border-radius: 4px; padding: 1px 6px; white-space: nowrap; }
+.dash .big { margin: 0; line-height: 1.1; }
+.dash .big .v { font-size: 2.1rem; font-weight: 700; letter-spacing: -.01em; }
+.dash .big .u { font-size: 1rem; color: var(--muted); margin-left: 4px; }
+.dash .mini .big .v { font-size: 1.55rem; }
+.dash .big.none .v { font-size: 1.3rem; font-weight: 600; color: var(--muted); font-style: italic; }
+.dash .doubtful .big .v { color: var(--warn-ink); }       /* a doubtful number must not look as sure as a good one */
+.dash .trend { margin: 0; font-size: .93rem; display: flex; flex-wrap: wrap; gap: 6px 8px; align-items: center; }
+.dash .caveat { margin: 0; font-size: .8rem; color: var(--muted); }
+.dash .bars { display: grid; gap: 4px; }
+.dash .bar-row { display: grid; grid-template-columns: 78px 1fr 64px; gap: 8px; align-items: center; font-size: .78rem; color: var(--muted); }
+.dash .bar-row .bv { text-align: right; font-variant-numeric: tabular-nums; }
+.dash .bar { display: block; height: 10px; background: #edf0f3; border-radius: 5px; overflow: hidden; }
+.dash .bar i { display: block; height: 100%; min-width: 3px; background: var(--accent); border-radius: 5px; }
+.dash .bar-row.prev .bar i { background: #9fb0bd; }
+.dash .what, .dash .why { margin: 0; font-size: .88rem; }
+.dash .what b, .dash .why b { color: var(--ink); }
+.dash .why { color: var(--muted); }
+.dash .alert { margin: 0; padding: 7px 10px; background: var(--warn-bg); border: 1px solid var(--warn-line); border-left-width: 5px; border-radius: 6px; color: var(--warn-ink); font-size: .86rem; }
+.dash .alert.shared { margin-top: 12px; }
+.dash details.fine { font-size: .84rem; color: var(--muted); border-top: 1px dashed var(--line); padding-top: 6px; }
+.dash details.fine summary { cursor: pointer; font-weight: 600; color: var(--accent); }
+.dash details.fine p { margin: 6px 0 0; }
+.dash .badge { font-size: .76rem; color: var(--muted); margin: auto 0 0; padding-top: 2px; }
+
+/* ---- "where does it come from / go" bars ---- */
+.dash figure.stack { margin: 16px 0 0; background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; }
+.dash figure.stack figcaption { font-weight: 700; margin-bottom: 8px; }
+.dash .stack-bar { display: flex; height: 22px; border-radius: 6px; overflow: hidden; background: #edf0f3; }
+.dash .stack-bar span { display: block; height: 100%; min-width: 3px; }
+.dash .key { list-style: none; margin: 10px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(310px, 1fr)); gap: 5px 22px; font-size: .88rem; }
+.dash .key li { display: grid; grid-template-columns: 12px 3.6em 1fr; gap: 0 8px; align-items: baseline; }
+.dash .key .sw { width: 12px; height: 12px; border-radius: 3px; transform: translateY(1px); }
+.dash .key .pct { font-weight: 700; text-align: right; }
+.dash .key .amt { color: var(--muted); }
+.dash .stack-note { margin: 8px 0 0; font-size: .84rem; color: var(--muted); }
+.dash .c1 { background: #0f6b5c; } .dash .c2 { background: #3b6ea8; } .dash .c3 { background: #7a5aa6; } .dash .c4 { background: #8fc1e3; } .dash .c5 { background: #9aa7b3; }
+.dash .g1 { background: #0f6b5c; } .dash .g2 { background: #5fb9a5; } .dash .g3 { background: #a9ddd0; }
+.dash .o1 { background: #e08a2e; } .dash .o2 { background: #8a5a2b; } .dash .o3 { background: #9aa7b3; }
+.dash .grey { background: #cfd6dc; }
+
+/* ---- safeguards ---- */
+.dash .safe { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 12px; }
+.dash .sg { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; }
+.dash .sg h3 { margin: 0; font-size: .98rem; line-height: 1.3; }
+.dash .sg .ans { margin: 0; }
+.dash .sg .what { color: var(--muted); }
+.dash .quote { margin: 6px 0 0; padding: 6px 10px; border-left: 3px solid var(--line); color: var(--ink); font-size: .85rem; overflow-wrap: anywhere; }
+
+/* ---- trust box + glossary ---- */
+.dash .box { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; margin-top: 12px; }
+.dash .trust-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; }
+.dash .box h3 { margin: 0 0 6px; font-size: 1rem; }
+.dash .box ul { margin: 6px 0 0; padding-left: 1.2em; }
+.dash .small { font-size: .84rem; color: var(--muted); }
+.dash dl.gloss { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 8px 28px; margin: 0; }
+.dash dl.gloss dt { font-weight: 700; }
+.dash dl.gloss dd { margin: 0 0 6px; color: var(--muted); font-size: .92rem; }
+
+/* wide screens: reserve two lines for titles so the big numbers line up across a row */
+@media (min-width: 700px) { .dash .card-top { min-height: 2.7em; } .dash .sg h3 { min-height: 2.6em; } }
+@media (max-width: 560px) {
+  .dash .topic-head { flex-wrap: wrap; }
+  .dash .topic-head .src { margin-left: 40px; flex-basis: 100%; text-align: left; }
+  .dash .big .v { font-size: 1.8rem; }
+  .dash .glance { padding: 16px 14px; }
+  .dash .bar-row { grid-template-columns: 70px 1fr 58px; }
+}
+
+/* ---- trace lines in a card's Fine print ---- */
+.dash .trace-head { margin: 8px 0 2px; }
+.dash .trace { margin: 2px 0; font-family: ui-monospace, Consolas, monospace; font-size: 0.76rem; color: var(--muted); overflow-wrap: anywhere; }/* The two-company comparison page.  It reuses the dashboard's chips, notes and headings; only the table and the two filing boxes are new. */
+.compare-main { max-width: 1280px; margin: 0 auto; padding: 0 16px 32px; }
+.compare-main .dash { margin-top: 4px; }
+.page-header .vs { font-weight: 400; opacity: 0.75; font-size: 0.75em; padding: 0 6px; }
+.dash .notes-list { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 8px; }
+.dash .note { padding: 9px 12px; background: var(--paper); border: 1px solid var(--line); border-left: 5px solid var(--same-line); border-radius: 6px; font-size: .92rem; }
+.dash .who { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; margin-top: 10px; }
+.dash .co-card { background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 12px 16px; min-width: 0; }
+.dash .co-card h3 { margin: 0 0 6px; font-size: 1.05rem; }
+.dash .co-card dl { margin: 0; display: grid; gap: 6px; }
+.dash .co-card dt { font-size: .75rem; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+.dash .co-card dd { margin: 0; overflow-wrap: anywhere; font-size: .92rem; }
+.dash .who-notes { margin: 14px 0 0; font-size: 1rem; }
+
+.swipe-hint { display: none; margin: 8px 0 0; font-size: .82rem; color: var(--muted); }
+@media (max-width: 700px) { .swipe-hint { display: block; } }
+.table-wrap { overflow-x: auto; background: var(--paper); border: 1px solid var(--line); border-radius: 10px; margin-top: 10px; }
+table.cmptable { width: 100%; min-width: 720px; border-collapse: collapse; font-size: .92rem; }
+table.cmptable th, table.cmptable td { padding: 9px 12px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+table.cmptable thead th { background: var(--head-bg); font-weight: 600; }
+table.cmptable thead th.co { width: 20%; }
+table.cmptable tbody tr:last-child th, table.cmptable tbody tr:last-child td { border-bottom: none; }
+table.cmptable tbody th { font-weight: 600; width: 28%; }
+table.cmptable .dir { display: block; font-weight: 400; font-size: .78rem; color: var(--muted); margin-top: 2px; }
+table.cmptable td.fig { font-variant-numeric: tabular-nums; }
+table.cmptable td.fig .num { font-size: 1.05rem; font-weight: 700; }
+table.cmptable td.fig .u { font-size: .8rem; color: var(--muted); }
+table.cmptable td.win { background: var(--accent-soft); }
+table.cmptable td.missing .num { font-weight: 400; font-style: italic; color: var(--muted); font-size: .95rem; }
+table.cmptable td.doubtful { background: var(--warn-bg); }
+table.cmptable .warn { color: var(--warn-ink); font-weight: 700; cursor: help; }
+table.cmptable tr.size { color: var(--muted); }
+table.cmptable tr.size td.fig .num { font-weight: 600; }
+table.cmptable td.res .detail { display: block; margin-top: 4px; font-size: .82rem; color: var(--muted); }</style>
+</head>
+<body>
+
+<header class="page-header">
+  <div class="inner">
+    <p class="eyebrow">Business Responsibility &amp; Sustainability Report · Principle 6 (environment) · two companies compared</p>
+    <h1>ICICI Bank <span class="vs">vs</span> Tata Steel</h1>
+    <p class="subtitle">Financial year 2024-25, the same year for both companies</p>
+  </div>
+</header>
+
+<main class="compare-main">
+<div class="dash">
+
+  <section class="glance" aria-labelledby="cmp-glance-h">
+    <h2 id="cmp-glance-h">Which company does better, on the measures that can be compared fairly?</h2>
+    <p class="story">We compared ICICI Bank and Tata Steel for FY 2024-25 on 6 fair measures (per ₹ 1 crore of sales, and shares): ICICI Bank is better on 3, Tata Steel is better on 1, 0 are about the same and 2 could not be compared. Totals are shown for size but not ranked.</p>
+    <p class="score"><span class="chip chip-good">✔ ICICI Bank better: 3</span><span class="chip chip-good">✔ Tata Steel better: 1</span><span class="chip chip-same">≈ about the same: 0</span><span class="chip chip-unsure">? could not compare: 2</span></p>
+  </section>
+
+  <section class="topic" aria-labelledby="cmp-who-h">
+    <div class="topic-head"><h2 id="cmp-who-h">The two filings</h2></div>
+    <div class="who">
+      <div class="co-card">
+        <h3>ICICI Bank Limited <span class="symbol">(ICICIBANK)</span></h3>
+        <dl>
+          <div><dt>Reporting boundary</dt><dd>Standalone basis</dd></div>
+          <div><dt>Filed on NSE</dt><dd>05-Aug-2025</dd></div>
+          <div><dt>Source file</dt><dd><a href="https://nsearchives.nseindia.com/corporate/xbrl/BRSR_1503412_05082025083000_WEB.xml" rel="noopener noreferrer" target="_blank">BRSR_1503412_05082025083000_WEB.xml</a></dd></div>
+        </dl>
+      </div>
+      <div class="co-card">
+        <h3>Tata Steel Limited <span class="symbol">(TATASTEEL)</span></h3>
+        <dl>
+          <div><dt>Reporting boundary</dt><dd>Standalone basis</dd></div>
+          <div><dt>Filed on NSE</dt><dd>24-Jun-2025</dd></div>
+          <div><dt>Source file</dt><dd><a href="https://nsearchives.nseindia.com/corporate/xbrl/BRSR_1470548_24062025065142_WEB.xml" rel="noopener noreferrer" target="_blank">BRSR_1470548_24062025065142_WEB.xml</a></dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section class="topic" aria-labelledby="cmp-fair-h">
+    <div class="topic-head"><h2 id="cmp-fair-h">How we compare fairly</h2></div>
+    <ul class="notes-list">
+<li class="note">Both companies are read for the same financial year, each from its own filing on NSE.</li><li class="note">Totals (energy, water, waste, emissions) depend on how big a company is, so they are shown but not ranked. The fair measures are the figure per ₹ 1 crore of sales and the shares (renewable energy, recycled waste): only these get a “lower” or “higher” verdict.</li><li class="note">“Better” means lower for energy, greenhouse gases, water and waste per ₹ of sales, and higher for the renewable and recycled shares. Within 1% (for a share: half a percentage point) counts as “about the same”.</li><li class="note">Every figure is in one standard unit (GJ, kL, tonnes, tCO₂e), and the two numbers in a row use the same scale. A figure whose unit a company did not state is shown as filed but not compared.</li><li class="note">A figure a company did not report is shown as “Not reported”, never as 0, and that row is not compared. A figure that looks doubtful, or is rounded too coarsely, is shown as filed but not compared.</li><li class="note">Companies in different industries use energy, water and materials very differently, so a lower figure is not by itself a sign of better effort. Nothing is rated against a benchmark or a legal limit: the filings contain none.</li>    </ul>
+  </section>
+
+  <section class="topic" id="cmp-energy" aria-labelledby="cmp-energy-h">
+    <div class="topic-head"><h2 id="cmp-energy-h">Energy</h2></div>
+    <p class="swipe-hint">On a phone the table scrolls sideways: swipe to see every column.</p>
+    <div class="table-wrap">
+      <table class="cmptable">
+        <thead><tr><th scope="col">Figure</th><th scope="col" class="co">ICICI Bank</th><th scope="col" class="co">Tata Steel</th><th scope="col">Result</th></tr></thead>
+        <tbody>
+          <tr class="size">
+            <th scope="row">Total energy used<span class="dir">a total: shown for size, not ranked</span></th>
+            <td class="fig "><span class="num">9,67,846</span> <span class="u">GJ</span></td>
+            <td class="fig "><span class="num">58,75,67,890</span> <span class="u">GJ</span></td>
+            <td class="res"><span class="chip chip-same">Depends on size</span><span class="detail">Tata Steel&#39;s figure is 607 times ICICI Bank&#39;s</span></td>
+          </tr>
+          <tr class="fair">
+            <th scope="row">Energy for every ₹ 1 crore of sales<span class="dir">Lower is better ↓</span></th>
+            <td class="fig  win"><span class="num">5.05</span> <span class="u">GJ per ₹ crore</span></td>
+            <td class="fig "><span class="num">4,434</span> <span class="u">GJ per ₹ crore</span></td>
+            <td class="res"><span class="chip chip-good">✔ ICICI Bank is lower</span><span class="detail">Tata Steel&#39;s figure is 878 times ICICI Bank&#39;s</span></td>
+          </tr>
+          <tr class="fair">
+            <th scope="row">Energy from renewable sources<span class="dir">Higher is better ↑</span></th>
+            <td class="fig  win"><span class="num">30.2</span> <span class="u">% of all energy</span></td>
+            <td class="fig "><span class="num">0.07</span> <span class="u">% of all energy</span></td>
+            <td class="res"><span class="chip chip-good">✔ ICICI Bank is higher</span><span class="detail">ICICI Bank is 30.1 percentage points above Tata Steel</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+  <section class="topic" id="cmp-climate" aria-labelledby="cmp-climate-h">
+    <div class="topic-head"><h2 id="cmp-climate-h">Climate: greenhouse gases</h2></div>
+    <p class="swipe-hint">On a phone the table scrolls sideways: swipe to see every column.</p>
+    <div class="table-wrap">
+      <table class="cmptable">
+        <thead><tr><th scope="col">Figure</th><th scope="col" class="co">ICICI Bank</th><th scope="col" class="co">Tata Steel</th><th scope="col">Result</th></tr></thead>
+        <tbody>
+          <tr class="size">
+            <th scope="row">Greenhouse gases released (Scope 1 + 2)<span class="dir">a total: shown for size, not ranked</span></th>
+            <td class="fig "><span class="num">1,46,377</span> <span class="u">tonnes CO₂e</span></td>
+            <td class="fig doubtful"><span class="num">66</span> <span class="u">tonnes CO₂e</span> <span class="warn" title="This figure carries a note: see the notes at the bottom of the page">⚠</span></td>
+            <td class="res"><span class="chip chip-same">Depends on size</span><span class="detail">Not compared: a figure looks doubtful.</span></td>
+          </tr>
+          <tr class="fair">
+            <th scope="row">Greenhouse gases for every ₹ 1 crore of sales<span class="dir">Lower is better ↓</span></th>
+            <td class="fig "><span class="num">0.76</span> <span class="u">tCO₂e per ₹ crore</span></td>
+            <td class="fig doubtful"><span class="num">Filed as 0</span> <span class="warn" title="This figure carries a note: see the notes at the bottom of the page">⚠</span></td>
+            <td class="res"><span class="chip chip-unsure">? Can’t compare</span><span class="detail">The figure looks doubtful, so we do not compare it.</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+  <section class="topic" id="cmp-water" aria-labelledby="cmp-water-h">
+    <div class="topic-head"><h2 id="cmp-water-h">Water</h2></div>
+    <p class="swipe-hint">On a phone the table scrolls sideways: swipe to see every column.</p>
+    <div class="table-wrap">
+      <table class="cmptable">
+        <thead><tr><th scope="col">Figure</th><th scope="col" class="co">ICICI Bank</th><th scope="col" class="co">Tata Steel</th><th scope="col">Result</th></tr></thead>
+        <tbody>
+          <tr class="size">
+            <th scope="row">Water taken in<span class="dir">a total: shown for size, not ranked</span></th>
+            <td class="fig "><span class="num">0.16</span> <span class="u">crore kL</span></td>
+            <td class="fig "><span class="num">11.08</span> <span class="u">crore kL</span></td>
+            <td class="res"><span class="chip chip-same">Depends on size</span><span class="detail">Tata Steel&#39;s figure is 70.4 times ICICI Bank&#39;s</span></td>
+          </tr>
+          <tr class="fair">
+            <th scope="row">Water for every ₹ 1 crore of sales<span class="dir">Lower is better ↓</span></th>
+            <td class="fig  win"><span class="num">4.56</span> <span class="u">kL per ₹ crore</span></td>
+            <td class="fig "><span class="num">744</span> <span class="u">kL per ₹ crore</span></td>
+            <td class="res"><span class="chip chip-good">✔ ICICI Bank is lower</span><span class="detail">Tata Steel&#39;s figure is 163 times ICICI Bank&#39;s</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+  <section class="topic" id="cmp-air" aria-labelledby="cmp-air-h">
+    <div class="topic-head"><h2 id="cmp-air-h">Air quality</h2></div>
+    <p class="swipe-hint">On a phone the table scrolls sideways: swipe to see every column.</p>
+    <div class="table-wrap">
+      <table class="cmptable">
+        <thead><tr><th scope="col">Figure</th><th scope="col" class="co">ICICI Bank</th><th scope="col" class="co">Tata Steel</th><th scope="col">Result</th></tr></thead>
+        <tbody>
+          <tr class="size">
+            <th scope="row">NOx (nitrogen oxides)<span class="dir">a total: shown for size, not ranked</span></th>
+            <td class="fig missing"><span class="num">Not reported</span></td>
+            <td class="fig "><span class="num">24,000</span> <span class="u">tonnes</span></td>
+            <td class="res"><span class="chip chip-unsure">? Not compared</span><span class="detail">ICICI Bank did not report this.</span></td>
+          </tr>
+          <tr class="size">
+            <th scope="row">SOx (sulphur oxides)<span class="dir">a total: shown for size, not ranked</span></th>
+            <td class="fig missing"><span class="num">Not reported</span></td>
+            <td class="fig "><span class="num">46,000</span> <span class="u">tonnes</span></td>
+            <td class="res"><span class="chip chip-unsure">? Not compared</span><span class="detail">ICICI Bank did not report this.</span></td>
+          </tr>
+          <tr class="size">
+            <th scope="row">PM (particulate matter)<span class="dir">a total: shown for size, not ranked</span></th>
+            <td class="fig missing"><span class="num">Not reported</span></td>
+            <td class="fig "><span class="num">8,000</span> <span class="u">tonnes</span></td>
+            <td class="res"><span class="chip chip-unsure">? Not compared</span><span class="detail">ICICI Bank did not report this.</span></td>
+          </tr>
+          <tr class="size">
+            <th scope="row">VOC (volatile organic compounds)<span class="dir">a total: shown for size, not ranked</span></th>
+            <td class="fig missing"><span class="num">Not reported</span></td>
+            <td class="fig "><span class="num">0</span> <span class="u">tonnes</span> <span class="warn" title="This figure carries a note: see the notes at the bottom of the page">⚠</span></td>
+            <td class="res"><span class="chip chip-unsure">? Not compared</span><span class="detail">ICICI Bank did not report this.</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+  <section class="topic" id="cmp-waste" aria-labelledby="cmp-waste-h">
+    <div class="topic-head"><h2 id="cmp-waste-h">Waste</h2></div>
+    <p class="swipe-hint">On a phone the table scrolls sideways: swipe to see every column.</p>
+    <div class="table-wrap">
+      <table class="cmptable">
+        <thead><tr><th scope="col">Figure</th><th scope="col" class="co">ICICI Bank</th><th scope="col" class="co">Tata Steel</th><th scope="col">Result</th></tr></thead>
+        <tbody>
+          <tr class="size">
+            <th scope="row">Waste produced<span class="dir">a total: shown for size, not ranked</span></th>
+            <td class="fig "><span class="num">335</span> <span class="u">tonnes</span></td>
+            <td class="fig "><span class="num">1,73,52,473</span> <span class="u">tonnes</span></td>
+            <td class="res"><span class="chip chip-same">Depends on size</span><span class="detail">Tata Steel&#39;s figure is 51,859 times ICICI Bank&#39;s</span></td>
+          </tr>
+          <tr class="fair">
+            <th scope="row">Waste for every ₹ 1 crore of sales<span class="dir">Lower is better ↓</span></th>
+            <td class="fig doubtful"><span class="num">0.002</span> <span class="u">tonnes per ₹ crore</span> <span class="warn" title="This figure carries a note: see the notes at the bottom of the page">⚠</span></td>
+            <td class="fig "><span class="num">131</span> <span class="u">tonnes per ₹ crore</span></td>
+            <td class="res"><span class="chip chip-unsure">? Can’t compare</span><span class="detail">Filed with one digit of precision, so too coarse to compare with another company.</span></td>
+          </tr>
+          <tr class="fair">
+            <th scope="row">Waste recycled or reused<span class="dir">Higher is better ↑</span></th>
+            <td class="fig "><span class="num">98.4</span> <span class="u">% of waste handled</span></td>
+            <td class="fig  win"><span class="num">99.9</span> <span class="u">% of waste handled</span></td>
+            <td class="res"><span class="chip chip-good">✔ Tata Steel is higher</span><span class="detail">ICICI Bank is 1.48 percentage points below Tata Steel</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="topic" aria-labelledby="cmp-notes-h">
+    <div class="topic-head"><h2 id="cmp-notes-h">Notes on the figures</h2></div>
+    <p class="plain">Every figure is shown exactly as filed. These are the notes that go with some of them.</p>
+    <h3 class="who-notes">ICICI Bank</h3>
+    <ul class="notes-list"><li class="note"><b>Waste for every ₹ 1 crore of sales:</b> The FY 2024-25 figure was filed as 0.0000000002, which has only one digit of precision. It is rounded too coarsely to compare with another year: the real figure could be much higher or lower.</li></ul>
+    <h3 class="who-notes">Tata Steel</h3>
+    <ul class="notes-list"><li class="note"><b>Greenhouse gases released (Scope 1 + 2):</b> Scope 1+2 emissions look about 1,000,000 times too small for this company&#39;s energy use (1.1e-07 tonnes per GJ; normal is roughly 0.01 to 0.5). The figure may have been typed in millions of tonnes. Shown exactly as filed; not corrected.</li><li class="note"><b>Greenhouse gases for every ₹ 1 crore of sales:</b> Reported as 0, but the total it relates to is not zero. A real intensity is never exactly 0, so this 0 means &#39;rounded away or left blank&#39;; it is not a real zero.</li><li class="note"><b>VOC (volatile organic compounds):</b> A reported 0 can mean &#39;none&#39;, or &#39;not measured / not material&#39;. The filing does not say which.</li></ul>
+  </section>
+
+</div>
+</main>
+
+<footer>
+  Source: each company's BRSR filing on NSE. Every figure comes from those filings; nothing is estimated. For one company in detail run
+  <code>python flow.py --company "ICICIBANK" --fy 2024-25</code>.
+</footer>
+
+</body>
+</html>
