@@ -14,7 +14,7 @@ PACKAGE_DIR = Path(brsr_p6.__file__).resolve().parent
 TESTS_DIR = Path(__file__).resolve().parent
 
 # Top of the list = lowest layer (used by everything).  A package may import from itself and from packages EARLIER in this list.
-LAYERS = ["core", "download", "parsing", "extraction", "analysis", "views", "rendering", "workflows", "cli"]
+LAYERS = ["core", "download", "parsing", "extraction", "analysis", "views", "rendering", "workflows", "api", "cli"]
 
 
 def modules():

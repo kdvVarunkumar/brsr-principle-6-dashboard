@@ -1,0 +1,7 @@
+/* Only what the React page adds to the shared stylesheets: the company/year pickers and the error line. */
+.picker { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 12px; }
+.picker label { font-size: .85rem; font-weight: 600; }
+.picker select { margin-left: 6px; padding: 4px 8px; border-radius: 6px; border: 1px solid var(--line); font: inherit; }
+.chat-down { margin: 0; padding: 10px 16px; background: #fef3c7; color: #78350f; border-bottom: 1px solid #fcd34d; font-size: .92rem; }
+.chat-down code { background: rgba(0,0,0,.07); padding: 1px 5px; border-radius: 4px; }
+.error-line { color: #b91c1c; padding: 12px 0; }

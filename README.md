@@ -222,7 +222,9 @@ brsr_p6/             the code, one package per step of the journey from NSE to t
   views/               5. decide what each page says: dashboard, SEBI, trace, trend, summary, compare, hub and error views
   rendering/           6. fill the HTML templates (Jinja2): render, templates/
   workflows/           whole jobs end to end: pipeline (the flow), trend/summary loaders, compare, missing_pages, hub, samples
+  api/                 `flow.py serve`: the Dashboard data as JSON and the built React app (web/)
   cli/                 the command line: flow_cli (the flow + the dispatcher) and one module per sub-command
+web/                 optional React Dashboard + CopilotKit chat assistant; see web/README.md
 tests/               automatic tests, in folders that mirror brsr_p6/
 samples/             sample report, trend, summary, comparison and error pages (+ README)
 data/                filings downloaded from NSE (11 committed, see data/README.md) and the cleaned JSON
@@ -231,6 +233,10 @@ architecture.md  plan.md  context.md  commands.md   the architecture, the plan, 
 ```
 
 **The layer rule.** A package may import only from itself and from the packages listed before it (`core` first): `core` knows nothing about `views`, and `views` knows nothing about how a page is laid out or saved. Only `download` talks to NSE, only `rendering` writes the pages, and `workflows` put the steps in order. `tests/test_architecture.py` fails with the exact file and line if the rule is broken. See [`architecture.md`](architecture.md).
+
+## Optional: React Dashboard with a chat assistant (CopilotKit)
+
+`web/` redraws the Dashboard's summary and topic sections in React from the same Python numbers and sentences (`python flow.py serve` serves them as JSON), and adds a CopilotKit chat sidebar that answers questions using only those figures, with their units, "as filed" notes and filing origin. It is an addition: the HTML pages above are unchanged and need neither Node nor an API key. Setup and run steps: [`web/README.md`](web/README.md).
 
 ## AI tools used
 

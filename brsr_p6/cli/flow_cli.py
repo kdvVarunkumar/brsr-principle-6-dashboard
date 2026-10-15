@@ -14,7 +14,7 @@ import sys
 import webbrowser
 from pathlib import Path
 
-from brsr_p6.cli import compare_cli, download_cli, extract_cli, hub_cli, samples_cli, summary_cli, trend_cli
+from brsr_p6.cli import compare_cli, download_cli, extract_cli, hub_cli, samples_cli, serve_cli, summary_cli, trend_cli
 from brsr_p6.cli.common import explain_failure
 from brsr_p6.core.errors import BrsrError
 from brsr_p6.core.paths import DEFAULT_OUTPUT_DIR
@@ -29,6 +29,7 @@ COMMANDS = {
     "compare": (compare_cli.main, "two companies, one year, side by side"),
     "hub": (hub_cli.main, "the home page and the compare page that hold every generated page"),
     "samples": (samples_cli.main, "rebuild the committed sample pages in samples/"),
+    "serve": (serve_cli.main, "the React Dashboard with the CopilotKit chat assistant (web/)"),
 }
 
 

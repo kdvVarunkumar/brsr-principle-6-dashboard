@@ -86,7 +86,7 @@ def test_a_folder_that_cannot_be_written_does_not_hide_the_original_error(monkey
 
 # ------------------------------------------------------------------------------------------------ the sub-commands
 def test_every_other_command_is_a_sub_command_of_the_one_file():
-    assert set(COMMANDS) == {"download", "extract", "trends", "summary", "compare", "hub", "samples"}
+    assert set(COMMANDS) == {"download", "extract", "trends", "summary", "compare", "hub", "samples", "serve"}
     for name, (run, what) in COMMANDS.items():
         assert callable(run) and what
 

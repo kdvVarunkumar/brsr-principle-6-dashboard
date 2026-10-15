@@ -12,6 +12,7 @@ DEFAULT_RAW_DIR = PROJECT_ROOT / "data" / "raw"          # filings downloaded fr
 DEFAULT_CACHE_DIR = PROJECT_ROOT / "data" / "cache"      # small caches (company search answers)
 DEFAULT_PARSED_DIR = PROJECT_ROOT / "data" / "parsed"    # the clean data of a report, as JSON
 DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "output"             # the HTML pages the commands write
+WEB_DIR = PROJECT_ROOT / "web"                           # the optional React page + CopilotKit chat assistant
 SAMPLES_DIR = PROJECT_ROOT / "samples"                   # the committed sample pages
 
 

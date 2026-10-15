@@ -21,11 +21,12 @@ Every command here was run and checked. Replace the company name and the year wi
 | **Two companies, one year** (Extension 3) | `python flow.py compare --company-a "Tata Steel" --company-b "Wipro" --fy 2025-26 --open` |
 | **Every page in one place** (home page + compare page) | `python flow.py hub --open` |
 | Rebuild the pages in `samples/` | `python flow.py samples` |
+| Open the React Dashboard with the CopilotKit chat assistant (setup: `web/README.md`; PyCharm: run configuration "Dashboard + assistant") | `python flow.py serve` |
 | Run all automatic tests | `pytest -q` |
 
 Pattern to remember: **`--company "<name or NSE symbol>"`** and **`--fy <year>`**, e.g. `--company "Tata Steel" --fy 2025-26`.
 
-**One file runs everything: `flow.py`.** With a company and a year it is the whole flow; the first word after it picks a single step or an extra (`download`, `extract`, `trends`, `summary`, `compare`, `hub`, `samples`). `python flow.py --help` lists them, and `python flow.py <word> --help` shows that command's options.
+**One file runs everything: `flow.py`.** With a company and a year it is the whole flow; the first word after it picks a single step or an extra (`download`, `extract`, `trends`, `summary`, `compare`, `hub`, `samples`, `serve`). `python flow.py --help` lists them, and `python flow.py <word> --help` shows that command's options.
 
 ---
 
